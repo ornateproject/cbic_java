@@ -31,6 +31,20 @@ public class GradeScore {
 		}
 		return rank;
 	}
+	// grade score for GST 1C
+	public int marks1c(double total) {
+		int rank=0;
+		if(total>10) {
+			rank=0;
+		}else if(total >= 6 && total <= 10) {
+			rank=4;
+		}else if(total >= 1 && total <= 5) {
+			rank=7;
+		}else {
+			rank=10;
+		}
+		return rank;
+	}
 	
 	// grade score for GST 1D
 	public int marks1d(double total) {
