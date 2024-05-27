@@ -3072,7 +3072,4 @@ public class RetriveCbicDetailsController {
 		}
 		return allGstaList;
 	}
-
-
-	
 }
