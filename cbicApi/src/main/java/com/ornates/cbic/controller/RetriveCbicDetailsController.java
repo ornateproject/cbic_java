@@ -1248,9 +1248,8 @@ public class RetriveCbicDetailsController {
 					allGstaList.add(gsta);
 				}
 			} else if (type.equalsIgnoreCase("commissary")) {
-				String prev_month_new =DateCalculate.getPreviousMonth(month_date);
-
-
+			String prev_month_new =DateCalculate.getPreviousMonth(month_date);
+	
 				// Query string
 				String queryGst46a="SELECT " +
 						"cc.ZONE_CODE, " +
@@ -1282,10 +1281,9 @@ public class RetriveCbicDetailsController {
 						"    mis_gst_zonecode AS zc " +
 						"    ON zc.ZONE_CODE = cc.ZONE_CODE " +
 						"WHERE cc.ZONE_CODE = '" + zone_code + "' AND 14c.MM_YYYY = '" + prev_month_new + "';";
-				String queryGst6c= "SELECT "
+				String queryGst6c=  "SELECT "
 						+ "    cc.ZONE_CODE, "
-						+" cc.COMM_NAME,"
-						+ "    zc.ZONE_NAME "
+						+ "    zc.ZONE_NAME, "
 						+ "    (14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col6_3 "
 						+ "FROM mis_gst_commcode AS cc "
 						+ "RIGHT JOIN "
@@ -1298,7 +1296,7 @@ public class RetriveCbicDetailsController {
 				String queryGst6d="SELECT " +
 						"cc.ZONE_CODE, " +
 						" cc.COMM_NAME,"+
-						"zc.ZONE_NAME " +
+						"zc.ZONE_NAME, " +
 						"(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col6_4 " +
 						"FROM " +
 						"mis_gst_commcode AS cc " +
