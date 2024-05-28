@@ -894,13 +894,13 @@ public class RetriveCbicDetailsController {
 						"FROM mis_gst_commcode as cc " +
 						"RIGHT JOIN mis_gi_gst_2 as 14c on cc.COMM_CODE = 14c.COMM_CODE " +
 						"LEFT JOIN mis_gst_zonecode as zc on zc.ZONE_CODE = cc.ZONE_CODE " +
-						"WHERE 14c.MM_YYYY = '"+ month_date+"' ;";
+						"WHERE 14c.MM_YYYY = '"+ month_date+ "' GROUP BY cc.ZONE_CODE;";
 
 				//Result Set
 				ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
 
 				while(rsGst14aa.next()) {
-					String commname=rsGst14aa.getString("COMM_NAME");
+					String commname="ALL";
 					String ra=RelevantAspect.GST4A_RA;
 					String zoneCode = rsGst14aa.getString("ZONE_CODE");
 
@@ -1238,7 +1238,7 @@ public class RetriveCbicDetailsController {
 				ResultSet rsGst6d =GetExecutionSQL.getResult(queryGst6d);
 
 				while(rsGst46a.next() && rsGst46b.next() && rsGst6c.next() && rsGst6d.next() ) {
-					String ra=RelevantAspect.Gst4D_RA;
+					String ra=RelevantAspect.GST4D_RA;
 					String zoneCode = rsGst46a.getString("ZONE_CODE");
 					int col6_1=rsGst46a.getInt("col6_1");
 					int col6_2=rsGst46b.getInt("col6_2");
@@ -1322,7 +1322,7 @@ public class RetriveCbicDetailsController {
 
 				while(rsGst46a.next() && rsGst46b.next() && rsGst6c.next() && rsGst6d.next() ) {
 					String commname=rsGst46a.getString("COMM_NAME");
-					String ra=RelevantAspect.Gst4D_RA;
+					String ra=RelevantAspect.GST4D_RA;
 					String zoneCode = rsGst46a.getString("ZONE_CODE");
 					int col6_1=rsGst46a.getInt("col6_1");
 					int col6_2=rsGst46b.getInt("col6_2");
@@ -2113,7 +2113,7 @@ public class RetriveCbicDetailsController {
 				//Result Set
 				ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
 				while(rsGst14aa.next()) {
-					String ra=RelevantAspect.Gst8A_RA;
+					String ra=RelevantAspect.GST8A_RA;
 					String zoneCode = rsGst14aa.getString("ZONE_CODE");
 					int col13=rsGst14aa.getInt("col13");
 					int col3=rsGst14aa.getInt("col3");
@@ -2177,7 +2177,7 @@ public class RetriveCbicDetailsController {
 				ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
 				while(rsGst14aa.next()) {
 					String commname=rsGst14aa.getString("COMM_NAME");
-					String ra=RelevantAspect.Gst8A_RA;
+					String ra=RelevantAspect.GST8A_RA;
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String zoneCode = rsGst14aa.getString("ZONE_CODE");
 					int col13=rsGst14aa.getInt("col13");
@@ -2250,7 +2250,7 @@ public class RetriveCbicDetailsController {
 				ResultSet rsGst3aa=GetExecutionSQL.getResult(queryGst3aa);
 				while(rsGst14aa.next() && rsGst3aa.next()) {
 					String zoneCode = rsGst14aa.getString("ZONE_CODE");
-					String ra=RelevantAspect.Gst8B_RA;
+					String ra=RelevantAspect.GST8B_RA;
 					int col1=rsGst14aa.getInt("col1");
 					int col2=rsGst14aa.getInt("col2");
 
@@ -2299,7 +2299,7 @@ public class RetriveCbicDetailsController {
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commname=rsGst14aa.getString("COMM_NAME");
 					String zoneCode = rsGst14aa.getString("ZONE_CODE");
-					String ra=RelevantAspect.Gst8B_RA;
+					String ra=RelevantAspect.GST8B_RA;
 					int col1=rsGst14aa.getInt("col1");
 					int col2=rsGst14aa.getInt("col2");
 

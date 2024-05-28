@@ -311,6 +311,21 @@ public class GradeScore {
 			return rank;
 		}
 		
+		//Grade sScore for Gst8B
+		public int marks8b(double total) {
+			int rank=0;
+			if(total<=10) {
+				rank=10;
+			}else if(total >= 11 && total <= 20) {
+				rank=7;
+			}else if(total >= 21 && total <= 30) {
+				rank=4;
+			}else {
+				rank=2;
+			}
+			return rank;
+		}
+		
 		// Api Gst9A
 		public int marks9a(double total) {
 			int rank=0;
@@ -319,6 +334,20 @@ public class GradeScore {
 			}else if(total >= 1 && total <= 5) {
 				rank=7;
 			}else if(total >= 6 && total <= 10) {
+				rank=4;
+			}else {
+				rank=2;
+			}
+			return rank;
+		}
+		// Api Gst9B
+		public int marks9b(double total) {
+			int rank=0;
+			if(total >= 40) {
+				rank=10;
+			}else if(total >= 30 && total <= 39) {
+				rank=7;
+			}else if(total >= 20 && total <= 29) {
 				rank=4;
 			}else {
 				rank=2;

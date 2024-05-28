@@ -9,7 +9,7 @@ public class RelevantAspect {
             "(OB+R-D)/(OB+R)\n";
     public static final String GST1E_RA ="*Percentage of registrations pending for cancellation at the end of the month vis-à-vis total applications initiated for cancellation \n" +
             "(OB+R-D)/(OB+R)\n";
-    public static final String GST1F_RA ="*Percentage of registration pending for revocation at the end of the month vis-à-vis total applications received for revocation of cancellation \n" +
+    public static final String GST1F_RA ="*Percentage of registration pending for revocation at the end of the month vis-à-vis total applications received for revocation of cancellation \n";
     public static final String Gst2_RA="Percentage of returns which were due but not filed vis-à-vis total returns due (GSTR 3B) ";
     public static final String Gst3A_RA="Number of Returns whose scrutiny completed for the month vis-à-vis total Returns pending for the month (Pro-rata basis)";
     public static final String Gst3B_RA="Recoveries made upto the month vis-a-vis detections upto the month";
