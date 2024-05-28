@@ -880,13 +880,9 @@ public class RetriveCbicDetailsController {
 				// Query string
 
 				// Query string
-				String queryGst14aa="SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, " +
-						"(14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) as col13, " +
-						"14c.OPENING_BALANCE_NO as col1 " +
-						"FROM mis_gst_commcode as cc " +
-						"RIGHT JOIN mis_gi_gst_2 as 14c on cc.COMM_CODE = 14c.COMM_CODE " +
-						"LEFT JOIN mis_gst_zonecode as zc on zc.ZONE_CODE = cc.ZONE_CODE " +
-						"WHERE 14c.MM_YYYY = '"+ month_date+ "' GROUP BY cc.ZONE_CODE;";
+				String queryGst14aa="SELECT zc.ZONE_NAME,  cc.ZONE_CODE, SUM(14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) AS col13,  SUM(14c.OPENING_BALANCE_NO) AS col1 FROM \n" +
+						" mis_gst_commcode AS cc RIGHT JOIN mis_gi_gst_2 AS 14c  ON cc.COMM_CODE = 14c.COMM_CODE LEFT JOIN    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+						" WHERE 14c.MM_YYYY = '"+ month_date+"' GROUP BY  cc.ZONE_CODE;";
 
 				//Result Set
 				ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
@@ -913,13 +909,19 @@ public class RetriveCbicDetailsController {
 
 			} else if (type.equalsIgnoreCase("commissary")) {
 				// Query string
-				String queryGst14aa="SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, " +
-						"(14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) as col13, " +
-						"14c.OPENING_BALANCE_NO as col1 " +
-						"FROM mis_gst_commcode as cc " +
-						"RIGHT JOIN mis_gi_gst_2 as 14c on cc.COMM_CODE = 14c.COMM_CODE " +
-						"LEFT JOIN mis_gst_zonecode as zc on zc.ZONE_CODE = cc.ZONE_CODE " +
-						"WHERE 14c.MM_YYYY = '"+ month_date+"' AND zc.ZONE_CODE = '"+zone_code+"';";
+				String queryGst14aa=" SELECT \n" +
+						"    zc.ZONE_NAME,  \n" +
+						"    cc.ZONE_CODE, \n" +
+						"    cc.COMM_NAME, \n" +
+						"    (14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) AS col13,  \n" +
+						"    (14c.OPENING_BALANCE_NO) AS col1 \n" +
+						"FROM mis_gst_commcode AS cc \n" +
+						"RIGHT JOIN mis_gi_gst_2 AS 14c  \n" +
+						"ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"LEFT JOIN    mis_gst_zonecode AS zc \n" +
+						"ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+						"WHERE 14c.MM_YYYY = '"+ month_date+"' AND cc.ZONE_CODE = '" + zone_code + "'\n" +
+						"LIMIT 0, 500;";
 				ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 				while(rsGst14aa.next()) {
 					String commname=rsGst14aa.getString("COMM_NAME");
