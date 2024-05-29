@@ -594,7 +594,7 @@ public class RetriveCbicDetailsController {
 	@RequestMapping(value = "/gst2")
 //	  http://localhost:8080/CbicAPI/cbic/gst2?month_date=2023-04-01&type=zone
 //	  http://localhost:8080/CbicAPI/cbic/gst2?month_date=2023-04-01&zone_code=70&type=commissary
-//	  http://localhost:8080/CbicAPI/cbic/gst2?type=all&month_date=2023-04-01
+//	  http://localhost:8080/CbicAPI/cbic/gst2?month_date=2023-04-01&type=all_commissary
 	public Object getGst2(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code,@RequestParam(required = false) String all) {
 
 		List<GST4A> allGstaList = new ArrayList<>();
@@ -657,7 +657,7 @@ public class RetriveCbicDetailsController {
 					gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,rank,absval,zoneCode,ra);
 					allGstaList.add(gsta);
 				}
-			}else if (type.equalsIgnoreCase("all")) {
+			}else if (type.equalsIgnoreCase("all_commissary")) {
 				String queryGst14aa="SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,(14c.GSTR_3BM_F-14c.GSTR_3BM_D) AS col21,14c.GSTR_3BM_F as col3 \n" +
 						"FROM  mis_gst_commcode as cc right join mis_gst_gst_2 as 14c on cc.COMM_CODE=14c.COMM_CODE \n" +
 						"left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE \n" +
