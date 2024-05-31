@@ -409,13 +409,14 @@ public class RetriveCbicDetailsController {
 	/*
 	 * Date: May 04, 2024
 	 * created:
-	 * updated: RKS, may 18, 2024
+	 * updated: RKS & Nishant, may 18,31, 2024
 	 * Purpose: This methods have core function in Return Filing .
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/gst1e")
 	//  http://localhost:8080/CbicAPI/cbic/gst1e?month_date=2023-04-01&type=zone
-//  http://localhost:8080/CbicAPI/cbic/gst1e?month_date=2023-04-01&zone_code=70&type=commissary
+//  http://localhost:8080/CbicAPI/cbic/gst1e?month_date=2023-04-01&zone_code=51&type=commissary
+//	  http://localhost:8080/CbicAPI/cbic/gst1e?month_date=2023-04-01&type=all_commissary
 	public Object getGst1E(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code) {
 
 		List<GST4A> allGstaList = new ArrayList<>();
@@ -427,12 +428,12 @@ public class RetriveCbicDetailsController {
 			if (type.equalsIgnoreCase("zone")) {
 
 				// Query string
-				String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,sum(1+1) as col9,sum(15a.SUO_MOTO_OPENING_BALANCE) as col1," +
-						"sum(15a.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION) as col2,sum(15a.CANCELLATION_OPENING_BALANCE) as col5," +
-						"sum(15a.CANCELLATION_NO_APPLICATION_RECEIVED) as col6 FROM  mis_gst_commcode as cc " +
-						"right join mis_dpm_gst_15a as 15a on cc.COMM_CODE=15a.COMM_CODE " +
+				String queryGst14aa ="SELECT zc.ZONE_NAME, cc.ZONE_CODE,sum((14c.SUO_MOTO_OPENING_BALANCE+14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION-14c.SUO_MOTO_GSTIN_CANCELLED)+(14c.CANCELLATION_OPENING_BALANCE+14c.CANCELLATION_NO_APPLICATION_RECEIVED-14c.CANCELLATION_GSTIN_CANCELLED) ) as col9,sum(14c.SUO_MOTO_OPENING_BALANCE) as col1," +
+						"sum(14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION) as col2,sum(14c.CANCELLATION_OPENING_BALANCE) as col5," +
+						"sum(14c.CANCELLATION_NO_APPLICATION_RECEIVED) as col6 FROM  mis_gst_commcode as cc " +
+						"right join mis_dpm_gst_15a as 14c on cc.COMM_CODE=14c.COMM_CODE " +
 						"left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE " +
-						"where MM_YYYY='" + month_date + "' group by ZONE_CODE";
+						"where  14c.MM_YYYY='" + month_date + "' group by cc.ZONE_CODE";
 
 				//Result Set
 				ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
@@ -460,10 +461,10 @@ public class RetriveCbicDetailsController {
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {
 				// Query string
-				String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,cc.COMM_NAME,(1+1) as col9,(15a.SUO_MOTO_OPENING_BALANCE) as col1, " +
-						"(15a.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION) as col2,(15a.CANCELLATION_OPENING_BALANCE) as col5, " +
-						"(15a.CANCELLATION_NO_APPLICATION_RECEIVED) as col6 FROM  mis_gst_commcode as cc  " +
-						"right join mis_dpm_gst_15a as 15a on cc.COMM_CODE=15a.COMM_CODE " +
+				String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,cc.COMM_NAME,((14c.SUO_MOTO_OPENING_BALANCE+14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION-14c.SUO_MOTO_GSTIN_CANCELLED)+(14c.CANCELLATION_OPENING_BALANCE+14c.CANCELLATION_NO_APPLICATION_RECEIVED-14c.CANCELLATION_GSTIN_CANCELLED) ) as col9,(14c.SUO_MOTO_OPENING_BALANCE) as col1, " +
+						"(14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION) as col2,(14c.CANCELLATION_OPENING_BALANCE) as col5, " +
+						"(14c.CANCELLATION_NO_APPLICATION_RECEIVED) as col6 FROM  mis_gst_commcode as cc  " +
+						"right join mis_dpm_gst_15a as 14c on cc.COMM_CODE=14c.COMM_CODE " +
 						"left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE " +
 						"where MM_YYYY='"+ month_date+"' and cc.ZONE_CODE='"+zone_code+"';";
 				ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
@@ -487,7 +488,39 @@ public class RetriveCbicDetailsController {
 					rank = score.marks1e(total);
 					String formattedTotal = String.format("%.2f", total);
 					double totalScore = Double.parseDouble(formattedTotal);
-					gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),"ALL",totalScore,rank,absval,zoneCode,ra);
+					gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,rank,absval,zoneCode,ra);
+					allGstaList.add(gsta);
+				}
+			}else if (type.equalsIgnoreCase("all_commissary")) {
+				String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,cc.COMM_NAME, ((14c.SUO_MOTO_OPENING_BALANCE+14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION-14c.SUO_MOTO_GSTIN_CANCELLED)+\n" +
+						"(14c.CANCELLATION_OPENING_BALANCE+14c.CANCELLATION_NO_APPLICATION_RECEIVED-14c.CANCELLATION_GSTIN_CANCELLED) ) as col9,(14c.SUO_MOTO_OPENING_BALANCE) as col1,\n" +
+						"(14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION) as col2,(14c.CANCELLATION_OPENING_BALANCE) as col5,\n" +
+						"(14c.CANCELLATION_NO_APPLICATION_RECEIVED) as col6 FROM  mis_gst_commcode as cc \n" +
+						"right join mis_dpm_gst_15a as 14c on cc.COMM_CODE=14c.COMM_CODE \n" +
+						"left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE\n" +
+						"where  14c.MM_YYYY='"+ month_date+"';";
+				ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
+
+				while (rsGst14aa.next()) {
+					String ra= RelevantAspect.GST1E_RA;
+					String zoneCode = rsGst14aa.getString("ZONE_CODE");
+					String commname=rsGst14aa.getString("COMM_NAME");
+					int col9 = rsGst14aa.getInt("col9");
+					int col1 = rsGst14aa.getInt("col1");
+					int col2 = rsGst14aa.getInt("col2");
+					int col5 = rsGst14aa.getInt("col5");
+					int col6 = rsGst14aa.getInt("col6");
+					String absval=String.valueOf(col9)+"/"+String.valueOf(col1 + col2 + col5 + col6);
+
+					if((col1 + col2 + col5 + col6) != 0) {
+						total = ((double) col9 / (col1 + col2 + col5 + col6));
+					}else {
+						total=0.00;
+					}
+					rank = score.marks1e(total);
+					String formattedTotal = String.format("%.2f", total);
+					double totalScore = Double.parseDouble(formattedTotal);
+					gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,rank,absval,zoneCode,ra);
 					allGstaList.add(gsta);
 				}
 			}
@@ -504,85 +537,85 @@ public class RetriveCbicDetailsController {
 	 * updated: RKS, may 24, 2024
 	 * Purpose: This methods have core function in Return Filing .
 	 */
-	@ResponseBody
-	@RequestMapping(value = "/gst1f")
-	//  http://localhost:8080/CbicAPI/cbic/gst1f?month_date=2023-04-01&type=zone
-	//  http://localhost:8080/CbicAPI/cbic/gst1f?month_date=2023-04-01&zone_code=70&type=commissary
-	public Object getGst1F(@RequestParam String month_date ,@RequestParam String type, @RequestParam(required = false) String zone_code ) {
+    @ResponseBody
+    @RequestMapping(value = "/gst1f")
+    //  http://localhost:8080/CbicAPI/cbic/gst1f?month_date=2023-04-01&type=zone
+    //  http://localhost:8080/CbicAPI/cbic/gst1f?month_date=2023-04-01&zone_code=70&type=commissary
+    public Object getGst1F(@RequestParam String month_date ,@RequestParam String type, @RequestParam(required = false) String zone_code ) {
 
-		List<GST4A> allGstaList = new ArrayList<>();
-		GST4A gsta = null;
-		int rank = 0;
-		double total = 0.00;
+        List<GST4A> allGstaList = new ArrayList<>();
+        GST4A gsta = null;
+        int rank = 0;
+        double total = 0.00;
 
-		try {
-			if (type.equalsIgnoreCase("zone")) {
+        try {
+            if (type.equalsIgnoreCase("zone")) {
 
-				// Query string
-				String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,sum(1) as col14,sum(15a.REVOCATION_OPENING_BALANCE) as col10," +
-						"sum(15a.REVOCATION_ARN_RECEIVED) as col11 FROM  mis_gst_commcode as cc " +
-						"right join mis_dpm_gst_15a as 15a on cc.COMM_CODE=15a.COMM_CODE " +
-						"left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE " +
-						"where MM_YYYY='" + month_date + "' group by ZONE_CODE";
+                // Query string
+                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,sum(15a.REVOCATION_OPENING_BALANCE + 15a.REVOCATION_ARN_RECEIVED-15a.REVOCATION_GSTIN_REVOKED-15a.REVOCATION_APPLICATION_REJECTED) as col14,sum(15a.REVOCATION_OPENING_BALANCE) as col10," +
+                        "sum(15a.REVOCATION_ARN_RECEIVED) as col11 FROM  mis_gst_commcode as cc " +
+                        "right join mis_dpm_gst_15a as 15a on cc.COMM_CODE=15a.COMM_CODE " +
+                        "left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE " +
+                        "where MM_YYYY='" + month_date + "' group by ZONE_CODE";
 
-				//Result Set
-				ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
+                //Result Set
+                ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
-				while (rsGst14aa.next()) {
-					String ra= RelevantAspect.GST1F_RA;
-					String zoneCode = rsGst14aa.getString("ZONE_CODE");
-					int col14 = rsGst14aa.getInt("col14");
-					int col10 = rsGst14aa.getInt("col10");
-					int col11 = rsGst14aa.getInt("col11");
-					String absval=String.valueOf(col14)+"/"+String.valueOf(col10 + col11);
+                while (rsGst14aa.next()) {
+                    String ra= RelevantAspect.GST1F_RA;
+                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    int col14 = rsGst14aa.getInt("col14");
+                    int col10 = rsGst14aa.getInt("col10");
+                    int col11 = rsGst14aa.getInt("col11");
+                    String absval=String.valueOf(col14)+"/"+String.valueOf(col10 + col11);
 
-					if ((col10 + col11) != 0) {
-						total = ((double) col14 / (col10 + col11));
-					}else{
-						total=0.00;
-					}
+                    if ((col10 + col11) != 0) {
+                        total = ((double) col14 / (col10 + col11));
+                    }else{
+                        total=0.00;
+                    }
 
-					rank = score.marks1f(total);
-					String formattedTotal = String.format("%.2f", total);
-					double totalScore = Double.parseDouble(formattedTotal);
-					gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),"ALL",totalScore,rank,absval,zoneCode,ra);
-					allGstaList.add(gsta);
-				}
-			}else if (type.equalsIgnoreCase("commissary")) {//gst1f-commissary
-				String queryGst14aa ="SELECT zc.ZONE_NAME, cc.ZONE_CODE,cc.COMM_NAME,(1) as col14,(15a.REVOCATION_OPENING_BALANCE) as col10, (15a.REVOCATION_ARN_RECEIVED) as col11 FROM  mis_gst_commcode as cc  right join mis_dpm_gst_15a as 15a on cc.COMM_CODE=15a.COMM_CODE  left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE where MM_YYYY='" + month_date + "' and cc.ZONE_CODE='"+zone_code+"';";
+                    rank = score.marks1f(total);
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),"ALL",totalScore,rank,absval,zoneCode,ra);
+                    allGstaList.add(gsta);
+                }
+            }else if (type.equalsIgnoreCase("commissary")) {//gst1f-commissary
+                String queryGst14aa ="SELECT zc.ZONE_NAME, cc.ZONE_CODE,cc.COMM_NAME,(15a.REVOCATION_OPENING_BALANCE + 15a.REVOCATION_ARN_RECEIVED-15a.REVOCATION_GSTIN_REVOKED-15a.REVOCATION_APPLICATION_REJECTED) as col14,(15a.REVOCATION_OPENING_BALANCE) as col10, (15a.REVOCATION_ARN_RECEIVED) as col11 FROM  mis_gst_commcode as cc  right join mis_dpm_gst_15a as 15a on cc.COMM_CODE=15a.COMM_CODE  left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE where MM_YYYY='" + month_date + "' and cc.ZONE_CODE='"+zone_code+"';";
 
-				//Result Set
-				ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
+                //Result Set
+                ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
 
-				while (rsGst14aa.next()) {
-					String ra = RelevantAspect.GST1F_RA;
-					String zoneCode = rsGst14aa.getString("ZONE_CODE");
-					String commname=rsGst14aa.getString("COMM_NAME");
-					String zonename = rsGst14aa.getString("ZONE_NAME");
-					int col14 = rsGst14aa.getInt("col14");
-					int col10 = rsGst14aa.getInt("col10");
-					int col11 = rsGst14aa.getInt("col11");
-					String absval = String.valueOf(col14) + "/" + String.valueOf(col10 + col11);
+                while (rsGst14aa.next()) {
+                    String ra = RelevantAspect.GST1F_RA;
+                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    String commname=rsGst14aa.getString("COMM_NAME");
+                    String zonename = rsGst14aa.getString("ZONE_NAME");
+                    int col14 = rsGst14aa.getInt("col14");
+                    int col10 = rsGst14aa.getInt("col10");
+                    int col11 = rsGst14aa.getInt("col11");
+                    String absval = String.valueOf(col14) + "/" + String.valueOf(col10 + col11);
 
-					if ((col10 + col11) != 0) {
-						total = ((double) col14 / (col10 + col11));
-					} else {
-						total = 0.00;
-					}
+                    if ((col10 + col11) != 0) {
+                        total = ((double) col14 / (col10 + col11));
+                    } else {
+                        total = 0.00;
+                    }
 
-					rank = score.marks1f(total);
-					String formattedTotal = String.format("%.2f", total);
-					double totalScore = Double.parseDouble(formattedTotal);
-					gsta = new GST4A(zonename, commname, totalScore, rank, absval, zoneCode, ra);
-					allGstaList.add(gsta);
-				}
-			}
+                    rank = score.marks1f(total);
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    gsta = new GST4A(zonename, commname, totalScore, rank, absval, zoneCode, ra);
+                    allGstaList.add(gsta);
+                }
+            }
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return allGstaList;
-	}
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allGstaList;
+    }
 
 	/*
 	 * Date: May 04, 2024
