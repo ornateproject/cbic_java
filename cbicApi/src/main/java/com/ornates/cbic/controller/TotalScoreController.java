@@ -223,6 +223,92 @@ public class TotalScoreController {
 		return allGstaList;
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/returnFiling")
+	//  http://localhost:8080/CbicAPI/cbic/t_score/returnFiling?month_date=2023-04-01&type=zone
+	//  http://localhost:8080/CbicAPI/cbic/t_score/returnFiling?month_date=2023-04-01&type=commissary&zone_code=59
+	public Object returnFiling(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code) {
+		List<TotalScore> allGstaList = new ArrayList<>();
+		TotalScore totalScore = null;
+		Connection con = null;
+		ResultSet rsGst14aa = null;
+		try {
+
+			if (type.equalsIgnoreCase("zone")) {
+				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+
+				String query_assessment = "SELECT \n" +
+						"    zc.ZONE_NAME, \n" +
+						"    cc.ZONE_CODE, \n" +
+						"    SUM(14c.GSTR_3BM_F - 14c.GSTR_3BM_D) AS col21,\n" +
+						"    SUM(14c.GSTR_3BM_F) AS col3,\n" +
+						"    SUM(14c.GSTR_3BM_F - 14c.GSTR_3BM_D) / SUM(14c.GSTR_3BM_F) AS total_score,\n" +
+						"    RANK() OVER (ORDER BY SUM(14c.GSTR_3BM_F - 14c.GSTR_3BM_D) / SUM(14c.GSTR_3BM_F) DESC) AS z_rank\n" +
+						"FROM mis_gst_commcode AS cc \n" +
+						"RIGHT JOIN mis_gst_gst_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+						"WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
+						"GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+						"ORDER BY total_score DESC;\n";
+
+				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+				while (rsGst14aa.next()) {
+					double total_score = rsGst14aa.getDouble("total_score");
+					zone_code = rsGst14aa.getString("ZONE_CODE");
+					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
+					String zoneName = rsGst14aa.getString("ZONE_NAME");
+					String commName = "ALL";
+					String gst = "ALL";
+					String absval = "null";
+
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst);
+					allGstaList.add(totalScore);
+				}
+			}else if (type.equalsIgnoreCase("commissary")) {
+
+				String query_assessment = "SELECT \n" +
+						"    zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, \n" +
+						"    (14c.GSTR_3BM_F - 14c.GSTR_3BM_D) AS col21,\n" +
+						"    (14c.GSTR_3BM_F) AS col3,'GST 2' AS gst,\n" +
+						"    (14c.GSTR_3BM_F - 14c.GSTR_3BM_D) / (14c.GSTR_3BM_F) AS total_score,\n" +
+						"    CONCAT((14c.GSTR_3BM_F - 14c.GSTR_3BM_D), '/', (14c.GSTR_3BM_F)) AS absolute_value\n" +
+						"FROM mis_gst_commcode AS cc \n" +
+						"RIGHT JOIN mis_gst_gst_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+						"WHERE 14c.MM_YYYY = '" + month_date + "' AND cc.ZONE_CODE = '" + zone_code + "';\n";
+
+				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+				while (rsGst14aa.next()) {
+					double tScore = rsGst14aa.getDouble("total_score");
+					zone_code = rsGst14aa.getString("ZONE_CODE");
+					Integer Zonal_rank = null;
+					String zoneName = rsGst14aa.getString("ZONE_NAME");
+					String commName = rsGst14aa.getString("COMM_NAME");
+					String gst = rsGst14aa.getString("GST");
+					String absval = rsGst14aa.getString("absolute_value");
+
+					String formattedTotal = String.format("%.2f", tScore);
+					double total_score = Double.parseDouble(formattedTotal);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					allGstaList.add(totalScore);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rsGst14aa != null) rsGst14aa.close();
+				if (con != null) con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return allGstaList;
+
+	}
+
 
 	@ResponseBody
 	@RequestMapping(value = "/scrutiny/assessment")
