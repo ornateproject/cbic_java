@@ -821,7 +821,7 @@ public class RetriveCbicDetailsController {
 				String queryGst3aa= "SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, 14c.CLOSING_NO AS col2 FROM mis_gst_commcode AS cc " +
 						"RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE " +
 						"LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE " +
-						"WHERE cc.ZONE_CODE = '" + zone_code + "' AND 14c.MM_YYYY = '" + month_date + "'";
+						"WHERE cc.ZONE_CODE = '" + zone_code + "' AND 14c.MM_YYYY = '" +prev_month_new+ "'";
 
 				//Result Set
 				ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
