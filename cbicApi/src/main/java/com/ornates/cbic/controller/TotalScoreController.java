@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-// total score 1(commissary only with 1E and 1F), 2, 3, 5(only 5a)
+// total score 1(commissary only with 1E and 1F), 2, 3, 5(only 5a-- zone and commissary both)
 
 @CrossOrigin
 @RequestMapping("/cbic/t_score")
@@ -576,7 +576,103 @@ public class TotalScoreController {
 			}else if (type.equalsIgnoreCase("commissary")) {
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "";
+				String query_assessment = "SELECT \n" +
+						"    zc.ZONE_NAME, \n" +
+						"    cc.ZONE_CODE, \n" +
+						"    cc.COMM_NAME,\n" +
+						"    (14c.adc_commissionerate_disposal_no + \n" +
+						"     14c.adc_audit_disposal_no + \n" +
+						"     14c.adc_investigation_disposal_no + \n" +
+						"     14c.adc_investigation_disposal_no + \n" +
+						"     14c.adc_callbook_disposal_no + \n" +
+						"     14c.dc_commissionerate_disposal_no + \n" +
+						"     14c.dc_audit_disposal_no + \n" +
+						"     14c.dc_investigation_disposal_no + \n" +
+						"     14c.dc_callbook_disposal_no + \n" +
+						"     14c.superintendent_commissionerate_disposal_no + \n" +
+						"     14c.superintendent_audit_disposal_no + \n" +
+						"     14c.superintendent_investigation_disposal_no + \n" +
+						"     14c.superintendent_callbook_disposal_no) as col9,\n" +
+						"    (14c.ADC_COMMISSIONERATE_OPENING_NO + \n" +
+						"     14c.ADC_AUDIT_OPENING_NO + \n" +
+						"     14c.ADC_INVESTIGATION_OPENING_NO + \n" +
+						"     14c.ADC_CALLBOOK_OPENING_NO + \n" +
+						"     14c.DC_COMMISSIONERATE_OPENING_NO + \n" +
+						"     14c.DC_AUDIT_OPENING_NO + \n" +
+						"     14c.DC_INVESTIGATION_OPENING_NO + \n" +
+						"     14c.DC_CALLBOOK_OPENING_NO + \n" +
+						"     14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + \n" +
+						"     14c.SUPERINTENDENT_AUDIT_OPENING_NO + \n" +
+						"     14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + \n" +
+						"     14c.SUPERINTENDENT_CALLBOOK_OPENING_NO) as col3,\n" +
+						"    'GST 5A' as GST,\n" +
+						"    COALESCE(\n" +
+						"        (14c.adc_commissionerate_disposal_no + \n" +
+						"         14c.adc_audit_disposal_no + \n" +
+						"         14c.adc_investigation_disposal_no + \n" +
+						"         14c.adc_investigation_disposal_no + \n" +
+						"         14c.adc_callbook_disposal_no + \n" +
+						"         14c.dc_commissionerate_disposal_no + \n" +
+						"         14c.dc_audit_disposal_no + \n" +
+						"         14c.dc_investigation_disposal_no + \n" +
+						"         14c.dc_callbook_disposal_no + \n" +
+						"         14c.superintendent_commissionerate_disposal_no + \n" +
+						"         14c.superintendent_audit_disposal_no + \n" +
+						"         14c.superintendent_investigation_disposal_no + \n" +
+						"         14c.superintendent_callbook_disposal_no) / \n" +
+						"        (14c.ADC_COMMISSIONERATE_OPENING_NO + \n" +
+						"         14c.ADC_AUDIT_OPENING_NO + \n" +
+						"         14c.ADC_INVESTIGATION_OPENING_NO + \n" +
+						"         14c.ADC_CALLBOOK_OPENING_NO + \n" +
+						"         14c.DC_COMMISSIONERATE_OPENING_NO + \n" +
+						"         14c.DC_AUDIT_OPENING_NO + \n" +
+						"         14c.DC_INVESTIGATION_OPENING_NO + \n" +
+						"         14c.DC_CALLBOOK_OPENING_NO + \n" +
+						"         14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + \n" +
+						"         14c.SUPERINTENDENT_AUDIT_OPENING_NO + \n" +
+						"         14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + \n" +
+						"         14c.SUPERINTENDENT_CALLBOOK_OPENING_NO), \n" +
+						"        0.00\n" +
+						"    ) as total_score,\n" +
+						"    CONCAT(\n" +
+						"        (14c.adc_commissionerate_disposal_no + \n" +
+						"         14c.adc_audit_disposal_no + \n" +
+						"         14c.adc_investigation_disposal_no + \n" +
+						"         14c.adc_investigation_disposal_no + \n" +
+						"         14c.adc_callbook_disposal_no + \n" +
+						"         14c.dc_commissionerate_disposal_no + \n" +
+						"         14c.dc_audit_disposal_no + \n" +
+						"         14c.dc_investigation_disposal_no + \n" +
+						"         14c.dc_callbook_disposal_no + \n" +
+						"         14c.superintendent_commissionerate_disposal_no + \n" +
+						"         14c.superintendent_audit_disposal_no + \n" +
+						"         14c.superintendent_investigation_disposal_no + \n" +
+						"         14c.superintendent_callbook_disposal_no), \n" +
+						"        '/', \n" +
+						"        (14c.ADC_COMMISSIONERATE_OPENING_NO + \n" +
+						"         14c.ADC_AUDIT_OPENING_NO + \n" +
+						"         14c.ADC_INVESTIGATION_OPENING_NO + \n" +
+						"         14c.ADC_CALLBOOK_OPENING_NO + \n" +
+						"         14c.DC_COMMISSIONERATE_OPENING_NO + \n" +
+						"         14c.DC_AUDIT_OPENING_NO + \n" +
+						"         14c.DC_INVESTIGATION_OPENING_NO + \n" +
+						"         14c.DC_CALLBOOK_OPENING_NO + \n" +
+						"         14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + \n" +
+						"         14c.SUPERINTENDENT_AUDIT_OPENING_NO + \n" +
+						"         14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + \n" +
+						"         14c.SUPERINTENDENT_CALLBOOK_OPENING_NO)\n" +
+						"    ) as absolute_value\n" +
+						"FROM \n" +
+						"    mis_gst_commcode as cc \n" +
+						"RIGHT JOIN \n" +
+						"    mis_dpm_gst_adj_1 as 14c \n" +
+						"    ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+						"LEFT JOIN \n" +
+						"    mis_gst_zonecode as zc \n" +
+						"    ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"WHERE \n" +
+						"    14c.MM_YYYY = '" + month_date + "' \n" +
+						"    AND cc.ZONE_CODE = '" + zone_code + "';\n";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
