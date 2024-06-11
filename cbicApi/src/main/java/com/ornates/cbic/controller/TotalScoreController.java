@@ -804,7 +804,7 @@ public class TotalScoreController {
 						"    FROM mis_gst_commcode AS cc \n" +
 						"    RIGHT JOIN mis_dpm_gst_4 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
 						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-						"    WHERE 14c.MM_YYYY = '2023-04-01' \n" +
+						"    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
 						"    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
 						")\n" +
 						"SELECT ZONE_CODE,ZONE_NAME, col16, col22,\n" +
@@ -830,7 +830,25 @@ public class TotalScoreController {
 			}else if (type.equalsIgnoreCase("commissary")) {
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "";
+				String query_assessment = "SELECT \n" +
+						"  cc.ZONE_CODE AS zone_code,\n" +
+						"  zc.ZONE_NAME AS zone_name,\n" +
+						"  cc.COMM_NAME AS comm_name,\n" +
+						"  'GST 7' AS gst,\n" +
+						"  SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) AS col16,\n" +
+						"  SUM(14c.age_breakup_above60_no) AS col22,\n" +
+						"  SUM(14c.age_breakup_above60_no) / NULLIF(SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO), 0) AS total_score,\n" +
+						"  CONCAT(\n" +
+						"    SUM(14c.age_breakup_above60_no), '/', \n" +
+						"    NULLIF(SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO), 0)\n" +
+						"  ) AS absolute_value\n" +
+						"FROM mis_dpm_gst_4 AS 14c \n" +
+						"LEFT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE\n" +
+						"LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"WHERE \n" +
+						"  14c.MM_YYYY = '" + month_date + "' \n" +
+						"  AND cc.ZONE_CODE = '" + zone_code + "'\n" +
+						"GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME;\n";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
