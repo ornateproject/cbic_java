@@ -758,10 +758,141 @@ public class RetriveCbicDetailsController {
      * updated: Nishant, may 18, 2024
      * Purpose: This methods have core function in Return Filing .
      */
+//    @ResponseBody
+//    @RequestMapping(value = "/gst3a")
+//    // http://localhost:8080/cbicApi/cbic/gst3a?month_date=2023-04-01&type=zone
+//    //  http://localhost:8080/cbicApi/cbic/gst3a?month_date=2023-04-01&zone_code=70&type=commissary
+//    public Object getGst3A(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code) {
+//
+//        List<GST4A> allGstaList = new ArrayList<>();
+//        GST4A gsta = null;
+//        int rank = 0;
+//        double total = 0.00;
+//
+//        try {
+//            if (type.equalsIgnoreCase("zone")) {
+//                String prev_month_new =DateCalculate.getPreviousMonth(month_date);
+//                // Query string
+//                String queryGst14aa= "WITH current_month_data AS (\n" +
+//                        "    SELECT\n" +
+//                        "        zc.ZONE_NAME,\n" +
+//                        "        cc.ZONE_CODE,\n" +
+//                        "        SUM(14c.SCRUTINIZED_ASMT_10) AS col5,\n" +
+//                        "        SUM(14c.RETURN_SCRUTINY) AS col2\n" +
+//                        "    FROM\n" +
+//                        "        mis_gst_commcode AS cc\n" +
+//                        "        RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+//                        "        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+//                        "    WHERE\n" +
+//                        "        14c.MM_YYYY = '"+ month_date+"'\n" +
+//                        "    GROUP BY\n" +
+//                        "        cc.ZONE_CODE\n" +
+//                        "),\n" +
+//                        "previous_month_data AS (\n" +
+//                        "    SELECT\n" +
+//                        "        zc.ZONE_NAME,\n" +
+//                        "        cc.ZONE_CODE,\n" +
+//                        "        SUM(14c.SCRUTINIZED_DISCRIPANCY_FOUND) AS col6,\n" +
+//                        "        SUM(14c.RETURN_SCRUTINY) AS col3\n" +
+//                        "    FROM\n" +
+//                        "        mis_gst_commcode AS cc\n" +
+//                        "        RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+//                        "        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+//                        "    WHERE\n" +
+//                        "        14c.MM_YYYY =  '" + prev_month_new + "'\n" +
+//                        "    GROUP BY\n" +
+//                        "        cc.ZONE_CODE\n" +
+//                        ")\n" +
+//                        "SELECT\n" +
+//                        "    curr.ZONE_NAME,\n" +
+//                        "    curr.ZONE_CODE,\n" +
+//                        "    curr.col5 AS col5_current_month,\n" +
+//                        "    curr.col2 AS col2_current_month,\n" +
+//                        "    prev.col6 AS col6_previous_month,\n" +
+//                        "    prev.col3 AS col3_previous_month\n" +
+//                        "FROM\n" +
+//                        "    current_month_data AS curr\n" +
+//                        "    LEFT JOIN previous_month_data AS prev ON curr.ZONE_CODE = prev.ZONE_CODE;";
+//
+//                //Result Set
+//                ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
+//                while(rsGst14aa.next()) {
+//                    String ra = RelevantAspect.Gst3A_RA;
+//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+//                    int col6 = rsGst14aa.getInt("col6_previous_month");
+//                    int col5 = rsGst14aa.getInt("col5_current_month");
+//                    int col3 = rsGst14aa.getInt("col3_previous_month");
+//                    int col2 = rsGst14aa.getInt("col2_current_month");
+//                    String absval = String.valueOf(col6 + col5) + "/" + String.valueOf(col3 + col2);
+//                    if (col3 + col2 != 0) {
+//                        total = ((double) (col6 + col5) / (col3 + col2));
+//                    }
+//                    rank = score.marks3a(total);
+//                    String formattedTotal = String.format("%.2f", total);
+//                    double totalScore = Double.parseDouble(formattedTotal);
+//                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), "ALL", totalScore, rank, absval, zoneCode, ra);
+//                    allGstaList.add(gsta);
+//                }
+//            }else if (type.equalsIgnoreCase("commissary")) {
+//                String prev_month_new =DateCalculate.getPreviousMonth(month_date);
+//                // Query string
+//                String queryGst14aa="WITH SecondQuery AS (\n" +
+//                        "    SELECT cc.COMM_CODE, 14c.CLOSING_NO AS col2\n" +
+//                        "    FROM mis_gst_commcode AS cc \n" +
+//                        "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+//                        "    WHERE cc.ZONE_CODE = '" + zone_code + "' AND 14c.MM_YYYY = '" + prev_month_new + "'\n" +
+//                        ")\n" +
+//                        "SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, \n" +
+//                        "       14c.SCRUTINIZED_ASMT_10 AS col6, \n" +
+//                        "       14c.SCRUTINIZED_DISCRIPANCY_FOUND AS col5, \n" +
+//                        "       14c.RETURN_SCRUTINY AS col3,\n" +
+//                        "       sq.col2\n" +
+//                        "FROM mis_gst_commcode AS cc \n" +
+//                        "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+//                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+//                        "LEFT JOIN SecondQuery AS sq ON sq.COMM_CODE = cc.COMM_CODE\n" +
+//                        "WHERE cc.ZONE_CODE = '" + zone_code + "' AND 14c.MM_YYYY = '" + month_date + "';\n";
+//
+//
+//
+//                //Result Set
+//                ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
+//                while(rsGst14aa.next()) {
+//                    String commname=rsGst14aa.getString("COMM_NAME");
+//                    String ra=RelevantAspect.Gst3A_RA;
+//                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+//                    int col6=rsGst14aa.getInt("col6");
+//                    int col5=rsGst14aa.getInt("col5");
+//                    int col3=rsGst14aa.getInt("col3");
+//                    int col2=rsGst14aa.getInt("col2");
+//                    String absval = String.valueOf(col6 + col5) + "/" + String.valueOf(col3 + col2);
+//
+//                    if ((col3+col2) != 0){
+//                        total =((double) (col6+col5)/(col3+col2));
+//                    }
+//
+//                    rank=score.marks3a(total);
+//                    String formattedTotal = String.format("%.2f", total);
+//                    double totalScore = Double.parseDouble(formattedTotal);
+//
+//                    gsta = new GST4A(zoneName, commname, (Double)totalScore, rank, absval, zoneCode,ra);
+//                    allGstaList.add(gsta);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return allGstaList;
+//    }
+
+    //                              that code for temporary
+
     @ResponseBody
     @RequestMapping(value = "/gst3a")
-    // http://localhost:8080/cbicApi/cbic/gst3a?month_date=2023-04-01&type=zone
-    //  http://localhost:8080/cbicApi/cbic/gst3a?month_date=2023-04-01&zone_code=70&type=commissary
+    // http://localhost:8080/cbicApi/cbic/gst3a?month_date=2023-05-01&type=zone
+    // http://localhost:8080/cbicApi/cbic/gst3a?month_date=2023-05-01&zone_code=69&type=commissary
+    // http://localhost:8080/cbicApi/cbic/gst3a?month_date=2023-05-01&type=all_commissary
     public Object getGst3A(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code) {
 
         List<GST4A> allGstaList = new ArrayList<>();
@@ -773,59 +904,33 @@ public class RetriveCbicDetailsController {
             if (type.equalsIgnoreCase("zone")) {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
                 // Query string
-                String queryGst14aa= "WITH current_month_data AS (\n" +
-                        "    SELECT\n" +
-                        "        zc.ZONE_NAME,\n" +
-                        "        cc.ZONE_CODE,\n" +
-                        "        SUM(14c.SCRUTINIZED_ASMT_10) AS col5,\n" +
-                        "        SUM(14c.RETURN_SCRUTINY) AS col2\n" +
-                        "    FROM\n" +
-                        "        mis_gst_commcode AS cc\n" +
-                        "        RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                        "        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                        "    WHERE\n" +
-                        "        14c.MM_YYYY = '"+ month_date+"'\n" +
-                        "    GROUP BY\n" +
-                        "        cc.ZONE_CODE\n" +
-                        "),\n" +
-                        "previous_month_data AS (\n" +
-                        "    SELECT\n" +
-                        "        zc.ZONE_NAME,\n" +
-                        "        cc.ZONE_CODE,\n" +
-                        "        SUM(14c.SCRUTINIZED_DISCRIPANCY_FOUND) AS col6,\n" +
-                        "        SUM(14c.RETURN_SCRUTINY) AS col3\n" +
-                        "    FROM\n" +
-                        "        mis_gst_commcode AS cc\n" +
-                        "        RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                        "        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                        "    WHERE\n" +
-                        "        14c.MM_YYYY =  '" + prev_month_new + "'\n" +
-                        "    GROUP BY\n" +
-                        "        cc.ZONE_CODE\n" +
-                        ")\n" +
-                        "SELECT\n" +
-                        "    curr.ZONE_NAME,\n" +
-                        "    curr.ZONE_CODE,\n" +
-                        "    curr.col5 AS col5_current_month,\n" +
-                        "    curr.col2 AS col2_current_month,\n" +
-                        "    prev.col6 AS col6_previous_month,\n" +
-                        "    prev.col3 AS col3_previous_month\n" +
-                        "FROM\n" +
-                        "    current_month_data AS curr\n" +
-                        "    LEFT JOIN previous_month_data AS prev ON curr.ZONE_CODE = prev.ZONE_CODE;";
+                String queryGst14aa= "SELECT current_data.ZONE_NAME,  current_data.ZONE_CODE, current_data.col4,  current_data.col9,  current_data.col10,  current_data.col2,  previous_data.col1\n" +
+                        "FROM  (SELECT zc.ZONE_NAME,  cc.ZONE_CODE, SUM(14c.SCRUTINIZED_DISCRIPANCY_FOUND) AS col4,   SUM(14c.OUTCOME_ASMT_12_ISSUED) AS col9,  SUM(14c.OUTCOME_SECTION_61) AS col10,   SUM(14c.RETURN_SCRUTINY) AS col2  FROM   mis_gst_commcode AS cc  RIGHT JOIN \n" +
+                        "  mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                        "  LEFT JOIN    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "  WHERE 14c.MM_YYYY = '"+ month_date+"'\n" +
+                        "  GROUP BY cc.ZONE_CODE, zc.ZONE_NAME) AS current_data\n" +
+                        "  JOIN (SELECT zc.ZONE_NAME,  cc.ZONE_CODE, SUM(14c.CLOSING_NO) AS col1 \n" +
+                        "  FROM mis_gst_commcode AS cc \n" +
+                        "  RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "  LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "  WHERE 14c.MM_YYYY = '" + prev_month_new + "' \n" +
+                        "  GROUP BY cc.ZONE_CODE, zc.ZONE_NAME) AS previous_data\n" +
+                        "  ON current_data.ZONE_CODE = previous_data.ZONE_CODE;";
 
                 //Result Set
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String ra = RelevantAspect.Gst3A_RA;
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
-                    int col6 = rsGst14aa.getInt("col6_previous_month");
-                    int col5 = rsGst14aa.getInt("col5_current_month");
-                    int col3 = rsGst14aa.getInt("col3_previous_month");
-                    int col2 = rsGst14aa.getInt("col2_current_month");
-                    String absval = String.valueOf(col6 + col5) + "/" + String.valueOf(col3 + col2);
-                    if (col3 + col2 != 0) {
-                        total = ((double) (col6 + col5) / (col3 + col2));
+                    int col1 = rsGst14aa.getInt("col1");
+                    int col2 = rsGst14aa.getInt("col2");
+                    int col4 = rsGst14aa.getInt("col4");
+                    int col9 = rsGst14aa.getInt("col9");
+                    int col10 = rsGst14aa.getInt("col10");
+                    String absval = String.valueOf(col4 + col9 + col10) + "/" + String.valueOf(col2 + col1);
+                    if (col2 + col1 != 0) {
+                        total = ((double) (col4 + col9 + col10) / (col2 + col1));
                     }
                     rank = score.marks3a(total);
                     String formattedTotal = String.format("%.2f", total);
@@ -836,47 +941,91 @@ public class RetriveCbicDetailsController {
             }else if (type.equalsIgnoreCase("commissary")) {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
                 // Query string
-                String queryGst14aa="WITH SecondQuery AS (\n" +
-                        "    SELECT cc.COMM_CODE, 14c.CLOSING_NO AS col2\n" +
+                String queryGst14aa="WITH PreviousMonthData AS (\n" +
+                        "    SELECT zc.ZONE_NAME AS prev_ZONE_NAME, cc.COMM_NAME AS prev_COMM_NAME, cc.ZONE_CODE AS prev_ZONE_CODE, 14c.CLOSING_NO AS prev_col1 \n" +
                         "    FROM mis_gst_commcode AS cc \n" +
                         "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
                         "    WHERE cc.ZONE_CODE = '" + zone_code + "' AND 14c.MM_YYYY = '" + prev_month_new + "'\n" +
                         ")\n" +
                         "SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, \n" +
-                        "       14c.SCRUTINIZED_ASMT_10 AS col6, \n" +
-                        "       14c.SCRUTINIZED_DISCRIPANCY_FOUND AS col5, \n" +
-                        "       14c.RETURN_SCRUTINY AS col3,\n" +
-                        "       sq.col2\n" +
+                        "    14c.SCRUTINIZED_DISCRIPANCY_FOUND AS col4, \n" +
+                        "    14c.OUTCOME_ASMT_12_ISSUED AS col9, \n" +
+                        "    14c.OUTCOME_SECTION_61 AS col10,\n" +
+                        "    14c.RETURN_SCRUTINY AS col2,pm.prev_col1 \n" +
                         "FROM mis_gst_commcode AS cc \n" +
-                        "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c \n" +
+                        "ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                         "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "LEFT JOIN SecondQuery AS sq ON sq.COMM_CODE = cc.COMM_CODE\n" +
-                        "WHERE cc.ZONE_CODE = '" + zone_code + "' AND 14c.MM_YYYY = '" + month_date + "';\n";
-
-
-
+                        "LEFT JOIN PreviousMonthData AS pm ON pm.prev_ZONE_CODE = cc.ZONE_CODE AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
+                        "WHERE cc.ZONE_CODE = '" + zone_code + "' AND 14c.MM_YYYY = '"+ month_date+"'\n" +
+                        "GROUP BY zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, \n" +
+                        "    14c.SCRUTINIZED_DISCRIPANCY_FOUND, \n" +
+                        "    14c.OUTCOME_ASMT_12_ISSUED, \n" +
+                        "    14c.OUTCOME_SECTION_61, \n" +
+                        "    14c.RETURN_SCRUTINY, pm.prev_col1\n" +
+                        "ORDER BY zc.ZONE_NAME, cc.COMM_NAME;";
                 //Result Set
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
-                    String commname=rsGst14aa.getString("COMM_NAME");
-                    String ra=RelevantAspect.Gst3A_RA;
-                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    String ra = RelevantAspect.Gst3A_RA;
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
-                    int col6=rsGst14aa.getInt("col6");
-                    int col5=rsGst14aa.getInt("col5");
-                    int col3=rsGst14aa.getInt("col3");
-                    int col2=rsGst14aa.getInt("col2");
-                    String absval = String.valueOf(col6 + col5) + "/" + String.valueOf(col3 + col2);
-
-                    if ((col3+col2) != 0){
-                        total =((double) (col6+col5)/(col3+col2));
+                    String commname=rsGst14aa.getString("COMM_NAME");
+                    int col1 = rsGst14aa.getInt("prev_col1");
+                    int col2 = rsGst14aa.getInt("col2");
+                    int col4 = rsGst14aa.getInt("col4");
+                    int col9 = rsGst14aa.getInt("col9");
+                    int col10 = rsGst14aa.getInt("col10");
+                    String absval = String.valueOf(col4 + col9 + col10) + "/" + String.valueOf(col2 + col1);
+                    if (col2 + col1 != 0) {
+                        total = ((double) (col4 + col9 + col10) / (col2 + col1));
                     }
-
-                    rank=score.marks3a(total);
+                    rank = score.marks3a(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-
-                    gsta = new GST4A(zoneName, commname, (Double)totalScore, rank, absval, zoneCode,ra);
+                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore, rank, absval, zoneCode, ra);
+                    allGstaList.add(gsta);
+                }
+            }else if (type.equalsIgnoreCase("all_commissary")) {
+                String prev_month_new =DateCalculate.getPreviousMonth(month_date);
+                // Query string
+                String queryGst14aa="WITH PreviousMonthData AS (\n" +
+                        "    SELECT zc.ZONE_NAME AS prev_ZONE_NAME, cc.COMM_NAME AS prev_COMM_NAME, cc.ZONE_CODE AS prev_ZONE_CODE, 14c.CLOSING_NO AS prev_col1 \n" +
+                        "    FROM mis_dggst_gst_scr_1 AS 14c \n" +
+                        "   left join  mis_gst_commcode AS cc ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
+                        ")\n" +
+                        "SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, 14c.SCRUTINIZED_DISCRIPANCY_FOUND AS col4, 14c.OUTCOME_ASMT_12_ISSUED AS col9, 14c.OUTCOME_SECTION_61 AS col10,14c.RETURN_SCRUTINY AS col2, pm.prev_col1 \n" +
+                        "FROM mis_dggst_gst_scr_1 AS 14c \n" +
+                        "left join mis_gst_commcode AS cc \n" +
+                        "ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "LEFT JOIN mis_gst_zonecode AS zc \n" +
+                        "ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "LEFT JOIN PreviousMonthData AS pm \n" +
+                        "ON pm.prev_ZONE_CODE = cc.ZONE_CODE AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
+                        "WHERE 14c.MM_YYYY = '"+ month_date+"'\n" +
+                        "GROUP BY zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, 14c.SCRUTINIZED_DISCRIPANCY_FOUND, 14c.OUTCOME_ASMT_12_ISSUED, 14c.OUTCOME_SECTION_61, 14c.RETURN_SCRUTINY, pm.prev_col1\n" +
+                        "ORDER BY zc.ZONE_NAME, cc.COMM_NAME;";
+                //Result Set
+                ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
+                while(rsGst14aa.next()) {
+                    String ra = RelevantAspect.Gst3A_RA;
+                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    String commname=rsGst14aa.getString("COMM_NAME");
+                    int col1 = rsGst14aa.getInt("prev_col1");
+                    int col2 = rsGst14aa.getInt("col2");
+                    int col4 = rsGst14aa.getInt("col4");
+                    int col9 = rsGst14aa.getInt("col9");
+                    int col10 = rsGst14aa.getInt("col10");
+                    String absval = String.valueOf(col4 + col9 + col10) + "/" + String.valueOf(col2 + col1);
+                    if (col2 + col1 != 0) {
+                        total = ((double) (col4 + col9 + col10) / (col2 + col1));
+                    }
+                    rank = score.marks3a(total);
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore, rank, absval, zoneCode, ra);
                     allGstaList.add(gsta);
                 }
             }
@@ -893,10 +1042,133 @@ public class RetriveCbicDetailsController {
      * Purpose: This methods have core function in Return Filing .
      */
 
+//    @ResponseBody
+//    @RequestMapping(value = "/gst3b")
+//    //  http://localhost:8080/cbicApi/cbic/gst3b?month_date=2023-04-01&type=zone
+//    //  http://localhost:8080/cbicApi/cbic/gst3b?month_date=2023-04-01&zone_code=70&type=commissary
+//    public Object getGst3B(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code) {
+//
+//        List<GST4A> allGstaList = new ArrayList<>();
+//        GST4A gsta = null;
+//        int rank = 0;
+//        double total = 0.00;
+//        //Connection done
+//        Connection con= JDBCConnection.getTNConnection();
+//
+//        try {
+//            if (type.equalsIgnoreCase("zone")) {
+//                String prev_month_new =DateCalculate.getPreviousMonth(month_date);
+//                // Query string
+//                String queryGst14aa = "WITH current_month_data AS (\n" +
+//                        "    SELECT\n" +
+//                        "        zc.ZONE_NAME,\n" +
+//                        "        cc.ZONE_CODE,\n" +
+//                        "      \n" +
+//                        "        SUM(14c.TAX_LIABILITY_DETECTECT) AS col14,\n" +
+//                        "        SUM(14c.AMOUNT_RECOVERED_TAX+14c.AMOUNT_RECOVERED_INTEREST+14c.AMOUNT_RECOVERED_PENALTY) AS col22\n" +
+//                        "    FROM\n" +
+//                        "        mis_gst_commcode AS cc\n" +
+//                        "        RIGHT JOIN mis_dggst_gst_scr_2a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+//                        "        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+//                        "    WHERE\n" +
+//                        "        14c.MM_YYYY = '" + month_date + "'\n" +
+//                        "    GROUP BY\n" +
+//                        "        cc.ZONE_CODE\n" +
+//                        "),\n" +
+//                        "previous_month_data AS (\n" +
+//                        "    SELECT\n" +
+//                        "        zc.ZONE_NAME,\n" +
+//                        "        cc.ZONE_CODE,\n" +
+//                        "        SUM(14c.AMOUNT_RECOVERED_TAX+14c.AMOUNT_RECOVERED_INTEREST+14c.AMOUNT_RECOVERED_PENALTY) AS col22_1,\n" +
+//                        "        SUM(14c.TAX_LIABILITY_DETECTECT) AS col14_1\n" +
+//                        "    FROM\n" +
+//                        "        mis_gst_commcode AS cc\n" +
+//                        "        RIGHT JOIN mis_dggst_gst_scr_2a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+//                        "        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+//                        "    WHERE\n" +
+//                        "        14c.MM_YYYY = '" + prev_month_new + "'\n" +
+//                        "    GROUP BY\n" +
+//                        "        cc.ZONE_CODE\n" +
+//                        ")\n" +
+//                        "SELECT\n" +
+//                        "    curr.ZONE_NAME,\n" +
+//                        "    curr.ZONE_CODE,\n" +
+//                        "    curr.col22 AS col22_current_month,\n" +
+//                        "    curr.col14 AS col14_current_month,\n" +
+//                        "    prev.col22_1 AS col22_1_previous_month,\n" +
+//                        "    prev.col14_1 AS col14_1_previous_month\n" +
+//                        "FROM\n" +
+//                        "    current_month_data AS curr\n" +
+//                        "    LEFT JOIN previous_month_data AS prev ON curr.ZONE_CODE = prev.ZONE_CODE;";
+//
+//                PreparedStatement psGst14aa = con.prepareStatement(queryGst14aa);
+//
+//                //Result Set
+//                ResultSet rsGst14aa = psGst14aa.executeQuery();
+//
+//
+//                while (rsGst14aa.next()) {
+//                    String ra = RelevantAspect.Gst3B_RA;
+//                    //String zoneName = rsGst14aa.getString("ZONE_NAME");
+//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+//                    int col22 = rsGst14aa.getInt("col22_current_month");
+//                    int col14 = rsGst14aa.getInt("col14");
+//                    if (col14 != 0) {
+//                        total = ((double) col22 / col14);
+//                    }
+//                    rank = score.marks3b(total);
+//                    String absval = String.valueOf(col22) + "/" + String.valueOf(col14);
+//                    String formattedTotal = String.format("%.2f", total);
+//                    double totalScore = Double.parseDouble(formattedTotal);
+//                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), "ALL", (Double) totalScore, rank, absval, zoneCode, ra);
+//                    allGstaList.add(gsta);
+//                }
+//            }else if (type.equalsIgnoreCase("commissary")) {
+//
+//                // Query string
+//                String queryGst14aa="SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, 14c.amount_recovered_penalty AS col22, "
+//                        +"14c.tax_liability_detectect AS col14 "
+//                        +"FROM mis_gst_commcode AS cc "
+//                        +"RIGHT JOIN mis_dggst_gst_scr_2a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE "
+//                        + "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE "
+//                        + "WHERE 14c.MM_YYYY ='" +month_date+"' AND zc.ZONE_CODE = '"+ zone_code +"';";
+//
+//                //Prepared Statement
+//                PreparedStatement psGst14aa=con.prepareStatement(queryGst14aa);
+//                //Result Set
+//                ResultSet rsGst14aa= psGst14aa.executeQuery();
+//
+//                while(rsGst14aa.next() ) {
+//                    String commname=rsGst14aa.getString("COMM_NAME");
+//                    String ra=RelevantAspect.Gst3B_RA;
+//                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+//                    int col22=rsGst14aa.getInt("col22");
+//                    int col14=rsGst14aa.getInt("col14");
+//                    String absval=String.valueOf(col22)+"/"+String.valueOf(col14);
+//
+//                    if (col14 != 0){
+//                        total =((double) col22/col14);
+//                    }
+//
+//                    rank=score.marks3b(total);
+//                    String formattedTotal = String.format("%.2f", total);
+//                    double totalScore = Double.parseDouble(formattedTotal);
+//                    gsta=new GST4A(zoneName, commname,totalScore, rank, absval, zoneCode,ra);
+//                    allGstaList.add(gsta);
+//                }
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return allGstaList;
+//    }
+
+    //                              that code for temporary
     @ResponseBody
-    @RequestMapping(value = "/gst3b")
-    //  http://localhost:8080/cbicApi/cbic/gst3b?month_date=2023-04-01&type=zone
-    //  http://localhost:8080/cbicApi/cbic/gst3b?month_date=2023-04-01&zone_code=70&type=commissary
+    @RequestMapping(value = "/gst3b") // msg:- 3b zone testing done, commmisonary not testing
+    //  http://localhost:8080/CbicAPI/cbic/gst3b?month_date=2023-04-01&type=zone
+    //  http://localhost:8080/CbicAPI/cbic/gst3b?month_date=2023-04-01&zone_code=70&type=commissary
     public Object getGst3B(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code) {
 
         List<GST4A> allGstaList = new ArrayList<>();
@@ -908,49 +1180,19 @@ public class RetriveCbicDetailsController {
 
         try {
             if (type.equalsIgnoreCase("zone")) {
-                String prev_month_new =DateCalculate.getPreviousMonth(month_date);
+                // String prev_month_new =DateCalculate.getPreviousMonth(month_date);
                 // Query string
-                String queryGst14aa = "WITH current_month_data AS (\n" +
-                        "    SELECT\n" +
-                        "        zc.ZONE_NAME,\n" +
-                        "        cc.ZONE_CODE,\n" +
-                        "      \n" +
-                        "        SUM(14c.TAX_LIABILITY_DETECTECT) AS col14,\n" +
-                        "        SUM(14c.AMOUNT_RECOVERED_TAX+14c.AMOUNT_RECOVERED_INTEREST+14c.AMOUNT_RECOVERED_PENALTY) AS col22\n" +
-                        "    FROM\n" +
-                        "        mis_gst_commcode AS cc\n" +
-                        "        RIGHT JOIN mis_dggst_gst_scr_2a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                        "        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                        "    WHERE\n" +
-                        "        14c.MM_YYYY = '" + month_date + "'\n" +
-                        "    GROUP BY\n" +
-                        "        cc.ZONE_CODE\n" +
-                        "),\n" +
-                        "previous_month_data AS (\n" +
-                        "    SELECT\n" +
-                        "        zc.ZONE_NAME,\n" +
-                        "        cc.ZONE_CODE,\n" +
-                        "        SUM(14c.AMOUNT_RECOVERED_TAX+14c.AMOUNT_RECOVERED_INTEREST+14c.AMOUNT_RECOVERED_PENALTY) AS col22_1,\n" +
-                        "        SUM(14c.TAX_LIABILITY_DETECTECT) AS col14_1\n" +
-                        "    FROM\n" +
-                        "        mis_gst_commcode AS cc\n" +
-                        "        RIGHT JOIN mis_dggst_gst_scr_2a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                        "        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                        "    WHERE\n" +
-                        "        14c.MM_YYYY = '" + prev_month_new + "'\n" +
-                        "    GROUP BY\n" +
-                        "        cc.ZONE_CODE\n" +
-                        ")\n" +
-                        "SELECT\n" +
-                        "    curr.ZONE_NAME,\n" +
-                        "    curr.ZONE_CODE,\n" +
-                        "    curr.col22 AS col22_current_month,\n" +
-                        "    curr.col14 AS col14_current_month,\n" +
-                        "    prev.col22_1 AS col22_1_previous_month,\n" +
-                        "    prev.col14_1 AS col14_1_previous_month\n" +
-                        "FROM\n" +
-                        "    current_month_data AS curr\n" +
-                        "    LEFT JOIN previous_month_data AS prev ON curr.ZONE_CODE = prev.ZONE_CODE;";
+                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
+                        "       SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) AS col22, \n" +
+                        "       SUM(14c.TAX_LIABILITY_DETECTECT) AS col14 \n" +
+                        "FROM mis_gst_commcode AS cc \n" +
+                        "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c \n" +
+                        "       ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "LEFT JOIN mis_gst_zonecode AS zc \n" +
+                        "       ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "WHERE 14c.MM_YYYY <= '" +month_date+"' \n" + //in this sql queries prev_month_new calculate in the queri
+                        "GROUP BY cc.ZONE_CODE, zc.ZONE_NAME \n" +
+                        "ORDER BY cc.ZONE_CODE;";
 
                 PreparedStatement psGst14aa = con.prepareStatement(queryGst14aa);
 
@@ -962,7 +1204,7 @@ public class RetriveCbicDetailsController {
                     String ra = RelevantAspect.Gst3B_RA;
                     //String zoneName = rsGst14aa.getString("ZONE_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
-                    int col22 = rsGst14aa.getInt("col22_current_month");
+                    int col22 = rsGst14aa.getInt("col22");
                     int col14 = rsGst14aa.getInt("col14");
                     if (col14 != 0) {
                         total = ((double) col22 / col14);
@@ -975,14 +1217,15 @@ public class RetriveCbicDetailsController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("commissary")) {
+                String prev_month_new =DateCalculate.getPreviousMonth(month_date);
 
                 // Query string
-                String queryGst14aa="SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, 14c.amount_recovered_penalty AS col22, "
-                        +"14c.tax_liability_detectect AS col14 "
-                        +"FROM mis_gst_commcode AS cc "
-                        +"RIGHT JOIN mis_dggst_gst_scr_2a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE "
-                        + "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE "
-                        + "WHERE 14c.MM_YYYY ='" +month_date+"' AND zc.ZONE_CODE = '"+ zone_code +"';";
+                String queryGst14aa="SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, (14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) AS col22,\n" +
+                        "14c.TAX_LIABILITY_DETECTECT AS col14 \n" +
+                        "FROM mis_gst_commcode AS cc \n" +
+                        "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "WHERE 14c.MM_YYYY ='" +prev_month_new+"' AND zc.ZONE_CODE = '" + zone_code + "';";
 
                 //Prepared Statement
                 PreparedStatement psGst14aa=con.prepareStatement(queryGst14aa);
