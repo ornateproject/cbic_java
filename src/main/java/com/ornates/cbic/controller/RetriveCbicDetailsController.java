@@ -891,7 +891,7 @@ public class RetriveCbicDetailsController {
     @ResponseBody
     @RequestMapping(value = "/gst3a")
     // http://localhost:8080/cbicApi/cbic/gst3a?month_date=2023-05-01&type=zone
-    // http://localhost:8080/cbicApi/cbic/gst3a?month_date=2023-05-01&zone_code=69&type=commissary
+    // http://localhost:8080/cbicApi/cbic/gst3a?month_date=2023-05-01&zone_code=69&type=commissary      //not working
     // http://localhost:8080/cbicApi/cbic/gst3a?month_date=2023-05-01&type=all_commissary
     public Object getGst3A(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code) {
 

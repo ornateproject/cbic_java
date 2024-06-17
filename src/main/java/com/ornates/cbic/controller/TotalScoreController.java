@@ -297,7 +297,7 @@ public class TotalScoreController {
 		return allGstaList;
 
 	}
-
+//                              merge 3a and 3b zone queri
 
 	@ResponseBody
 	@RequestMapping(value = "/scrutiny/assessment") //3
