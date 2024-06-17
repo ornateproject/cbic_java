@@ -2,8 +2,10 @@ package com.ornates.cbic.controller;
 
 import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
+import com.ornates.cbic.model.response.GST4A;
 import com.ornates.cbic.model.response.TotalScore;
 import com.ornates.cbic.service.DateCalculate;
+import com.ornates.cbic.service.RelevantAspect;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -1166,5 +1168,4 @@ public class TotalScoreController {
 		return allGstaList;
 
 	}
-
 }
