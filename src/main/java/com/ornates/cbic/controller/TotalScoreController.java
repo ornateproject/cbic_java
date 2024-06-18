@@ -219,11 +219,13 @@ public class TotalScoreController {
 	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-04-01&type=zone
 	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-04-01&type=commissary&zone_code=59
 	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-04-01&type=zone_wise_comm&zone_code=59
+	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-04-01&type=all_commissary
 	public Object returnFiling(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code) {
 		List<TotalScore> allGstaList = new ArrayList<>();
 		TotalScore totalScore = null;
 		Connection con = null;
 		ResultSet rsGst14aa = null;
+		double total = 0.00;
 		try {
 
 			if (type.equalsIgnoreCase("zone")) {
@@ -308,6 +310,33 @@ public class TotalScoreController {
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String gst = "null";
 					String absval = "null";
+
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst);
+					allGstaList.add(totalScore);
+				}
+			}else if (type.equalsIgnoreCase("all_commissary")) {
+				String query_assessment="SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,\n" +
+						"    (14c.GSTR_3BM_F - 14c.GSTR_3BM_D) AS col21, 14c.GSTR_3BM_F AS col3,\n" +
+						"    (14c.GSTR_3BM_F - 14c.GSTR_3BM_D) / 14c.GSTR_3BM_F AS total_score,\n" +
+						"    CONCAT(\n" +
+						"        CAST(14c.GSTR_3BM_F - 14c.GSTR_3BM_D AS CHAR), \n" +
+						"        '/', \n" +
+						"        CAST(14c.GSTR_3BM_F AS CHAR)\n" +
+						"    ) AS absolute_value\n" +
+						"FROM mis_gst_commcode AS cc\n" +
+						"RIGHT JOIN mis_gst_gst_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"WHERE  14c.MM_YYYY = '" + month_date + "';";
+
+				rsGst14aa =GetExecutionSQL.getResult(query_assessment);
+				while (rsGst14aa.next()) {
+					double total_score = rsGst14aa.getDouble("total_score");
+					zone_code = rsGst14aa.getString("ZONE_CODE");
+					Integer Zonal_rank = null;
+					String zoneName = rsGst14aa.getString("ZONE_NAME");
+					String commName = rsGst14aa.getString("COMM_NAME");
+					String gst = "GST2";
+					String absval = "absolute_value";
 
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst);
 					allGstaList.add(totalScore);
