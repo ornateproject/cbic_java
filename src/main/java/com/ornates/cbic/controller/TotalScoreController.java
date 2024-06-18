@@ -217,8 +217,8 @@ public class TotalScoreController {
 	@ResponseBody
 	@RequestMapping(value = "/returnFiling") //2
 	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-04-01&type=zone
-	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-04-01&type=commissary&zone_code=59
-	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-04-01&type=zone_wise_comm&zone_code=59
+	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-04-01&type=commissary&zone_code=59			//for commissary name ALL button
+	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-04-01&type=zone_wise_comm&zone_code=59   //for show button
 	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-04-01&type=all_commissary
 	public Object returnFiling(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code) {
 		List<TotalScore> allGstaList = new ArrayList<>();
@@ -293,12 +293,16 @@ public class TotalScoreController {
 						"    (14c.GSTR_3BM_F - 14c.GSTR_3BM_D) AS col21,\n" +
 						"    14c.GSTR_3BM_F AS col3,\n" +
 						"    (14c.GSTR_3BM_F - 14c.GSTR_3BM_D) / 14c.GSTR_3BM_F AS total_score,\n" +
+						"    CONCAT((14c.GSTR_3BM_F - 14c.GSTR_3BM_D), \n" +
+						"        '/', \n" +
+						"        14c.GSTR_3BM_F\n" +
+						"    ) AS absolute_value,\n" +
 						"    ROW_NUMBER() OVER (ORDER BY (14c.GSTR_3BM_F - 14c.GSTR_3BM_D) / 14c.GSTR_3BM_F DESC) AS z_rank\n" +
-						"FROM  mis_gst_commcode AS cc \n" +
-						"    RIGHT JOIN mis_gst_gst_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-						"WHERE  14c.MM_YYYY = '" + month_date + "' AND zc.ZONE_CODE = '" + zone_code + "'\n" +
-						"ORDER BY total_score DESC;";
+						"FROM mis_gst_commcode AS cc \n" +
+						"RIGHT JOIN mis_gst_gst_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"WHERE  14c.MM_YYYY =  '" + month_date + "' AND zc.ZONE_CODE = '" + zone_code + "'\n" +
+						"ORDER BY total_score DESC;\n";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -308,8 +312,8 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = rsGst14aa.getString("COMM_NAME");
-					String gst = "null";
-					String absval = "null";
+					String gst = "GST2";
+					String absval = rsGst14aa.getString("absolute_value");
 
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst);
 					allGstaList.add(totalScore);
