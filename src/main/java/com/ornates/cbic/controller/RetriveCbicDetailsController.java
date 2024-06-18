@@ -111,11 +111,16 @@ public class RetriveCbicDetailsController {
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
                     String commname = rsGst14aa.getString("COMM_NAME");
                     //String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    int col21 = rsGst14aa.getInt("col21");
-                    int col3 = rsGst14aa.getInt("col3");
-                    String absval = String.valueOf(col21) + "/" + String.valueOf(col3);
+                    int col6 = rsGst14aa.getInt("col6");
+                    int col2 = rsGst14aa.getInt("col2");
+                    int col4 = rsGst14aa.getInt("col4");
+                    String absval=String.valueOf(col6)+"/"+String.valueOf(col2 + col4);
 
-                    total = ((double) col21 / col3);
+                    if((col2 + col4) != 0) {
+                        total = ((double) col6 / (col2 + col4));
+                    }else {
+                        total = 0.00;
+                    }
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     rank = score.marks2(total);
@@ -3729,8 +3734,7 @@ public class RetriveCbicDetailsController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {// gst 10b - all_commissary
-                String queryGst14aa="-- ------gst 10b----------\n" +
-                        "SELECT cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME,\n" +
+                String queryGst14aa= "SELECT cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME,\n" +
                         "    (14c.AUDIT_PARAS_BREAKUP_6_12_NO_LARGE + 14c.AUDIT_PARAS_BREAKUP_6_12_NO_MEDIUM + 14c.AUDIT_PARAS_BREAKUP_6_12_NO_SMALL) AS col30,\n" +
                         "    (14c.AUDIT_PARAS_BREAKUP_MORE_1_YEAR_NO_LARGE + 14c.AUDIT_PARAS_BREAKUP_MORE_1_YEAR_NO_MEDIUM + 14c.AUDIT_PARAS_BREAKUP_MORE_1_YEAR_NO_SMALL) AS col32,\n" +
                         "    (14c.AUDIT_PARAS_CLOSING_NO_LARGE + 14c.AUDIT_PARAS_CLOSING_NO_MEDIUM + 14c.AUDIT_PARAS_CLOSING_NO_SMALL) AS col24\n" +

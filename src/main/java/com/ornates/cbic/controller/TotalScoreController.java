@@ -18,7 +18,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-// total score 1(commissary only with 1E and 1F), 2, 3, 5(only 5a-- zone and commissary both)
+// total score 1(commissary only with 1E and 1F), 2, 3, 5(only 5a-- zone and commissary both),7
 
 @CrossOrigin
 @RequestMapping("/cbic/t_score")
@@ -218,6 +218,7 @@ public class TotalScoreController {
 	@RequestMapping(value = "/returnFiling") //2
 	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-04-01&type=zone
 	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-04-01&type=commissary&zone_code=59
+	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-04-01&type=zone_wise_comm&zone_code=59
 	public Object returnFiling(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code) {
 		List<TotalScore> allGstaList = new ArrayList<>();
 		TotalScore totalScore = null;
@@ -226,7 +227,7 @@ public class TotalScoreController {
 		try {
 
 			if (type.equalsIgnoreCase("zone")) {
-				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "SELECT \n" +
 						"    zc.ZONE_NAME, \n" +
@@ -283,6 +284,32 @@ public class TotalScoreController {
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
 					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					allGstaList.add(totalScore);
+				}
+			}else if (type.equalsIgnoreCase("zone_wise_comm")) {
+				String query_assessment = "SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,\n" +
+						"    (14c.GSTR_3BM_F - 14c.GSTR_3BM_D) AS col21,\n" +
+						"    14c.GSTR_3BM_F AS col3,\n" +
+						"    (14c.GSTR_3BM_F - 14c.GSTR_3BM_D) / 14c.GSTR_3BM_F AS total_score,\n" +
+						"    ROW_NUMBER() OVER (ORDER BY (14c.GSTR_3BM_F - 14c.GSTR_3BM_D) / 14c.GSTR_3BM_F DESC) AS z_rank\n" +
+						"FROM  mis_gst_commcode AS cc \n" +
+						"    RIGHT JOIN mis_gst_gst_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"WHERE  14c.MM_YYYY = '" + month_date + "' AND zc.ZONE_CODE = '" + zone_code + "'\n" +
+						"ORDER BY total_score DESC;";
+
+				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+				while (rsGst14aa.next()) {
+					double total_score = rsGst14aa.getDouble("total_score");
+					zone_code = rsGst14aa.getString("ZONE_CODE");
+					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
+					String zoneName = rsGst14aa.getString("ZONE_NAME");
+					String commName = rsGst14aa.getString("COMM_NAME");
+					String gst = "null";
+					String absval = "null";
+
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst);
 					allGstaList.add(totalScore);
 				}
 			}
@@ -832,32 +859,54 @@ public class TotalScoreController {
 			}else if (type.equalsIgnoreCase("commissary")) {
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "SELECT \n" +
-						"  cc.ZONE_CODE AS zone_code,\n" +
-						"  zc.ZONE_NAME AS zone_name,\n" +
-						"  cc.COMM_NAME AS comm_name,\n" +
-						"  'GST 7' AS gst,\n" +
-						"  SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) AS col16,\n" +
-						"  SUM(14c.age_breakup_above60_no) AS col22,\n" +
-						"  SUM(14c.age_breakup_above60_no) / NULLIF(SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO), 0) AS total_score,\n" +
-						"  CONCAT(\n" +
-						"    SUM(14c.age_breakup_above60_no), '/', \n" +
-						"    NULLIF(SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO), 0)\n" +
-						"  ) AS absolute_value\n" +
-						"FROM mis_dpm_gst_4 AS 14c \n" +
-						"LEFT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE\n" +
-						"LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
-						"WHERE \n" +
-						"  14c.MM_YYYY = '" + month_date + "' \n" +
-						"  AND cc.ZONE_CODE = '" + zone_code + "'\n" +
-						"GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME;\n";
+				String query_assessment =
+//						"SELECT \n" +
+//						"  cc.ZONE_CODE AS zone_code,\n" +
+//						"  zc.ZONE_NAME AS zone_name,\n" +
+//						"  cc.COMM_NAME AS comm_name,\n" +
+//						"  'GST 7' AS gst,\n" +
+//						"  SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) AS col16,\n" +
+//						"  SUM(14c.age_breakup_above60_no) AS col22,\n" +
+//						"  SUM(14c.age_breakup_above60_no) / NULLIF(SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO), 0) AS total_score,\n" +
+//						"  CONCAT(\n" +
+//						"    SUM(14c.age_breakup_above60_no), '/', \n" +
+//						"    NULLIF(SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO), 0)\n" +
+//						"  ) AS absolute_value\n" +
+//						"FROM mis_dpm_gst_4 AS 14c \n" +
+//						"LEFT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE\n" +
+//						"LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+//						"WHERE \n" +
+//						"  14c.MM_YYYY = '" + month_date + "' \n" +
+//						"  AND cc.ZONE_CODE = '" + zone_code + "'\n" +
+//						"GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME;\n";
+
+
+						"SELECT \n" +
+								"    cc.ZONE_CODE AS zone_code,  \n" +
+								"    zc.ZONE_NAME AS zone_name, \n" +
+								"    cc.COMM_NAME AS comm_name,\n" +
+								"    SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) AS col16,\n" +
+								"    SUM(14c.age_breakup_above60_no) AS col22,\n" +
+								"    ROW_NUMBER() OVER (ORDER BY SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) DESC) AS z_rank\n" +
+								"FROM mis_dpm_gst_4 AS 14c \n" +
+								"LEFT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE\n" +
+								"LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+								"WHERE \n" +
+								"    14c.MM_YYYY = '" + month_date + "' \n" +
+								"    AND cc.ZONE_CODE = '" + zone_code + "' \n" +
+								"GROUP BY \n" +
+								"    cc.ZONE_CODE,  \n" +
+								"    zc.ZONE_NAME, \n" +
+								"    cc.COMM_NAME\n" +
+								"ORDER BY \n" +
+								"    col16 DESC;\n";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
 					double tScore = rsGst14aa.getDouble("total_score");
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer Zonal_rank = null;
+					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String gst = rsGst14aa.getString("GST");
