@@ -359,13 +359,13 @@ public class TotalScoreController {
 		return allGstaList;
 
 	}
-//                              merge 3a and 3b zone queri
 
 	@ResponseBody
 	@RequestMapping(value = "/scrutiny/assessment") //3
 	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-04-01&type=parameter 						//for scrutiny/assessment button
 	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-04-01&type=zone&zone_code=59 				// for all button
 	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-04-01&type=commissary&zone_code=59			// for show button, zone wise
+	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-04-01&type=all_commissary
 	public Object scrutinyAssessment(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code) {
 		List<TotalScore> allGstaList = new ArrayList<>();
 		TotalScore totalScore = null;
@@ -509,6 +509,68 @@ public class TotalScoreController {
 					zone_code = "null";
 					Integer Zonal_rank = null;
 					String commName = "null";
+
+					String formattedTotal = String.format("%.2f", tScore);
+					double total_score = Double.parseDouble(formattedTotal);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					allGstaList.add(totalScore);
+				}
+			}else if (type.equalsIgnoreCase("all_commissary")) {
+				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+
+				String query_assessment = "WITH PreviousMonthData AS (\n" +
+						"    SELECT zc.ZONE_NAME AS prev_ZONE_NAME, cc.COMM_NAME AS prev_COMM_NAME, cc.ZONE_CODE AS prev_ZONE_CODE, 14c.CLOSING_NO AS prev_col1 \n" +
+						"    FROM mis_gst_commcode AS cc \n" +
+						"    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+						"    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
+						"),\n" +
+						"FirstQueryResult AS (\n" +
+						"    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,  \n" +
+						"        (14c.SCRUTINIZED_DISCRIPANCY_FOUND + 14c.OUTCOME_ASMT_12_ISSUED + 14c.OUTCOME_SECTION_61) / \n" +
+						"            (pm.prev_col1 + 14c.RETURN_SCRUTINY) AS score_of_subParameter1\n" +
+						"    FROM mis_gst_commcode AS cc  \n" +
+						"    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"    LEFT JOIN PreviousMonthData AS pm ON pm.prev_ZONE_CODE = cc.ZONE_CODE AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
+						"    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
+						"    GROUP BY zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, pm.prev_col1, \n" +
+						"        14c.RETURN_SCRUTINY, 14c.SCRUTINIZED_DISCRIPANCY_FOUND, 14c.OUTCOME_ASMT_12_ISSUED, 14c.OUTCOME_SECTION_61\n" +
+						"),\n" +
+						"SecondQueryResult AS (\n" +
+						"    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, \n" +
+						"        (14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / \n" +
+						"            14c.TAX_LIABILITY_DETECTECT AS score_of_subParameter2\n" +
+						"    FROM mis_gst_commcode AS cc \n" +
+						"    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
+						"),\n" +
+						"FinalResult AS (\n" +
+						"    SELECT fqr.ZONE_NAME, fqr.COMM_NAME, fqr.ZONE_CODE, \n" +
+						"        fqr.score_of_subParameter1, sqr.score_of_subParameter2, \n" +
+						"        (fqr.score_of_subParameter1 + sqr.score_of_subParameter2) AS total_score\n" +
+						"    FROM FirstQueryResult AS fqr\n" +
+						"    JOIN SecondQueryResult AS sqr ON fqr.ZONE_NAME = sqr.ZONE_NAME \n" +
+						"        AND fqr.COMM_NAME = sqr.COMM_NAME AND fqr.ZONE_CODE = sqr.ZONE_CODE\n" +
+						")\n" +
+						"SELECT ROW_NUMBER() OVER (ORDER BY total_score DESC) AS z_rank,\n" +
+						"    ZONE_NAME, COMM_NAME, ZONE_CODE, \n" +
+						"    score_of_subParameter1, score_of_subParameter2, total_score\n" +
+						"FROM FinalResult\n" +
+						"ORDER BY total_score DESC;\n";
+
+				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+				while (rsGst14aa.next()) {
+					String commName = rsGst14aa.getString("COMM_NAME");
+					String zoneName = rsGst14aa.getString("ZONE_NAME");
+					double tScore = rsGst14aa.getDouble("total_score");
+					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
+					String gst ="null";
+					String absval = "null";
+					zone_code = "null";
+
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
