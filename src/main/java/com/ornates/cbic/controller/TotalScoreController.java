@@ -362,11 +362,12 @@ public class TotalScoreController {
 
 	@ResponseBody
 	@RequestMapping(value = "/scrutiny/assessment") //3
-	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-04-01&type=parameter 						//for scrutiny/assessment button
-	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-04-01&type=zone&zone_code=59 				// for all button
-	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-04-01&type=commissary&zone_code=59			// for show button, zone wise
-	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-04-01&type=all_commissary
-	public Object scrutinyAssessment(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code) {
+	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-05-01&type=parameter							// for scrutiny/assessment button
+	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-05-01&type=zone&zone_code=59 				// for all button
+	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-05-01&type=commissary&zone_code=59			// for show button, zone wise
+	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-05-01&type=all_commissary					// for all commissary
+	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-05-01&type=come_name&zone_code=64&come_name=Rajkot			// for only commissary wise, show button
+	public Object scrutinyAssessment(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code, @RequestParam(required = false) String come_name) {
 		List<TotalScore> allGstaList = new ArrayList<>();
 		TotalScore totalScore = null;
 		Connection con = null;
@@ -569,6 +570,61 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst ="null";
 					String absval = "null";
+					zone_code = "null";
+
+
+					String formattedTotal = String.format("%.2f", tScore);
+					double total_score = Double.parseDouble(formattedTotal);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					allGstaList.add(totalScore);
+				}
+			}else if (type.equalsIgnoreCase("come_name")) {
+				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+
+				String query_assessment = "WITH PreviousMonthData AS (\n" +
+						"    SELECT zc.ZONE_NAME AS prev_ZONE_NAME, cc.COMM_NAME AS prev_COMM_NAME, cc.ZONE_CODE AS prev_ZONE_CODE, 14c.CLOSING_NO AS col1\n" +
+						"    FROM mis_gst_commcode AS cc\n" +
+						"        RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+						"        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+						"    WHERE 14c.MM_YYYY = '" + prev_month_new + "' and zc.ZONE_CODE = '" + zone_code + "' and cc.COMM_NAME = '" + come_name + "'\n" +
+						"),\n" +
+						"CurrentMonthData AS (\n" +
+						"    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,\n" +
+						"        14c.SCRUTINIZED_DISCRIPANCY_FOUND AS col4, 14c.OUTCOME_ASMT_12_ISSUED AS col9, 14c.OUTCOME_SECTION_61 AS col10, 14c.RETURN_SCRUTINY AS col2, pm.col1\n" +
+						"    FROM mis_gst_commcode AS cc\n" +
+						"        RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+						"        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+						"        LEFT JOIN PreviousMonthData AS pm ON pm.prev_ZONE_CODE = cc.ZONE_CODE AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
+						"    WHERE 14c.MM_YYYY = '" + month_date + "' and zc.ZONE_CODE = '" + zone_code + "' and cc.COMM_NAME = '" + come_name + "'\n" +
+						"    GROUP BY zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,\n" +
+						"        14c.SCRUTINIZED_DISCRIPANCY_FOUND, 14c.OUTCOME_ASMT_12_ISSUED, 14c.OUTCOME_SECTION_61, 14c.RETURN_SCRUTINY, pm.col1\n" +
+						"),\n" +
+						"GST3A_Data AS (\n" +
+						"    SELECT ZONE_NAME, COMM_NAME, ZONE_CODE, 'GST3A' AS gst,\n" +
+						"        CASE WHEN (col1 + col2) != 0 THEN (col4 + col9 + col10) / (col1 + col2) ELSE NULL END AS total_score,\n" +
+						"        CASE WHEN (col1 + col2) != 0 THEN CONCAT((col4 + col9 + col10), '/', (col1 + col2)) ELSE NULL END AS absolute_value\n" +
+						"    FROM CurrentMonthData\n" +
+						"),\n" +
+						"GST3B_Data AS (\n" +
+						"    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, 'GST3B' AS gst,\n" +
+						"        (14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / 14c.TAX_LIABILITY_DETECTECT AS total_score,\n" +
+						"        CONCAT((14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY), '/', 14c.TAX_LIABILITY_DETECTECT) AS absolute_value\n" +
+						"    FROM mis_gst_commcode AS cc \n" +
+						"        RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"    WHERE 14c.MM_YYYY = '" + prev_month_new + "' and zc.ZONE_CODE = '" + zone_code + "' and cc.COMM_NAME = '" + come_name + "'\n" +
+						")\n" +
+						"SELECT * FROM GST3A_Data UNION ALL SELECT * FROM GST3B_Data;\n";
+
+				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+				while (rsGst14aa.next()) {
+					String commName = rsGst14aa.getString("COMM_NAME");
+					String zoneName = rsGst14aa.getString("ZONE_NAME");
+					double tScore = rsGst14aa.getDouble("total_score");
+					Integer Zonal_rank = null;
+					String gst =rsGst14aa.getString("gst");
+					String absval = rsGst14aa.getString("absolute_value");
 					zone_code = "null";
 
 
