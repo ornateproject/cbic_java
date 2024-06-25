@@ -2747,7 +2747,7 @@ public class RetriveCbicDetailsController {
     /*
      * Date: May 04, 2024
      * created:
-     * updated: RKS, june 11, 2024
+     * updated: RKS & Nishant may 24, 2024
      * Purpose: This methods have core function in Return Filing .
      */
     @ResponseBody
@@ -2787,7 +2787,7 @@ public class RetriveCbicDetailsController {
                     String absval = String.valueOf(col22) + "/" + String.valueOf(col16);
 
                     if (col16 != 0) {
-                        total = ((double) col22 / col16) * 100;
+                        total = ((double) col22 / col16);
                     } else {
                         total = 0;
                     }
@@ -2799,19 +2799,23 @@ public class RetriveCbicDetailsController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("commissary")) { // gst 7
-                String quaryGst7 = " SELECT \n" +
-                        "  cc.ZONE_CODE AS zone_code,\n" +
-                        "  zc.ZONE_NAME AS zone_name,\n" +
-                        "  cc.COMM_NAME AS comm_name,\n" +
-                        "  SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) AS col16,\n" +
-                        "  SUM(14c.age_breakup_above60_no) AS col22\n" +
-                        "FROM   mis_dpm_gst_4 AS 14c \n" +
-                        "LEFT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE\n" +
-                        "LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
-                        "WHERE \n" +
-                        "  14c.MM_YYYY = '" + month_date + "' \n" +
-                        "  AND cc.ZONE_CODE = '"+zone_code+"'\n" +
-                        "GROUP BY cc.ZONE_CODE,  zc.ZONE_NAME, cc.COMM_NAME;";
+                String quaryGst7 = "SELECT \r\n"
+                        + "    cc.ZONE_CODE,\r\n"
+                        + "    zc.ZONE_NAME,\r\n"
+                        + "    cc.COMM_NAME,\r\n"
+                        + "    SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO) AS col16,\r\n"
+                        + "    SUM(dpm.age_breakup_above60_no) AS col22\r\n"
+                        + "FROM mis_gst_commcode AS cc\r\n"
+                        + "RIGHT JOIN mis_dpm_gst_4 AS dpm\r\n"
+                        + "    ON cc.COMM_CODE = dpm.COMM_CODE\r\n"
+                        + "LEFT JOIN mis_gst_zonecode AS zc\r\n"
+                        + "    ON zc.ZONE_CODE = cc.ZONE_CODE\r\n"
+                        + "WHERE dpm.MM_YYYY = '" + month_date + "' AND zc.ZONE_CODE = '"+zone_code+"'\r\n"
+                        + "GROUP BY \r\n"
+                        + "    cc.ZONE_CODE, \r\n"
+                        + "    zc.ZONE_NAME,\r\n"
+                        + "    cc.COMM_NAME;\r\n"
+                        + "";
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(quaryGst7);
 
