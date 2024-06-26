@@ -22,7 +22,7 @@ import com.ornates.cbic.service.RelevantAspect;
  * @Author: @Kinshuk_Maity
  */
 
-@CrossOrigin
+//@CrossOrigin
 @RequestMapping("/cbic")
 @Controller
 public class RetriveCbicDetailsController {
