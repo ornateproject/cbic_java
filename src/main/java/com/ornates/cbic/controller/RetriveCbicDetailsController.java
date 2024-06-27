@@ -2289,24 +2289,25 @@ public class RetriveCbicDetailsController {
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
-                String queryGst14aa="WITH current_month_data AS (\n" +
-                        "    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, \n" +
-                        "        (14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO + 14c.SUP_DISPOSAL_NO) AS col9\n" +
+                String queryGst14aa="WITH cte1 AS (\n" +
+                        "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, \n" +
+                        "           (14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO + 14c.SUP_DISPOSAL_NO) AS col9 \n" +
                         "    FROM mis_gst_commcode AS cc \n" +
                         "    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                         "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
                         "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
-                        "), \n" +
-                        "previous_month_data AS (\n" +
-                        "    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, (14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col3\n" +
+                        "),\n" +
+                        "cte2 AS (\n" +
+                        "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, \n" +
+                        "           (14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col3 \n" +
                         "    FROM mis_gst_commcode AS cc \n" +
                         "    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                         "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "    WHERE  14c.MM_YYYY = '" + prev_month_new + "'\n" +
+                        "    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
                         ")\n" +
-                        "SELECT cm.ZONE_NAME,cm.COMM_NAME,cm.ZONE_CODE,cm.col9,pm.col3\n" +
-                        "FROM current_month_data cm\n" +
-                        "JOIN previous_month_data pm ON cm.ZONE_CODE = pm.ZONE_CODE AND cm.COMM_NAME = pm.COMM_NAME;";
+                        "SELECT cte1.ZONE_NAME, cte1.ZONE_CODE, cte1.COMM_NAME, cte1.col9, cte2.col3\n" +
+                        "FROM cte1\n" +
+                        "JOIN cte2 ON cte1.ZONE_NAME = cte2.ZONE_NAME AND cte1.ZONE_CODE = cte2.ZONE_CODE AND cte1.COMM_NAME = cte2.COMM_NAME;";
 
 
                 //Result Set
@@ -2426,15 +2427,12 @@ public class RetriveCbicDetailsController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,\n" +
-                        "    (14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) AS col18,\n" +
-                        "    (14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col13\n" +
-                        "FROM mis_gst_commcode AS cc\n" +
-                        "RIGHT JOIN mis_dgi_st_1a AS 14c \n" +
-                        "ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                        "LEFT JOIN mis_gst_zonecode AS zc \n" +
-                        "ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                        "WHERE 14c.MM_YYYY = '" + month_date + "'";
+                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,(14c.COMM_MORE_YEAR_AMT+14c.JC_MORE_YEAR_AMT+14c.AC_MORE_YEAR_AMT+14c.SUP_MORE_YEAR_AMT) AS col18,\n" +
+                        "(14c.COMM_CLOSING_NO+14c.JC_CLOSING_NO+14c.AC_CLOSING_NO+14c.SUP_CLOSING_NO) AS col13 \n" +
+                        "FROM mis_gst_commcode AS cc \n" +
+                        "RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "WHERE 14c.MM_YYYY = '" + month_date + "';";
 
 
                 //Prepared Statement
@@ -2564,25 +2562,25 @@ public class RetriveCbicDetailsController {
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
-                String queryGst14aa="WITH CurrentMonth AS (\n" +
+                String queryGst14aa="WITH CTE1 AS (\n" +
                         "    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,\n" +
                         "        (14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO + 14c.SUP_DISPOSAL_NO) AS col9\n" +
                         "    FROM mis_gst_commcode AS cc\n" +
                         "    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                         "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                        "    WHERE  14c.MM_YYYY = '" + month_date + "'\n" +
+                        "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
                         "),\n" +
-                        "PreviousMonth AS (\n" +
+                        "CTE2 AS (\n" +
                         "    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,\n" +
                         "        (14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col3\n" +
                         "    FROM mis_gst_commcode AS cc\n" +
                         "    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                         "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                        "    WHERE  14c.MM_YYYY = '" + prev_month_new + "'\n" +
+                        "    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
                         ")\n" +
-                        "SELECT cm.ZONE_NAME, cm.COMM_NAME, cm.ZONE_CODE, cm.col9, pm.col3\n" +
-                        "FROM CurrentMonth cm\n" +
-                        "JOIN PreviousMonth pm ON cm.ZONE_CODE = pm.ZONE_CODE AND cm.COMM_NAME = pm.COMM_NAME;";
+                        "SELECT CTE1.ZONE_NAME, CTE1.COMM_NAME, CTE1.ZONE_CODE, CTE1.col9, CTE2.col3\n" +
+                        "FROM CTE1\n" +
+                        "JOIN CTE2 ON CTE1.ZONE_NAME = CTE2.ZONE_NAME AND CTE1.COMM_NAME = CTE2.COMM_NAME AND CTE1.ZONE_CODE = CTE2.ZONE_CODE;";
                 //Result Set
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
@@ -2706,13 +2704,14 @@ public class RetriveCbicDetailsController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa= "SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,\n" +
-                                "    (14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) AS col18,\n" +
-                                "    (14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col13\n" +
-                                "FROM mis_gst_commcode AS cc\n" +
-                                "RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                                "WHERE 14c.MM_YYYY = '"+month_date+"';";
+                String queryGst14aa= "SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, \n" +
+                        "    (14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) AS col18, \n" +
+                        "    (14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col13,\n" +
+                        "    (14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) / (14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS total_score_of_subpara4\n" +
+                        "FROM mis_gst_commcode AS cc\n" +
+                        "RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                        "WHERE 14c.MM_YYYY = '"+month_date+"';";
                 //Prepared Statement
                 PreparedStatement psGst14aa=con.prepareStatement(queryGst14aa);
                 //Result Set
