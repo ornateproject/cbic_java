@@ -386,6 +386,7 @@ public class TotalScoreController {
 		TotalScore totalScore = null;
 		Connection con = null;
 		ResultSet rsGst14aa = null;
+
 		try {
 
 			if (type.equalsIgnoreCase("parameter")) { // scrutiny/assessment all zone name 1
@@ -429,50 +430,79 @@ public class TotalScoreController {
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "WITH PreviousMonthData AS (\n" +
-                        "    SELECT zc.ZONE_NAME AS prev_ZONE_NAME, cc.COMM_NAME AS prev_COMM_NAME, cc.ZONE_CODE AS prev_ZONE_CODE, 14c.CLOSING_NO AS prev_col1 \n" +
-                        "    FROM mis_gst_commcode AS cc RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                        "        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                        "    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
-                        "),\n" +
-                        "FirstQueryResult AS (\n" +
-                        "    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, \n" +
-                        "        (14c.SCRUTINIZED_DISCRIPANCY_FOUND + 14c.OUTCOME_ASMT_12_ISSUED + 14c.OUTCOME_SECTION_61) /\n" +
-                        "        (pm.prev_col1 + 14c.RETURN_SCRUTINY) AS score_of_subParameter1\n" +
-                        "    FROM mis_gst_commcode AS cc  \n" +
-                        "        RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "        LEFT JOIN PreviousMonthData AS pm ON pm.prev_ZONE_CODE = cc.ZONE_CODE AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
-                        "    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
-                        "    GROUP BY zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, pm.prev_col1, \n" +
-                        "        14c.RETURN_SCRUTINY, 14c.SCRUTINIZED_DISCRIPANCY_FOUND, 14c.OUTCOME_ASMT_12_ISSUED, 14c.OUTCOME_SECTION_61\n" +
-                        "),\n" +
-                        "SecondQueryResult AS (\n" +
-                        "    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, (14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / 14c.TAX_LIABILITY_DETECTECT AS score_of_subParameter2\n" +
-                        "    FROM mis_gst_commcode AS cc RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
-                        "),\n" +
-                        "FinalResult AS (\n" +
-                        "    SELECT fqr.ZONE_NAME, fqr.COMM_NAME, fqr.ZONE_CODE, fqr.score_of_subParameter1, sqr.score_of_subParameter2, \n" +
-                        "        (fqr.score_of_subParameter1 + sqr.score_of_subParameter2) AS total_score\n" +
-                        "    FROM FirstQueryResult AS fqr JOIN SecondQueryResult AS sqr ON fqr.ZONE_NAME = sqr.ZONE_NAME  AND fqr.COMM_NAME = sqr.COMM_NAME AND fqr.ZONE_CODE = sqr.ZONE_CODE\n" +
-                        "),\n" +
-                        "RankedResults AS (\n" +
-                        "    SELECT ROW_NUMBER() OVER (ORDER BY total_score DESC) AS z_rank, ZONE_NAME,  COMM_NAME,  ZONE_CODE,  total_score FROM FinalResult\n" +
-                        ")\n" +
-                        "SELECT rr.z_rank, zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, rr.total_score\n" +
-                        "FROM mis_gst_commcode AS cc \n" +
-                        "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                        "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "    LEFT JOIN PreviousMonthData AS pm ON pm.prev_ZONE_CODE = cc.ZONE_CODE AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
-                        "    JOIN RankedResults AS rr ON rr.ZONE_CODE = cc.ZONE_CODE AND rr.COMM_NAME = cc.COMM_NAME\n" +
-                        "WHERE 14c.MM_YYYY = '" + month_date + "' AND zc.ZONE_CODE = '" + zone_code + "'\n" +
-                        "GROUP BY zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, rr.z_rank, rr.total_score\n" +
-                        "ORDER BY rr.z_rank;\n";
+				// for z_rank, ZONE_NAME, COMM_NAME, ZONE_CODE
+				String query_assessment = "WITH FirstQuery AS (\n" +
+						"    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, ROW_NUMBER() OVER (ORDER BY zc.ZONE_CODE) AS z_rank\n" +
+						"    FROM mis_gst_commcode AS cc \n" +
+						"    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+						"    WHERE 14c.MM_YYYY = '" + month_date + "' AND zc.ZONE_CODE = '" + zone_code + "'\n" +
+						"),\n" +
+						"SecondQuery AS (\n" +
+						"    WITH PreviousMonthData AS (\n" +
+						"        SELECT zc.ZONE_NAME AS prev_ZONE_NAME, cc.COMM_NAME AS prev_COMM_NAME, cc.ZONE_CODE AS prev_ZONE_CODE, 14c.CLOSING_NO AS prev_col1 \n" +
+						"        FROM mis_gst_commcode AS cc \n" +
+						"        RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+						"        WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
+						"    ),\n" +
+						"    FirstQueryResult AS (\n" +
+						"        SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, (14c.SCRUTINIZED_DISCRIPANCY_FOUND + 14c.OUTCOME_ASMT_12_ISSUED + 14c.OUTCOME_SECTION_61) /(pm.prev_col1 + 14c.RETURN_SCRUTINY) AS score_of_subParameter1\n" +
+						"        FROM mis_gst_commcode AS cc  \n" +
+						"        RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"        LEFT JOIN PreviousMonthData AS pm ON pm.prev_ZONE_CODE = cc.ZONE_CODE AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
+						"        WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
+						"        GROUP BY zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, pm.prev_col1, 14c.RETURN_SCRUTINY, 14c.SCRUTINIZED_DISCRIPANCY_FOUND, 14c.OUTCOME_ASMT_12_ISSUED, 14c.OUTCOME_SECTION_61\n" +
+						"    ),\n" +
+						"    SecondQueryResult AS (\n" +
+						"        SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, (14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / 14c.TAX_LIABILITY_DETECTECT AS score_of_subParameter2\n" +
+						"        FROM mis_gst_commcode AS cc \n" +
+						"        RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"        WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
+						"    ),\n" +
+						"    FinalResult AS (\n" +
+						"        SELECT fqr.ZONE_NAME, fqr.COMM_NAME, fqr.ZONE_CODE, fqr.score_of_subParameter1, sqr.score_of_subParameter2, (fqr.score_of_subParameter1 + sqr.score_of_subParameter2) AS total_score\n" +
+						"        FROM FirstQueryResult AS fqr\n" +
+						"        JOIN SecondQueryResult AS sqr ON fqr.ZONE_NAME = sqr.ZONE_NAME AND fqr.COMM_NAME = sqr.COMM_NAME AND fqr.ZONE_CODE = sqr.ZONE_CODE\n" +
+						"    )\n" +
+						"    SELECT ROW_NUMBER() OVER (ORDER BY total_score DESC) AS z_rank, ZONE_NAME, COMM_NAME, ZONE_CODE, total_score FROM FinalResult\n" +
+						")\n" +
+						"SELECT fq.ZONE_NAME, fq.COMM_NAME, fq.ZONE_CODE, sq.z_rank \n" +
+						"FROM FirstQuery fq\n" +
+						"JOIN SecondQuery sq ON fq.COMM_NAME = sq.COMM_NAME\n" +
+						"ORDER BY sq.z_rank ASC;\n";
+
+				// for only total_score
+				String query_assessment2 = "WITH PreviousMonthData AS (\n" +
+						" SELECT zc.ZONE_NAME AS prev_ZONE_NAME, cc.COMM_NAME AS prev_COMM_NAME, cc.ZONE_CODE AS prev_ZONE_CODE, 14c.CLOSING_NO AS prev_col1  FROM mis_gst_commcode AS cc \n" +
+						" RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE  LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+						" WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND zc.ZONE_CODE = '" + zone_code + "'\n" +
+						" ),\n" +
+						" FirstQueryResult AS (\n" +
+						" SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,  (14c.SCRUTINIZED_DISCRIPANCY_FOUND + 14c.OUTCOME_ASMT_12_ISSUED + 14c.OUTCOME_SECTION_61) / (pm.prev_col1 + 14c.RETURN_SCRUTINY) AS score_of_subParameter1\n" +
+						" FROM mis_gst_commcode AS cc   RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE  LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						" LEFT JOIN PreviousMonthData AS pm ON pm.prev_ZONE_CODE = cc.ZONE_CODE AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
+						" WHERE 14c.MM_YYYY = '" + month_date + "' AND zc.ZONE_CODE = '" + zone_code + "'\n" +
+						" GROUP BY zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, pm.prev_col1,  14c.RETURN_SCRUTINY, 14c.SCRUTINIZED_DISCRIPANCY_FOUND, 14c.OUTCOME_ASMT_12_ISSUED, 14c.OUTCOME_SECTION_61\n" +
+						" ),\n" +
+						" SecondQueryResult AS (\n" +
+						" SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,  (14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) /  14c.TAX_LIABILITY_DETECTECT AS score_of_subParameter2\n" +
+						" FROM mis_gst_commcode AS cc  RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE  LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						" WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND zc.ZONE_CODE = '" + zone_code + "'\n" +
+						" ),\n" +
+						" FinalResult AS (\n" +
+						" SELECT fqr.ZONE_NAME, fqr.COMM_NAME, fqr.ZONE_CODE,  fqr.score_of_subParameter1, sqr.score_of_subParameter2,  (fqr.score_of_subParameter1 + sqr.score_of_subParameter2) AS total_score\n" +
+						" FROM FirstQueryResult AS fqr JOIN SecondQueryResult AS sqr ON fqr.ZONE_NAME = sqr.ZONE_NAME  AND fqr.COMM_NAME = sqr.COMM_NAME AND fqr.ZONE_CODE = sqr.ZONE_CODE\n" +
+						" )\n" +
+						" SELECT ROW_NUMBER() OVER (ORDER BY total_score DESC) AS z_rank, ZONE_NAME, COMM_NAME, ZONE_CODE,total_score FROM FinalResult ORDER BY total_score DESC;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+				ResultSet rsGst14aa2 = GetExecutionSQL.getResult(query_assessment2);
 
-				while (rsGst14aa.next()) {
-					double tScore = rsGst14aa.getDouble("total_score");
+				while (rsGst14aa.next() && rsGst14aa2.next()) {
+					double tScore = rsGst14aa2.getDouble("total_score");
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
