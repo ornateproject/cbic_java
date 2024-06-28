@@ -1535,6 +1535,9 @@ public class RetriveCbicDetailsController {
 
     @ResponseBody
     @RequestMapping(value = "/gst4b")
+    //  http://localhost:8080/cbicApi/cbic/gst4b?month_date=2023-04-01&type=zone
+    //  http://localhost:8080/cbicApi/cbic/gst4b?month_date=2023-04-01&zone_code=70&type=commissary
+    //	  http://localhost:8080/cbicApi/cbic/gst4b?month_date=2023-04-01&type=all_commissary
     public Object getGst4B(@RequestParam String month_date ,@RequestParam String type, @RequestParam(required = false) String zone_code ) {
 
         List<GST4A> allGstaList = new ArrayList<>();
@@ -2014,6 +2017,7 @@ public class RetriveCbicDetailsController {
     @RequestMapping(value = "/gst5a")
     //  http://localhost:8080/cbicApi/cbic/gst5a?month_date=2023-04-01&type=zone
     //  http://localhost:8080/cbicApi/cbic/gst5a?month_date=2023-04-01&zone_code=70&type=commissary
+    //	http://localhost:8080/cbicApi/cbic/gst5a?month_date=2023-05-01&type=all_commissary
     public Object getGst5A(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code) {
 
         List<GST4A> allGstaList = new ArrayList<>();
@@ -2109,6 +2113,7 @@ public class RetriveCbicDetailsController {
     @RequestMapping(value = "/gst5b")
     //  http://localhost:8080/cbicApi/cbic/gst5b?month_date=2023-05-01&type=zone
     //  http://localhost:8080/cbicApi/cbic/gst5b?month_date=2023-05-01&zone_code=70&type=commissary
+    //	http://localhost:8080/cbicApi/cbic/gst5b?month_date=2023-05-01&type=all_commissary
     public Object getGst5B(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code) {
         List<GST4A> allGstaList = new ArrayList<>();
         GST4A gsta = null;
@@ -2753,6 +2758,7 @@ public class RetriveCbicDetailsController {
     @RequestMapping(value = "/gst7")
     //  http://localhost:8080/cbicApi/cbic/gst7?month_date=2023-04-01&type=zone
     //  http://localhost:8080/cbicApi/cbic/gst7?month_date=2023-04-01&zone_code=70&type=commissary
+    //  http://localhost:8080/cbicApi/cbic/gst7?month_date=2023-04-01&type=all_commissary
     public Object getGst7(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code) {
         List<GST4A> allGstaList = new ArrayList<>();
         GST4A gsta = null;
@@ -3055,6 +3061,7 @@ public class RetriveCbicDetailsController {
     @RequestMapping(value = "/gst8b")
     //  http://localhost:8080/cbicApi/cbic/gst8b?month_date=2023-04-01&type=zone
     //  http://localhost:8080/cbicApi/cbic/gst8b?month_date=2023-04-01&zone_code=70&type=commissary
+    //	  http://localhost:8080/cbicApi/cbic/gst8b?month_date=2023-04-01&type=all_commissary
     public Object getGst8B(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code) {
 
         List<GST4A> allGstaList=new ArrayList<>();
@@ -3204,6 +3211,7 @@ public class RetriveCbicDetailsController {
     @RequestMapping(value = "/gst9a")
     //  http://localhost:8080/cbicApi/cbic/gst9a?month_date=2023-04-01&type=zone
     //  http://localhost:8080/cbicApi/cbic/gst9a?month_date=2023-04-01&zone_code=70&type=commissary
+    //	  http://localhost:8080/cbicApi/cbic/gst9a?month_date=2023-04-01&type=all_commissary
     public Object getGst9a(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code) {
 
         List<GST4A> allGstaList = new ArrayList<>();
@@ -3360,6 +3368,7 @@ public class RetriveCbicDetailsController {
     @RequestMapping(value = "/gst9b")
     //  http://localhost:8080/cbicApi/cbic/gst9b?month_date=2023-05-01&type=zone
     //  http://localhost:8080/cbicApi/cbic/gst9b?month_date=2023-05-01&zone_code=51&type=commissary
+    //	  http://localhost:8080/cbicApi/cbic/gst9b?month_date=2023-04-01&type=all_commissary
     public Object getGst9b(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code) {
 
         List<GST4A> allGstaList = new ArrayList<>();
@@ -3689,6 +3698,7 @@ public class RetriveCbicDetailsController {
     @RequestMapping(value = "/gst11a")
     //  http://localhost:8080/cbicApi/cbic/gst11a?month_date=2023-04-01&type=zone
     //  http://localhost:8080/cbicApi/cbic/gst11a?month_date=2023-04-01&zone_code=70&type=commissary
+    //	  http://localhost:8080/cbicApi/cbic/gst11a?month_date=2023-04-01&type=all_commissary
     public Object getGst11A(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code) {
         List<GST4A> allGstaList = new ArrayList<>();
         GST4A gsta = null;
