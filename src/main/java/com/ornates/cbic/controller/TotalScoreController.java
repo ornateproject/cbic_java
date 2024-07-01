@@ -67,11 +67,12 @@ public class TotalScoreController {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
+					String ra ="null";
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
 
-					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -87,12 +88,13 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = rsGst14aa.getString("COMM_NAME");
+					String ra ="null";
 					String gst = "null";
 					String absval = "null";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
@@ -108,12 +110,13 @@ public class TotalScoreController {
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					double tScore = rsGst14aa.getDouble("score_of_subParameter");
+					String ra =rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 					String commName = "null";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
@@ -129,13 +132,14 @@ public class TotalScoreController {
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					double tScore = rsGst14aa.getDouble("total_score");
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
+					String ra ="null";
 					String gst ="null";
 					String absval = "null";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
@@ -152,12 +156,13 @@ public class TotalScoreController {
 					double tScore = rsGst14aa.getDouble("total_score");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
+					String ra =rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}
@@ -224,8 +229,9 @@ public class TotalScoreController {
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
+					String ra ="null";
 
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			} else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -254,12 +260,13 @@ public class TotalScoreController {
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String gst = "null";
 					String absval = "null";
+					String ra ="null";
 					String commName = rsGst14aa.getString("COMM_NAME");
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			} else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
@@ -285,12 +292,13 @@ public class TotalScoreController {
 					String gst = rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					double tScore = rsGst14aa.getDouble("total_score");
+					String ra =rsGst14aa.getString("ra");
 					Zonal_rank = null;
 					String commName = "null";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			} else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
@@ -320,11 +328,12 @@ public class TotalScoreController {
 					Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst = "null";
 					String absval = "null";
+					String ra ="null";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			} else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
@@ -353,11 +362,12 @@ public class TotalScoreController {
 					Zonal_rank = null;
 					String gst = rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
+					String ra =rsGst14aa.getString("ra");
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}
@@ -423,8 +433,9 @@ public class TotalScoreController {
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
+					String ra ="null";
 
-					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -509,10 +520,11 @@ public class TotalScoreController {
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String gst = "null";
 					String absval = "null";
+					String ra ="null";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
@@ -522,7 +534,7 @@ public class TotalScoreController {
 						"    current_data.ZONE_NAME, current_data.ZONE_CODE,\n" +
 						"    (current_data.col4 + current_data.col9 + current_data.col10) / (previous_data.col1 + current_data.col2) AS score_of_subParameter,\n" +
 						"    CONCAT((current_data.col4 + current_data.col9 + current_data.col10), '/', (previous_data.col1 + current_data.col2)) AS absolute_value,\n" +
-						"    'GST3A' AS gst\n" +
+						"    'GST3A' AS gst, 'Number of Returns whose scrutiny completed for the month vis-à-vis total Returns pending for the month (Pro-rata basis)' AS ra\n" +
 						"FROM (\n" +
 						"    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
 						"        SUM(14c.SCRUTINIZED_DISCRIPANCY_FOUND) AS col4, SUM(14c.OUTCOME_ASMT_12_ISSUED) AS col9, SUM(14c.OUTCOME_SECTION_61) AS col10, SUM(14c.RETURN_SCRUTINY) AS col2\n" +
@@ -541,12 +553,12 @@ public class TotalScoreController {
 						"    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
 						") AS previous_data ON current_data.ZONE_CODE = previous_data.ZONE_CODE\n" +
 						"UNION ALL\n" +
-						"SELECT  subquery.ZONE_NAME, subquery.ZONE_CODE, subquery.score_of_subParameter, subquery.absolute_value, subquery.gst\n" +
+						"SELECT  subquery.ZONE_NAME, subquery.ZONE_CODE, subquery.score_of_subParameter, subquery.absolute_value, subquery.gst, subquery.ra\n" +
 						"FROM ( SELECT  zc.ZONE_NAME, cc.ZONE_CODE,\n" +
 						"        CASE WHEN SUM(14c.TAX_LIABILITY_DETECTECT) <> 0 THEN SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / SUM(14c.TAX_LIABILITY_DETECTECT)\n" +
 						"\tELSE NULL END AS score_of_subParameter,\n" +
 						"        CASE WHEN SUM(14c.TAX_LIABILITY_DETECTECT) <> 0 THEN CONCAT(SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY), '/', SUM(14c.TAX_LIABILITY_DETECTECT))\n" +
-						"\t\tELSE NULL END AS absolute_value, 'GST3B' AS gst\n" +
+						"\t\tELSE NULL END AS absolute_value, 'GST3B' AS gst, 'Recoveries made upto the month vis-a-vis detections upto the month' AS ra\n" +
 						"    FROM mis_gst_commcode AS cc\n" +
 						"        RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
 						"    WHERE 14c.MM_YYYY <= '" + month_date + "' AND zc.ZONE_CODE = '" + zone_code + "'\n" +
@@ -561,12 +573,14 @@ public class TotalScoreController {
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					double tScore = rsGst14aa.getDouble("score_of_subParameter");
+					String ra =rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 					String commName = "null";
+					//String ra = "null";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
@@ -624,11 +638,12 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst ="null";
 					String absval = "null";
+					String ra ="null";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
@@ -653,13 +668,13 @@ public class TotalScoreController {
 						"        14c.SCRUTINIZED_DISCRIPANCY_FOUND, 14c.OUTCOME_ASMT_12_ISSUED, 14c.OUTCOME_SECTION_61, 14c.RETURN_SCRUTINY, pm.col1\n" +
 						"),\n" +
 						"GST3A_Data AS (\n" +
-						"    SELECT ZONE_NAME, COMM_NAME, ZONE_CODE, 'GST3A' AS gst,\n" +
+						"    SELECT ZONE_NAME, COMM_NAME, ZONE_CODE, 'GST3A' AS gst, 'Number of Returns whose scrutiny completed for the month vis-à-vis total Returns pending for the month (Pro-rata basis)' AS ra,\n" +
 						"        CASE WHEN (col1 + col2) != 0 THEN (col4 + col9 + col10) / (col1 + col2) ELSE NULL END AS total_score,\n" +
 						"        CASE WHEN (col1 + col2) != 0 THEN CONCAT((col4 + col9 + col10), '/', (col1 + col2)) ELSE NULL END AS absolute_value\n" +
 						"    FROM CurrentMonthData\n" +
 						"),\n" +
 						"GST3B_Data AS (\n" +
-						"    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, 'GST3B' AS gst,\n" +
+						"    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, 'GST3B' AS gst, 'Recoveries made upto the month vis-a-vis detections upto the month' AS ra,\n" +
 						"        (14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / 14c.TAX_LIABILITY_DETECTECT AS total_score,\n" +
 						"        CONCAT((14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY), '/', 14c.TAX_LIABILITY_DETECTECT) AS absolute_value\n" +
 						"    FROM mis_gst_commcode AS cc \n" +
@@ -678,12 +693,13 @@ public class TotalScoreController {
 					double tScore = rsGst14aa.getDouble("total_score");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
+					String ra =rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}
@@ -736,8 +752,9 @@ public class TotalScoreController {
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
+					String ra ="null";
 
-					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -755,10 +772,11 @@ public class TotalScoreController {
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String gst = "null";
 					String absval = "null";
+					String ra ="null";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
@@ -774,12 +792,13 @@ public class TotalScoreController {
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					double tScore = rsGst14aa.getDouble("score_of_subParameter");
+					String ra = rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 					String commName = "null";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
@@ -797,11 +816,12 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst ="null";
 					String absval = "null";
+					String ra ="null";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
@@ -818,12 +838,13 @@ public class TotalScoreController {
 					double tScore = rsGst14aa.getDouble("total_score");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
+					String ra = rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}
@@ -876,8 +897,9 @@ public class TotalScoreController {
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
+					String ra ="null";
 
-					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -895,10 +917,11 @@ public class TotalScoreController {
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String gst = "null";
 					String absval = "null";
+					String ra ="null";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
@@ -914,12 +937,13 @@ public class TotalScoreController {
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					double tScore = rsGst14aa.getDouble("score_of_subParameter");
+					String ra = rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 					String commName = "null";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
@@ -937,11 +961,12 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst ="null";
 					String absval = "null";
+					String ra ="null";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
@@ -958,12 +983,13 @@ public class TotalScoreController {
 					double tScore = rsGst14aa.getDouble("total_score");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
+					String ra = rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}
@@ -1075,8 +1101,9 @@ public class TotalScoreController {
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
+					String ra ="null";
 
-					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -1094,10 +1121,11 @@ public class TotalScoreController {
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String gst = "null";
 					String absval = "null";
+					String ra ="null";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
@@ -1120,7 +1148,7 @@ public class TotalScoreController {
 						"),\n" +
 						"GST6A AS (\n" +
 						"    SELECT zc.ZONE_NAME,d.ZONE_CODE, CASE WHEN c.col3 != 0 THEN d.col9 / c.col3\n" +
-						"\t\tELSE 0 END AS score_of_subpara, CONCAT(d.col9, '/', c.col3) AS absolute_value, 'GST6A' AS gst\n" +
+						"\t\tELSE 0 END AS score_of_subpara, CONCAT(d.col9, '/', c.col3) AS absolute_value, 'GST6A' AS gst, 'No. of cases disposed of during the month in Service Tax vis-à-vis  total cases in the beginning of the month' As ra\n" +
 						"    FROM DisposalData d\n" +
 						"    LEFT JOIN ClosingData c ON d.ZONE_CODE = c.ZONE_CODE\n" +
 						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = d.ZONE_CODE\n" +
@@ -1132,7 +1160,7 @@ public class TotalScoreController {
 						"            SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT), \n" +
 						"            '/', \n" +
 						"            SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO)\n" +
-						"        ) AS absolute_value,'GST6B' AS gst\n" +
+						"        ) AS absolute_value,'GST6B' AS gst, 'Number of adjudication cases pending for more than one year in Service Tax vis-à-vis total adjudication pending at the end of the month' As ra\n" +
 						"    FROM mis_gst_commcode AS cc \n" +
 						"    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
 						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
@@ -1140,7 +1168,7 @@ public class TotalScoreController {
 						"    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
 						"),\n" +
 						"GST6C AS (SELECT t1.ZONE_NAME, t1.ZONE_CODE, (t1.col9 / t2.col3) AS score_of_subpara,\n" +
-						"           CONCAT(t1.col9, '/', t2.col3) AS absolute_value, 'GST6C' AS gst\n" +
+						"           CONCAT(t1.col9, '/', t2.col3) AS absolute_value, 'GST6C' AS gst, 'No. of cases disposed of during the month in Central Excise vis-à-vis total cases in the beginning of the month' As ra\n" +
 						"    FROM (\n" +
 						"        SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO + 14c.SUP_DISPOSAL_NO) AS col9\n" +
 						"        FROM mis_gst_commcode AS cc\n" +
@@ -1169,7 +1197,7 @@ public class TotalScoreController {
 						"                SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT), \n" +
 						"                '/', \n" +
 						"                SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO)\n" +
-						"            )END AS absolute_value, 'GST6D' AS gst\n" +
+						"            )END AS absolute_value, 'GST6D' AS gst, 'Number of adjudication cases pending for more than one year in Central Excise vis-à-vis total adjudication pending at the end of the month' As ra\n" +
 						"    FROM mis_gst_commcode AS cc\n" +
 						"    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
 						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
@@ -1186,12 +1214,13 @@ public class TotalScoreController {
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					double tScore = rsGst14aa.getDouble("score_of_subpara");
+					String ra =rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 					String commName = "null";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
@@ -1242,11 +1271,12 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst ="null";
 					String absval = "null";
+					String ra ="null";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
@@ -1263,12 +1293,13 @@ public class TotalScoreController {
 					double tScore = rsGst14aa.getDouble("total_score");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
+					String ra = rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}
@@ -1334,8 +1365,9 @@ public class TotalScoreController {
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
+					String ra ="null";
 
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			} else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -1384,12 +1416,13 @@ public class TotalScoreController {
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String gst = "null";
 					String absval = "null";
+					String ra ="null";
 					String commName = rsGst14aa.getString("COMM_NAME");
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			} else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
@@ -1419,12 +1452,13 @@ public class TotalScoreController {
 					String gst = rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					double tScore = rsGst14aa.getDouble("total_score");
+					String ra = rsGst14aa.getString("ra");
 					Zonal_rank = null;
 					String commName = "null";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			} else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
@@ -1456,11 +1490,12 @@ public class TotalScoreController {
 					Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst = "null";
 					String absval = "null";
+					String ra ="null";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			} else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
@@ -1493,11 +1528,12 @@ public class TotalScoreController {
 					Zonal_rank = null;
 					String gst = rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
+					String ra = rsGst14aa.getString("ra");
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}
@@ -1549,8 +1585,10 @@ public class TotalScoreController {
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
+					String ra ="null";
 
-					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst);
+
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -1568,10 +1606,12 @@ public class TotalScoreController {
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String gst = "null";
 					String absval = "null";
+					String ra ="null";
+
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
@@ -1587,12 +1627,14 @@ public class TotalScoreController {
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					double tScore = rsGst14aa.getDouble("score_of_subParameter");
+					String ra = rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 					String commName = "null";
 
+
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
@@ -1610,11 +1652,12 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst ="null";
 					String absval = "null";
+					String ra ="null";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
@@ -1631,12 +1674,13 @@ public class TotalScoreController {
 					double tScore = rsGst14aa.getDouble("total_score");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
+					String ra = rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}
@@ -1681,15 +1725,19 @@ public class TotalScoreController {
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
-					double total_score = rsGst14aa.getDouble("total_score");
+					double tScore = rsGst14aa.getDouble("total_score");
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
+					String ra ="null";
 
-					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst);
+
+					String formattedTotal = String.format("%.2f", tScore);
+					double total_score = Double.parseDouble(formattedTotal);
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -1707,10 +1755,12 @@ public class TotalScoreController {
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String gst = "null";
 					String absval = "null";
+					String ra ="null";
+
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
@@ -1726,12 +1776,14 @@ public class TotalScoreController {
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					double tScore = rsGst14aa.getDouble("score_of_subParameter");
+					String ra = rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 					String commName = "null";
 
+
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
@@ -1749,11 +1801,12 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst ="null";
 					String absval = "null";
+					String ra ="null";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
@@ -1770,12 +1823,13 @@ public class TotalScoreController {
 					double tScore = rsGst14aa.getDouble("total_score");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
+					String ra = rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}
@@ -1828,8 +1882,10 @@ public class TotalScoreController {
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
+					String ra ="null";
 
-					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst);
+
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -1847,10 +1903,11 @@ public class TotalScoreController {
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String gst = "null";
 					String absval = "null";
+					String ra ="null";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
@@ -1866,12 +1923,13 @@ public class TotalScoreController {
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					double tScore = rsGst14aa.getDouble("score_of_subParameter");
+					String ra = rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 					String commName = "null";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
@@ -1889,11 +1947,12 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst ="null";
 					String absval = "null";
+					String ra ="null";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
@@ -1910,12 +1969,13 @@ public class TotalScoreController {
 					double tScore = rsGst14aa.getDouble("total_score");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
+					String ra = rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}
@@ -1968,8 +2028,10 @@ public class TotalScoreController {
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
+					String ra ="null";
 
-					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst);
+
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -1987,10 +2049,12 @@ public class TotalScoreController {
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String gst = "null";
 					String absval = "null";
+					String ra ="null";
+
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
@@ -2006,12 +2070,13 @@ public class TotalScoreController {
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					double tScore = rsGst14aa.getDouble("score_of_subParameter");
+					String ra = rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 					String commName = "null";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
@@ -2029,11 +2094,12 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst ="null";
 					String absval = "null";
+					String ra ="null";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
@@ -2050,12 +2116,14 @@ public class TotalScoreController {
 					double tScore = rsGst14aa.getDouble("total_score");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
+					String ra = rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
+
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra);
 					allGstaList.add(totalScore);
 				}
 			}

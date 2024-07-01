@@ -8,8 +8,9 @@ public class TotalScore {
     private String absval;
     private  Integer Zonal_rank;
     private  String gst;
+    private  String ra;
 
-    public TotalScore(String zoneName, String commName, String zone_code, double totalScore, String absval, Integer zonal_rank, String gst) {
+    public TotalScore(String zoneName, String commName, String zone_code, double totalScore, String absval, Integer zonal_rank, String gst, String ra) {
         this.zoneName = zoneName;
         this.commName = commName;
         this.zone_code = zone_code;
@@ -17,6 +18,7 @@ public class TotalScore {
         this.absval = absval;
         Zonal_rank = zonal_rank;
         this.gst = gst;
+        this.ra = ra;
     }
 
     public String getZoneName() {
@@ -73,5 +75,13 @@ public class TotalScore {
 
     public void setGst(String gst) {
         this.gst = gst;
+    }
+
+    public String getRa() {
+        return ra;
+    }
+
+    public void setRa(String ra) {
+        this.ra = ra;
     }
 }
