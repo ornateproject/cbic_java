@@ -16,7 +16,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-// total score 1(commissary only with 1E and 1F), 2, 3, 5(only 5a-- zone and commissary both),7
 
 //@CrossOrigin
 @RequestMapping("/cbic/t_score")
