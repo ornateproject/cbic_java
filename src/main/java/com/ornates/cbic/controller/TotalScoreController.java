@@ -1990,10 +1990,10 @@ public class TotalScoreController {
 	@ResponseBody
 	@RequestMapping(value = "/arrest and prosecution") //9
 	//  http://localhost:8080/cbicApi/cbic/t_score/arrest and prosecution?month_date=2023-05-01&type=parameter							// for scrutiny/assessment button
-	//  http://localhost:8080/cbicApi/cbic/t_score/arrest/prosecution?month_date=2023-05-01&type=zone&zone_code=59 				// for all button
-	//  http://localhost:8080/cbicApi/cbic/t_score/arrest/prosecution?month_date=2023-05-01&type=commissary&zone_code=59			// for show button, zone wise
-	//  http://localhost:8080/cbicApi/cbic/t_score/arrest/prosecution?month_date=2023-05-01&type=all_commissary					// for all commissary
-	//  http://localhost:8080/cbicApi/cbic/t_score/arrest/prosecution?month_date=2023-05-01&type=come_name&zone_code=64&come_name=Rajkot			// for only commissary wise, show button
+	//  http://localhost:8080/cbicApi/cbic/t_score/arrest and prosecution?month_date=2023-05-01&type=zone&zone_code=59 				// for all button
+	//  http://localhost:8080/cbicApi/cbic/t_score/arrest and prosecution?month_date=2023-05-01&type=commissary&zone_code=59			// for show button, zone wise
+	//  http://localhost:8080/cbicApi/cbic/t_score/arrest and prosecution?month_date=2023-05-01&type=all_commissary					// for all commissary
+	//  http://localhost:8080/cbicApi/cbic/t_score/arrest and prosecution?month_date=2023-05-01&type=come_name&zone_code=64&come_name=Rajkot			// for only commissary wise, show button
 	public Object arrestProsecution(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code, @RequestParam(required = false) String come_name) {
 		List<TotalScore> allGstaList = new ArrayList<>();
 		TotalScore totalScore = null;
@@ -2089,7 +2089,49 @@ public class TotalScoreController {
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "";
+				String query_assessment = "WITH cte AS (\n" +
+                        " SELECT  zc.ZONE_NAME, zc.ZONE_CODE, \n" +
+                        " COUNT(*) AS col8, COALESCE(SUM(lgl.PROSECUTION_SANCTIONED), 0) AS col5\n" +
+                        " FROM mis_dla_gst_lgl_4 AS lgl \n" +
+                        " LEFT JOIN mis_gst_commcode AS cc ON lgl.COMM_CODE = cc.COMM_CODE \n" +
+                        " LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE \n" +
+                        " WHERE lgl.MM_YYYY = '" + month_date + "' AND zc.ZONE_CODE = '" + zone_code + "' GROUP BY zc.ZONE_CODE, zc.ZONE_NAME\n" +
+                        " ),\n" +
+                        " cte1 AS (\n" +
+                        " SELECT  zc.ZONE_NAME,zc.ZONE_CODE,  COALESCE(SUM(lgl.PROSECUTION_SANCTIONED), 0) AS col5_1 \n" +
+                        " FROM mis_dla_gst_lgl_4 AS lgl \n" +
+                        " LEFT JOIN mis_gst_commcode AS cc ON lgl.COMM_CODE = cc.COMM_CODE \n" +
+                        " LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE \n" +
+                        " WHERE lgl.MM_YYYY = '" + prev_month_new + "' AND zc.ZONE_CODE = '" + zone_code + "'\n" +
+                        " GROUP BY zc.ZONE_CODE, zc.ZONE_NAME\n" +
+                        " ),\n" +
+                        " query_gst9a AS (\n" +
+                        " SELECT  cte.ZONE_NAME,  cte.ZONE_CODE, \n" +
+                        " ROUND((cte.col8 / NULLIF(cte.col5 + cte1.col5_1, 0)), 2) AS score_of_subParameter,\n" +
+                        " 'gst9A' AS gst, 'Number of cases where prosecution was not launched within 2 months of prosecution sanction date vis-à-vis total number of prosecution sanctioned cases ' as ra,\n" +
+                        " CONCAT(\n" +
+                        " ROUND((cte.col8 / NULLIF(cte.col5 + cte1.col5_1, 0)) * 100),\n" +
+                        " '/',\n" +
+                        " 100\n" +
+                        " ) AS absolute_value\n" +
+                        " FROM cte \n" +
+                        " INNER JOIN cte1 ON cte.ZONE_CODE = cte1.ZONE_CODE\n" +
+                        " ),\n" +
+                        " query_gst9b AS (\n" +
+                        " SELECT  zc.ZONE_NAME,  cc.ZONE_CODE, \n" +
+                        " SUM(14c.PROSECUTION_LAUNCHED) / SUM(14c.ARRESTS_MADE) AS Totalscore9b,\n" +
+                        " 'gst9B' AS Gst9b, 'Number of Prosecution launched upto the month vis-à-vis  number of arrests made upto the month' as ra,\n" +
+                        " CONCAT(\n" +
+                        " ABS(SUM(14c.PROSECUTION_LAUNCHED)),\n" +
+                        " '/',\n" +
+                        " ABS(SUM(14c.ARRESTS_MADE))\n" +
+                        " ) AS absolute_valuegst9b\n" +
+                        " FROM mis_gst_commcode AS cc\n" +
+                        " RIGHT JOIN mis_gi_gst_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                        " LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                        " WHERE 14c.MM_YYYY <= '" + month_date + "' AND cc.ZONE_CODE = '" + zone_code + "' GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                        " )\n" +
+                        " SELECT * FROM query_gst9a UNION ALL SELECT * FROM query_gst9b;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
