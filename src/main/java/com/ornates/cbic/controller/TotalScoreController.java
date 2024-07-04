@@ -152,7 +152,7 @@ public class TotalScoreController {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = rsGst14aa.getString("COMM_NAME");
-					double tScore = rsGst14aa.getDouble("total_score");
+					double tScore = rsGst14aa.getDouble("score_of_subParameter");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					String ra =rsGst14aa.getString("ra");
@@ -273,15 +273,15 @@ public class TotalScoreController {
 
 				String query_assessment = "WITH score_calculation AS (\n" +
 						"    SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
-						"        SUM(14c.GSTR_3BM_F - 14c.GSTR_3BM_D) AS col21, SUM(14c.GSTR_3BM_F) AS col3, (SUM(14c.GSTR_3BM_F - 14c.GSTR_3BM_D) / SUM(14c.GSTR_3BM_F)) AS total_score\n" +
+						"        SUM(14c.GSTR_3BM_F - 14c.GSTR_3BM_D) AS col21, SUM(14c.GSTR_3BM_F) AS col3, (SUM(14c.GSTR_3BM_F - 14c.GSTR_3BM_D) / SUM(14c.GSTR_3BM_F)) AS score_of_subParameter\n" +
 						"    FROM mis_gst_commcode AS cc RIGHT JOIN mis_gst_gst_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
 						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE WHERE 14c.MM_YYYY = '" + month_date + "' and  cc.ZONE_CODE = '" + zone_code + "'\n" +
 						"    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
 						")\n" +
 						"SELECT \n" +
-						"    ROW_NUMBER() OVER (ORDER BY total_score DESC) AS z_rank, ZONE_NAME, ZONE_CODE, col21, col3, total_score, 'GST2' AS gst,\n" +
+						"    ROW_NUMBER() OVER (ORDER BY score_of_subParameter DESC) AS z_rank, ZONE_NAME, ZONE_CODE, col21, col3, score_of_subParameter, 'GST2' AS gst, '*Percentage of returns which were due but not filed vis-à-vis total returns due (GSTR 3B) ' as ra,\n" +
 						"    CONCAT(CAST(col21 AS CHAR), '/', CAST(col3 AS CHAR)) AS absolute_value\n" +
-						"FROM score_calculation ORDER BY total_score DESC;";
+						"FROM score_calculation ORDER BY score_of_subParameter DESC;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -290,7 +290,7 @@ public class TotalScoreController {
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String gst = rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
-					double tScore = rsGst14aa.getDouble("total_score");
+					double tScore = rsGst14aa.getDouble("score_of_subParameter");
 					String ra =rsGst14aa.getString("ra");
 					Zonal_rank = null;
 					String commName = "null";
@@ -340,24 +340,25 @@ public class TotalScoreController {
 
 				String query_assessment = "WITH score_calculation AS (\n" +
 						"    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
-						"        (14c.GSTR_3BM_F - 14c.GSTR_3BM_D) AS col21, (14c.GSTR_3BM_F) AS col3, ((14c.GSTR_3BM_F - 14c.GSTR_3BM_D) / (14c.GSTR_3BM_F)) AS total_score,\n" +
-						"        'GST2' AS gst, CONCAT((14c.GSTR_3BM_F - 14c.GSTR_3BM_D), '/', 14c.GSTR_3BM_F) AS absolute_value\n" +
+						"        (14c.GSTR_3BM_F - 14c.GSTR_3BM_D) AS col21, (14c.GSTR_3BM_F) AS col3, ((14c.GSTR_3BM_F - 14c.GSTR_3BM_D) / (14c.GSTR_3BM_F)) AS score_of_subParameter,\n" +
+						"        'GST2' AS gst, CONCAT((14c.GSTR_3BM_F - 14c.GSTR_3BM_D), '/', 14c.GSTR_3BM_F) AS absolute_value, '*Percentage of returns which were due but not filed vis-à-vis total returns due (GSTR 3B) ' as ra\n" +
 						"    FROM mis_gst_commcode AS cc \n" +
 						"    RIGHT JOIN mis_gst_gst_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
 						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
 						"    WHERE 14c.MM_YYYY = '" + month_date + "' AND zc.ZONE_CODE = '" + zone_code + "' AND cc.COMM_NAME = '" + come_name + "'\n" +
 						")\n" +
-						"SELECT ROW_NUMBER() OVER (ORDER BY total_score DESC) AS z_rank,\n" +
-						"    ZONE_NAME, ZONE_CODE, COMM_NAME, col21, col3,total_score,gst,absolute_value\n" +
-						"FROM score_calculation ORDER BY total_score DESC;\n";
+						"SELECT ROW_NUMBER() OVER (ORDER BY score_of_subParameter DESC) AS z_rank,\n" +
+						"    ZONE_NAME, ZONE_CODE, COMM_NAME, col21, col3,score_of_subParameter,gst,absolute_value,ra\n" +
+						"FROM score_calculation ORDER BY score_of_subParameter DESC;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
 
 				while (rsGst14aa.next()) {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
-					double tScore = rsGst14aa.getDouble("total_score");
+					double tScore = rsGst14aa.getDouble("score_of_subParameter");
 					Zonal_rank = null;
 					String gst = rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
@@ -834,7 +835,7 @@ public class TotalScoreController {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = rsGst14aa.getString("COMM_NAME");
-					double tScore = rsGst14aa.getDouble("total_score");
+					double tScore = rsGst14aa.getDouble("score_of_subParameter");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					String ra = rsGst14aa.getString("ra");
@@ -1098,7 +1099,7 @@ public class TotalScoreController {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = rsGst14aa.getString("COMM_NAME");
-					double tScore = rsGst14aa.getDouble("total_score");
+					double tScore = rsGst14aa.getDouble("score_of_subParameter");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					String ra = rsGst14aa.getString("ra");
@@ -1611,6 +1612,7 @@ public class TotalScoreController {
 		try {
 
 			if (type.equalsIgnoreCase("parameter")) { // returnFiling all zone name 1
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "WITH CTE AS ( SELECT \n" +
@@ -1642,6 +1644,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			} else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "-- First query to get the COMM_NAME\n" +
@@ -1697,23 +1700,24 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			} else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
-				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
+				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "WITH CTE AS (\n" +
-						"    SELECT SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) AS col16, \n" +
-						"        SUM(14c.age_breakup_above60_no) AS col22, cc.ZONE_CODE, zc.ZONE_NAME\n" +
-						"    FROM mis_gst_commcode AS cc \n" +
-						"        RIGHT JOIN mis_dpm_gst_4 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-						"        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-						"    WHERE 14c.MM_YYYY = '" + month_date + "' AND cc.ZONE_CODE = '" + zone_code + "'\n" +
-						"    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
-						")\n" +
-						"SELECT ZONE_CODE, ZONE_NAME, col16, col22, \n" +
-						"    CONCAT(col22, '/', col16) AS absolute_value, -- Concatenating col22 and col16 with '/'\n" +
-						"    (col22 / col16) AS total_score,\n" +
-						"    ROW_NUMBER() OVER (ORDER BY (col22 / col16) DESC) AS z_rank,\n" +
-						"    'GST7' AS gst  -- Adding the 'gst' column with value 'GST7'\n" +
-						"FROM CTE ORDER BY total_score DESC;";
+						" SELECT SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) AS col16,\n" +
+						" SUM(14c.age_breakup_above60_no) AS col22, cc.ZONE_CODE, zc.ZONE_NAME\n" +
+						" FROM mis_gst_commcode AS cc \n" +
+						" RIGHT JOIN mis_dpm_gst_4 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						" LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						" WHERE 14c.MM_YYYY = '" + month_date + "' AND cc.ZONE_CODE = '" + zone_code + "'\n" +
+						" GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+						" )\n" +
+						" SELECT ZONE_CODE, ZONE_NAME, col16, col22, \n" +
+						" CONCAT(col22, '/', col16) AS absolute_value,\n" +
+						" (col22 / col16) AS score_of_subParameter,\n" +
+						" ROW_NUMBER() OVER (ORDER BY (col22 / col16) DESC) AS z_rank,\n" +
+						" 'GST7' AS gst,'Number of refunds applications pending beyond 60 days of receipt vis-à-vis total number of refunds applications pending at the end of the month' as ra \n" +
+						" FROM CTE ORDER BY score_of_subParameter DESC;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -1722,7 +1726,7 @@ public class TotalScoreController {
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String gst = rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
-					double tScore = rsGst14aa.getDouble("total_score");
+					double tScore = rsGst14aa.getDouble("score_of_subParameter");
 					String ra = rsGst14aa.getString("ra");
 					Zonal_rank = null;
 					String commName = "null";
@@ -1733,6 +1737,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			} else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "WITH calculated_values AS (\n" +
@@ -1770,32 +1775,35 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			} else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "WITH calculated_values AS (\n" +
-						"    SELECT cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME, \n" +
+				String query_assessment = "\n" +
+						"WITH calculated_values AS (\n" +
+						"    SELECT  cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME, \n" +
 						"        SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO) AS col16,\n" +
 						"        SUM(dpm.age_breakup_above60_no) AS col22,\n" +
-						"        SUM(dpm.age_breakup_above60_no) * 1.0 / NULLIF(SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO), 0) AS total_score\n" +
+						"        SUM(dpm.age_breakup_above60_no) * 1.0 / NULLIF(SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO), 0) AS score_of_subParameter\n" +
 						"    FROM mis_gst_commcode AS cc\n" +
 						"        RIGHT JOIN mis_dpm_gst_4 AS dpm ON cc.COMM_CODE = dpm.COMM_CODE\n" +
 						"        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
 						"    WHERE dpm.MM_YYYY = '" + month_date + "' AND cc.ZONE_CODE = '" + zone_code + "' AND cc.COMM_NAME = '" + come_name + "'\n" +
 						"    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
 						")\n" +
-						"SELECT ZONE_CODE, ZONE_NAME, COMM_NAME, col16,col22, total_score,\n" +
+						"SELECT \n" +
+						"    ZONE_CODE, ZONE_NAME, COMM_NAME, col16,col22, score_of_subParameter, 'GST 7' as gst, 'Number of refunds applications pending beyond 60 days of receipt vis-à-vis total number of refunds applications pending at the end of the month' as ra,\n" +
 						"    CONCAT(col22, '/', col16) AS absolute_value,\n" +
-						"    'GST7' AS gst,  -- Adding the constant 'GST7' as the gst column\n" +
-						"    ROW_NUMBER() OVER (ORDER BY total_score DESC) AS z_rank\n" +
-						"FROM calculated_values ORDER BY total_score DESC;\n";
+						"    ROW_NUMBER() OVER (ORDER BY score_of_subParameter DESC) AS z_rank\n" +
+						"FROM calculated_values ORDER BY score_of_subParameter DESC;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
 
 				while (rsGst14aa.next()) {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
-					double tScore = rsGst14aa.getDouble("total_score");
+					double tScore = rsGst14aa.getDouble("score_of_subParameter");
 					Zonal_rank = null;
 					String gst = rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
@@ -1842,6 +1850,7 @@ public class TotalScoreController {
 		try {
 
 			if (type.equalsIgnoreCase("parameter")) { // recovery all zone name 1
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -1863,6 +1872,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -1886,6 +1896,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -1909,6 +1920,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -1932,6 +1944,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -1942,7 +1955,7 @@ public class TotalScoreController {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = rsGst14aa.getString("COMM_NAME");
-					double tScore = rsGst14aa.getDouble("total_score");
+					double tScore = rsGst14aa.getDouble("score_of_subParameter");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					String ra = rsGst14aa.getString("ra");
@@ -1975,8 +1988,8 @@ public class TotalScoreController {
 	 * Purpose: This methods have core function in arrest/prosecution.
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/arrest/prosecution") //9
-	//  http://localhost:8080/cbicApi/cbic/t_score/arrest/prosecution?month_date=2023-05-01&type=parameter							// for scrutiny/assessment button
+	@RequestMapping(value = "/arrest and prosecution") //9
+	//  http://localhost:8080/cbicApi/cbic/t_score/arrest and prosecution?month_date=2023-05-01&type=parameter							// for scrutiny/assessment button
 	//  http://localhost:8080/cbicApi/cbic/t_score/arrest/prosecution?month_date=2023-05-01&type=zone&zone_code=59 				// for all button
 	//  http://localhost:8080/cbicApi/cbic/t_score/arrest/prosecution?month_date=2023-05-01&type=commissary&zone_code=59			// for show button, zone wise
 	//  http://localhost:8080/cbicApi/cbic/t_score/arrest/prosecution?month_date=2023-05-01&type=all_commissary					// for all commissary
@@ -1989,9 +2002,46 @@ public class TotalScoreController {
 		try {
 
 			if (type.equalsIgnoreCase("parameter")) { // arrest/prosecution all zone name 1
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "";
+				String query_assessment = "WITH cte AS ( \n" +
+						"SELECT zc.ZONE_NAME,zc.ZONE_CODE,1 AS col8, _11a.PROSECUTION_SANCTIONED AS col5   \n" +
+						" FROM mis_dla_gst_lgl_4 AS _11a    \n" +
+						"\t  LEFT JOIN mis_gst_commcode AS cc ON _11a.COMM_CODE = cc.COMM_CODE \n" +
+						"      LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE WHERE   _11a.MM_YYYY = '" + month_date + "'\n" +
+						"      ),cte1 AS (SELECT zc.ZONE_NAME,zc.ZONE_CODE, _11a.PROSECUTION_SANCTIONED AS col5_1\n" +
+						"      FROM mis_dla_gst_lgl_4 AS _11a \n" +
+						"      LEFT JOIN mis_gst_commcode AS cc ON _11a.COMM_CODE = cc.COMM_CODE \n" +
+						"      LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE \n" +
+						"      WHERE _11a.MM_YYYY = '" + prev_month_new + "'\n" +
+						"      ),\n" +
+						"      cte2 AS (SELECT zc.ZONE_NAME,  cc.ZONE_CODE,\n" +
+						"      SUM(14c.PROSECUTION_LAUNCHED) AS col4, SUM(14c.ARRESTS_MADE) AS col4_1,\n" +
+						"      SUM(14c.PROSECUTION_LAUNCHED) / SUM(14c.ARRESTS_MADE) AS total_scoregst9b\n" +
+						"      FROM mis_gst_commcode AS cc\n" +
+						"\t  RIGHT JOIN mis_gi_gst_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+						"      LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+						"      WHERE 14c.MM_YYYY <= '" + month_date + "'\n" +
+						"      GROUP BY cc.ZONE_CODE, zc.ZONE_NAME ORDER BY cc.ZONE_CODE\n" +
+						"      )\n" +
+						"      SELECT cte.ZONE_NAME,cte.ZONE_CODE,cte.col8,cte.col5,cte1.col5_1,\n" +
+						"      CASE \n" +
+						"      WHEN (cte.col5 + cte1.col5_1) <> 0 THEN cte.col8 / (cte.col5 + cte1.col5_1)\n" +
+						"      ELSE NULL END AS total_scoregst9a,\n" +
+						"      cte2.col4, cte2.col4_1, cte2.total_scoregst9b,\n" +
+						"      (CASE WHEN (cte.col5 + cte1.col5_1) <> 0 THEN cte.col8 / (cte.col5 + cte1.col5_1)\n" +
+						"      ELSE NULL\n" +
+						"      END + cte2.total_scoregst9b) AS total_score,\n" +
+						"      ROW_NUMBER() OVER (ORDER BY (CASE \n" +
+						"      WHEN (cte.col5 + cte1.col5_1) <> 0 THEN cte.col8 / (cte.col5 + cte1.col5_1)\n" +
+						"      ELSE NULL END + cte2.total_scoregst9b) DESC) AS z_rank\n" +
+						"      FROM \n" +
+						"      cte \n" +
+						"      INNER JOIN cte1 ON cte.ZONE_NAME = cte1.ZONE_NAME AND cte.ZONE_CODE = cte1.ZONE_CODE\n" +
+						"      INNER JOIN cte2 ON cte.ZONE_NAME = cte2.ZONE_NAME AND cte.ZONE_CODE = cte2.ZONE_CODE\n" +
+						"      GROUP BY cte.ZONE_NAME, cte.ZONE_CODE, cte.col8, cte.col5, cte1.col5_1, cte2.col4, cte2.col4_1, cte2.total_scoregst9b\n" +
+						"      ORDER BY total_score DESC;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -2012,6 +2062,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -2035,6 +2086,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -2058,6 +2110,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -2081,6 +2134,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -2091,7 +2145,7 @@ public class TotalScoreController {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = rsGst14aa.getString("COMM_NAME");
-					double tScore = rsGst14aa.getDouble("total_score");
+					double tScore = rsGst14aa.getDouble("score_of_subParameter");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					String ra = rsGst14aa.getString("ra");
@@ -2139,6 +2193,7 @@ public class TotalScoreController {
 		try {
 
 			if (type.equalsIgnoreCase("parameter")) { // audit all zone name 1
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -2160,6 +2215,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -2182,6 +2238,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -2204,6 +2261,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -2227,6 +2285,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -2237,7 +2296,7 @@ public class TotalScoreController {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = rsGst14aa.getString("COMM_NAME");
-					double tScore = rsGst14aa.getDouble("total_score");
+					double tScore = rsGst14aa.getDouble("score_of_subParameter");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					String ra = rsGst14aa.getString("ra");
@@ -2285,6 +2344,7 @@ public class TotalScoreController {
 		try {
 
 			if (type.equalsIgnoreCase("parameter")) { // appeals all zone name 1
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -2306,6 +2366,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -2329,6 +2390,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -2351,6 +2413,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -2374,6 +2437,7 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "";
@@ -2384,7 +2448,7 @@ public class TotalScoreController {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = rsGst14aa.getString("COMM_NAME");
-					double tScore = rsGst14aa.getDouble("total_score");
+					double tScore = rsGst14aa.getDouble("score_of_subParameter");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					String ra = rsGst14aa.getString("ra");
