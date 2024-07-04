@@ -10,4 +10,9 @@ public class DateCalculate {
 		return prev_month.toString();
 	}
 
+	public static String getNextMonth(String newDate) {
+		LocalDate curr_month = LocalDate.parse(newDate);
+		LocalDate next_month = curr_month.plusMonths(1);
+		return next_month.toString();
+	}
 }
