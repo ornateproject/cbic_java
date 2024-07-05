@@ -2471,7 +2471,116 @@ public class TotalScoreController {
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "";
+				String query_assessment = "WITH cteA AS (\n" +
+						"    SELECT zc.ZONE_NAME, zc.ZONE_CODE,\n" +
+						"        SUM(11a.DEPARTMENT_DISPOSAL_NO + 11a.TAXPAYER_DISPOSAL_NO) AS col10\n" +
+						"    FROM mis_dla_gst_lgl_1 11a\n" +
+						"    LEFT JOIN mis_gst_commcode cc ON 11a.COMM_CODE = cc.COMM_CODE\n" +
+						"    LEFT JOIN mis_gst_zonecode zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE 11a.MM_YYYY = '" + month_date + "' AND FORUM_CODE = 6\n" +
+						"    GROUP BY zc.ZONE_NAME, zc.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"cte1A AS (\n" +
+						"    SELECT zc.ZONE_CODE, SUM(DEPARTMENT_CLOSING_NO + TAXPAYER_CLOSING_NO) AS col4\n" +
+						"    FROM mis_dla_gst_lgl_1 11a\n" +
+						"    LEFT JOIN mis_gst_commcode cc ON 11a.COMM_CODE = cc.COMM_CODE\n" +
+						"    LEFT JOIN mis_gst_zonecode zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE 11a.MM_YYYY = '" + prev_month_new + "' AND FORUM_CODE = 6\n" +
+						"    GROUP BY zc.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"cte2A AS (\n" +
+						"    SELECT zc.ZONE_CODE, \n" +
+						"           SUM(11a.DEPARTMENT_CLOSING_NO + 11a.TAXPAYER_CLOSING_NO) AS col10A, \n" +
+						"           SUM(11a.DEPARTMENT_BREAKUP_LESS_1YEAR_NO + 11a.TAXPAYER_BREAKUP_LESS_1YEAR_NO) AS col12A\n" +
+						"    FROM mis_dla_gst_lgl_1a AS 11a\n" +
+						"    LEFT JOIN mis_gst_commcode AS cc ON 11a.COMM_CODE = cc.COMM_CODE\n" +
+						"    LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE 11a.MM_YYYY = '" + month_date + "' AND FORUM_CODE = 6\n" +
+						"    GROUP BY zc.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"cte3A AS (\n" +
+						"    SELECT zc.ZONE_CODE,\n" +
+						"           SUM(11b.DEPARTMENT_CLOSING_NO + 11b.TAXPAYER_CLOSING_NO) AS col10B, \n" +
+						"           SUM(11b.DEPARTMENT_BREAKUP_LESS_1YEAR_NO + 11b.TAXPAYER_BREAKUP_LESS_1YEAR_NO) AS col12B\n" +
+						"    FROM mis_dla_gst_lgl_1b AS 11b\n" +
+						"    LEFT JOIN mis_gst_commcode AS cc ON 11b.COMM_CODE = cc.COMM_CODE\n" +
+						"    LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE 11b.MM_YYYY = '" + month_date + "' AND FORUM_CODE = 6\n" +
+						"    GROUP BY zc.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"cteB AS (\n" +
+						"    SELECT zc.ZONE_NAME, zc.ZONE_CODE,\n" +
+						"        SUM(11a.DEPARTMENT_DISPOSAL_NO + 11a.TAXPAYER_DISPOSAL_NO) AS col10\n" +
+						"    FROM mis_dla_gst_lgl_1 11a\n" +
+						"    LEFT JOIN mis_gst_commcode cc ON 11a.COMM_CODE = cc.COMM_CODE\n" +
+						"    LEFT JOIN mis_gst_zonecode zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE 11a.MM_YYYY ='" + month_date + "' AND 11a.FORUM_CODE = 7\n" +
+						"    GROUP BY zc.ZONE_NAME, zc.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"cte1B AS (\n" +
+						"    SELECT zc.ZONE_CODE, SUM(DEPARTMENT_CLOSING_NO + TAXPAYER_CLOSING_NO) AS col4\n" +
+						"    FROM mis_dla_gst_lgl_1 11a\n" +
+						"    LEFT JOIN mis_gst_commcode cc ON 11a.COMM_CODE = cc.COMM_CODE\n" +
+						"    LEFT JOIN mis_gst_zonecode zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE 11a.MM_YYYY = '" + prev_month_new + "' AND 11a.FORUM_CODE = 7\n" +
+						"    GROUP BY zc.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"cte2B AS (\n" +
+						"    SELECT zc.ZONE_CODE,\n" +
+						"        SUM(11a.DEPARTMENT_CLOSING_NO + 11a.TAXPAYER_CLOSING_NO) AS col10A,\n" +
+						"        SUM(11a.DEPARTMENT_BREAKUP_LESS_1YEAR_NO + 11a.TAXPAYER_BREAKUP_LESS_1YEAR_NO) AS col12A\n" +
+						"    FROM mis_dla_gst_lgl_1a AS 11a\n" +
+						"    LEFT JOIN mis_gst_commcode AS cc ON 11a.COMM_CODE = cc.COMM_CODE\n" +
+						"    LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE 11a.MM_YYYY = '" + month_date + "' AND FORUM_CODE = 7\n" +
+						"    GROUP BY zc.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"cte3B AS (\n" +
+						"    SELECT zc.ZONE_CODE,\n" +
+						"        SUM(11b.DEPARTMENT_CLOSING_NO + 11b.TAXPAYER_CLOSING_NO) AS col10B,\n" +
+						"        SUM(11b.DEPARTMENT_BREAKUP_LESS_1YEAR_NO + 11b.TAXPAYER_BREAKUP_LESS_1YEAR_NO) AS col12B\n" +
+						"    FROM mis_dla_gst_lgl_1b AS 11b\n" +
+						"    LEFT JOIN mis_gst_commcode AS cc ON 11b.COMM_CODE = cc.COMM_CODE\n" +
+						"    LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE 11b.MM_YYYY = '" + month_date + "' AND FORUM_CODE = 7\n" +
+						"    GROUP BY zc.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"scoreA AS (\n" +
+						"    SELECT cteA.ZONE_NAME, cteA.ZONE_CODE,\n" +
+						"        COALESCE((cteA.col10 / cte1A.col4), 0) + \n" +
+						"        COALESCE(CASE WHEN (cte2A.col10A + cte3A.col10B) = 0 THEN NULL \n" +
+						"                      ELSE (((cte2A.col10A - cte2A.col12A) + (cte3A.col10B - cte3A.col12B)) / (cte2A.col10A + cte3A.col10B)) \n" +
+						"                 END, 0) AS total_scoreA\n" +
+						"    FROM cteA\n" +
+						"    INNER JOIN cte1A ON cteA.ZONE_CODE = cte1A.ZONE_CODE\n" +
+						"    INNER JOIN cte2A ON cteA.ZONE_CODE = cte2A.ZONE_CODE\n" +
+						"    INNER JOIN cte3A ON cteA.ZONE_CODE = cte3A.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"scoreB AS (\n" +
+						"    SELECT cteB.ZONE_NAME, cteB.ZONE_CODE,\n" +
+						"        COALESCE(CASE WHEN cte1B.col4 = 0 THEN NULL ELSE (cteB.col10 / cte1B.col4) END, 0) + \n" +
+						"        COALESCE((((cte2B.col10A - cte2B.col12A) + (cte3B.col10B - cte3B.col12B)) / (cte2B.col10A + cte3B.col10B)), 0) AS total_scoreB\n" +
+						"    FROM cteB\n" +
+						"    INNER JOIN cte1B ON cteB.ZONE_CODE = cte1B.ZONE_CODE\n" +
+						"    INNER JOIN cte2B ON cteB.ZONE_CODE = cte2B.ZONE_CODE\n" +
+						"    INNER JOIN cte3B ON cteB.ZONE_CODE = cte3B.ZONE_CODE\n" +
+						")\n" +
+						"\n" +
+						"SELECT scoreA.ZONE_NAME, scoreA.ZONE_CODE,\n" +
+						"       scoreA.total_scoreA, scoreB.total_scoreB,\n" +
+						"       (scoreA.total_scoreA + scoreB.total_scoreB) AS total_score,\n" +
+						"       DENSE_RANK() OVER (ORDER BY (scoreA.total_scoreA + scoreB.total_scoreB) DESC) AS z_rank\n" +
+						"FROM scoreA\n" +
+						"INNER JOIN scoreB ON scoreA.ZONE_CODE = scoreB.ZONE_CODE;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -2517,7 +2626,115 @@ public class TotalScoreController {
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "";
+				String query_assessment = "WITH cte AS (\n" +
+						"    SELECT zc.ZONE_NAME, zc.ZONE_CODE, SUM(DEPARTMENT_DISPOSAL_NO + TAXPAYER_DISPOSAL_NO) AS col10\n" +
+						"    FROM\n" +
+						"        mis_dla_gst_lgl_1 11a\n" +
+						"        LEFT JOIN mis_gst_commcode cc ON 11a.COMM_CODE = cc.COMM_CODE\n" +
+						"        LEFT JOIN mis_gst_zonecode zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE 11a.MM_YYYY = '" + month_date + "' and zc.ZONE_CODE='" + zone_code + "' AND FORUM_CODE = 6\n" +
+						"    GROUP BY zc.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"cte1 AS (\n" +
+						"    SELECT zc.ZONE_NAME, zc.ZONE_CODE, SUM(DEPARTMENT_CLOSING_NO + TAXPAYER_CLOSING_NO) AS col4\n" +
+						"    FROM mis_dla_gst_lgl_1 11a\n" +
+						"        LEFT JOIN mis_gst_commcode cc ON 11a.COMM_CODE = cc.COMM_CODE\n" +
+						"        LEFT JOIN mis_gst_zonecode zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE 11a.MM_YYYY = '" + prev_month_new + "' and zc.ZONE_CODE='" + zone_code + "' AND FORUM_CODE = 6 GROUP BY zc.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"cte2 AS (\n" +
+						"    SELECT zc.ZONE_NAME,  zc.ZONE_CODE, SUM(11a.DEPARTMENT_CLOSING_NO + 11a.TAXPAYER_CLOSING_NO) AS col10A, SUM(11a.DEPARTMENT_BREAKUP_LESS_1YEAR_NO + 11a.TAXPAYER_BREAKUP_LESS_1YEAR_NO) AS col12A\n" +
+						"    FROM mis_dla_gst_lgl_1a AS 11a\n" +
+						"    LEFT JOIN mis_gst_commcode AS cc ON 11a.COMM_CODE = cc.COMM_CODE\n" +
+						"    LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE 11a.MM_YYYY = '" + month_date + "' and zc.ZONE_CODE='" + zone_code + "' AND FORUM_CODE = 6 GROUP BY zc.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"cte3 AS (\n" +
+						"    SELECT zc.ZONE_NAME, zc.ZONE_CODE, SUM(11b.DEPARTMENT_CLOSING_NO + 11b.TAXPAYER_CLOSING_NO) AS col10B, SUM(11b.DEPARTMENT_BREAKUP_LESS_1YEAR_NO + 11b.TAXPAYER_BREAKUP_LESS_1YEAR_NO) AS col12B\n" +
+						"    FROM mis_dla_gst_lgl_1b AS 11b\n" +
+						"    LEFT JOIN mis_gst_commcode AS cc ON 11b.COMM_CODE = cc.COMM_CODE\n" +
+						"    LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE 11b.MM_YYYY = '" + month_date + "' and zc.ZONE_CODE='" + zone_code + "'  AND FORUM_CODE = 6 GROUP BY zc.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"cte_gst11C AS (\n" +
+						"    SELECT zc.ZONE_NAME, zc.ZONE_CODE, SUM(11a.DEPARTMENT_DISPOSAL_NO + 11a.TAXPAYER_DISPOSAL_NO) AS col10\n" +
+						"    FROM  mis_dla_gst_lgl_1 11a\n" +
+						"        LEFT JOIN mis_gst_commcode cc ON 11a.COMM_CODE = cc.COMM_CODE\n" +
+						"        LEFT JOIN  mis_gst_zonecode zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE 11a.MM_YYYY ='" + month_date + "' and zc.ZONE_CODE='" + zone_code + "'  AND 11a.FORUM_CODE = 7 GROUP BY zc.ZONE_NAME, zc.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"cte_gst11C1 AS (\n" +
+						"    SELECT zc.ZONE_NAME, zc.ZONE_CODE,  SUM(11a.DEPARTMENT_CLOSING_NO + 11a.TAXPAYER_CLOSING_NO) AS col4\n" +
+						"    FROM mis_dla_gst_lgl_1 11a\n" +
+						"        LEFT JOIN mis_gst_commcode cc ON 11a.COMM_CODE = cc.COMM_CODE\n" +
+						"        LEFT JOIN mis_gst_zonecode zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE 11a.MM_YYYY = '" + prev_month_new + "' and zc.ZONE_CODE='" + zone_code + "' AND 11a.FORUM_CODE = 7 GROUP BY zc.ZONE_NAME, zc.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"cte_gst11D AS (\n" +
+						"    SELECT zc.ZONE_NAME,  zc.ZONE_CODE, SUM(11a.DEPARTMENT_CLOSING_NO + 11a.TAXPAYER_CLOSING_NO) AS col10A, SUM(11a.DEPARTMENT_BREAKUP_LESS_1YEAR_NO + 11a.TAXPAYER_BREAKUP_LESS_1YEAR_NO) AS col12A\n" +
+						"    FROM  mis_dla_gst_lgl_1a AS 11a\n" +
+						"    LEFT JOIN  mis_gst_commcode AS cc ON 11a.COMM_CODE = cc.COMM_CODE\n" +
+						"    LEFT JOIN  mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE   11a.MM_YYYY = '" + month_date + "' and zc.ZONE_CODE='" + zone_code + "'  AND FORUM_CODE = 7  GROUP BY zc.ZONE_CODE\n" +
+						"),\n" +
+						"\n" +
+						"cte_gst11D1 AS (\n" +
+						"    SELECT  zc.ZONE_NAME,  zc.ZONE_CODE,  SUM(11b.DEPARTMENT_CLOSING_NO + 11b.TAXPAYER_CLOSING_NO) AS col10B,  SUM(11b.DEPARTMENT_BREAKUP_LESS_1YEAR_NO + 11b.TAXPAYER_BREAKUP_LESS_1YEAR_NO) AS col12B\n" +
+						"    FROM  mis_dla_gst_lgl_1b AS 11b\n" +
+						"    LEFT JOIN mis_gst_commcode AS cc ON 11b.COMM_CODE = cc.COMM_CODE\n" +
+						"    LEFT JOIN  mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+						"    WHERE 11b.MM_YYYY = '" + month_date + "' and zc.ZONE_CODE='" + zone_code + "'  AND FORUM_CODE = 7\n" +
+						"    GROUP BY  zc.ZONE_CODE\n" +
+						")\n" +
+						"\n" +
+						"SELECT\n" +
+						"    cte.ZONE_NAME, cte.ZONE_CODE, (cte.col10 / cte1.col4) AS total_score, 'gst11A' AS Gst, 'Number of appeal cases disposed of during the month vis-à-vis  pending appeal cases  at the beginning for the month' as ra,\n" +
+						"    CONCAT(cte.col10, '/', cte1.col4) AS absolute_value\n" +
+						"FROM cte\n" +
+						"    INNER JOIN cte1 ON cte.ZONE_CODE = cte1.ZONE_CODE\n" +
+						"\n" +
+						"UNION ALL\n" +
+						"\n" +
+						"SELECT\n" +
+						"    cte2.ZONE_NAME, cte2.ZONE_CODE, CASE WHEN (cte2.col10A + cte3.col10B) = 0 THEN NULL ELSE (((cte2.col10A - cte2.col12A) + (cte3.col10B - cte3.col12B)) / (cte2.col10A + cte3.col10B)) END AS total_score, 'gst11B' AS Gst, 'Number of appeal cases  pending for more than one year vis-à-vis  total cases of appeal pending ' as ra,\n" +
+						"    CONCAT((cte2.col10A - cte2.col12A) + (cte3.col10B - cte3.col12B), '/', (cte2.col10A + cte3.col10B)) AS absolute_value\n" +
+						"FROM\n" +
+						"    cte2\n" +
+						"    INNER JOIN cte3 ON cte2.ZONE_CODE = cte3.ZONE_CODE\n" +
+						"\n" +
+						"UNION ALL\n" +
+						"\n" +
+						"SELECT\n" +
+						"    cte_gst11C.ZONE_NAME,\n" +
+						"    cte_gst11C.ZONE_CODE,\n" +
+						"    CASE WHEN cte_gst11C1.col4 = 0 THEN NULL ELSE (cte_gst11C.col10 / cte_gst11C1.col4) END AS total_score,\n" +
+						"    'gst11C' AS Gst, 'Number of Cases disposed during the month vis-à-vis  pending cases at the beginning for the month' as ra,\n" +
+						"    CASE WHEN cte_gst11C1.col4 = 0 THEN NULL ELSE CONCAT(cte_gst11C.col10, '/', cte_gst11C1.col4) END AS absolute_value\n" +
+						"FROM\n" +
+						"    cte_gst11C\n" +
+						"    INNER JOIN cte_gst11C1 ON cte_gst11C.ZONE_CODE = cte_gst11C1.ZONE_CODE\n" +
+						"\n" +
+						"UNION ALL\n" +
+						"\n" +
+						"SELECT\n" +
+						"    cte_gst11D.ZONE_NAME,\n" +
+						"    cte_gst11D.ZONE_CODE,\n" +
+						"    CASE WHEN (cte_gst11D.col10A + cte_gst11D1.col10B) = 0 THEN NULL ELSE (((cte_gst11D.col10A - cte_gst11D.col12A) + (cte_gst11D1.col10B - cte_gst11D1.col12B)) / (cte_gst11D.col10A + cte_gst11D1.col10B)) END AS total_score,\n" +
+						"    'gst11D' AS Gst, 'Number of appeal cases pending for more than One year vis-à-vis  total cases of appeal pending ' as ra,\n" +
+						"    CONCAT(\n" +
+						"        ABS(((cte_gst11D.col10A - cte_gst11D.col12A) + (cte_gst11D1.col10B - cte_gst11D1.col12B))),\n" +
+						"        '/',\n" +
+						"        ABS((cte_gst11D.col10A + cte_gst11D1.col10B))\n" +
+						"    ) AS absolute_value\n" +
+						"FROM\n" +
+						"    cte_gst11D\n" +
+						"    INNER JOIN cte_gst11D1 ON cte_gst11D.ZONE_CODE = cte_gst11D1.ZONE_CODE;\n";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -2526,7 +2743,7 @@ public class TotalScoreController {
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
-					double tScore = rsGst14aa.getDouble("score_of_subParameter");
+					double tScore = rsGst14aa.getDouble("total_score");
 					String ra = rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 					String commName = "null";
