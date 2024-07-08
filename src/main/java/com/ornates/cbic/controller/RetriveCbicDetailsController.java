@@ -1293,15 +1293,15 @@ public class RetriveCbicDetailsController {
                 // String prev_month_new =DateCalculate.getPreviousMonth(month_date);
                 // Query string
                 String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
-                        "       SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) AS col22, \n" +
-                        "       SUM(14c.TAX_LIABILITY_DETECTECT) AS col14 \n" +
+                        "       SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) /\n" +
+                        "       SUM(14c.TAX_LIABILITY_DETECTECT) AS score_of_parameter,\n" +
+                        "       CONCAT(SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY), ' / ',\n" +
+                        "       SUM(14c.TAX_LIABILITY_DETECTECT)) AS absval\n" +
                         "FROM mis_gst_commcode AS cc \n" +
-                        "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c \n" +
-                        "       ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                        "LEFT JOIN mis_gst_zonecode AS zc \n" +
-                        "       ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "WHERE 14c.MM_YYYY <= '" +month_date+"' \n" + //in this sql queries prev_month_new calculate in the queri
-                        "GROUP BY cc.ZONE_CODE, zc.ZONE_NAME \n" +
+                        "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "WHERE 14c.MM_YYYY <= '" +month_date+"' \n" +
+                        "GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                         "ORDER BY cc.ZONE_CODE;";
 
                 PreparedStatement psGst14aa = con.prepareStatement(queryGst14aa);
@@ -1311,31 +1311,34 @@ public class RetriveCbicDetailsController {
 
 
                 while (rsGst14aa.next()) {
-                    String ra = RelevantAspect.Gst3B_RA;
-                    //String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    String commname="All";
+                    String ra=RelevantAspect.Gst3B_RA;
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
-                    int col22 = rsGst14aa.getInt("col22");
-                    int col14 = rsGst14aa.getInt("col14");
-                    if (col14 != 0) {
-                        total = ((double) col22 / col14);
-                    }
-                    rank = score.marks3b(total);
-                    String absval = String.valueOf(col22) + "/" + String.valueOf(col14);
+                    String absval=rsGst14aa.getString("absval");
+                    total = rsGst14aa.getDouble("score_of_parameter");
+
+
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), "ALL", (Double) totalScore, rank, absval, zoneCode, ra);
+                    gsta=new GST4A(zoneName, commname,totalScore, rank, absval, zoneCode,ra);
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("commissary")) {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
 
                 // Query string
-                String queryGst14aa="SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, (14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) AS col22,\n" +
-                        "14c.TAX_LIABILITY_DETECTECT AS col14 \n" +
+                String queryGst14aa="SELECT zc.ZONE_NAME, \n" +
+                        "       cc.COMM_NAME, \n" +
+                        "       zc.ZONE_CODE, \n" +
+                        "       SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / -- as col22\n" +
+                        "       SUM(14c.TAX_LIABILITY_DETECTECT) AS score_of_parameter, -- as col14\n" +
+                        "       CONCAT(SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY), '/', SUM(14c.TAX_LIABILITY_DETECTECT)) AS absval\n" +
                         "FROM mis_gst_commcode AS cc \n" +
                         "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                         "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "WHERE 14c.MM_YYYY ='" +month_date+"' AND zc.ZONE_CODE = '" + zone_code + "';";
+                        "WHERE 14c.MM_YYYY <= '" +month_date+"' AND zc.ZONE_CODE = '" + zone_code + "'\n" +
+                        "GROUP BY zc.ZONE_NAME, cc.COMM_NAME, zc.ZONE_CODE;\n";
 
                 //Prepared Statement
                 PreparedStatement psGst14aa=con.prepareStatement(queryGst14aa);
@@ -1347,13 +1350,9 @@ public class RetriveCbicDetailsController {
                     String ra=RelevantAspect.Gst3B_RA;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
-                    int col22=rsGst14aa.getInt("col22");
-                    int col14=rsGst14aa.getInt("col14");
-                    String absval=String.valueOf(col22)+"/"+String.valueOf(col14);
+                    String absval=rsGst14aa.getString("absval");
+                    total = rsGst14aa.getDouble("score_of_parameter");
 
-                    if (col14 != 0){
-                        total =((double) col22/col14);
-                    }
 
                     rank=score.marks3b(total);
                     String formattedTotal = String.format("%.2f", total);
@@ -1365,12 +1364,17 @@ public class RetriveCbicDetailsController {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
 
                 // Query string
-                String queryGst14aa="SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, (14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) AS col22,\n" +
-                        "14c.TAX_LIABILITY_DETECTECT AS col14 \n" +
+                String queryGst14aa="SELECT zc.ZONE_NAME, \n" +
+                        "       cc.COMM_NAME, \n" +
+                        "       zc.ZONE_CODE, \n" +
+                        "       SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / -- as col22\n" +
+                        "       SUM(14c.TAX_LIABILITY_DETECTECT) AS score_of_parameter, -- as col14\n" +
+                        "       CONCAT(SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY), '/', SUM(14c.TAX_LIABILITY_DETECTECT)) AS absval\n" +
                         "FROM mis_gst_commcode AS cc \n" +
                         "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                         "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "WHERE 14c.MM_YYYY ='"+month_date+"' ";
+                        "WHERE 14c.MM_YYYY <= '" +month_date+"' \n" +
+                        "GROUP BY zc.ZONE_NAME, cc.COMM_NAME, zc.ZONE_CODE;\n";
 
                 //Prepared Statement
                 PreparedStatement psGst14aa=con.prepareStatement(queryGst14aa);
@@ -1382,13 +1386,9 @@ public class RetriveCbicDetailsController {
                     String ra=RelevantAspect.Gst3B_RA;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
-                    int col22=rsGst14aa.getInt("col22");
-                    int col14=rsGst14aa.getInt("col14");
-                    String absval=String.valueOf(col22)+"/"+String.valueOf(col14);
+                    String absval=rsGst14aa.getString("absval");
+                    total = rsGst14aa.getDouble("score_of_parameter");
 
-                    if (col14 != 0){
-                        total =((double) col22/col14);
-                    }
 
                     rank=score.marks3b(total);
                     String formattedTotal = String.format("%.2f", total);
