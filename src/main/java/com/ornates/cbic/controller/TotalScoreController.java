@@ -1169,11 +1169,75 @@ public class TotalScoreController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
-				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
+				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'		'" + next_month_new + "'
 				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 				String next_month_new = DateCalculate.getNextMonth(month_date);
 
-				String query_assessment = "";
+				String query_assessment = "WITH CTE1 AS (\n" +
+						"    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+						"           (14c.ADC_COMMISSIONERATE_TIME_LESS_3_NO + 14c.ADC_AUDIT_TIME_LESS_3_NO + 14c.ADC_INVESTIGATION_TIME_LESS_3_NO + 14c.ADC_CALLBOOK_TIME_LESS_3_NO +\n" +
+						"            14c.DC_COMMISSIONERATE_TIME_LESS_3_NO + 14c.DC_AUDIT_TIME_LESS_3_NO + 14c.DC_INVESTIGATION_TIME_LESS_3_NO + 14c.DC_CALLBOOK_TIME_LESS_3_NO +\n" +
+						"            14c.SUPERINTENDENT_COMMISSIONERATE_TIME_LESS_3_NO + 14c.SUPERINTENDENT_AUDIT_TIME_LESS_3_NO + 14c.SUPERINTENDENT_INVESTIGATION_TIME_LESS_3_NO + 14c.SUPERINTENDENT_CALLBOOK_TIME_LESS_3_NO) AS col22, \n" +
+						"           (14c.ADC_COMMISSIONERATE_TIME_3_TO_6_NO + 14c.ADC_AUDIT_TIME_3_TO_6_NO + 14c.ADC_INVESTIGATION_TIME_3_TO_6_NO + 14c.ADC_CALLBOOK_TIME_3_TO_6_NO +\n" +
+						"            14c.DC_COMMISSIONERATE_TIME_3_TO_6_NO + 14c.DC_AUDIT_TIME_3_TO_6_NO + 14c.DC_INVESTIGATION_TIME_3_TO_6_NO + 14c.DC_CALLBOOK_TIME_3_TO_6_NO +\n" +
+						"            14c.SUPERINTENDENT_COMMISSIONERATE_TIME_3_TO_6_NO + 14c.SUPERINTENDENT_AUDIT_TIME_3_TO_6_NO + 14c.SUPERINTENDENT_INVESTIGATION_TIME_3_TO_6_NO + 14c.SUPERINTENDENT_CALLBOOK_TIME_3_TO_6_NO) AS col23, \n" +
+						"           NULL AS col16\n" +
+						"    FROM mis_gst_commcode AS cc \n" +
+						"    RIGHT JOIN mis_dpm_gst_adj_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"    WHERE 14c.MM_YYYY = '" + month_date + "' and cc.ZONE_CODE='" + zone_code + "' and cc.COMM_NAME= '" + come_name + "'\n" +
+						"),\n" +
+						"CTE2 AS (\n" +
+						"    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+						"           NULL AS col22, NULL AS col23,\n" +
+						"           (14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + 14c.ADC_CALLBOOK_OPENING_NO +\n" +
+						"            14c.DC_COMMISSIONERATE_OPENING_NO + 14c.DC_AUDIT_OPENING_NO + 14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO +\n" +
+						"            14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO + 14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO) AS col16\n" +
+						"    FROM mis_gst_commcode AS cc \n" +
+						"    RIGHT JOIN mis_dpm_gst_adj_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"    WHERE 14c.MM_YYYY = '" + next_month_new + "' and cc.ZONE_CODE='" + zone_code + "' and cc.COMM_NAME= '" + come_name + "'\n" +
+						")\n" +
+						"SELECT ZONE_NAME, ZONE_CODE, COMM_NAME, \n" +
+						"       (SUM(col22) + SUM(col23)) / SUM(col16) AS score_of_subParameter,\n" +
+						"       CONCAT((SUM(col22) + SUM(col23)), '/', SUM(col16)) AS absolute_value, \n" +
+						"       'GST 5A' as gst, 'Number of cases disposed of during the month vis-à-vis total pending cases at the beginning of the month' as ra\n" +
+						"FROM (\n" +
+						"    SELECT * FROM CTE1\n" +
+						"    UNION ALL\n" +
+						"    SELECT * FROM CTE2\n" +
+						") AS combined_data \n" +
+						"GROUP BY ZONE_NAME, ZONE_CODE, COMM_NAME\n" +
+						"\n" +
+						"UNION ALL\n" +
+						"\n" +
+						"SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+						"    (\n" +
+						"        14c.adc_commissionerate_disposal_no +  14c.adc_audit_disposal_no +   14c.adc_investigation_disposal_no +   14c.adc_callbook_disposal_no +   14c.dc_commissionerate_disposal_no + \n" +
+						"        14c.dc_audit_disposal_no +   14c.dc_investigation_disposal_no +   14c.dc_callbook_disposal_no +  14c.superintendent_commissionerate_disposal_no +   14c.superintendent_audit_disposal_no + \n" +
+						"        14c.superintendent_investigation_disposal_no +  14c.superintendent_callbook_disposal_no \n" +
+						"    ) /\n" +
+						"    (\n" +
+						"        14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + 14c.ADC_CALLBOOK_OPENING_NO + 14c.DC_COMMISSIONERATE_OPENING_NO +  14c.DC_AUDIT_OPENING_NO +\n" +
+						"        14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + 14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO +  14c.SUPERINTENDENT_AUDIT_OPENING_NO +\n" +
+						"        14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO\n" +
+						"    ) as score_of_subParameter,\n" +
+						"    CONCAT(\n" +
+						"        14c.adc_commissionerate_disposal_no +   14c.adc_audit_disposal_no +  14c.adc_investigation_disposal_no +   14c.adc_callbook_disposal_no +  14c.dc_commissionerate_disposal_no + \n" +
+						"        14c.dc_audit_disposal_no + 14c.dc_investigation_disposal_no +  14c.dc_callbook_disposal_no +   14c.superintendent_commissionerate_disposal_no +  14c.superintendent_audit_disposal_no + \n" +
+						"        14c.superintendent_investigation_disposal_no +   14c.superintendent_callbook_disposal_no, \n" +
+						"        ' / ',\n" +
+						"        14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO +  14c.ADC_INVESTIGATION_OPENING_NO + 14c.ADC_CALLBOOK_OPENING_NO + 14c.DC_COMMISSIONERATE_OPENING_NO +\n" +
+						"        14c.DC_AUDIT_OPENING_NO +  14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + 14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO +\n" +
+						"        14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO\n" +
+						"    ) as absolute_value  ,\n" +
+						"    'GST 5A' as gst, 'Number of cases disposed of during the month vis-à-vis total pending cases at the beginning of the month' as ra\n" +
+						"FROM mis_gst_commcode as cc \n" +
+						"RIGHT JOIN mis_dpm_gst_adj_1 as 14c \n" +
+						"ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"LEFT JOIN mis_gst_zonecode as zc \n" +
+						"ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"WHERE 14c.MM_YYYY = '" + month_date + "' and cc.ZONE_CODE='" + zone_code + "' and cc.COMM_NAME= '" + come_name + "';\n";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -1918,12 +1982,12 @@ public class TotalScoreController {
 	 * Purpose: This methods have core function in recovery.
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/recovery") //8
-	//  http://localhost:8080/cbicApi/cbic/t_score/recovery?month_date=2023-05-01&type=parameter							// for scrutiny/assessment button
-	//  http://localhost:8080/cbicApi/cbic/t_score/recovery?month_date=2023-05-01&type=zone&zone_code=59 				// for all button
-	//  http://localhost:8080/cbicApi/cbic/t_score/recovery?month_date=2023-05-01&type=commissary&zone_code=59			// for show button, zone wise
-	//  http://localhost:8080/cbicApi/cbic/t_score/recovery?month_date=2023-05-01&type=all_commissary					// for all commissary
-	//  http://localhost:8080/cbicApi/cbic/t_score/recovery?month_date=2023-05-01&type=come_name&zone_code=64&come_name=Rajkot			// for only commissary wise, show button
+	@RequestMapping(value = "/recovery of arrears") //8
+	//  http://localhost:8080/cbicApi/cbic/t_score/recovery of arrears?month_date=2023-05-01&type=parameter							// for scrutiny/assessment button
+	//  http://localhost:8080/cbicApi/cbic/t_score/recovery of arrears?month_date=2023-05-01&type=zone&zone_code=59 				// for all button
+	//  http://localhost:8080/cbicApi/cbic/t_score/recovery of arrears?month_date=2023-05-01&type=commissary&zone_code=59			// for show button, zone wise
+	//  http://localhost:8080/cbicApi/cbic/t_score/recovery of arrears?month_date=2023-05-01&type=all_commissary					// for all commissary
+	//  http://localhost:8080/cbicApi/cbic/t_score/recovery of arrears?month_date=2023-05-01&type=come_name&zone_code=64&come_name=Rajkot			// for only commissary wise, show button
 	public Object recovery(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code, @RequestParam(required = false) String come_name) {
 		List<TotalScore> allGstaList = new ArrayList<>();
 		TotalScore totalScore = null;
@@ -1935,7 +1999,38 @@ public class TotalScoreController {
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "";
+				String query_assessment = "WITH cte AS ( \n" +
+                        "SELECT zc.ZONE_NAME,cc.ZONE_CODE,SUM(a11.ARREAR_REALISED_AMT) AS col13\n" +
+                        "  FROM mis_tar_gst_3_new AS a11\n" +
+                        "  LEFT JOIN mis_gst_commcode AS cc ON a11.COMM_CODE = cc.COMM_CODE\n" +
+                        "  LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+                        "  WHERE a11.MM_YYYY = '" + month_date + "' GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                        "  ),\n" +
+                        "  cte1 AS (\n" +
+                        "  SELECT zc.ZONE_NAME,cc.ZONE_CODE,COUNT(*) AS col3\n" +
+                        "  FROM mis_tar_gst_3_new AS a11\n" +
+                        "  LEFT JOIN mis_gst_commcode AS cc ON a11.COMM_CODE = cc.COMM_CODE\n" +
+                        "  LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE\n" +
+                        "  WHERE a11.MM_YYYY = '" + prev_month_new + "' GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                        "  ),\n" +
+                        "  final_cte AS (\n" +
+                        "  SELECT cte.ZONE_NAME,cte.ZONE_CODE,SUM(cte.col13) AS col13,SUM(cte1.col3) AS col3,(cte.col13 / cte1.col3) AS col13_col3_ratio,\n" +
+                        "  additional_data.col20,additional_data.col22,\n" +
+                        "  ((additional_data.col20 - additional_data.col22) / additional_data.col20) AS col20_col22_ratio,(cte.col13 / cte1.col3) + ((additional_data.col20 - additional_data.col22) / additional_data.col20) AS total_score\n" +
+                        "  FROM cte\n" +
+                        "  INNER JOIN cte1 ON cte.ZONE_CODE = cte1.ZONE_CODE\n" +
+                        "  LEFT JOIN (\n" +
+                        "  SELECT\n" +
+                        "  cc.ZONE_CODE,SUM(14c.CLOSING_AMT) AS col20,SUM(14c.BELOW_YEAR_AMT) AS col22\n" +
+                        "  FROM mis_gst_commcode AS cc\n" +
+                        "  RIGHT JOIN mis_tar_gst_3_new AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                        "  WHERE 14c.MM_YYYY = '" + month_date + "' GROUP BY cc.ZONE_CODE\n" +
+                        "  ) AS additional_data ON cte.ZONE_CODE = additional_data.ZONE_CODE\n" +
+                        "  GROUP BY cte.ZONE_NAME, cte.ZONE_CODE, additional_data.col20, additional_data.col22\n" +
+                        "  )\n" +
+                        "  SELECT\n" +
+                        "  final_cte.ZONE_NAME,final_cte.ZONE_CODE,final_cte.col13,final_cte.col3,final_cte.col13_col3_ratio,final_cte.col20,final_cte.col22,final_cte.col20_col22_ratio,final_cte.total_score,\n" +
+                        "  ROW_NUMBER() OVER (ORDER BY final_cte.total_score DESC) AS z_rank FROM final_cte;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -2005,7 +2100,43 @@ public class TotalScoreController {
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "";
+				String query_assessment = "WITH cte AS (   SELECT DISTINCT \n" +
+						"   zc.ZONE_NAME, zc.ZONE_CODE, cc.COMM_NAME, cc.COMM_CODE, \n" +
+						"   a11.ARREAR_REALISED_AMT AS col13 \n" +
+						"   FROM mis_tar_gst_3_new AS a11 \n" +
+						"   LEFT JOIN mis_gst_commcode AS cc ON a11.COMM_CODE = cc.COMM_CODE \n" +
+						"   LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE \n" +
+						"   WHERE a11.MM_YYYY = '" + prev_month_new + "' \n" +
+						"   ), \n" +
+						"   cte1 AS (\n" +
+						"   SELECT DISTINCT zc.ZONE_NAME, zc.ZONE_CODE, cc.COMM_NAME, cc.COMM_CODE, 1 AS col3 \n" +
+						"   FROM mis_tar_gst_3_new AS a11 \n" +
+						"   LEFT JOIN mis_gst_commcode AS cc ON a11.COMM_CODE = cc.COMM_CODE \n" +
+						"   LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE \n" +
+						"   WHERE a11.MM_YYYY = '" + prev_month_new + "'\n" +
+						"   ),\n" +
+						"   cte2 AS (\n" +
+						"   SELECT cc.ZONE_CODE, cc.COMM_NAME,cc.COMM_CODE,MAX(14c.CLOSING_AMT) AS col20, MAX(14c.BELOW_YEAR_AMT) AS col22\n" +
+						"   FROM mis_gst_commcode AS cc \n" +
+						"   RIGHT JOIN mis_tar_gst_3_new AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"   LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"   WHERE 14c.MM_YYYY = '" + month_date + "' GROUP BY cc.ZONE_CODE, zc.ZONE_NAME,cc.COMM_NAME,cc.COMM_CODE\n" +
+						"   )\n" +
+						"   SELECT cte.ZONE_NAME, cte.ZONE_CODE, cte.COMM_CODE, cte.col13, cte1.col3,cte.COMM_NAME, \n" +
+						"   CASE WHEN cte1.col3 = 0 THEN NULL \n" +
+						"   END AS Score_of_subparameter1,cte2.col20, cte2.col22,(cte2.col20 - cte2.col22) / cte2.col20 AS Score_of_subparameter2,\n" +
+						"   COALESCE((cte.col13 / cte1.col3), 0) + COALESCE((cte2.col20 - cte2.col22) / cte2.col20, 0) AS total_score,\n" +
+						"   RANK() OVER (ORDER BY COALESCE((cte.col13 / cte1.col3), 0) + COALESCE((cte2.col20 - cte2.col22) / cte2.col20, 0) DESC, cte.COMM_CODE DESC) AS z_rank\n" +
+						"   FROM cte \n" +
+						"   INNER JOIN cte1 \n" +
+						"   ON cte.COMM_CODE = cte1.COMM_CODE \n" +
+						"   AND cte.ZONE_CODE = cte1.ZONE_CODE \n" +
+						"   AND cte.COMM_NAME = cte1.COMM_NAME\n" +
+						"   INNER JOIN cte2 \n" +
+						"   ON cte.COMM_CODE = cte2.COMM_CODE \n" +
+						"   AND cte.ZONE_CODE = cte2.ZONE_CODE \n" +
+						"   AND cte.COMM_NAME = cte2.COMM_NAME\n" +
+						"   ORDER BY total_score DESC, cte.COMM_CODE DESC;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
