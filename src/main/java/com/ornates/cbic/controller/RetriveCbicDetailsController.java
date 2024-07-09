@@ -1832,77 +1832,52 @@ public class RetriveCbicDetailsController {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
 
                 // Query string
-                String queryGst46a="SELECT " +
-                        "cc.ZONE_CODE, " +
-                        "zc.ZONE_NAME, " +
-                        "sum(14c.REALISATION_CGST_AMT + 14c.REALISATION_IGST_AMT + 14c.REALISATION_SGST_AMT + 14c.REALISATION_CESS_AMT) AS col6_1 " +
-                        "FROM mis_gst_commcode AS cc " +
-                        "RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE " +
-                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE " +
-                        "WHERE 14c.MM_YYYY = '" + month_date + "' GROUP BY cc.ZONE_CODE;";
-
-
-                String queryGst46b= "SELECT " +
-                        "cc.ZONE_CODE, " +
-                        "zc.ZONE_NAME, " +
-                        "SUM(" +
-                        "    14c.REALISATION_CGST_AMT + " +
-                        "    14c.REALISATION_IGST_AMT + " +
-                        "    14c.REALISATION_SGST_AMT + " +
-                        "    14c.REALISATION_CESS_AMT " +
-                        ") AS col6_2 " +
-                        "FROM " +
-                        "    mis_gst_commcode AS cc " +
-                        "RIGHT JOIN " +
-                        "    mis_gi_gst_1 AS 14c " +
-                        "    ON cc.COMM_CODE = 14c.COMM_CODE " +
-                        "LEFT JOIN " +
-                        "    mis_gst_zonecode AS zc " +
-                        "    ON zc.ZONE_CODE = cc.ZONE_CODE " +
-                        "WHERE 14c.MM_YYYY = '"+prev_month_new+"' " +
-                        "GROUP BY cc.ZONE_CODE;";
-
-                String queryGst6c= "SELECT "
-                        + "    cc.ZONE_CODE, "
-                        + "    zc.ZONE_NAME, "
-                        + "    SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col6_3 "
-                        + "FROM mis_gst_commcode AS cc "
-                        + "RIGHT JOIN "
-                        + "    mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE "
-                        + "LEFT JOIN "
-                        + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE "
-                        + "WHERE "
-                        + "    14c.MM_YYYY = '" + month_date + "' " // Use the monthDate variable here
-                        + "GROUP BY "
-                        + "    cc.ZONE_CODE; ";
-
-
-                String queryGst6d="SELECT " +
-                        "cc.ZONE_CODE, " +
-                        "zc.ZONE_NAME, " +
-                        "SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col6_4 " +
-                        "FROM " +
-                        "mis_gst_commcode AS cc " +
-                        "RIGHT JOIN " +
-                        "mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE " +
-                        "LEFT JOIN " +
-                        "mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE " +
-                        "WHERE " +
-                        "14c.MM_YYYY = '"+prev_month_new+"' " +
-                        "GROUP BY " +
-                        "cc.ZONE_CODE;";
+                String queryGst46a="WITH may_data AS (\n" +
+                        "    SELECT \n" +
+                        "        cc.ZONE_CODE, zc.ZONE_NAME, \n" +
+                        "        SUM(14c.REALISATION_CGST_AMT + 14c.REALISATION_IGST_AMT + 14c.REALISATION_SGST_AMT + 14c.REALISATION_CESS_AMT) AS col6_1,\n" +
+                        "        SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col6_3 \n" +
+                        "    FROM mis_gst_commcode AS cc \n" +
+                        "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
+                        "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                        "),\n" +
+                        "april_data AS (\n" +
+                        "    SELECT cc.ZONE_CODE, zc.ZONE_NAME, \n" +
+                        "        SUM(14c.REALISATION_CGST_AMT + 14c.REALISATION_IGST_AMT + 14c.REALISATION_SGST_AMT + 14c.REALISATION_CESS_AMT) AS col6_2,\n" +
+                        "        SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col6_4\n" +
+                        "    FROM mis_gst_commcode AS cc\n" +
+                        "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' \n" +
+                        "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                        ")\n" +
+                        "SELECT \n" +
+                        "    COALESCE(may_data.ZONE_CODE, april_data.ZONE_CODE) AS ZONE_CODE,\n" +
+                        "    COALESCE(may_data.ZONE_NAME, april_data.ZONE_NAME) AS ZONE_NAME,\n" +
+                        "    may_data.col6_1, may_data.col6_3, april_data.col6_2, april_data.col6_4\n" +
+                        "FROM \n" +
+                        "    may_data\n" +
+                        "LEFT JOIN april_data ON may_data.ZONE_CODE = april_data.ZONE_CODE\n" +
+                        "UNION\n" +
+                        "SELECT \n" +
+                        "    COALESCE(may_data.ZONE_CODE, april_data.ZONE_CODE) AS ZONE_CODE,\n" +
+                        "    COALESCE(may_data.ZONE_NAME, april_data.ZONE_NAME) AS ZONE_NAME,\n" +
+                        "    may_data.col6_1, may_data.col6_3, april_data.col6_2, april_data.col6_4\n" +
+                        "FROM \n" +
+                        "    may_data\n" +
+                        "RIGHT JOIN april_data ON may_data.ZONE_CODE = april_data.ZONE_CODE\n" +
+                        "ORDER BY ZONE_CODE;\n";
 
                 ResultSet rsGst46a =GetExecutionSQL.getResult(queryGst46a);
-                ResultSet rsGst46b =GetExecutionSQL.getResult(queryGst46b);
-                ResultSet rsGst6c =GetExecutionSQL.getResult(queryGst6c);
-                ResultSet rsGst6d =GetExecutionSQL.getResult(queryGst6d);
-                while(rsGst46a.next() && rsGst46b.next() && rsGst6c.next() && rsGst6d.next() ) {
+                while(rsGst46a.next()) {
                     String ra=RelevantAspect.GST4D_RA;
                     String zoneCode = rsGst46a.getString("ZONE_CODE");
                     int col6_1=rsGst46a.getInt("col6_1");
-                    int col6_2=rsGst46b.getInt("col6_2");
-                    int col6_3=rsGst6c.getInt("col6_3");
-                    int col6_4=rsGst6d.getInt("col6_4");
+                    int col6_2=rsGst46a.getInt("col6_2");
+                    int col6_3=rsGst46a.getInt("col6_3");
+                    int col6_4=rsGst46a.getInt("col6_4");
                     String absval = String.valueOf(col6_1+ col6_2) + "/" + String.valueOf(col6_3+col6_4);
                     if(col6_3+col6_4!=0) {
                         total=((double) (col6_1+col6_2) / (col6_3+col6_4));
