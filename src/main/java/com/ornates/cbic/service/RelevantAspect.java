@@ -1,16 +1,14 @@
 package com.ornates.cbic.service;
 
 public class RelevantAspect {
-	
-	public static final String GST1A_RA ="Number of applications cleared within 07 days vis-à-vis total applications filed with Aadhar verification during the month";
-	public static final String GST1B_RA ="Number of cases where PV not completed within 30 days vis-à-vis total applications marked for PV for the month";
+
+    public static final String GST1A_RA ="Number of applications cleared within 07 days vis-à-vis total applications filed with Aadhar verification during the month";
+    public static final String GST1B_RA ="Number of cases where PV not completed within 30 days vis-à-vis total applications marked for PV for the month";
     public static final String GST1C_RA ="Number of Deemed registrations vis-à-vis total number of applications received for registration in the month";
-    public static final String GST1D_RA ="*Percentage of registration applications pending at the end of the month vis-à-vis total applications for registration received. \n" +
-            "(OB+R-D)/(OB+R)\n";
-    public static final String GST1E_RA ="*Percentage of registrations pending for cancellation at the end of the month vis-à-vis total applications initiated for cancellation \n" +
-            "(OB+R-D)/(OB+R)\n";
-    public static final String GST1F_RA ="*Percentage of registration pending for revocation at the end of the month vis-à-vis total applications received for revocation of cancellation \n";
-    public static final String Gst2_RA="Percentage of returns which were due but not filed vis-à-vis total returns due (GSTR 3B) ";
+    public static final String GST1D_RA ="Percentage of registration applications pending at the end of the month vis-à-vis total applications for registration received.";
+    public static final String GST1E_RA ="Percentage of registrations pending for cancellation at the end of the month vis-à-vis total applications initiated for cancellation";
+    public static final String GST1F_RA ="Percentage of registration pending for revocation at the end of the month vis-à-vis total applications received for revocation of cancellation";
+    public static final String Gst2_RA="Percentage of returns which were due but not filed vis-à-vis total returns due";
     public static final String Gst3A_RA="Number of Returns whose scrutiny completed for the month vis-à-vis total Returns pending for the month (Pro-rata basis)";
     public static final String Gst3B_RA="Recoveries made upto the month vis-a-vis detections upto the month";
     public static final String GST4A_RA="No. of cases disposed (investigation completed)during the month vis a vis total investigations pending at beginning of the month";
@@ -35,6 +33,6 @@ public class RelevantAspect {
     public static final String Gst11B_RA="Number of appeal cases  pending for more than one year vis-à-vis  total cases of appeal pending";
     public static final String Gst11C_RA="Number of Cases disposed during the month vis-à-vis  pending cases at the beginning for the month";
     public static final String Gst11D_RA="Number of appeal cases pending for more than One year vis-à-vis  total cases of appeal pending ";
-    
-    
+
+
 }

@@ -1,7 +1,7 @@
 package com.ornates.cbic.model.response;
 
 public class GST4A {
-	
+
 	private String zone_name;
 	private String commissionerate_name;
 	private Double total_score;
@@ -9,7 +9,7 @@ public class GST4A {
 	private String absolutevale;
 	private String zone_code;
 	private String relevant_aspect;
-	
+
 	public String getZone_name() {
 		return zone_name;
 	}
@@ -53,7 +53,7 @@ public class GST4A {
 		this.relevant_aspect = relevant_aspect;
 	}
 	public GST4A(String zone_name, String commissionerate_name, Double total_score, Integer rank, String absolutevale,
-			String zone_code, String relevant_aspect) {
+				 String zone_code, String relevant_aspect) {
 		super();
 		this.zone_name = zone_name;
 		this.commissionerate_name = commissionerate_name;
@@ -66,8 +66,8 @@ public class GST4A {
 	public GST4A() {
 		super();
 	}
-	
-	
-	
+
+
+
 
 }
