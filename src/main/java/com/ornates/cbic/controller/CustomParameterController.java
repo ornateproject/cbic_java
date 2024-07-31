@@ -48,12 +48,12 @@ public class CustomParameterController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/adjudication") // custom
-    //  http://localhost:8080/cbicApi/cbic/custom/parameter/adjudication?month_date=2023-05-01&type=parameter                   // for return filing button
-    //  http://localhost:8080/cbicApi/cbic/custom/parameter/adjudication?month_date=2023-05-01&type=zone&zone_code=59           // for all button
-    //	http://localhost:8080/cbicApi/cbic/custom/parameter/adjudication?month_date=2023-05-01&type=commissary&zone_code=59     // for show button, zone wise
-    //  http://localhost:8080/cbicApi/cbic/custom/parameter/adjudication?month_date=2023-05-01&type=all_commissary              // for all commissary
-    //  http://localhost:8080/cbicApi/cbic/custom/parameter/adjudication?month_date=2023-05-01&type=come_name&zone_code=64&come_name=Rajkot     // for particular commissary wise, show button
+    @RequestMapping(value = "/adjudication") // custom 5
+    //  http://localhost:8080/cbicApi/cbic/custom/parameter/adjudication?month_date=2022-03-01&type=parameter                   // for return filing button
+    //  http://localhost:8080/cbicApi/cbic/custom/parameter/adjudication?month_date=2022-03-01&type=zone&zone_code=59           // for all button
+    //	http://localhost:8080/cbicApi/cbic/custom/parameter/adjudication?month_date=2022-03-01&type=commissary&zone_code=59     // for show button, zone wise
+    //  http://localhost:8080/cbicApi/cbic/custom/parameter/adjudication?month_date=2022-03-01&type=all_commissary              // for all commissary
+    //  http://localhost:8080/cbicApi/cbic/custom/parameter/adjudication?month_date=2022-03-01&type=come_name&zone_code=64&come_name=Rajkot     // for particular commissary wise, show button
     public Object adjudication(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code, @RequestParam(required = false) String come_name) {
         List<TotalScore> allGstaList = new ArrayList<>();
         TotalScore totalScore = null;
@@ -63,6 +63,7 @@ public class CustomParameterController {
         try {
 
             if (type.equalsIgnoreCase("parameter")) { // adjudication all zone name 1
+                //		'" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
                 //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
                 String query_assessment = "WITH CTE_5a AS (\n" +
@@ -72,7 +73,7 @@ public class CustomParameterController {
                         "    FROM Mis_DGI_CUS_1A AS 14c \n" +
                         "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
                         "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "    WHERE 14c.MM_YYYY = '2022-03-01' \n" +
+                        "    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
                         "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                         "),\n" +
                         "CTE_5b AS (\n" +
@@ -82,7 +83,7 @@ public class CustomParameterController {
                         "    FROM mis_dgi_cus_1A AS 14c  \n" +
                         "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
                         "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "    WHERE 14c.MM_YYYY = '2022-03-01' \n" +
+                        "    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
                         "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                         "),\n" +
                         "CTE_5c AS (\n" +
@@ -91,7 +92,7 @@ public class CustomParameterController {
                         "    FROM mis_gst_commcode AS cc \n" +
                         "    RIGHT JOIN mis_dgi_cus_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                         "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "    WHERE 14c.MM_YYYY = '2022-03-01'\n" +
+                        "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
                         "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
                         "),\n" +
                         "ALL_ZONES AS (\n" +
