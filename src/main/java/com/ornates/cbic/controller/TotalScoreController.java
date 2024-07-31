@@ -500,7 +500,7 @@ public class TotalScoreController {
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/returnFiling") //2
+	@RequestMapping(value = "/returnFiling") //2 ///
 	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-05-01&type=parameter							// for return filing button
 	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-05-01&type=zone&zone_code=59 				// for all button
 	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-05-01&type=commissary&zone_code=59			// for show button, zone wise
@@ -565,7 +565,7 @@ public class TotalScoreController {
 						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
 						"),\n" +
 						"ranked_scores AS (\n" +
-						"    SELECT ROW_NUMBER() OVER (ORDER BY total_score DESC) AS z_rank, ZONE_NAME, ZONE_CODE, COMM_NAME, col21, col3, total_score FROM score_calculation\n" +
+						"    SELECT ROW_NUMBER() OVER (ORDER BY total_score) AS z_rank, ZONE_NAME, ZONE_CODE, COMM_NAME, col21, col3, total_score FROM score_calculation\n" +
 						")\n" +
 						"SELECT * FROM ranked_scores\n" +
 						"WHERE COMM_NAME IN ( SELECT DISTINCT COMM_NAME FROM ranked_scores WHERE ZONE_CODE = '" + zone_code + "'\n" +
@@ -639,10 +639,10 @@ public class TotalScoreController {
 						"        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
 						"    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
 						")\n" +
-						"SELECT ROW_NUMBER() OVER (ORDER BY total_score DESC) AS z_rank,\n" +
+						"SELECT ROW_NUMBER() OVER (ORDER BY total_score) AS z_rank,\n" +
 						"    ZONE_NAME, ZONE_CODE, COMM_NAME, col21, col3,total_score\n" +
 						"FROM score_calculation\n" +
-						"ORDER BY total_score DESC;";
+						"ORDER BY total_score;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -679,7 +679,7 @@ public class TotalScoreController {
 						")\n" +
 						"SELECT ROW_NUMBER() OVER (ORDER BY score_of_subParameter DESC) AS z_rank,\n" +
 						"    ZONE_NAME, ZONE_CODE, COMM_NAME, col21, col3,score_of_subParameter,gst,absolute_value,ra\n" +
-						"FROM score_calculation ORDER BY score_of_subParameter DESC;";
+						"FROM score_calculation ORDER BY score_of_subParameter;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 

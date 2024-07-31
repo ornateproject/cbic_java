@@ -20,7 +20,7 @@ import java.util.List;
  * @Author: @RKS & @Nishant
  */
 
-@CrossOrigin
+//@CrossOrigin
 @RequestMapping("/cbic/custom")
 @Controller
 public class CustomSubParameterController {
