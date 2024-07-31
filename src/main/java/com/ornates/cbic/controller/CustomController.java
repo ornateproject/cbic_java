@@ -442,7 +442,7 @@ public class CustomController {
     @RequestMapping(value = "/cus5b")
     //  http://localhost:8080/cbicApi/cbic/custom/cus5b?month_date=2022-02-01&type=zone
     //  http://localhost:8080/cbicApi/cbic/custom/cus5b?month_date=2022-02-01&zone_code=58&type=commissary
-    //  http://localhost:8080/cbicApi/cbic/custom/cus5c?month_date=2022-02-01&type=all_commissary
+    //  http://localhost:8080/cbicApi/cbic/custom/cus5b?month_date=2022-02-01&type=all_commissary
     public Object CustomGst5b(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code){
         List<GST4A> allGstaList = new ArrayList<>();
         GST4A gsta = null;
@@ -489,6 +489,35 @@ public class CustomController {
                         " FROM  mis_dgi_cus_1A  AS 14c  RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
                         " LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
                         " WHERE 14c.MM_YYYY ='" + month_date + "' and cc.ZONE_CODE = '"+zone_code+"';";
+
+                ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
+                while(rsGst14aa.next()) {
+                    String ra= CustomRelaventAspect.cus5B_RA;
+                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    String commname=rsGst14aa.getString("COMM_NAME");
+                    int col7d=rsGst14aa.getInt("col7d");
+                    int col6a=rsGst14aa.getInt("col6a");
+                    String absval=String.valueOf(col7d)+"/"+String.valueOf(col6a);
+
+                    if(col6a !=0){
+                        total = ((double) col7d/col6a);
+                    }else {
+                        total=0.00;
+                    }
+
+                    rank=score.c_marks5b(total);
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,rank,absval,zoneCode,ra);
+                    allGstaList.add(gsta);
+                }
+            }else if (type.equalsIgnoreCase("all_commissary")) {  // cus5b
+                String queryGst14aa="SELECT zc.ZONE_NAME, cc.ZONE_CODE,cc.COMM_NAME,\n" +
+                        "(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT) AS col7d, \n" +
+                        " (14c.AC_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.COMM_CLOSING_NO) AS col6a\n" +
+                        " FROM  mis_dgi_cus_1A  AS 14c  RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                        " LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        " WHERE 14c.MM_YYYY = '" + month_date + "';";
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
