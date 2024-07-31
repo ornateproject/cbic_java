@@ -500,7 +500,7 @@ public class TotalScoreController {
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/returnFiling") //2 ///
+	@RequestMapping(value = "/returnFiling") //2 
 	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-05-01&type=parameter							// for return filing button
 	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-05-01&type=zone&zone_code=59 				// for all button
 	//  http://localhost:8080/cbicApi/cbic/t_score/returnFiling?month_date=2023-05-01&type=commissary&zone_code=59			// for show button, zone wise
@@ -2707,7 +2707,7 @@ public class TotalScoreController {
 						"),\n" +
 						"ranked_values AS (\n" +
 						"    SELECT cv2.ZONE_CODE, cv2.ZONE_NAME, cv2.COMM_NAME, cv2.col16, cv2.col22, cv2.total_score,\n" +
-						"           ROW_NUMBER() OVER (ORDER BY cv2.total_score DESC) AS z_rank\n" +
+						"           ROW_NUMBER() OVER (ORDER BY cv2.total_score) AS z_rank\n" +
 						"    FROM calculated_values_2 cv2\n" +
 						")\n" +
 						"SELECT rv.ZONE_CODE, rv.ZONE_NAME, rv.COMM_NAME, rv.col16, rv.col22, rv.total_score, rv.z_rank\n" +
@@ -2753,9 +2753,9 @@ public class TotalScoreController {
 						" SELECT ZONE_CODE, ZONE_NAME, col16, col22, \n" +
 						" CONCAT(col22, '/', col16) AS absolute_value,\n" +
 						" (col22 / col16) AS score_of_subParameter,\n" +
-						" ROW_NUMBER() OVER (ORDER BY (col22 / col16) DESC) AS z_rank,\n" +
+						" ROW_NUMBER() OVER (ORDER BY (col22 / col16)) AS z_rank,\n" +
 						" 'GST7' AS gst,'Number of refunds applications pending beyond 60 days of receipt vis-à-vis total number of refunds applications pending at the end of the month' as ra \n" +
-						" FROM CTE ORDER BY score_of_subParameter DESC;";
+						" FROM CTE ORDER BY score_of_subParameter;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -2793,9 +2793,9 @@ public class TotalScoreController {
 						"    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
 						")\n" +
 						"SELECT ZONE_CODE, ZONE_NAME, COMM_NAME, col16,col22,total_score,\n" +
-						"    ROW_NUMBER() OVER (ORDER BY total_score DESC) AS z_rank\n" +
+						"    ROW_NUMBER() OVER (ORDER BY total_score ) AS z_rank\n" +
 						"FROM calculated_values\n" +
-						"ORDER BY total_score DESC;";
+						"ORDER BY total_score ;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -2837,8 +2837,8 @@ public class TotalScoreController {
 						"SELECT \n" +
 						"    ZONE_CODE, ZONE_NAME, COMM_NAME, col16,col22, score_of_subParameter, 'GST 7' as gst, 'Number of refunds applications pending beyond 60 days of receipt vis-à-vis total number of refunds applications pending at the end of the month' as ra,\n" +
 						"    CONCAT(col22, '/', col16) AS absolute_value,\n" +
-						"    ROW_NUMBER() OVER (ORDER BY score_of_subParameter DESC) AS z_rank\n" +
-						"FROM calculated_values ORDER BY score_of_subParameter DESC;";
+						"    ROW_NUMBER() OVER (ORDER BY score_of_subParameter) AS z_rank\n" +
+						"FROM calculated_values ORDER BY score_of_subParameter ;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
