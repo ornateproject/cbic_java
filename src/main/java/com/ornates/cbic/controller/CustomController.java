@@ -354,6 +354,7 @@ public class CustomController {
     @RequestMapping(value = "/cus5a")
     //  http://localhost:8080/cbicApi/cbic/custom/cus5a?month_date=2015-03-01&type=zone
     //  http://localhost:8080/cbicApi/cbic/custom/cus5a?month_date=2015-03-01&zone_code=69&type=commissary
+    //  http://localhost:8080/cbicApi/cbic/custom/cus5a?month_date=2022-02-01&type=all_commissary
     public Object getCus5a(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code) {
         List<GST4A> allGstaList = new ArrayList<>();
         GST4A gsta = null;
@@ -382,7 +383,7 @@ public class CustomController {
                     int col3a = rsGst14aa.getInt("col3a");
                     String absval=String.valueOf(col5a)+"/"+String.valueOf(col3a);
                     if((col3a) != 0) {
-                        total = ((double) (col5a) / (col3a));
+                        total = ((double) (col5a) * 100 / (col3a));
                     }else {
                         total = 0.00;
                     }
@@ -405,12 +406,9 @@ public class CustomController {
                         "LEFT JOIN mis_gst_zonecode AS zc " +
                         "ON zc.ZONE_CODE = cc.ZONE_CODE " +
                         "WHERE 14c.MM_YYYY = '" + month_date + "' AND cc.ZONE_CODE = '" + zone_code + "';";
-
-
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
 
                 while (rsGst14aa.next()) {
-
                     String ra = CustomRelaventAspect.cus5a_RA;
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
                     String commname = rsGst14aa.getString("COMM_NAME");
@@ -420,7 +418,37 @@ public class CustomController {
                     String absval=String.valueOf(col5a)+"/"+String.valueOf(col3a);
 
                     if((col3a) != 0) {
-                        total = ((double) (col5a) / (col3a));
+                        total = ((double) (col5a) * 100 / (col3a));
+                    }else {
+                        total = 0.00;
+                    }
+                    rank = score.c_marks5a(total);
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore, rank, absval, zoneCode, ra);
+                    allGstaList.add(gsta);
+                }
+            }else if (type.equalsIgnoreCase("all_commissary")) {
+                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, \n" +
+                        "(14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO) as col5a, \n" +
+                        "(14c.COMM_OPENING_NO + 14c.JC_OPENING_NO + 14c.AC_OPENING_NO) as col3a \n" +
+                        "FROM Mis_DGI_CUS_1A AS 14c \n" +
+                        "RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "WHERE 14c.MM_YYYY = '" + month_date + "';";
+                ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
+
+                while (rsGst14aa.next()) {
+                    String ra = CustomRelaventAspect.cus5a_RA;
+                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    String commname = rsGst14aa.getString("COMM_NAME");
+                    //String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    int col5a = rsGst14aa.getInt("col5a");
+                    int col3a = rsGst14aa.getInt("col3a");      //col3a is giving null for any date column, that reason total_score is o
+                    String absval=String.valueOf(col5a)+"/"+String.valueOf(col3a);
+
+                    if((col3a) != 0) {
+                        total = ((double) (col5a) * 100 / (col3a));
                     }else {
                         total = 0.00;
                     }
@@ -470,7 +498,7 @@ public class CustomController {
                     String absval=String.valueOf(col7d)+"/"+String.valueOf(col6a);
 
                     if(col6a !=0){
-                        total = ((double) col7d/col6a);
+                        total = ((double) col7d * 100 / col6a);
                     }else {
                         total=0.00;
                     }
@@ -500,7 +528,7 @@ public class CustomController {
                     String absval=String.valueOf(col7d)+"/"+String.valueOf(col6a);
 
                     if(col6a !=0){
-                        total = ((double) col7d/col6a);
+                        total = ((double) col7d * 100 / col6a);
                     }else {
                         total=0.00;
                     }
@@ -529,7 +557,7 @@ public class CustomController {
                     String absval=String.valueOf(col7d)+"/"+String.valueOf(col6a);
 
                     if(col6a !=0){
-                        total = ((double) col7d/col6a);
+                        total = ((double) col7d * 100 / col6a);
                     }else {
                         total=0.00;
                     }
@@ -577,7 +605,7 @@ public class CustomController {
                     String ra= CustomRelaventAspect.cus5c_RA;
                     String commname= "ALL";
                     String absval= rsGst14aa.getString("absval");
-                    total = rsGst14aa.getDouble("total_score");
+                    total = rsGst14aa.getDouble("total_score") * 100;
 
                     rank=score.c_marks5c(total);
                     String formattedTotal = String.format("%.2f", total);
@@ -602,7 +630,7 @@ public class CustomController {
                     String ra= CustomRelaventAspect.cus5c_RA;
                     String commname= rsGst14aa.getString("COMM_NAME");
                     String absval= rsGst14aa.getString("absval");
-                    total = rsGst14aa.getDouble("total_score");
+                    total = rsGst14aa.getDouble("total_score")  * 100;
 
                     rank=score.c_marks5c(total);
                     String formattedTotal = String.format("%.2f", total);
@@ -626,7 +654,7 @@ public class CustomController {
                     String ra= CustomRelaventAspect.cus5c_RA;
                     String commname= rsGst14aa.getString("COMM_NAME");
                     String absval= rsGst14aa.getString("absval");
-                    total = rsGst14aa.getDouble("total_score");
+                    total = rsGst14aa.getDouble("total_score") * 100;
 
                     rank=score.c_marks5c(total);
                     String formattedTotal = String.format("%.2f", total);
