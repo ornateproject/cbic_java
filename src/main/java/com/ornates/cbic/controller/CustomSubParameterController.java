@@ -23,7 +23,7 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/cbic/custom")
 @Controller
-public class CustomController {
+public class CustomSubParameterController {
     CustomGreadeScore score = new CustomGreadeScore();
     @ResponseBody
     @RequestMapping(value = "/")
