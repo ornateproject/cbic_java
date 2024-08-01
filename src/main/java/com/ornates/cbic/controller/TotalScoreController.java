@@ -606,7 +606,7 @@ public class TotalScoreController {
 						"    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
 						")\n" +
 						"SELECT \n" +
-						"    ROW_NUMBER() OVER (ORDER BY score_of_subParameter DESC) AS z_rank, ZONE_NAME, ZONE_CODE, col21, col3, score_of_subParameter, 'GST2' AS gst, '*Percentage of returns which were due but not filed vis-à-vis total returns due (GSTR 3B) ' as ra,\n" +
+						"    ROW_NUMBER() OVER (ORDER BY score_of_subParameter DESC) AS z_rank, ZONE_NAME, ZONE_CODE, col21, col3, score_of_subParameter, 'GST2' AS gst, 'Percentage of returns which were due but not filed vis-à-vis total returns due' as ra,\n" +
 						"    CONCAT(CAST(col21 AS CHAR), '/', CAST(col3 AS CHAR)) AS absolute_value\n" +
 						"FROM score_calculation ORDER BY score_of_subParameter ;";
 
