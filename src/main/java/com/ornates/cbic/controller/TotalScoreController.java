@@ -538,7 +538,7 @@ public class TotalScoreController {
 					int col21=rsGst14aa.getInt("col21");
 					int col3=rsGst14aa.getInt("col3");
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
+
 					Integer insentavization = 0;
 					double sub_parameter_weighted_average = 0.00;
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
@@ -553,6 +553,7 @@ public class TotalScoreController {
 					String ra= RelevantAspect.Gst2_RA;
 					String formattedTotal = String.format("%.2f", total);
 					double total_score = Double.parseDouble(formattedTotal);
+					Integer way_to_grade = score.marks2(total_score);
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
@@ -2632,7 +2633,7 @@ public class TotalScoreController {
 
 	@ResponseBody
 	@RequestMapping(value = "/refunds") //7
-	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2023-05-01&type=parameter							// for return filing button
+	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2023-05-01&type=parameter							// for refunds button
 	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2023-05-01&type=zone&zone_code=59 				// for all button
 	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2023-05-01&type=commissary&zone_code=59			// for show button, zone wise
 	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2023-05-01&type=all_commissary					// for all commissary
@@ -2645,7 +2646,7 @@ public class TotalScoreController {
 		Integer Zonal_rank = 0;
 		try {
 
-			if (type.equalsIgnoreCase("parameter")) { // returnFiling all zone name 1
+			if (type.equalsIgnoreCase("parameter")) { // refunds all zone name 1
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
