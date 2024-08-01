@@ -608,7 +608,7 @@ public class TotalScoreController {
 						"SELECT \n" +
 						"    ROW_NUMBER() OVER (ORDER BY score_of_subParameter DESC) AS z_rank, ZONE_NAME, ZONE_CODE, col21, col3, score_of_subParameter, 'GST2' AS gst, '*Percentage of returns which were due but not filed vis-à-vis total returns due (GSTR 3B) ' as ra,\n" +
 						"    CONCAT(CAST(col21 AS CHAR), '/', CAST(col3 AS CHAR)) AS absolute_value\n" +
-						"FROM score_calculation ORDER BY score_of_subParameter DESC;";
+						"FROM score_calculation ORDER BY score_of_subParameter ;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -622,6 +622,7 @@ public class TotalScoreController {
 					String absval = rsGst14aa.getString("absolute_value");
 					double tScore = rsGst14aa.getDouble("score_of_subParameter") * 100;
 					String ra =rsGst14aa.getString("ra");
+					//String ra=RelevantAspect.Gst2_RA;
 					Zonal_rank = null;
 					String commName = "null";
 
@@ -660,7 +661,8 @@ public class TotalScoreController {
 					Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst = "null";
 					String absval = "null";
-					String ra ="null";
+					//String ra ="null";
+					String ra=RelevantAspect.Gst2_RA;
 
 
 					String formattedTotal = String.format("%.2f", tScore);
@@ -674,7 +676,7 @@ public class TotalScoreController {
 				String query_assessment = "WITH score_calculation AS (\n" +
 						"    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
 						"        (14c.GSTR_3BM_F - 14c.GSTR_3BM_D) AS col21, (14c.GSTR_3BM_F) AS col3, ((14c.GSTR_3BM_F - 14c.GSTR_3BM_D) / (14c.GSTR_3BM_F)) AS score_of_subParameter,\n" +
-						"        'GST2' AS gst, CONCAT((14c.GSTR_3BM_F - 14c.GSTR_3BM_D), '/', 14c.GSTR_3BM_F) AS absolute_value, '*Percentage of returns which were due but not filed vis-à-vis total returns due (GSTR 3B) ' as ra\n" +
+						"        'GST2' AS gst, CONCAT((14c.GSTR_3BM_F - 14c.GSTR_3BM_D), '/', 14c.GSTR_3BM_F) AS absolute_value, 'Percentage of returns which were due but not filed vis-à-vis total returns due ' as ra\n" +
 						"    FROM mis_gst_commcode AS cc \n" +
 						"    RIGHT JOIN mis_gst_gst_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
 						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
@@ -699,6 +701,7 @@ public class TotalScoreController {
 					String gst = rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					String ra =rsGst14aa.getString("ra");
+					//String ra=RelevantAspect.Gst2_RA;
 
 
 					String formattedTotal = String.format("%.2f", tScore);
@@ -2672,7 +2675,8 @@ public class TotalScoreController {
 					String absval = rsGst14aa.getString("absolute_value");
 					String commName = "ALL";
 					String gst = "ALL";
-					String ra ="null";
+					//String ra ="null";
+					String ra = RelevantAspect.Gst7_RA;
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
@@ -2731,7 +2735,8 @@ public class TotalScoreController {
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String gst = "null";
 					String absval = "null";
-					String ra ="null";
+					//String ra ="null";
+					String ra = RelevantAspect.Gst7_RA;
 					String commName = rsGst14aa.getString("COMM_NAME");
 
 
@@ -2813,7 +2818,8 @@ public class TotalScoreController {
 					Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst = "null";
 					String absval = "null";
-					String ra ="null";
+					//String ra ="null";
+					String ra = RelevantAspect.Gst7_RA;
 
 
 					String formattedTotal = String.format("%.2f", tScore);
