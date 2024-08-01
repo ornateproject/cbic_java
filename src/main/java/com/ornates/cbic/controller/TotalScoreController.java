@@ -743,51 +743,39 @@ public class TotalScoreController {
 //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "WITH current_data AS (\n" +
-						"    SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(14c.SCRUTINIZED_DISCRIPANCY_FOUND) AS col4, SUM(14c.OUTCOME_ASMT_12_ISSUED) AS col9, SUM(14c.OUTCOME_SECTION_61) AS col10, SUM(14c.RETURN_SCRUTINY) AS col2\n" +
-						"    FROM mis_gst_commcode AS cc\n" +
-						"    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-						"    WHERE 14c.MM_YYYY =  '" + month_date + "' GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
-						"),\n" +
-						"previous_data AS (\n" +
-						"    SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(14c.CLOSING_NO) AS col1\n" +
-						"    FROM mis_gst_commcode AS cc\n" +
-						"    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-						"    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
-						"    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
-						"),\n" +
-						"parameter1 AS (\n" +
-						"    SELECT current_data.ZONE_NAME, current_data.ZONE_CODE, ((current_data.col4 + current_data.col9 + current_data.col10) / (current_data.col2 + previous_data.col1)) as score_of_parameter1\n" +
-						"    FROM current_data\n" +
-						"    JOIN previous_data ON current_data.ZONE_CODE = previous_data.ZONE_CODE\n" +
-						"),\n" +
-						"parameter2 AS (\n" +
-						"    SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / SUM(14c.TAX_LIABILITY_DETECTECT) AS score_of_parameter2\n" +
-						"    FROM mis_gst_commcode AS cc\n" +
-						"    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-						"    WHERE 14c.MM_YYYY <=  '" + month_date + "' GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
-						"),\n" +
-						"ranked_data AS (\n" +
-						"    SELECT p1.ZONE_NAME, p1.ZONE_CODE, (p1.score_of_parameter1 + p2.score_of_parameter2) as total_score,\n" +
-						"           ROW_NUMBER() OVER (ORDER BY (p1.score_of_parameter1 + p2.score_of_parameter2) DESC) as z_rank\n" +
-						"    FROM parameter1 p1\n" +
-						"    LEFT JOIN parameter2 p2 ON p1.ZONE_CODE = p2.ZONE_CODE\n" +
-						"    UNION\n" +
-						"    SELECT p2.ZONE_NAME, p2.ZONE_CODE, (p1.score_of_parameter1 + p2.score_of_parameter2) as total_score,\n" +
-						"           ROW_NUMBER() OVER (ORDER BY (p1.score_of_parameter1 + p2.score_of_parameter2) DESC) as z_rank\n" +
-						"    FROM parameter1 p1\n" +
-						"    RIGHT JOIN parameter2 p2 ON p1.ZONE_CODE = p2.ZONE_CODE\n" +
-						")\n" +
-						"SELECT ZONE_NAME, ZONE_CODE, total_score, z_rank\n" +
-						"FROM ranked_data ORDER BY total_score DESC;\n";
+				String query_assessment = "SELECT current_data.ZONE_NAME,current_data.ZONE_CODE,current_data.total_score3a,previous_data.total_score3b,\n" +
+						"    (((current_data.total_score3a * 0.5 * 10) + (previous_data.total_score3b * 0.5 * 10)) / 10) as parameter,\n" +
+						"    ROW_NUMBER() OVER (ORDER BY (((current_data.total_score3a * 0.5 * 10) + (previous_data.total_score3b * 0.5 * 10)) / 10) DESC) AS z_rank\n" +
+						"FROM  \n" +
+						"    (SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
+						"            (((SUM(14c.SCRUTINIZED_DISCRIPANCY_FOUND) + SUM(14c.OUTCOME_ASMT_12_ISSUED) + SUM(14c.OUTCOME_SECTION_61)) * 100) / (SUM(14c.RETURN_SCRUTINY) + previous_data.col1)) as total_score3a\n" +
+						"     FROM mis_gst_commcode AS cc  \n" +
+						"     RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+						"     LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"     LEFT JOIN (SELECT cc.ZONE_CODE, SUM(14c.CLOSING_NO) AS col1 \n" +
+						"                FROM mis_gst_commcode AS cc \n" +
+						"                RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"                LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"                WHERE 14c.MM_YYYY = '" + prev_month_new + "' \n" +
+						"                GROUP BY cc.ZONE_CODE) AS previous_data \n" +
+						"                ON cc.ZONE_CODE = previous_data.ZONE_CODE\n" +
+						"     WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+						"     GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, previous_data.col1) AS current_data\n" +
+						"JOIN \n" +
+						"    (SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
+						"            (SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) * 100) / SUM(14c.TAX_LIABILITY_DETECTECT) AS total_score3b\n" +
+						"     FROM mis_gst_commcode AS cc \n" +
+						"     RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"     LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"     WHERE 14c.MM_YYYY <= '" + month_date + "' \n" +
+						"     GROUP BY cc.ZONE_CODE, zc.ZONE_NAME) AS previous_data\n" +
+						"ON current_data.ZONE_CODE = previous_data.ZONE_CODE\n" +
+						"ORDER BY parameter DESC;\n";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
-					double total_score = rsGst14aa.getDouble("total_score");
+					double tScore = rsGst14aa.getDouble("parameter");
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					Integer way_to_grade = 0;
 					Integer insentavization = 0;
@@ -799,6 +787,8 @@ public class TotalScoreController {
 					String absval = "null";
 					String ra ="null";
 
+					String formattedTotal = String.format("%.2f", tScore);
+					double total_score = Double.parseDouble(formattedTotal);
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
