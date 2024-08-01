@@ -97,9 +97,9 @@ public class GradeScore {
 		int rank=0;
 		if(total<=5) {
 			rank=10;
-		}else if(total >= 6 && total <= 10) {
+		}else if(total > 5 && total <= 10) {
 			rank=7;
-		}else if(total >= 11 && total <= 15) {
+		}else if(total > 10 && total <= 15) {
 			rank=4;
 		}else {
 			rank=2;
@@ -273,9 +273,9 @@ public class GradeScore {
 		int rank=0;
 		if(total<=10) {
 			rank=10;
-		}else if(total >= 11 && total <= 20) {
+		}else if(total > 10 && total <= 20) {
 			rank=7;
-		}else if(total >= 21 && total <= 30) {
+		}else if(total > 20 && total <= 30) {
 			rank=4;
 		}else {
 			rank=2;
@@ -287,9 +287,9 @@ public class GradeScore {
 		int rank=0;
 		if(total<=0) {
 			rank=10;
-		}else if(total >= 1 && total <= 5) {
+		}else if(total >0 && total <= 5) {
 			rank=7;
-		}else if(total >= 6 && total <= 10) {
+		}else if(total >5 && total <= 10) {
 			rank=4;
 		}else {
 			rank=0;

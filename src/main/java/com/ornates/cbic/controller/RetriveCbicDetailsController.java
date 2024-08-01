@@ -856,9 +856,8 @@ public class RetriveCbicDetailsController {
                     total = rsGst14aa.getDouble("total_score");
 
                     //total=((double) col21 / col3);
-
                     //}
-                    //rank=score.marks2(total);
+                    rank=score.marks2(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,rank,absval,zoneCode,ra);
