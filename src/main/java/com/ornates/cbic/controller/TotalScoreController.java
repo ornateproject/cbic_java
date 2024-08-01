@@ -6,6 +6,7 @@ import com.ornates.cbic.model.response.TotalScore;
 import com.ornates.cbic.service.DateCalculate;
 import com.ornates.cbic.service.GradeScore;
 
+import com.ornates.cbic.service.RelevantAspect;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -548,7 +549,8 @@ public class TotalScoreController {
 					String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
 
 					// Object total = ((double) col21*100 / col3);
-					String ra ="null";
+					//String ra ="null";
+					String ra= RelevantAspect.Gst2_RA;
 					String formattedTotal = String.format("%.2f", total);
 					double total_score = Double.parseDouble(formattedTotal);
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -583,7 +585,8 @@ public class TotalScoreController {
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String gst = "null";
 					String absval = "null";
-					String ra ="null";
+					//String ra ="null";
+					String ra=RelevantAspect.Gst2_RA;
 					String commName = rsGst14aa.getString("COMM_NAME");
 
 
