@@ -2951,6 +2951,7 @@ public class RetriveCbicDetailsController {
         double total = 0.00;
         try {
             if (type.equalsIgnoreCase("zone")) {
+                String prev_month_new =DateCalculate.getPreviousMonth(month_date);
                 // Query string
 //                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,sum(14c.COMM_DISPOSAL_NO+14c.JC_DISPOSAL_NO+14c.AC_DISPOSAL_NO+14c.SUP_DISPOSAL_NO) AS col9 " +
 //
@@ -2970,13 +2971,13 @@ public class RetriveCbicDetailsController {
                         + "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(COALESCE(14c.COMM_DISPOSAL_NO, 0) +COALESCE(14c.JC_DISPOSAL_NO, 0) +COALESCE(14c.AC_DISPOSAL_NO, 0) +COALESCE(14c.SUP_DISPOSAL_NO, 0)) AS col9\n"
                         + "    FROM mis_gst_commcode AS cc\n"
                         + "    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n"
-                        + "    WHERE 14c.MM_YYYY = '2023-05-01' GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n"
+                        + "    WHERE 14c.MM_YYYY = '" + month_date + "' GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n"
                         + "),\n"
                         + "closing_data AS (\n"
                         + "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(COALESCE(14c.COMM_CLOSING_NO, 0) +COALESCE(14c.JC_CLOSING_NO, 0) +COALESCE(14c.AC_CLOSING_NO, 0) +COALESCE(14c.SUP_CLOSING_NO, 0)) AS col3\n"
                         + "    FROM mis_gst_commcode AS cc\n"
                         + "    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n"
-                        + "    WHERE 14c.MM_YYYY = '2023-04-01'GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n"
+                        + "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n"
                         + "),\n"
                         + "ranked_data AS (\n"
                         + "    SELECT d.ZONE_NAME, d.ZONE_CODE,d.col9,c.col3,\n"
