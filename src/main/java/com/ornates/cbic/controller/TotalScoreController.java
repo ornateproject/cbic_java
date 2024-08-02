@@ -724,7 +724,7 @@ public class TotalScoreController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/scrutiny/assessment") //3
+	@RequestMapping(value = "/scrutiny/assessment") //3  update only url1 query
 	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-05-01&type=parameter							// for scrutiny/assessment button
 	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-05-01&type=zone&zone_code=59 				// for all button
 	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-05-01&type=commissary&zone_code=59			// for show button, zone wise
