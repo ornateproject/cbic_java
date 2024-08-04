@@ -1580,14 +1580,15 @@ public class RetriveCbicDetailsController {
                     total = rsGst14aa.getDouble("score_of_parameter") * 100;
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
+
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
 
 
                     rank=score.marks3b(total);
                     String formattedTotal = String.format("%.2f", total);
-                    double totalScore = Double.parseDouble(formattedTotal) * 100;
+                    double totalScore = Double.parseDouble(formattedTotal) ;
+                    int way_to_grade = score.marks3b(totalScore);
                     gsta=new GST4A(zoneName, commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
@@ -1622,14 +1623,14 @@ public class RetriveCbicDetailsController {
                     total = rsGst14aa.getDouble("score_of_parameter") * 100;
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
 
 
-                    rank=score.marks3b(total);
+                    // rank=score.marks3b(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.marks3b(totalScore);
                     gsta=new GST4A(zoneName, commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
