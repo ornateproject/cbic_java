@@ -887,8 +887,7 @@ public class TotalScoreController {
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "-- Combined query for GST 3A and GST 3B zone data\n" +
-						"SELECT\n" +
+				String query_assessment = "SELECT\n" +
 						"    current_data.ZONE_NAME, current_data.ZONE_CODE,\n" +
 						"    ((current_data.col4 + current_data.col9 + current_data.col10) / (current_data.col2 + previous_data.col1)) AS score_of_parameter,\n" +
 						"    CONCAT( '(',\n" +
@@ -934,13 +933,13 @@ public class TotalScoreController {
 
 				while (rsGst14aa.next()) {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
+
 					Integer insentavization = 0;
 					double sub_parameter_weighted_average = 0.00;
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absval");
-					double tScore = rsGst14aa.getDouble("score_of_parameter");
+					double tScore = rsGst14aa.getDouble("score_of_parameter") * 100;
 					String ra =rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 					String commName = "null";
@@ -948,6 +947,7 @@ public class TotalScoreController {
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
+					Integer way_to_grade = score.marks3a(total_score);
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
@@ -1066,7 +1066,7 @@ public class TotalScoreController {
 					double sub_parameter_weighted_average = 0.00;
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = rsGst14aa.getString("COMM_NAME");
-					double tScore = rsGst14aa.getDouble("total_score");
+					double tScore = rsGst14aa.getDouble("total_score") * 100;
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					String ra =rsGst14aa.getString("ra");
