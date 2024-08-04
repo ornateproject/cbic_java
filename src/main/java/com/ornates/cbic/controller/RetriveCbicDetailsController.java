@@ -1274,16 +1274,16 @@ public class RetriveCbicDetailsController {
                     int col10 = rsGst14aa.getInt("col10");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
                     String absval = String.valueOf(col4 + col9 + col10) + "/" + String.valueOf(col2 + col1);
                     if (col2 + col1 != 0) {
                         total = (((double) (col4 + col9 + col10)) * 100 / (col2 + col1));
                     }
-                    rank = score.marks3a(total);
+                   //  rank = score.marks3a(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.marks3a(totalScore);
                     gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
@@ -1340,16 +1340,17 @@ public class RetriveCbicDetailsController {
                     int col10 = rsGst14aa.getInt("col10");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
+
                     String absval = String.valueOf(col4 + col9 + col10) + "/" + String.valueOf(col2 + col1);
                     if (col2 + col1 != 0) {
                         total = (((double) (col4 + col9 + col10)) * 100 / (col2 + col1));
                     }
-                    rank = score.marks3a(total);
+                   // rank = score.marks3a(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.marks3a(totalScore);
                     // System.out.println(totalScore);
                     gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
