@@ -1228,8 +1228,8 @@ public class RetriveCbicDetailsController {
                    // rank = score.marks3a(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    //int way_to_grade = score.marks3a(totalScore);
-                    int way_to_grade = 0;
+                    int way_to_grade = score.marks3a(totalScore);
+                    //int way_to_grade = 0;
                     gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), "ALL", totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
@@ -1538,8 +1538,8 @@ public class RetriveCbicDetailsController {
                     //rank=score.marks3b(total);
                     int Zonal_rank = 0;
                     String gst = "no";
-//                   int way_to_grade = score.marks3b(total);
-                    int way_to_grade = 0;
+                   int way_to_grade = score.marks3b(total);
+                    //int way_to_grade = 0;
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
 
