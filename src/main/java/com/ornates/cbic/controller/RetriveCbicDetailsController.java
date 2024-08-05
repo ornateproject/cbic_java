@@ -671,7 +671,7 @@ public class RetriveCbicDetailsController {
                     String absval=String.valueOf(col9)+"/"+String.valueOf(col1 + col2 + col5 + col6);
 
                     if((col1 + col2 + col5 + col6) != 0) {
-                        total = ((double) col9 / (col1 + col2 + col5 + col6));
+                        total = (((double) col9 * 100)/ (col1 + col2 + col5 + col6));
                     }else {
                         total=0.00;
                     }
@@ -709,7 +709,7 @@ public class RetriveCbicDetailsController {
                     String absval=String.valueOf(col9)+"/"+String.valueOf(col1 + col2 + col5 + col6);
 
                     if((col1 + col2 + col5 + col6) != 0) {
-                        total = ((double) col9 / (col1 + col2 + col5 + col6));
+                        total = (((double) col9 * 100)/ (col1 + col2 + col5 + col6));
                     }else {
                         total=0.00;
                     }
@@ -747,7 +747,7 @@ public class RetriveCbicDetailsController {
                     String absval=String.valueOf(col9)+"/"+String.valueOf(col1 + col2 + col5 + col6);
 
                     if((col1 + col2 + col5 + col6) != 0) {
-                        total = ((double) col9 / (col1 + col2 + col5 + col6));
+                        total = (((double) col9 * 100)/ (col1 + col2 + col5 + col6));
                     }else {
                         total=0.00;
                     }
@@ -811,7 +811,7 @@ public class RetriveCbicDetailsController {
                     String absval=String.valueOf(col14)+"/"+String.valueOf(col10 + col11);
 
                     if ((col10 + col11) != 0) {
-                        total = ((double) col14 / (col10 + col11));
+                        total = (((double) col14 * 100)/ (col10 + col11));
                     }else{
                         total=0.00;
                     }
@@ -846,7 +846,7 @@ public class RetriveCbicDetailsController {
                     String absval = String.valueOf(col14) + "/" + String.valueOf(col10 + col11);
 
                     if ((col10 + col11) != 0) {
-                        total = ((double) col14 / (col10 + col11));
+                        total = (((double) col14 * 100)/ (col10 + col11));
                     } else {
                         total = 0.00;
                     }
@@ -883,7 +883,7 @@ public class RetriveCbicDetailsController {
                     String absval = String.valueOf(col14) + "/" + String.valueOf(col10 + col11);
 
                     if ((col10 + col11) != 0) {
-                        total = ((double) col14 / (col10 + col11));
+                        total = (((double) col14 * 100)/ (col10 + col11));
                     } else {
                         total = 0.00;
                     }
