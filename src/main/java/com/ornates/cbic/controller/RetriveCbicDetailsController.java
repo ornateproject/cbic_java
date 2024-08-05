@@ -1689,7 +1689,7 @@ public class RetriveCbicDetailsController {
                     String absval=String.valueOf(col13)+"/"+String.valueOf(col1);
 
                     if(col1!=0) {
-                        total=((double) (col13) / col1);
+                        total=(((double) (col13) * 100) / col1);
                     }
                     //}
                     rank=score.marks4a(total);
@@ -1731,7 +1731,7 @@ public class RetriveCbicDetailsController {
                     String absval=String.valueOf(col13)+"/"+String.valueOf(col1);
 
                     if(col1!=0) {
-                        total=((double) (col13) / col1);
+                        total=(((double) (col13) * 100) / col1);
                     }
                     //}
                     rank=score.marks4a(total);
@@ -1766,7 +1766,7 @@ public class RetriveCbicDetailsController {
                     String absval=String.valueOf(col13)+"/"+String.valueOf(col1);
 
                     if(col1!=0) {
-                        total=((double) (col13) / col1);
+                        total=(((double) (col13) * 100) / col1);
                     }
                     //}
                     rank=score.marks4a(total);
@@ -1832,7 +1832,7 @@ public class RetriveCbicDetailsController {
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
                     if(col25!=0) {
-                        total=((double) (col29+col31) / col25);
+                        total=(((double) (col29+col31) * 100)/ col25);
                     }
                     //}
                     rank=score.marks4b(total);
@@ -1866,7 +1866,7 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
                     String absval = String.valueOf(col29+col31) + "/" + String.valueOf(col25);
                     // if(col25!=0) {
-                    total=((double) (col29+col31) / col25);
+                    total=(((double) (col29+col31) * 100) / col25);
                     //}
                     //}
                     rank=score.marks4b(total);
@@ -1905,7 +1905,7 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
                     String absval = String.valueOf(col29+col31) + "/" + String.valueOf(col25);
                     // if(col25!=0) {
-                    total=((double) (col29+col31) / col25);
+                    total=(((double) (col29+col31) * 100) / col25);
                     //}
                     //}
                     rank=score.marks4b(total);
@@ -1997,7 +1997,7 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
                     String absval = String.valueOf(col1_6) + "/" + String.valueOf(col1_7);
                     if ((col1_7) != 0){
-                        total =((double) (col1_6)/(col1_7));
+                        total =(((double) (col1_6) * 100)/(col1_7));
                     }
                     else{
                         total=0;
@@ -2051,7 +2051,7 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
                     String absval = String.valueOf(col1_6) + "/" + String.valueOf(col1_7);
                     if ((col1_7) != 0){
-                        total =((double) (col1_6)/(col1_7));
+                        total =(((double) (col1_6) * 100)/(col1_7));
                     }
                     else{total=0;}
 
@@ -2103,7 +2103,7 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
                     String absval = String.valueOf(col1_6) + "/" + String.valueOf(col1_7);
                     if ((col1_7) != 0){
-                        total =((double) (col1_6)/(col1_7));
+                        total =(((double) (col1_6) * 100)/(col1_7));
                     }
                     else{total=0;}
 
@@ -2197,7 +2197,7 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
                     String absval = String.valueOf(col6_1+ col6_2) + "/" + String.valueOf(col6_3+col6_4);
                     if(col6_3+col6_4!=0) {
-                        total=((double) (col6_1+col6_2) / (col6_3+col6_4));
+                        total=(((double) (col6_1+col6_2) * 100) / (col6_3+col6_4));
                     }
                     rank=score.marks4d(total);
                     String formattedTotal = String.format("%.2f", total);
@@ -2288,7 +2288,7 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
                     String absval = String.valueOf(col6_1+ col6_2) + "/" + String.valueOf(col6_3+col6_4);
                     if(col6_3+col6_4!=0) {
-                        total=((double) (col6_1+col6_2) / (col6_3+col6_4));
+                        total=(((double) (col6_1+col6_2) * 100) / (col6_3+col6_4));
                     }
                     rank=score.marks4d(total);
                     String formattedTotal = String.format("%.2f", total);
@@ -2345,7 +2345,7 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
                     String absval = String.valueOf(col6_1+ col6_2) + "/" + String.valueOf(col6_3+col6_4);
                     if(col6_3+col6_4!=0) {
-                        total=((double) (col6_1+col6_2) / (col6_3+col6_4));
+                        total=(((double) (col6_1+col6_2) * 100) / (col6_3+col6_4));
                     }
                     rank=score.marks4d(total);
                     String formattedTotal = String.format("%.2f", total);
@@ -3923,7 +3923,7 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
                     String absval = String.valueOf(col13) + "/" + String.valueOf(col3);
                     if ((col3) != 0){
-                        total =((double) (col13)/(col3));
+                        total =(((double) (col13) * 100)/(col3));
                     }
                     else{
                         total=0;
@@ -3994,7 +3994,7 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
                     String absval = String.valueOf(col13) + "/" + String.valueOf(col3);
                     if ((col3) != 0){
-                        total =((double) (col13)/(col3));
+                        total =(((double) (col13) * 100)/(col3));
                     }
                     else{
                         total=0;
@@ -4046,7 +4046,7 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
                     String absval = String.valueOf(col13) + "/" + String.valueOf(col3);
                     if ((col3) != 0){
-                        total =((double) (col13)/(col3));
+                        total =(((double) (col13) * 100)/(col3));
                     }
                     else{
                         total=0;
@@ -4144,7 +4144,7 @@ public class RetriveCbicDetailsController {
 //					}
 
                     // Calculate total
-                    total = col20 != 0 ? ((double) (col20 - col22) / col20) : 0.0;
+                    total = col20 != 0 ? (((double) (col20 - col22) * 100) / col20) : 0.0;
                     //}
                     rank=score.marks8b(total);
                     String absval = (col20-col22) + "/" +(col20);
@@ -4211,7 +4211,7 @@ public class RetriveCbicDetailsController {
 //					if(rsGst3aa.next()) {
 //						col21=rsGst3aa.getInt("col21");
 //					}
-                    total = col20 != 0 ? ((double) (col20 - col22) / col20) : 0.0;
+                    total = col20 != 0 ? (((double) (col20 - col22) * 100) / col20) : 0.0;
 
                     total=((double) (col20-col22)/ col20);
                     //}
@@ -4297,7 +4297,7 @@ public class RetriveCbicDetailsController {
                     int col8=rsGst14aa.getInt("col8");
                     int col5=rsGst14aa.getInt("col5");
                     int col5_1=rsGst14aa.getInt("col5_1");
-                    total = rsGst14aa.getDouble("total_score");
+                    total = rsGst14aa.getDouble("total_score") * 100;
                     int Zonal_rank = 0;
                     String gst = "no";
                     int way_to_grade = 0;
@@ -4373,7 +4373,7 @@ public class RetriveCbicDetailsController {
                     int col8=rsGst14aa.getInt("col8");
                     int col5=rsGst14aa.getInt("col5");
                     int col5_1=rsGst14aa.getInt("col5_1");
-                    total = rsGst14aa.getDouble("total_score");
+                    total = rsGst14aa.getDouble("total_score") * 100;
                     int Zonal_rank = 0;
                     String gst = "no";
                     int way_to_grade = 0;
@@ -4446,7 +4446,7 @@ public class RetriveCbicDetailsController {
                     int col8=rsGst14aa.getInt("col8");
                     int col5=rsGst14aa.getInt("col5");
                     int col5_1=rsGst14aa.getInt("col5_1");
-                    total = rsGst14aa.getDouble("total_score");
+                    total = rsGst14aa.getDouble("total_score") * 100;
                     int Zonal_rank = 0;
                     String gst = "no";
                     int way_to_grade = 0;
@@ -4529,7 +4529,7 @@ public class RetriveCbicDetailsController {
                     String absval=String.valueOf(col4)+"/"+String.valueOf(col4_1);
 
                     if((col4_1) != 0){
-                        total=((double) (col4) /(col4_1));
+                        total=(((double) (col4) * 100) /(col4_1));
                     }
 
 
@@ -4573,7 +4573,7 @@ public class RetriveCbicDetailsController {
                     String absval=String.valueOf(col4)+"/"+String.valueOf(col4_1);
 
                     if((col4_1) != 0){
-                        total=((double) (col4) /(col4_1));
+                        total=(((double) (col4) * 100) /(col4_1));
                     }
 
                     rank=score.marks9b(total);
@@ -4614,7 +4614,7 @@ public class RetriveCbicDetailsController {
                     String absval=String.valueOf(col4)+"/"+String.valueOf(col4_1);
 
                     if((col4_1) != 0){
-                        total=((double) (col4) /(col4_1));
+                        total=(((double) (col4) * 100) /(col4_1));
                     }
 
                     rank=score.marks9b(total);
@@ -4681,7 +4681,7 @@ public class RetriveCbicDetailsController {
                     String formattedX = String.format("%.2f", X);
                     String absval = col3 + "/" + formattedX;
                     if (X != 0) {
-                        total = ((double) col3 / X);
+                        total = (((double) col3  * 100)/ X);
                     } else {
                         total = 0.00;
                     }
@@ -4720,7 +4720,7 @@ public class RetriveCbicDetailsController {
                     String formattedX = String.format("%.2f", X);
                     String absval = col3 + "/" + formattedX;
                     if (X != 0) {
-                        total = ((double) col3 / X);
+                        total = (((double) col3 * 100) / X);
                     } else {
                         total = 0.00;
                     }
@@ -4762,7 +4762,7 @@ public class RetriveCbicDetailsController {
                     String formattedX = String.format("%.2f", X);
                     String absval = col3 + "/" + formattedX;
                     if (X != 0) {
-                        total = ((double) col3 / X);
+                        total = (((double) col3 * 100) / X);
                     } else {
                         total = 0.00;
                     }
@@ -4832,7 +4832,7 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
                     String absval=String.valueOf(col36 + col38)+"/"+String.valueOf(col30);
                     if(col30 != 0){
-                        total=((double) (col36 + col38) / (col30));
+                        total=(((double) (col36 + col38) * 100) / (col30));
                     }else {
                         total = 0.00;
                     }
@@ -4869,7 +4869,7 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
                     String absval=String.valueOf(col36 + col38)+"/"+String.valueOf(col30);
                     if(col30 != 0){
-                        total=((double) (col36 + col38) / (col30));
+                        total=(((double) (col36 + col38) * 100) / (col30));
                     }else {
                         total = 0.00;
                     }
@@ -4905,7 +4905,7 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
                     String absval=String.valueOf(col36 + col38)+"/"+String.valueOf(col30);
                     if(col30 != 0){
-                        total=((double) (col36 + col38) / (col30));
+                        total=(((double) (col36 + col38) * 100) / (col30));
                     }else {
                         total = 0.00;
                     }
@@ -4980,7 +4980,7 @@ public class RetriveCbicDetailsController {
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
                     String absval=String.valueOf(col10)+"/"+String.valueOf(col4);
-                    total = (col4 != 0) ? ((col10 / col4) ) : 0;
+                    total = (col4 != 0) ? (((col10 * 100) / col4) ) : 0;
 
                     rank = score.marks11a(total,col10);
                     String formattedTotal = String.format("%.2f", total);
@@ -5028,7 +5028,7 @@ public class RetriveCbicDetailsController {
                     rank = score.marks11a(total, col10);
                     String absval = String.valueOf(col10) + "/" + String.valueOf(col4);
 
-                    total = (col4 != 0) ? (col10 / col4) : 0;
+                    total = (col4 != 0) ? (col10 * 100 / col4) : 0;
 
                     rank = score.marks11a(total, col10);
                     String formattedTotal = String.format("%.2f", total);
@@ -5072,7 +5072,7 @@ public class RetriveCbicDetailsController {
                     int way_to_grade = 0;
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
-                    total = (col4 != 0) ? ((col10 / col4)) : 0;
+                    total = (col4 != 0) ? ((col10 * 100 / col4)) : 0;
                     rank = score.marks11a(total, col10);
                     String absval = String.valueOf(col10) + "/" + String.valueOf(col4);
 
@@ -5169,7 +5169,7 @@ public class RetriveCbicDetailsController {
 
 
                     if (denominator != 0){
-                        total = rsGst46b.getDouble("total_score");
+                        total = rsGst46b.getDouble("total_score") * 100;
                     }else{
                         total = 0.00;
                     }
@@ -5237,7 +5237,7 @@ public class RetriveCbicDetailsController {
 
 
                     if (denominator != 0){
-                        total = rsGst46b.getDouble("total_score");
+                        total = rsGst46b.getDouble("total_score") * 100;
                     }else{
                         total = 0.00;
                     }
@@ -5305,7 +5305,7 @@ public class RetriveCbicDetailsController {
 
 
                     if (denominator != 0){
-                        total = rsGst46b.getDouble("total_score");
+                        total = rsGst46b.getDouble("total_score") * 100;
                     }else{
                         total = 0.00;
                     }
@@ -5388,7 +5388,7 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
 
                     if (col4 != 0){
-                        total = rsGst46b.getDouble("total_score");
+                        total = rsGst46b.getDouble("total_score") * 100;
                     }else{
                         total = 0.00;
                     }
@@ -5450,7 +5450,7 @@ public class RetriveCbicDetailsController {
                     String absval = String.valueOf(col10) + "/" + String.valueOf(col4);
 
                     if (col4 != 0){
-                        total = rsGst46b.getDouble("total_score");
+                        total = rsGst46b.getDouble("total_score") * 100;
                     }else{
                         total = 0.00;
                     }
@@ -5508,7 +5508,7 @@ public class RetriveCbicDetailsController {
                     String absval = String.valueOf(col10) + "/" + String.valueOf(col4);
 
                     if (col4 != 0){
-                        total = rsGst46b.getDouble("total_score");
+                        total = rsGst46b.getDouble("total_score") * 100;
                     }else{
                         total = 0.00;
                     }
@@ -5619,7 +5619,7 @@ public class RetriveCbicDetailsController {
 
 
                     if (denominator != 0){
-                        total = rsGst46b.getDouble("total_score");
+                        total = rsGst46b.getDouble("total_score") * 100;
                     }else{
                         total = 0.00;
                     }
@@ -5688,7 +5688,7 @@ public class RetriveCbicDetailsController {
 
 
                     if (denominator != 0){
-                        total = rsGst46b.getDouble("total_score");
+                        total = rsGst46b.getDouble("total_score") * 100;
                     }else{
                         total = 0.00;
                     }
@@ -5757,7 +5757,7 @@ public class RetriveCbicDetailsController {
 
 
                     if (denominator != 0){
-                        total = rsGst46b.getDouble("total_score");
+                        total = rsGst46b.getDouble("total_score") * 100;
                     }else{
                         total = 0.00;
                     }
