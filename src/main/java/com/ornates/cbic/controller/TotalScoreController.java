@@ -784,7 +784,7 @@ public class TotalScoreController {
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
-					String ra ="null";
+					String ra ="Number of Returns whose scrutiny completed for the month vis-à-vis total Returns pending for the month (Pro-rata basis) ||  Recoveries made upto the month vis-a-vis detections upto the month";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
@@ -924,6 +924,7 @@ public class TotalScoreController {
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absval");
 					double tScore = rsGst14aa.getDouble("score_of_parameter") * 100;
+					// String ra ="Number of Returns whose scrutiny completed for the month vis-à-vis total Returns pending for the month (Pro-rata basis) || Recoveries made upto the month vis-a-vis detections upto the month";
 					String ra =rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 					String commName = "null";
@@ -980,7 +981,8 @@ public class TotalScoreController {
 						")\n" +
 						"SELECT ROW_NUMBER() OVER (ORDER BY total_score DESC) AS z_rank, \n" +
 						"       ZONE_NAME, COMM_NAME, ZONE_CODE, \n" +
-						"       score_of_parameter3a, absvl3a, score_of_parameter3b, absvl3b, total_score\n" +
+						"       score_of_parameter3a, absvl3a, score_of_parameter3b, absvl3b, total_score," +
+						"\"Number of Returns whose scrutiny completed for the month vis-à-vis total Returns pending for the month (Pro-rata basis) || Recoveries made upto the month vis-a-vis detections upto the month\" as ra\n" +
 						"FROM ComputedScores\n" +
 						"ORDER BY total_score DESC;\n";
 
@@ -997,7 +999,7 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst ="null";
 					String absval = "null";
-					String ra ="null";
+					String ra =rsGst14aa.getString("ra");
 
 
 					String formattedTotal = String.format("%.2f", tScore);
