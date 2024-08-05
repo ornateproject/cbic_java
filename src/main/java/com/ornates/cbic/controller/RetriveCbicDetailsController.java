@@ -89,7 +89,7 @@ public class RetriveCbicDetailsController {
                     String absval=String.valueOf(col6)+"/"+String.valueOf(col2 + col4);
 
                     if((col2 + col4) != 0) {
-                        total = ((double) col6 / (col2 + col4));
+                        total = (((double) col6 * 100) / (col2 + col4));
                     }else {
                         total = 0.00;
                     }
@@ -127,7 +127,7 @@ public class RetriveCbicDetailsController {
                     String absval=String.valueOf(col6)+"/"+String.valueOf(col2 + col4);
 
                     if((col2 + col4) != 0) {
-                        total = ((double) col6 / (col2 + col4));
+                        total = (((double) col6 * 100) / (col2 + col4));
                     }else {
                         total = 0.00;
                     }
@@ -186,7 +186,7 @@ public class RetriveCbicDetailsController {
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
                     if(col7 != 0) {
-                        total = ((double) col10 / col7) * 100;
+                        total = (((double) col10 * 100) / col7);
                     }else{
                         total = 0.00;
                     }
@@ -221,7 +221,7 @@ public class RetriveCbicDetailsController {
                     String absval = String.valueOf(col10) + "/" + String.valueOf(col7);
 
                     if(col7 != 0) {
-                        total = ((double) col10 / col7);
+                        total = (((double) col10 * 100) / col7);
                     }else{
                         total = 0.00;
                     }
@@ -289,7 +289,7 @@ public class RetriveCbicDetailsController {
                     String absval=String.valueOf(col10)+"/"+String.valueOf(col2 + col3);
 
                     if((col2 + col3) != 0){
-                        total = ((double) (col10) / (col2 + col3));
+                        total = ((double) (col10) * 100 / (col2 + col3));
                     }else {
                         total=0.00;
                     }
@@ -325,7 +325,7 @@ public class RetriveCbicDetailsController {
                     String absval=String.valueOf(col10)+"/"+String.valueOf(col2 + col3);
 
                     if((col2 + col3) != 0){
-                        total = ((double) (col10) / (col2 + col3));
+                        total = ((double) (col10) * 100 / (col2 + col3));
                     }else {
                         total=0.00;
                     }
@@ -361,7 +361,7 @@ public class RetriveCbicDetailsController {
                     String absval=String.valueOf(col10)+"/"+String.valueOf(col2 + col3);
 
                     if((col2 + col3) != 0){
-                        total = ((double) (col10) / (col2 + col3));
+                        total = ((double) (col10) * 100 / (col2 + col3));
                     }else {
                         total=0.00;
                     }
@@ -525,7 +525,7 @@ public class RetriveCbicDetailsController {
 
 
                     if((col1 + col2 + col3) != 0) {
-                        total = ((double) col14 / (col1 + col2 + col3));
+                        total = ((double) col14 * 100 / (col1 + col2 + col3));
                     }else{
                         total = 0.00;
                     }
@@ -564,7 +564,7 @@ public class RetriveCbicDetailsController {
 
 
                     if((col1 + col2 + col3) != 0) {
-                        total = ((double) col14 / (col1 + col2 + col3));
+                        total = ((double) col14 * 100 / (col1 + col2 + col3));
                     }else{
                         total = 0.00;
                     }
@@ -603,7 +603,7 @@ public class RetriveCbicDetailsController {
 
 
                     if((col1 + col2 + col3) != 0) {
-                        total = ((double) col14 / (col1 + col2 + col3));
+                        total = ((double) col14 * 100/ (col1 + col2 + col3));
                     }else{
                         total = 0.00;
                     }
