@@ -52,7 +52,7 @@ public class LastMonthYearController {
         ResultSet currentMonthValue= null;
         try {
 
-            if (type.equalsIgnoreCase("last3month")) { // for parameter 1
+            if (type.equalsIgnoreCase("last3month")) { // for parameter 1      zone wise
                 //     '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 
 //					String curentMonth = "SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m-%d') AS month_date;";
