@@ -2492,13 +2492,22 @@ public class RetriveCbicDetailsController {
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 // Query string
-                String queryGst14aa= "SELECT zc.ZONE_NAME,cc.COMM_NAME, cc.ZONE_CODE, "
-                        + "(14c.adc_commissionerate_disposal_no + 14c.adc_audit_disposal_no + 14c.adc_investigation_disposal_no + 14c.adc_callbook_disposal_no + 14c.dc_commissionerate_disposal_no + 14c.dc_audit_disposal_no + 14c.dc_investigation_disposal_no + 14c.dc_callbook_disposal_no + 14c.superintendent_commissionerate_disposal_no + 14c.superintendent_audit_disposal_no + 14c.superintendent_investigation_disposal_no + 14c.superintendent_callbook_disposal_no) as col10, "
-                        + "(14c.ADC_COMMISSIONERATE_OPENING_NO+14c.ADC_AUDIT_OPENING_NO+14c.ADC_INVESTIGATION_OPENING_NO+14c.ADC_CALLBOOK_OPENING_NO+14c.DC_COMMISSIONERATE_OPENING_NO+14c.DC_AUDIT_OPENING_NO+14c.DC_INVESTIGATION_OPENING_NO+14c.DC_CALLBOOK_OPENING_NO+14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO+14c.SUPERINTENDENT_AUDIT_OPENING_NO+14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO+14c.SUPERINTENDENT_CALLBOOK_OPENING_NO) as col4 "
-                        + "FROM mis_gst_commcode as cc "
-                        + "right join mis_dpm_gst_adj_1 as 14c on cc.COMM_CODE = 14c.COMM_CODE "
-                        + "left join mis_gst_zonecode as zc on zc.ZONE_CODE = cc.ZONE_CODE "
-                        + "where 14c.MM_YYYY = '"+month_date+"';";
+                String queryGst14aa= "WITH cte AS (\n" +
+                        "    SELECT zc.ZONE_NAME,cc.COMM_NAME,cc.ZONE_CODE,\n" +
+                        "           (14c.adc_commissionerate_disposal_no + 14c.adc_audit_disposal_no + 14c.adc_investigation_disposal_no + 14c.adc_callbook_disposal_no + 14c.dc_commissionerate_disposal_no + 14c.dc_audit_disposal_no + 14c.dc_investigation_disposal_no + 14c.dc_callbook_disposal_no + 14c.superintendent_commissionerate_disposal_no + 14c.superintendent_audit_disposal_no + 14c.superintendent_investigation_disposal_no + 14c.superintendent_callbook_disposal_no) as col10,\n" +
+                        "           (14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + 14c.ADC_CALLBOOK_OPENING_NO + 14c.DC_COMMISSIONERATE_OPENING_NO + 14c.DC_AUDIT_OPENING_NO + 14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + 14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO + 14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO) as col4\n" +
+                        "    FROM mis_gst_commcode as cc\n" +
+                        "    RIGHT JOIN mis_dpm_gst_adj_1 as 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                        "    LEFT JOIN mis_gst_zonecode as zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                        "    WHERE 14c.MM_YYYY = '"+month_date+"'\n" +
+                        ")\n" +
+                        "SELECT ZONE_NAME,COMM_NAME,ZONE_CODE,col10,col4,\n" +
+                        "       CASE \n" +
+                        "           WHEN col4 = 0 THEN 0 \n" +
+                        "           ELSE col10 * 100 / col4 \n" +
+                        "       END AS score_of_subparameter\n" +
+                        "FROM cte\n" +
+                        "order by score_of_subparameter desc;";
 
                 //Prepared Statement
                 PreparedStatement psGst14aa=con.prepareStatement(queryGst14aa);
@@ -2510,6 +2519,7 @@ public class RetriveCbicDetailsController {
                     String ra=RelevantAspect.GST5A_RA;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    total = rsGst14aa.getDouble("score_of_subparameter");
                     int col10=rsGst14aa.getInt("col10");
                     int col4=rsGst14aa.getInt("col4");
                     int Zonal_rank = 0;
@@ -2519,9 +2529,9 @@ public class RetriveCbicDetailsController {
                     int sub_parameter_weighted_average = 0;
                     String absval=String.valueOf(col10)+"/"+String.valueOf(col4);
 
-                    if((col4)!=0) {
-                        total = (((double) (col10) * 100) / (col4));
-                    }
+//                    if((col4)!=0) {
+//                        total = (((double) (col10) * 100) / (col4));
+//                    }
 
                     rank=score.marks5a(total);
                     String formattedTotal = String.format("%.2f", total);
