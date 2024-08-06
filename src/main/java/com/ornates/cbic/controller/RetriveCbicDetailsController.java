@@ -2635,6 +2635,7 @@ public class RetriveCbicDetailsController {
                 while (rsGst14aa.next()) {
                     String ra = RelevantAspect.Gst5B_RA;
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    total = rsGst14aa.getDouble("total_score");
                     String commname="ALL";
                     int col22 = rsGst14aa.getInt("col22");
                     int col23 = rsGst14aa.getInt("col23");
@@ -2645,7 +2646,7 @@ public class RetriveCbicDetailsController {
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
 
-                    total = (((double) (col22 + col23) * 100) / (col16));
+//                    total = (((double) (col22 + col23) * 100) / (col16));
                     //}
                     rank = score.marks5b(total);
                     String formattedTotal = String.format("%.2f", total);
