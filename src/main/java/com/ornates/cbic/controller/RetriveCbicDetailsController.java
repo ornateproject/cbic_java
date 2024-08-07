@@ -4413,22 +4413,25 @@ public class RetriveCbicDetailsController {
             if(type.equalsIgnoreCase("zone")) {
 
                 // Query string
-                String queryGst14aa=
-                        "SELECT " +
-                                "    cc.ZONE_CODE, " +
-                                "    zc.ZONE_NAME, " +
-                                "    SUM(14c.CLOSING_AMT) AS col20, " +
-                                "    SUM(14c.BELOW_YEAR_AMT) AS col22 " +
-                                "FROM " +
-                                "    mis_gst_commcode AS cc " +
-                                "RIGHT JOIN " +
-                                "    mis_tar_gst_3_new AS 14c ON cc.COMM_CODE = 14c.COMM_CODE " +
-                                "LEFT JOIN " +
-                                "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE " +
-                                "WHERE " +
-                                "    14c.MM_YYYY = '" + month_date + "' " +
-                                "GROUP BY " +
-                                "    cc.ZONE_CODE;";
+                String queryGst14aa="SELECT\n" +
+                        "    cc.ZONE_CODE,\n" +
+                        "    zc.ZONE_NAME,\n" +
+                        "    SUM(tc.CLOSING_AMT) AS col20,\n" +
+                        "    SUM(tc.BELOW_YEAR_AMT) AS col22,\n" +
+                        "    -- Calculate total_score using the formula\n" +
+                        "    (SUM(tc.CLOSING_AMT) - SUM(tc.BELOW_YEAR_AMT)) / NULLIF(SUM(tc.CLOSING_AMT), 0) * 100 AS total_score\n" +
+                        "FROM\n" +
+                        "    mis_gst_commcode AS cc\n" +
+                        "RIGHT JOIN\n" +
+                        "    mis_tar_gst_3_new AS tc ON cc.COMM_CODE = tc.COMM_CODE\n" +
+                        "LEFT JOIN\n" +
+                        "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                        "WHERE\n" +
+                        "    tc.MM_YYYY = '" + month_date + "'\n" +
+                        "GROUP BY\n" +
+                        "    cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                        "ORDER BY\n" +
+                        "    total_score ASC;\n";
 
 
 //				String prev_month_new =DateCalculate.getPreviousMonth(month_date);
@@ -4450,9 +4453,9 @@ public class RetriveCbicDetailsController {
                     String ra=RelevantAspect.GST8B_RA;
                     int col20=rsGst14aa.getInt("col20");
                     int col22=rsGst14aa.getInt("col22");
+                    Double t_score = rsGst14aa.getDouble("total_score");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
 
@@ -4464,12 +4467,13 @@ public class RetriveCbicDetailsController {
 //					}
 
                     // Calculate total
-                    total = col20 != 0 ? (((double) (col20 - col22) * 100) / col20) : 0.0;
+                    //total = col20 != 0 ? (((double) (col20 - col22) * 100) / col20) : 0.0;
                     //}
                     rank=score.marks8b(total);
                     String absval = (col20-col22) + "/" +(col20);
-                    String formattedTotal = String.format("%.2f", total);
+                    String formattedTotal = String.format("%.2f", t_score);
                     double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.marks8b(totalScore);
                     gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), "ALL", totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     //gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),"ALL",(int)total,rank);
@@ -4477,26 +4481,28 @@ public class RetriveCbicDetailsController {
                 }
             }else if (type.equalsIgnoreCase("commissary")) {
                 // Query string
-                String queryGst14aa= "SELECT \r\n"
-                        + "    cc.ZONE_CODE, \r\n"
-                        + "    zc.ZONE_NAME,\r\n"
-                        + "    cc.COMM_NAME,  \r\n"
-                        + "    MAX(14c.CLOSING_AMT) AS col20, \r\n"
-                        + "    MAX(14c.BELOW_YEAR_AMT) AS col22 \r\n"
-                        + "FROM \r\n"
-                        + "    mis_gst_commcode AS cc \r\n"
-                        + "RIGHT JOIN \r\n"
-                        + "    mis_tar_gst_3_new AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \r\n"
-                        + "LEFT JOIN \r\n"
-                        + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \r\n"
-                        + "WHERE \r\n"
-                        + "    14c.MM_YYYY = '" + month_date + "' \r\n"
-                        + "    AND zc.ZONE_CODE = '"+zone_code+"'\r\n"
-                        + "GROUP BY \r\n"
-                        + "    cc.ZONE_CODE, \r\n"
-                        + "    zc.ZONE_NAME,\r\n"
-                        + "    cc.COMM_NAME;\r\n"
-                        + "";
+                String queryGst14aa="SELECT \n" +
+                        "    cc.ZONE_CODE, \n" +
+                        "    zc.ZONE_NAME,\n" +
+                        "    cc.COMM_NAME,  \n" +
+                        "    MAX(14c.CLOSING_AMT) AS col20, \n" +
+                        "    MAX(14c.BELOW_YEAR_AMT) AS col22,\n" +
+                        "    ((MAX(14c.CLOSING_AMT) - MAX(14c.BELOW_YEAR_AMT)) / MAX(14c.CLOSING_AMT)) * 100 AS total_score\n" +
+                        "FROM \n" +
+                        "    mis_gst_commcode AS cc \n" +
+                        "RIGHT JOIN \n" +
+                        "    mis_tar_gst_3_new AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "LEFT JOIN \n" +
+                        "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "WHERE \n" +
+                        "    14c.MM_YYYY = '"+month_date+"' \n" +
+                        "    AND zc.ZONE_CODE = '"+zone_code+"'\n" +
+                        "GROUP BY \n" +
+                        "    cc.ZONE_CODE, \n" +
+                        "    zc.ZONE_NAME,\n" +
+                        "    cc.COMM_NAME\n" +
+                        "ORDER BY \n" +
+                        "    total_score ASC;\n";
 
 
 //				String prev_month_new =DateCalculate.getPreviousMonth(month_date);
@@ -4516,12 +4522,12 @@ public class RetriveCbicDetailsController {
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
                     String commname=rsGst14aa.getString("COMM_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    Double t_score = rsGst14aa.getDouble("total_score");
                     String ra=RelevantAspect.GST8B_RA;
                     int col20=rsGst14aa.getInt("col20");
                     int col22=rsGst14aa.getInt("col22");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
 
@@ -4531,14 +4537,66 @@ public class RetriveCbicDetailsController {
 //					if(rsGst3aa.next()) {
 //						col21=rsGst3aa.getInt("col21");
 //					}
-                    total = col20 != 0 ? (((double) (col20 - col22) * 100) / col20) : 0.0;
-
-                    total=((double) (col20-col22)/ col20);
-                    //}
+//                    total = col20 != 0 ? (((double) (col20 - col22) * 100) / col20) : 0.0;
+//
+//                    total=((double) (col20-col22)/ col20);
+//                    //}
+                    //rank=score.marks8b(total);
+                    String absval = String.valueOf(col20-col22) + "/" + String.valueOf(col20);
+                    String formattedTotal = String.format("%.2f", t_score);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.marks8b(totalScore);
+                    gsta = new GST4A(zoneName, commname, totalScore,absval,zoneCode,ra,
+                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(gsta);
+                }
+            }else if (type.equalsIgnoreCase("all_commissary")) {
+                // Query string
+                String queryGst14aa="SELECT \n" +
+                        "    cc.ZONE_CODE, \n" +
+                        "    zc.ZONE_NAME,\n" +
+                        "    cc.COMM_NAME,  \n" +
+                        "    MAX(14c.CLOSING_AMT) AS col20, \n" +
+                        "    MAX(14c.BELOW_YEAR_AMT) AS col22,\n" +
+                        "    ((MAX(14c.CLOSING_AMT) - MAX(14c.BELOW_YEAR_AMT)) / MAX(14c.CLOSING_AMT)) * 100 AS total_score\n" +
+                        "FROM \n" +
+                        "    mis_gst_commcode AS cc \n" +
+                        "RIGHT JOIN \n" +
+                        "    mis_tar_gst_3_new AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "LEFT JOIN \n" +
+                        "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "WHERE \n" +
+                        "    14c.MM_YYYY = '"+month_date+"' \n" +
+                        "GROUP BY \n" +
+                        "    cc.ZONE_CODE, \n" +
+                        "    zc.ZONE_NAME,\n" +
+                        "    cc.COMM_NAME\n" +
+                        "ORDER BY \n" +
+                        "    total_score ASC;\n";
+                //Result Set
+                ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
+                //ResultSet rsGst3aa=GetExecutionSQL.getResult(queryGst3aa);
+                while(rsGst14aa.next()) {
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    String commname=rsGst14aa.getString("COMM_NAME");
+                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    Double t_score = rsGst14aa.getDouble("total_score");
+                    String ra=RelevantAspect.GST8B_RA;
+                    int col20=rsGst14aa.getInt("col20");
+                    int col22=rsGst14aa.getInt("col22");
+                    int Zonal_rank = 0;
+                    String gst = "no";
+                    int insentavization = 0;
+                    int sub_parameter_weighted_average = 0;
+//                    total = col20 != 0 ? (((double) (col20 - col22) * 100) / col20) : 0.0;
+//
+//                    total=((double) (col20-col22)/ col20);
+//                    //}
                     rank=score.marks8b(total);
                     String absval = String.valueOf(col20-col22) + "/" + String.valueOf(col20);
-                    String formattedTotal = String.format("%.2f", total);
+                    String formattedTotal = String.format("%.2f", t_score);
                     double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.marks8b(totalScore);
                     gsta = new GST4A(zoneName, commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
