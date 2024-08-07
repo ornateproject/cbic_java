@@ -1837,7 +1837,7 @@ public class TotalScoreController {
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String gst = "null";
 					String absval = "null";
-					String ra ="null";
+					String ra ="Adjudication";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
