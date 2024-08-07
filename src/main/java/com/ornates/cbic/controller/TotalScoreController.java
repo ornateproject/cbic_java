@@ -2206,7 +2206,7 @@ public class TotalScoreController {
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
-					double total_score = rsGst14aa.getDouble("total_score") * 100;
+					double tScore = rsGst14aa.getDouble("total_score") * 100;
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					Integer way_to_grade = 0;
 					Integer insentavization = 0;
@@ -2216,8 +2216,10 @@ public class TotalScoreController {
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
-					String ra ="null";
+					String ra ="ADJUDICATION(LEGACY CASES)";
 
+					String formattedTotal = String.format("%.2f", tScore);
+					double total_score = Double.parseDouble(formattedTotal);
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
@@ -2293,7 +2295,7 @@ public class TotalScoreController {
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String gst = "null";
 					String absval = "null";
-					String ra ="null";
+					String ra ="ADJUDICATION(LEGACY CASES)";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
@@ -2478,7 +2480,7 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst ="null";
 					String absval = "null";
-					String ra ="null";
+					String ra ="ADJUDICATION(LEGACY CASES)";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
@@ -2909,7 +2911,7 @@ public class TotalScoreController {
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
-					String ra ="null";
+					String ra ="RECOVERY OF ARREARS";
 
 
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -2964,7 +2966,7 @@ public class TotalScoreController {
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String gst = "null";
 					String absval = "null";
-					String ra ="null";
+					String ra ="RECOVERY OF ARREARS";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
@@ -3042,7 +3044,7 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst ="null";
 					String absval = "null";
-					String ra ="null";
+					String ra ="RECOVERY OF ARREARS";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
@@ -3150,7 +3152,7 @@ public class TotalScoreController {
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
-					String ra ="null";
+					String ra ="ARREST AND PROSECUTION";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
@@ -3177,7 +3179,7 @@ public class TotalScoreController {
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String gst = "null";
 					String absval = "null";
-					String ra ="null";
+					String ra ="ARREST AND PROSECUTION";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
@@ -3257,7 +3259,7 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst ="null";
 					String absval = "null";
-					String ra ="null";
+					String ra ="ARREST AND PROSECUTION";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
