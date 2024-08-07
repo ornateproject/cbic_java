@@ -1952,33 +1952,42 @@ public class RetriveCbicDetailsController {
 
                 String queryGst3aa= "WITH FirstQuery AS (\n" +
                         "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
-                        "           SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col1_6 \n" +
+                        "           SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col1_7 \n" +
                         "    FROM mis_gst_commcode AS cc\n" +
                         "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                         "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                        "    WHERE 14c.MM_YYYY <= '"+ month_date+"' GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                        "    WHERE 14c.MM_YYYY <= '"+ month_date+"' \n" +
+                        "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                         "),\n" +
                         "SecondQuery AS (\n" +
                         "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
-                        "           SUM(7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) AS col1_7 \n" +
+                        "           SUM(7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) AS col1_8 \n" +
                         "    FROM mis_gst_commcode AS cc\n" +
                         "    RIGHT JOIN mis_ddm_gst_1 AS 7c ON cc.COMM_CODE = 7c.COMM_CODE\n" +
                         "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                        "    WHERE 7c.MM_YYYY <= '"+ month_date+"' GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                        "    WHERE 7c.MM_YYYY <= '"+ month_date+"' \n" +
+                        "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                         ")\n" +
                         "SELECT \n" +
                         "    COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME, \n" +
                         "    COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) AS ZONE_CODE, \n" +
-                        "    fq.col1_6, sq.col1_7\n" +
+                        "    fq.col1_7, sq.col1_8, \n" +
+                        "    (fq.col1_7 * 100 / sq.col1_8) AS score_of_parameter4c\n" +
                         "FROM FirstQuery fq\n" +
                         "LEFT JOIN SecondQuery sq ON fq.ZONE_CODE = sq.ZONE_CODE\n" +
-                        "UNION\n" +
+                        "\n" +
+                        "UNION ALL\n" +
+                        "\n" +
                         "SELECT \n" +
                         "    COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME, \n" +
                         "    COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) AS ZONE_CODE, \n" +
-                        "    fq.col1_6, sq.col1_7\n" +
+                        "    fq.col1_7, sq.col1_8, \n" +
+                        "    (fq.col1_7 * 100 / sq.col1_8) AS score_of_parameter4c\n" +
                         "FROM SecondQuery sq\n" +
-                        "LEFT JOIN FirstQuery fq ON fq.ZONE_CODE = sq.ZONE_CODE ORDER BY ZONE_CODE;";
+                        "LEFT JOIN FirstQuery fq ON fq.ZONE_CODE = sq.ZONE_CODE\n" +
+                        "WHERE fq.ZONE_CODE IS NULL\n" +
+                        "\n" +
+                        "ORDER BY score_of_parameter4c DESC;\n";
 
 
                 //Result Set
@@ -1987,24 +1996,25 @@ public class RetriveCbicDetailsController {
                     String ra=RelevantAspect.Gst4C_RA;
                     String zoneName = rsGst3aa.getString("ZONE_NAME");
                     String zoneCode = rsGst3aa.getString("ZONE_CODE");
-                    int col1_6=rsGst3aa.getInt("col1_6");
+                    Double t_score = rsGst3aa.getDouble("score_of_parameter4c");
                     int col1_7=rsGst3aa.getInt("col1_7");
+                    int col1_8=rsGst3aa.getInt("col1_8");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
-                    String absval = String.valueOf(col1_6) + "/" + String.valueOf(col1_7);
-                    if ((col1_7) != 0){
-                        total =(((double) (col1_6) * 100)/(col1_7));
-                    }
-                    else{
-                        total=0;
-                    }
+                    String absval = String.valueOf(col1_7) + "/" + String.valueOf(col1_8);
+//                    if ((col1_8) != 0){
+//                        total =(((double) (col1_7) * 100)/(col1_8));
+//                    }
+//                    else{
+//                        total=0;
+//                    }
 
                     rank=score.marks4c(total);
-                    String formattedTotal = String.format("%.2f", total);
+                    String formattedTotal = String.format("%.2f", t_score);
                     double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.marks4c(totalScore);
                     gsta = new GST4A(zoneName, "ALL", totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
@@ -2013,27 +2023,25 @@ public class RetriveCbicDetailsController {
                 //String prev_month_new =DateCalculate.getPreviousMonth(month_date);
                 // Query string
                 String queryGst14aa="WITH detection_sum AS (\n" +
-                        "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
-                        "           SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col1_6 \n" +
-                        "    FROM mis_gst_commcode AS cc\n" +
-                        "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                        "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                        "    WHERE 14c.MM_YYYY <= '"+ month_date+"' AND cc.ZONE_CODE='" + zone_code + "' GROUP BY cc.COMM_NAME, cc.ZONE_CODE, zc.ZONE_NAME\n" +
-                        "),\n" +
-                        "gross_tax_sum AS (\n" +
-                        "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
-                        "           SUM(7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) AS col1_7 \n" +
-                        "    FROM mis_gst_commcode AS cc \n" +
-                        "    RIGHT JOIN mis_ddm_gst_1 AS 7c ON cc.COMM_CODE = 7c.COMM_CODE \n" +
-                        "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "    WHERE 7c.MM_YYYY <= '"+ month_date+"' AND cc.ZONE_CODE='" + zone_code + "' GROUP BY cc.COMM_NAME, cc.ZONE_CODE, zc.ZONE_NAME\n" +
-                        ")\n" +
-                        "SELECT d.ZONE_NAME,d.ZONE_CODE,d.COMM_NAME,d.col1_6,g.col1_7\n" +
-                        "FROM detection_sum d\n" +
-                        "LEFT JOIN gross_tax_sum g ON d.ZONE_NAME = g.ZONE_NAME AND d.ZONE_CODE = g.ZONE_CODE AND d.COMM_NAME = g.COMM_NAME;\n";
-
-
-
+                        "                            SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+                        "                                   SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col1_7 \n" +
+                        "                            FROM mis_gst_commcode AS cc\n" +
+                        "                            RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "                            LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                        "                            WHERE 14c.MM_YYYY <= '" + month_date + "' and cc.ZONE_CODE='" + zone_code + "'  GROUP BY cc.COMM_NAME, cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                        "                        ),\n" +
+                        "                        gross_tax_sum AS (\n" +
+                        "                            SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+                        "                                   SUM(7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) AS col1_8 \n" +
+                        "                            FROM mis_gst_commcode AS cc \n" +
+                        "                            RIGHT JOIN mis_ddm_gst_1 AS 7c ON cc.COMM_CODE = 7c.COMM_CODE \n" +
+                        "                            LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "                            WHERE 7c.MM_YYYY <= '" + month_date + "' and cc.ZONE_CODE='" + zone_code + "' GROUP BY cc.COMM_NAME, cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                        "                        )\n" +
+                        "                        SELECT d.ZONE_NAME,d.ZONE_CODE,d.COMM_NAME,d.col1_7,g.col1_8, (d.col1_7 * 100 / g.col1_8) as score_of_subparameter4c\n" +
+                        "                        FROM detection_sum d\n" +
+                        "                        LEFT JOIN gross_tax_sum g ON d.ZONE_NAME = g.ZONE_NAME AND d.ZONE_CODE = g.ZONE_CODE AND d.COMM_NAME = g.COMM_NAME\n" +
+                        "                        order by score_of_subparameter4c desc;";
                 //Result Set
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next() ) {
@@ -2041,22 +2049,23 @@ public class RetriveCbicDetailsController {
                     String ra=RelevantAspect.Gst4C_RA;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
-                    int col1_6=rsGst14aa.getInt("col1_6");
+                    Double t_score = rsGst14aa.getDouble("score_of_subparameter4c");
                     int col1_7=rsGst14aa.getInt("col1_7");
+                    int col1_8=rsGst14aa.getInt("col1_8");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
-                    String absval = String.valueOf(col1_6) + "/" + String.valueOf(col1_7);
-                    if ((col1_7) != 0){
-                        total =(((double) (col1_6) * 100)/(col1_7));
-                    }
-                    else{total=0;}
+                    String absval = String.valueOf(col1_7) + "/" + String.valueOf(col1_8);
+//                    if ((col1_7) != 0){
+//                        total =(((double) (col1_6) * 100)/(col1_7));
+//                    }
+//                    else{total=0;}
 
-                    rank=score.marks4c(total);
-                    String formattedTotal = String.format("%.2f", total);
+                    //rank=score.marks4c(total);
+                    String formattedTotal = String.format("%.2f", t_score);
                     double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.marks4c(totalScore);
                     gsta = new GST4A(zoneName, commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
@@ -2065,24 +2074,25 @@ public class RetriveCbicDetailsController {
                 //String prev_month_new =DateCalculate.getPreviousMonth(month_date);
                 // Query string
                 String queryGst14aa="WITH detection_sum AS (\n" +
-                        "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
-                        "           SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col1_6 \n" +
-                        "    FROM mis_gst_commcode AS cc\n" +
-                        "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                        "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                        "    WHERE 14c.MM_YYYY <= '"+ month_date+"'  GROUP BY cc.COMM_NAME, cc.ZONE_CODE, zc.ZONE_NAME\n" +
-                        "),\n" +
-                        "gross_tax_sum AS (\n" +
-                        "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
-                        "           SUM(7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) AS col1_7 \n" +
-                        "    FROM mis_gst_commcode AS cc \n" +
-                        "    RIGHT JOIN mis_ddm_gst_1 AS 7c ON cc.COMM_CODE = 7c.COMM_CODE \n" +
-                        "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "    WHERE 7c.MM_YYYY <= '"+ month_date+"'  GROUP BY cc.COMM_NAME, cc.ZONE_CODE, zc.ZONE_NAME\n" +
-                        ")\n" +
-                        "SELECT d.ZONE_NAME,d.ZONE_CODE,d.COMM_NAME,d.col1_6,g.col1_7\n" +
-                        "FROM detection_sum d\n" +
-                        "LEFT JOIN gross_tax_sum g ON d.ZONE_NAME = g.ZONE_NAME AND d.ZONE_CODE = g.ZONE_CODE AND d.COMM_NAME = g.COMM_NAME;\n";
+                        "                            SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+                        "                                   SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col1_7 \n" +
+                        "                            FROM mis_gst_commcode AS cc\n" +
+                        "                            RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "                            LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                        "                            WHERE 14c.MM_YYYY <= '" + month_date + "'  GROUP BY cc.COMM_NAME, cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                        "                        ),\n" +
+                        "                        gross_tax_sum AS (\n" +
+                        "                            SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+                        "                                   SUM(7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) AS col1_8 \n" +
+                        "                            FROM mis_gst_commcode AS cc \n" +
+                        "                            RIGHT JOIN mis_ddm_gst_1 AS 7c ON cc.COMM_CODE = 7c.COMM_CODE \n" +
+                        "                            LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "                            WHERE 7c.MM_YYYY <= '" + month_date + "'  GROUP BY cc.COMM_NAME, cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                        "                        )\n" +
+                        "                        SELECT d.ZONE_NAME,d.ZONE_CODE,d.COMM_NAME,d.col1_7,g.col1_8, (d.col1_7 * 100 / g.col1_8) as score_of_subparameter4c\n" +
+                        "                        FROM detection_sum d\n" +
+                        "                        LEFT JOIN gross_tax_sum g ON d.ZONE_NAME = g.ZONE_NAME AND d.ZONE_CODE = g.ZONE_CODE AND d.COMM_NAME = g.COMM_NAME\n" +
+                        "                        order by score_of_subparameter4c desc;";
 
 
 
@@ -2093,22 +2103,23 @@ public class RetriveCbicDetailsController {
                     String ra=RelevantAspect.Gst4C_RA;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
-                    int col1_6=rsGst14aa.getInt("col1_6");
+                    Double t_score = rsGst14aa.getDouble("score_of_subparameter4c");
                     int col1_7=rsGst14aa.getInt("col1_7");
+                    int col1_8=rsGst14aa.getInt("col1_8");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
-                    String absval = String.valueOf(col1_6) + "/" + String.valueOf(col1_7);
-                    if ((col1_7) != 0){
-                        total =(((double) (col1_6) * 100)/(col1_7));
-                    }
-                    else{total=0;}
+                    String absval = String.valueOf(col1_7) + "/" + String.valueOf(col1_8);
+//                    if ((col1_7) != 0){
+//                        total =(((double) (col1_6) * 100)/(col1_7));
+//                    }
+//                    else{total=0;}
 
-                    rank=score.marks4c(total);
-                    String formattedTotal = String.format("%.2f", total);
+                    //rank=score.marks4c(total);
+                    String formattedTotal = String.format("%.2f", t_score);
                     double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.marks4c(totalScore);
                     gsta = new GST4A(zoneName, commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
