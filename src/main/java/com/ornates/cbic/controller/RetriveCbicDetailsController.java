@@ -733,12 +733,37 @@ public class RetriveCbicDetailsController {
             if (type.equalsIgnoreCase("zone")) {
 
                 // Query string
-                String queryGst14aa ="SELECT zc.ZONE_NAME, cc.ZONE_CODE,sum((14c.SUO_MOTO_OPENING_BALANCE+14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION-14c.SUO_MOTO_GSTIN_CANCELLED)+(14c.CANCELLATION_OPENING_BALANCE+14c.CANCELLATION_NO_APPLICATION_RECEIVED-14c.CANCELLATION_GSTIN_CANCELLED) ) as col9,sum(14c.SUO_MOTO_OPENING_BALANCE) as col1," +
-                        "sum(14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION) as col2,sum(14c.CANCELLATION_OPENING_BALANCE) as col5," +
-                        "sum(14c.CANCELLATION_NO_APPLICATION_RECEIVED) as col6 FROM  mis_gst_commcode as cc " +
-                        "right join mis_dpm_gst_15a as 14c on cc.COMM_CODE=14c.COMM_CODE " +
-                        "left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE " +
-                        "where  14c.MM_YYYY='" + month_date + "' group by cc.ZONE_CODE";
+                String queryGst14aa ="SELECT \n" +
+                        "    zc.ZONE_NAME, \n" +
+                        "    cc.ZONE_CODE,\n" +
+                        "    SUM(\n" +
+                        "        (14c.SUO_MOTO_OPENING_BALANCE + 14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION - 14c.SUO_MOTO_GSTIN_CANCELLED) +\n" +
+                        "        (14c.CANCELLATION_OPENING_BALANCE + 14c.CANCELLATION_NO_APPLICATION_RECEIVED - 14c.CANCELLATION_GSTIN_CANCELLED)\n" +
+                        "    ) AS col9,\n" +
+                        "    SUM(14c.SUO_MOTO_OPENING_BALANCE) AS col1,\n" +
+                        "    SUM(14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION) AS col2,\n" +
+                        "    SUM(14c.CANCELLATION_OPENING_BALANCE) AS col5,\n" +
+                        "    SUM(14c.CANCELLATION_NO_APPLICATION_RECEIVED) AS col6,\n" +
+                        "    (SUM(\n" +
+                        "        (14c.SUO_MOTO_OPENING_BALANCE + 14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION - 14c.SUO_MOTO_GSTIN_CANCELLED) +\n" +
+                        "        (14c.CANCELLATION_OPENING_BALANCE + 14c.CANCELLATION_NO_APPLICATION_RECEIVED - 14c.CANCELLATION_GSTIN_CANCELLED)\n" +
+                        "    ) / \n" +
+                        "    (SUM(14c.SUO_MOTO_OPENING_BALANCE) + \n" +
+                        "    SUM(14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION) + \n" +
+                        "    SUM(14c.CANCELLATION_OPENING_BALANCE) + \n" +
+                        "    SUM(14c.CANCELLATION_NO_APPLICATION_RECEIVED))) * 100 AS total_score\n" +
+                        "FROM \n" +
+                        "    mis_gst_commcode AS cc\n" +
+                        "RIGHT JOIN \n" +
+                        "    mis_dpm_gst_15a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                        "LEFT JOIN \n" +
+                        "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                        "WHERE \n" +
+                        "    14c.MM_YYYY = '" + month_date + "'\n" +
+                        "GROUP BY \n" +
+                        "    cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                        "ORDER BY \n" +
+                        "    total_score ASC;\n";
 
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
@@ -772,12 +797,42 @@ public class RetriveCbicDetailsController {
                 }
             }else if (type.equalsIgnoreCase("commissary")) {
                 // Query string
-                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,cc.COMM_NAME,((14c.SUO_MOTO_OPENING_BALANCE+14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION-14c.SUO_MOTO_GSTIN_CANCELLED)+(14c.CANCELLATION_OPENING_BALANCE+14c.CANCELLATION_NO_APPLICATION_RECEIVED-14c.CANCELLATION_GSTIN_CANCELLED) ) as col9,(14c.SUO_MOTO_OPENING_BALANCE) as col1, " +
-                        "(14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION) as col2,(14c.CANCELLATION_OPENING_BALANCE) as col5, " +
-                        "(14c.CANCELLATION_NO_APPLICATION_RECEIVED) as col6 FROM  mis_gst_commcode as cc  " +
-                        "right join mis_dpm_gst_15a as 14c on cc.COMM_CODE=14c.COMM_CODE " +
-                        "left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE " +
-                        "where MM_YYYY='"+ month_date+"' and cc.ZONE_CODE='"+zone_code+"';";
+                String queryGst14aa = "SELECT \n" +
+                        "    zc.ZONE_NAME, \n" +
+                        "    cc.ZONE_CODE,\n" +
+                        "    cc.COMM_NAME,\n" +
+                        "    ((tbl14c.SUO_MOTO_OPENING_BALANCE + \n" +
+                        "      tbl14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION - \n" +
+                        "      tbl14c.SUO_MOTO_GSTIN_CANCELLED) +\n" +
+                        "     (tbl14c.CANCELLATION_OPENING_BALANCE + \n" +
+                        "      tbl14c.CANCELLATION_NO_APPLICATION_RECEIVED - \n" +
+                        "      tbl14c.CANCELLATION_GSTIN_CANCELLED)) AS col9,\n" +
+                        "    tbl14c.SUO_MOTO_OPENING_BALANCE AS col1,\n" +
+                        "    tbl14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION AS col2,\n" +
+                        "    tbl14c.CANCELLATION_OPENING_BALANCE AS col5,\n" +
+                        "    tbl14c.CANCELLATION_NO_APPLICATION_RECEIVED AS col6,\n" +
+                        "    ((tbl14c.SUO_MOTO_OPENING_BALANCE + \n" +
+                        "      tbl14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION - \n" +
+                        "      tbl14c.SUO_MOTO_GSTIN_CANCELLED) +\n" +
+                        "     (tbl14c.CANCELLATION_OPENING_BALANCE + \n" +
+                        "      tbl14c.CANCELLATION_NO_APPLICATION_RECEIVED - \n" +
+                        "      tbl14c.CANCELLATION_GSTIN_CANCELLED)) / \n" +
+                        "    (tbl14c.SUO_MOTO_OPENING_BALANCE +\n" +
+                        "     tbl14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION +\n" +
+                        "     tbl14c.CANCELLATION_OPENING_BALANCE +\n" +
+                        "     tbl14c.CANCELLATION_NO_APPLICATION_RECEIVED) * 100 AS total_score\n" +
+                        "FROM \n" +
+                        "    mis_gst_commcode AS cc\n" +
+                        "RIGHT JOIN \n" +
+                        "    mis_dpm_gst_15a AS tbl14c ON cc.COMM_CODE = tbl14c.COMM_CODE\n" +
+                        "LEFT JOIN \n" +
+                        "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                        "WHERE \n" +
+                        "    MM_YYYY = '" + month_date + "' \n" +
+                        "    AND cc.ZONE_CODE = '" + zone_code + "'\n" +
+                        "ORDER BY \n" +
+                        "    total_score ASC\n" +
+                        "LIMIT 0, 1000;\n";
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
                 while (rsGst14aa.next()) {
@@ -809,13 +864,41 @@ public class RetriveCbicDetailsController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,cc.COMM_NAME, ((14c.SUO_MOTO_OPENING_BALANCE+14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION-14c.SUO_MOTO_GSTIN_CANCELLED)+\n" +
-                        "(14c.CANCELLATION_OPENING_BALANCE+14c.CANCELLATION_NO_APPLICATION_RECEIVED-14c.CANCELLATION_GSTIN_CANCELLED) ) as col9,(14c.SUO_MOTO_OPENING_BALANCE) as col1,\n" +
-                        "(14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION) as col2,(14c.CANCELLATION_OPENING_BALANCE) as col5,\n" +
-                        "(14c.CANCELLATION_NO_APPLICATION_RECEIVED) as col6 FROM  mis_gst_commcode as cc \n" +
-                        "right join mis_dpm_gst_15a as 14c on cc.COMM_CODE=14c.COMM_CODE \n" +
-                        "left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE\n" +
-                        "where  14c.MM_YYYY='"+ month_date+"';";
+                String queryGst14aa = "SELECT \n" +
+                        "    zc.ZONE_NAME, \n" +
+                        "    cc.ZONE_CODE,\n" +
+                        "    cc.COMM_NAME,\n" +
+                        "    ((tbl14c.SUO_MOTO_OPENING_BALANCE +\n" +
+                        "      tbl14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION -\n" +
+                        "      tbl14c.SUO_MOTO_GSTIN_CANCELLED) +\n" +
+                        "     (tbl14c.CANCELLATION_OPENING_BALANCE +\n" +
+                        "      tbl14c.CANCELLATION_NO_APPLICATION_RECEIVED -\n" +
+                        "      tbl14c.CANCELLATION_GSTIN_CANCELLED)) AS col9,\n" +
+                        "    tbl14c.SUO_MOTO_OPENING_BALANCE AS col1,\n" +
+                        "    tbl14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION AS col2,\n" +
+                        "    tbl14c.CANCELLATION_OPENING_BALANCE AS col5,\n" +
+                        "    tbl14c.CANCELLATION_NO_APPLICATION_RECEIVED AS col6,\n" +
+                        "    (((\n" +
+                        "        tbl14c.SUO_MOTO_OPENING_BALANCE +\n" +
+                        "        tbl14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION -\n" +
+                        "        tbl14c.SUO_MOTO_GSTIN_CANCELLED) +\n" +
+                        "       (tbl14c.CANCELLATION_OPENING_BALANCE +\n" +
+                        "        tbl14c.CANCELLATION_NO_APPLICATION_RECEIVED -\n" +
+                        "        tbl14c.CANCELLATION_GSTIN_CANCELLED))\n" +
+                        "        / (tbl14c.SUO_MOTO_OPENING_BALANCE +\n" +
+                        "           tbl14c.SUO_MOTO_GSTIN_LIABLE_FOR_CANCELLATION +\n" +
+                        "           tbl14c.CANCELLATION_OPENING_BALANCE +\n" +
+                        "           tbl14c.CANCELLATION_NO_APPLICATION_RECEIVED)) * 100 AS total_score\n" +
+                        "FROM \n" +
+                        "    mis_gst_commcode AS cc\n" +
+                        "RIGHT JOIN \n" +
+                        "    mis_dpm_gst_15a AS tbl14c ON cc.COMM_CODE = tbl14c.COMM_CODE\n" +
+                        "LEFT JOIN \n" +
+                        "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                        "WHERE \n" +
+                        "    tbl14c.MM_YYYY ='" + month_date + "'\n" +
+                        "ORDER BY \n" +
+                        "    total_score ASC;\n";
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
                 while (rsGst14aa.next()) {
