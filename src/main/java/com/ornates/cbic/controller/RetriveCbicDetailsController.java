@@ -1397,6 +1397,7 @@ public class RetriveCbicDetailsController {
         GST4A gsta = null;
         int rank = 0;
         double total = 0.00;
+        Double median = 0.00;
 
         try {
             if (type.equalsIgnoreCase("zone")) {
@@ -1442,7 +1443,7 @@ public class RetriveCbicDetailsController {
                         "            FROM mis_gst_commcode AS cc  \n" +
                         "            RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                         "            LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "            WHERE 14c.MM_YYYY = '2023-05-01' \n" +
+                        "            WHERE 14c.MM_YYYY = '" +month_date+"' \n" +
                         "            GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                         "        ) AS current_data\n" +
                         "    JOIN \n" +
@@ -1452,7 +1453,7 @@ public class RetriveCbicDetailsController {
                         "            FROM mis_gst_commcode AS cc \n" +
                         "            RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                         "            LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "            WHERE 14c.MM_YYYY = '2023-04-01' \n" +
+                        "            WHERE 14c.MM_YYYY = '" + prev_month_new + "' \n" +
                         "            GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                         "        ) AS previous_data\n" +
                         "    ON current_data.ZONE_CODE = previous_data.ZONE_CODE\n" +
@@ -1484,7 +1485,7 @@ public class RetriveCbicDetailsController {
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
                     String absval = rsGst14aa.getString("absval");
                     Double t_score = rsGst14aa.getDouble("total_score");
-                    Double median = rsGst14aa.getDouble("median_numerator_3a");
+                    median = rsGst14aa.getDouble("median_numerator_3a");
                     Double numerator_3b = rsGst14aa.getDouble("numerator_3a");
 
                     String formattedTotal = String.format("%.2f", t_score);
@@ -1496,6 +1497,7 @@ public class RetriveCbicDetailsController {
                         insentavization += 1;
                     }
 
+
                     int Zonal_rank = 0;
                     String gst = "no";
 
@@ -1504,6 +1506,8 @@ public class RetriveCbicDetailsController {
                     gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
+                System.out.println("gst3a median:- " + median); //********************************** for testing ************************************
+
             }else if (type.equalsIgnoreCase("commissary")) {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
                 // Query string
@@ -1772,6 +1776,7 @@ public class RetriveCbicDetailsController {
 
         List<GST4A> allGstaList = new ArrayList<>();
         GST4A gsta = null;
+        Double median = 0.00;
         Connection con = JDBCConnection.getTNConnection();
 
         try {
@@ -1783,7 +1788,7 @@ public class RetriveCbicDetailsController {
                         "        COUNT(*) OVER () AS total_count\n" +
                         "    FROM mis_gst_commcode AS cc \n" +
                         "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                        "    WHERE 14c.MM_YYYY <= '2023-05-01'\n" +
+                        "    WHERE 14c.MM_YYYY <= '" +month_date+"'\n" +
                         "    GROUP BY cc.ZONE_CODE\n" +
                         "),\n" +
                         "median_data AS (\n" +
@@ -1808,7 +1813,7 @@ public class RetriveCbicDetailsController {
                         "    FROM mis_gst_commcode AS cc \n" +
                         "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                         "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "    WHERE 14c.MM_YYYY <= '2023-05-01' \n" +
+                        "    WHERE 14c.MM_YYYY <= '" +month_date+"' \n" +
                         "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                         ") AS t\n" +
                         "CROSS JOIN median_data m\n" +
@@ -1823,7 +1828,7 @@ public class RetriveCbicDetailsController {
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
                     String absval = rsGst14aa.getString("absval");
                     Double t_score = rsGst14aa.getDouble("score_of_parameter");
-                    Double median = rsGst14aa.getDouble("median_numerator_3b");
+                    median = rsGst14aa.getDouble("median_numerator_3b");
                     Double numerator_3b = rsGst14aa.getDouble("numerator_3b");
 
                     String formattedTotal = String.format("%.2f", t_score);
@@ -1843,6 +1848,7 @@ public class RetriveCbicDetailsController {
                     gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
+                //System.out.println("gst3b median:- " + median); //**************************** for testing ******************************************
             }else if (type.equalsIgnoreCase("commissary")) {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
 
