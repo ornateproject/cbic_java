@@ -959,11 +959,27 @@ public class RetriveCbicDetailsController {
             if (type.equalsIgnoreCase("zone")) {
 
                 // Query string
-                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,sum(15a.REVOCATION_OPENING_BALANCE + 15a.REVOCATION_ARN_RECEIVED-15a.REVOCATION_GSTIN_REVOKED-15a.REVOCATION_APPLICATION_REJECTED) as col14,sum(15a.REVOCATION_OPENING_BALANCE) as col10," +
-                        "sum(15a.REVOCATION_ARN_RECEIVED) as col11 FROM  mis_gst_commcode as cc " +
-                        "right join mis_dpm_gst_15a as 15a on cc.COMM_CODE=15a.COMM_CODE " +
-                        "left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE " +
-                        "where MM_YYYY='" + month_date + "' group by ZONE_CODE";
+                String queryGst14aa = "SELECT \n" +
+                        "    zc.ZONE_NAME, \n" +
+                        "    cc.ZONE_CODE,\n" +
+                        "    SUM(15a.REVOCATION_OPENING_BALANCE + 15a.REVOCATION_ARN_RECEIVED - 15a.REVOCATION_GSTIN_REVOKED - 15a.REVOCATION_APPLICATION_REJECTED) AS col14,\n" +
+                        "    SUM(15a.REVOCATION_OPENING_BALANCE) AS col10,\n" +
+                        "    SUM(15a.REVOCATION_ARN_RECEIVED) AS col11,\n" +
+                        "    (SUM(15a.REVOCATION_OPENING_BALANCE + 15a.REVOCATION_ARN_RECEIVED - 15a.REVOCATION_GSTIN_REVOKED - 15a.REVOCATION_APPLICATION_REJECTED) / \n" +
+                        "    (SUM(15a.REVOCATION_OPENING_BALANCE) + SUM(15a.REVOCATION_ARN_RECEIVED)) * 100) AS total_score\n" +
+                        "FROM \n" +
+                        "    mis_gst_commcode AS cc\n" +
+                        "RIGHT JOIN \n" +
+                        "    mis_dpm_gst_15a AS 15a ON cc.COMM_CODE = 15a.COMM_CODE\n" +
+                        "LEFT JOIN \n" +
+                        "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                        "WHERE \n" +
+                        "    MM_YYYY = '" + month_date + "'\n" +
+                        "GROUP BY \n" +
+                        "    zc.ZONE_NAME, \n" +
+                        "    cc.ZONE_CODE\n" +
+                        "ORDER BY \n" +
+                        "    total_score ASC;\n";
 
                 //Result Set
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
@@ -995,8 +1011,26 @@ public class RetriveCbicDetailsController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("commissary")) {//gst1f-commissary
-                String queryGst14aa ="SELECT zc.ZONE_NAME, cc.ZONE_CODE,cc.COMM_NAME," +
-                        "(15a.REVOCATION_OPENING_BALANCE + 15a.REVOCATION_ARN_RECEIVED-15a.REVOCATION_GSTIN_REVOKED-15a.REVOCATION_APPLICATION_REJECTED) as col14,(15a.REVOCATION_OPENING_BALANCE) as col10, (15a.REVOCATION_ARN_RECEIVED) as col11 FROM  mis_gst_commcode as cc  right join mis_dpm_gst_15a as 15a on cc.COMM_CODE=15a.COMM_CODE  left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE where MM_YYYY='" + month_date + "' and cc.ZONE_CODE='"+zone_code+"';";
+                String queryGst14aa ="SELECT \n" +
+                        "    zc.ZONE_NAME, \n" +
+                        "    cc.ZONE_CODE,\n" +
+                        "    cc.COMM_NAME,\n" +
+                        "    (15a.REVOCATION_OPENING_BALANCE + 15a.REVOCATION_ARN_RECEIVED - 15a.REVOCATION_GSTIN_REVOKED - 15a.REVOCATION_APPLICATION_REJECTED) AS col14,\n" +
+                        "    15a.REVOCATION_OPENING_BALANCE AS col10,\n" +
+                        "    15a.REVOCATION_ARN_RECEIVED AS col11,\n" +
+                        "    ((15a.REVOCATION_OPENING_BALANCE + 15a.REVOCATION_ARN_RECEIVED - 15a.REVOCATION_GSTIN_REVOKED - 15a.REVOCATION_APPLICATION_REJECTED) / \n" +
+                        "     (15a.REVOCATION_OPENING_BALANCE + 15a.REVOCATION_ARN_RECEIVED)) * 100 AS total_score\n" +
+                        "FROM \n" +
+                        "    mis_gst_commcode AS cc\n" +
+                        "RIGHT JOIN \n" +
+                        "    mis_dpm_gst_15a AS 15a ON cc.COMM_CODE = 15a.COMM_CODE\n" +
+                        "LEFT JOIN \n" +
+                        "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                        "WHERE \n" +
+                        "    MM_YYYY = '" + month_date + "'\n" +
+                        "    AND cc.ZONE_CODE = '" + zone_code + "'\n" +
+                        "ORDER BY \n" +
+                        "    total_score ASC;\n";
 
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
@@ -1030,11 +1064,25 @@ public class RetriveCbicDetailsController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,cc.COMM_NAME,\n" +
-                        "(15a.REVOCATION_OPENING_BALANCE + 15a.REVOCATION_ARN_RECEIVED-15a.REVOCATION_GSTIN_REVOKED-15a.REVOCATION_APPLICATION_REJECTED) as col14,\n" +
-                        "(15a.REVOCATION_OPENING_BALANCE) as col10, (15a.REVOCATION_ARN_RECEIVED) as col11 FROM  mis_gst_commcode as cc  \n" +
-                        "right join mis_dpm_gst_15a as 15a on cc.COMM_CODE=15a.COMM_CODE  left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE \n" +
-                        "where MM_YYYY='" + month_date + "';";
+                String queryGst14aa = "SELECT \n" +
+                        "    zc.ZONE_NAME, \n" +
+                        "    cc.ZONE_CODE,\n" +
+                        "    cc.COMM_NAME,\n" +
+                        "    (15a.REVOCATION_OPENING_BALANCE + 15a.REVOCATION_ARN_RECEIVED - 15a.REVOCATION_GSTIN_REVOKED - 15a.REVOCATION_APPLICATION_REJECTED) AS col14,\n" +
+                        "    15a.REVOCATION_OPENING_BALANCE AS col10,\n" +
+                        "    15a.REVOCATION_ARN_RECEIVED AS col11,\n" +
+                        "    (15a.REVOCATION_OPENING_BALANCE + 15a.REVOCATION_ARN_RECEIVED - 15a.REVOCATION_GSTIN_REVOKED - 15a.REVOCATION_APPLICATION_REJECTED) / \n" +
+                        "    (15a.REVOCATION_OPENING_BALANCE + 15a.REVOCATION_ARN_RECEIVED) * 100 AS total_score\n" +
+                        "FROM \n" +
+                        "    mis_gst_commcode AS cc\n" +
+                        "RIGHT JOIN \n" +
+                        "    mis_dpm_gst_15a AS 15a ON cc.COMM_CODE = 15a.COMM_CODE\n" +
+                        "LEFT JOIN \n" +
+                        "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                        "WHERE \n" +
+                        "    MM_YYYY = '" + month_date + "'\n" +
+                        "ORDER BY \n" +
+                        "    total_score ASC;\n";
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
 
