@@ -542,14 +542,24 @@ public class RetriveCbicDetailsController {
         try {
             if (type.equalsIgnoreCase("zone")) {
                 // Query string
-                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE, "
-                        + "sum((14c.OPENING_BALANCE+14c.NO_OF_ARN_RECEIVED_GSTN+14c.NO_OF_ARN_RECEIVED_CPC)-(14c.DISPOSAL_OF_ARN_TRANSFERED_CPC+14c.DISPOSAL_OF_ARN_DEEMED_REG+14c.DISPOSAL_OF_ARN_WITHIN_7+14c.DISPOSAL_OF_ARN_PV_APPROVED+14c.DISPOSAL_OF_ARN_PV_REJECTED)) as col14, "
-                        + "sum(14c.OPENING_BALANCE) as col1, "
-                        + "sum(14c.NO_OF_ARN_RECEIVED_GSTN) as col2, "
-                        + "sum(14c.NO_OF_ARN_RECEIVED_CPC) as col3 "
-                        + "FROM  mis_gst_commcode  cc right join mis_dpm_gst_14a  14c on cc.COMM_CODE=14c.COMM_CODE "
-                        + " left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE  "
-                        + " where MM_YYYY='" + month_date + "' group by ZONE_CODE";
+                String queryGst14aa = "SELECT zc.ZONE_NAME, \n" +
+                        "       cc.ZONE_CODE, \n" +
+                        "       SUM((14c.OPENING_BALANCE + 14c.NO_OF_ARN_RECEIVED_GSTN + 14c.NO_OF_ARN_RECEIVED_CPC) - \n" +
+                        "           (14c.DISPOSAL_OF_ARN_TRANSFERED_CPC + 14c.DISPOSAL_OF_ARN_DEEMED_REG + \n" +
+                        "            14c.DISPOSAL_OF_ARN_WITHIN_7 + 14c.DISPOSAL_OF_ARN_PV_APPROVED + 14c.DISPOSAL_OF_ARN_PV_REJECTED)) AS col14, \n" +
+                        "       SUM(14c.OPENING_BALANCE) AS col1, \n" +
+                        "       SUM(14c.NO_OF_ARN_RECEIVED_GSTN) AS col2, \n" +
+                        "       SUM(14c.NO_OF_ARN_RECEIVED_CPC) AS col3,\n" +
+                        "       (SUM((14c.OPENING_BALANCE + 14c.NO_OF_ARN_RECEIVED_GSTN + 14c.NO_OF_ARN_RECEIVED_CPC) - \n" +
+                        "           (14c.DISPOSAL_OF_ARN_TRANSFERED_CPC + 14c.DISPOSAL_OF_ARN_DEEMED_REG + \n" +
+                        "            14c.DISPOSAL_OF_ARN_WITHIN_7 + 14c.DISPOSAL_OF_ARN_PV_APPROVED + 14c.DISPOSAL_OF_ARN_PV_REJECTED)) /\n" +
+                        "       (SUM(14c.OPENING_BALANCE) + SUM(14c.NO_OF_ARN_RECEIVED_GSTN) + SUM(14c.NO_OF_ARN_RECEIVED_CPC))) * 100 AS total_score\n" +
+                        "FROM mis_gst_commcode cc \n" +
+                        "RIGHT JOIN mis_dpm_gst_14a 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                        "LEFT JOIN mis_gst_zonecode zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                        "WHERE MM_YYYY = '" + month_date + "'\n" +
+                        "GROUP BY cc.ZONE_CODE\n" +
+                        "ORDER BY total_score ASC;\n";
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
                 while (rsGst14aa.next()) {
@@ -581,13 +591,28 @@ public class RetriveCbicDetailsController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("commissary")) {
-                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,cc.COMM_NAME,\n" +
-                        "((14c.OPENING_BALANCE+14c.NO_OF_ARN_RECEIVED_GSTN+14c.NO_OF_ARN_RECEIVED_CPC)-(14c.DISPOSAL_OF_ARN_TRANSFERED_CPC+14c.DISPOSAL_OF_ARN_DEEMED_REG+14c.DISPOSAL_OF_ARN_WITHIN_7+14c.DISPOSAL_OF_ARN_PV_APPROVED+14c.DISPOSAL_OF_ARN_PV_REJECTED)) as col14, \n" +
-                        "(14c.OPENING_BALANCE) as col1,\n" +
-                        "(14c.NO_OF_ARN_RECEIVED_GSTN) as col2,\n" +
-                        "(14c.NO_OF_ARN_RECEIVED_CPC) as col3 \n" +
-                        "FROM  mis_gst_commcode  cc right join mis_dpm_gst_14a  14c on cc.COMM_CODE=14c.COMM_CODE \n" +
-                        "left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE  where MM_YYYY='"+ month_date+"' and zc.ZONE_CODE = '"+zone_code+"';";
+                String queryGst14aa = "SELECT zc.ZONE_NAME, \n" +
+                        "       cc.ZONE_CODE, \n" +
+                        "       cc.COMM_NAME,\n" +
+                        "       (14c.OPENING_BALANCE + 14c.NO_OF_ARN_RECEIVED_GSTN + 14c.NO_OF_ARN_RECEIVED_CPC - \n" +
+                        "       (14c.DISPOSAL_OF_ARN_TRANSFERED_CPC + 14c.DISPOSAL_OF_ARN_DEEMED_REG + \n" +
+                        "        14c.DISPOSAL_OF_ARN_WITHIN_7 + 14c.DISPOSAL_OF_ARN_PV_APPROVED + \n" +
+                        "        14c.DISPOSAL_OF_ARN_PV_REJECTED)) AS col14, \n" +
+                        "       14c.OPENING_BALANCE AS col1,\n" +
+                        "       14c.NO_OF_ARN_RECEIVED_GSTN AS col2,\n" +
+                        "       14c.NO_OF_ARN_RECEIVED_CPC AS col3,\n" +
+                        "       ((14c.OPENING_BALANCE + 14c.NO_OF_ARN_RECEIVED_GSTN + 14c.NO_OF_ARN_RECEIVED_CPC - \n" +
+                        "        (14c.DISPOSAL_OF_ARN_TRANSFERED_CPC + 14c.DISPOSAL_OF_ARN_DEEMED_REG + \n" +
+                        "         14c.DISPOSAL_OF_ARN_WITHIN_7 + 14c.DISPOSAL_OF_ARN_PV_APPROVED + \n" +
+                        "         14c.DISPOSAL_OF_ARN_PV_REJECTED)) / \n" +
+                        "       (14c.OPENING_BALANCE + 14c.NO_OF_ARN_RECEIVED_GSTN + 14c.NO_OF_ARN_RECEIVED_CPC)) * 100 AS total_score\n" +
+                        "FROM mis_gst_commcode cc\n" +
+                        "RIGHT JOIN mis_dpm_gst_14a 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                        "LEFT JOIN mis_gst_zonecode zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                        "WHERE MM_YYYY = '" + month_date + "'\n" +
+                        "  AND zc.ZONE_CODE = '" + zone_code + "'\n" +
+                        "ORDER BY total_score ASC\n" +
+                        "LIMIT 0, 1000;\n";
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
                 while (rsGst14aa.next()) {
@@ -620,13 +645,32 @@ public class RetriveCbicDetailsController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,cc.COMM_NAME,\n" +
-                        "((14c.OPENING_BALANCE+14c.NO_OF_ARN_RECEIVED_GSTN+14c.NO_OF_ARN_RECEIVED_CPC)-(14c.DISPOSAL_OF_ARN_TRANSFERED_CPC+14c.DISPOSAL_OF_ARN_DEEMED_REG+14c.DISPOSAL_OF_ARN_WITHIN_7+14c.DISPOSAL_OF_ARN_PV_APPROVED+14c.DISPOSAL_OF_ARN_PV_REJECTED)) as col14, \n" +
-                        "(14c.OPENING_BALANCE) as col1,\n" +
-                        "(14c.NO_OF_ARN_RECEIVED_GSTN) as col2,\n" +
-                        "(14c.NO_OF_ARN_RECEIVED_CPC) as col3 \n" +
-                        "FROM  mis_gst_commcode  cc right join mis_dpm_gst_14a  14c on cc.COMM_CODE=14c.COMM_CODE \n" +
-                        "left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE  where MM_YYYY='"+ month_date+"';";
+                String queryGst14aa = "SELECT \n" +
+                        "    zc.ZONE_NAME, \n" +
+                        "    cc.ZONE_CODE,\n" +
+                        "    cc.COMM_NAME,\n" +
+                        "    ((14c.OPENING_BALANCE + 14c.NO_OF_ARN_RECEIVED_GSTN + 14c.NO_OF_ARN_RECEIVED_CPC) - \n" +
+                        "    (14c.DISPOSAL_OF_ARN_TRANSFERED_CPC + 14c.DISPOSAL_OF_ARN_DEEMED_REG + \n" +
+                        "    14c.DISPOSAL_OF_ARN_WITHIN_7 + 14c.DISPOSAL_OF_ARN_PV_APPROVED + \n" +
+                        "    14c.DISPOSAL_OF_ARN_PV_REJECTED)) AS col14, \n" +
+                        "    14c.OPENING_BALANCE AS col1,\n" +
+                        "    14c.NO_OF_ARN_RECEIVED_GSTN AS col2,\n" +
+                        "    14c.NO_OF_ARN_RECEIVED_CPC AS col3,\n" +
+                        "    ((14c.OPENING_BALANCE + 14c.NO_OF_ARN_RECEIVED_GSTN + 14c.NO_OF_ARN_RECEIVED_CPC - \n" +
+                        "      (14c.DISPOSAL_OF_ARN_TRANSFERED_CPC + 14c.DISPOSAL_OF_ARN_DEEMED_REG + \n" +
+                        "       14c.DISPOSAL_OF_ARN_WITHIN_7 + 14c.DISPOSAL_OF_ARN_PV_APPROVED + \n" +
+                        "       14c.DISPOSAL_OF_ARN_PV_REJECTED)) / \n" +
+                        "     (14c.OPENING_BALANCE + 14c.NO_OF_ARN_RECEIVED_GSTN + 14c.NO_OF_ARN_RECEIVED_CPC)) * 100 AS total_score\n" +
+                        "FROM \n" +
+                        "    mis_gst_commcode cc \n" +
+                        "RIGHT JOIN \n" +
+                        "    mis_dpm_gst_14a 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "LEFT JOIN \n" +
+                        "    mis_gst_zonecode zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "WHERE \n" +
+                        "    MM_YYYY = '" + month_date + "'\n" +
+                        "ORDER BY \n" +
+                        "    total_score ASC;\n";
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
                 while (rsGst14aa.next()) {
