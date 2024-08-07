@@ -1,9 +1,4 @@
-package com.ornates.cbic.controller;////        Testing_controller
-//
-//
-//
-//
-//
+//compackage com.ornates.cbic.controller;////        Testing_controller
 //package com.ornates.cbic.controller;
 //
 //import com.ornates.cbic.dao.pool.JDBCConnection;
@@ -45,7 +40,7 @@ package com.ornates.cbic.controller;////        Testing_controller
 //        System.out.println("Connection :"+con);
 //        return "its working api";
 //    }
-//    
+//
 //    @ResponseBody
 //	@RequestMapping(value = "/total/parameter")
 ////  http://localhost:8080/cbicApi/cbic/testing/total/parameter?month_date=2023-05-01&type=parameter					//1no url
@@ -273,24 +268,24 @@ package com.ornates.cbic.controller;////        Testing_controller
 //	      			    zone_code = rsGst14aa.getString("ZONE_CODE");
 //	      			    String commName = "ALL";
 //	      			    String p1 = null, p2 = null, p3 = null, p4 = null, p5 = null, p11 = null;
-//	      			    
 //
-//	      			    // p6uf:- mean un-formatted, I will format in percentage 
+//
+//	      			    // p6uf:- mean un-formatted, I will format in percentage
 //	      			    String p6uf = rsGst14aa.getString("total_score6");
 //	      			    String p7uf = rsGst14aa.getString("total_score7");
 //	      			    String p8uf = rsGst14aa.getString("total_score8");
 //	      			    String p9uf = rsGst14aa.getString("total_score9");
 //	      			    String p10uf = rsGst14aa.getString("total_score10");
-//	      			    
+//
 //	      			    System.out.println(p6uf);
-//	      			
+//
 //
 //	      			    double p6d = Double.parseDouble(p6uf);
 //	      			    double p7d = Double.parseDouble(p7uf);
 //	      			    double p8d = Double.parseDouble(p8uf);
 //	      			    double p9d = Double.parseDouble(p9uf);
 //	      			    double p10d = Double.parseDouble(p10uf);
-//	      			    
+//
 //	      			    System.out.println(p6d);
 //
 //	      			    Double tScore = ((p6d * 10) + (p7d * 5) + (p8d * 8) + (p9d * 6) + (p10d * 12)) / (10 + 5 + 8 + 6 + 12);
@@ -328,9 +323,9 @@ package com.ornates.cbic.controller;////        Testing_controller
 //				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 //
 //				while (rsGst14aa.next()) {
-//				
+//
 //				}
-//			} 
+//			}
 //		} catch (SQLException e) {
 //			e.printStackTrace();
 //		} finally {
@@ -343,5 +338,5 @@ package com.ornates.cbic.controller;////        Testing_controller
 //		}
 //		return allGstaList;
 //	}
-//   
+//
 //}
