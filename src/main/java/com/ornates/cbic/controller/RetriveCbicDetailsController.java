@@ -1506,7 +1506,7 @@ public class RetriveCbicDetailsController {
                     gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
-                System.out.println("gst3a median:- " + median); //********************************** for testing ************************************
+                System.out.println("gst3a median zone wise :- " + median); //********************************** for testing ************************************
 
             }else if (type.equalsIgnoreCase("commissary")) {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
@@ -1844,6 +1844,7 @@ public class RetriveCbicDetailsController {
                     String gst = "no";
 
                     double sub_parameter_weighted_average = insentavization * 0.5 ;
+                    //double sub_parameter_weighted_average = 0.00 ;
 
                     gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
                     allGstaList.add(gsta);
