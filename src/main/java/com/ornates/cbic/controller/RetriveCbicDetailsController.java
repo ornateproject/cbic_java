@@ -6049,7 +6049,7 @@ public class RetriveCbicDetailsController {
                         "(((cte.col10A - cte.col12A) + (cte1.col10B - cte1.col12B)) / (cte.col10A + cte1.col10B)) AS total_score\n" +
                         "FROM cte\n" +
                         "INNER JOIN cte1 ON cte.ZONE_CODE = cte1.ZONE_CODE\n" +
-                        "order by total_score desc;";
+                        "order by total_score ;";
                 ResultSet rsGst46b =GetExecutionSQL.getResult(queryGst49);
 
                 while(rsGst46b.next()) {
@@ -6114,7 +6114,7 @@ public class RetriveCbicDetailsController {
                         "      (cte.col10A + cte1.col10B) AS denominator, \n" +
                         "\t(((cte.col10A - cte.col12A) + (cte1.col10B - cte1.col12B)) / (cte.col10A + cte1.col10B)) AS total_score \n" +
                         "FROM cte INNER JOIN cte1 ON cte.COMM_CODE = cte1.COMM_CODE\n" +
-                        "order by total_score desc;";
+                        "order by total_score ;";
 
 
                 ResultSet rsGst46b =GetExecutionSQL.getResult(queryGst49);
@@ -6181,7 +6181,7 @@ public class RetriveCbicDetailsController {
                         "      (cte.col10A + cte1.col10B) AS denominator, \n" +
                         "\t(((cte.col10A - cte.col12A) + (cte1.col10B - cte1.col12B)) / (cte.col10A + cte1.col10B)) AS total_score \n" +
                         "FROM cte INNER JOIN cte1 ON cte.COMM_CODE = cte1.COMM_CODE\n" +
-                        "order by total_score desc;";
+                        "order by total_score ;";
 
 
                 ResultSet rsGst46b =GetExecutionSQL.getResult(queryGst49);
