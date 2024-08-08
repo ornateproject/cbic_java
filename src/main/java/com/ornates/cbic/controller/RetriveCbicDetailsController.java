@@ -284,7 +284,7 @@ public class RetriveCbicDetailsController {
                         "GROUP BY \n" +
                         "    cc.ZONE_CODE\n" +
                         "ORDER BY \n" +
-                        "    total_score DESC;\n";
+                        "    total_score ;\n";
 
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
@@ -336,7 +336,7 @@ public class RetriveCbicDetailsController {
                         "    MM_YYYY = '" + month_date + "' \n" +
                         "    AND zc.ZONE_CODE = '" + zone_code + "'\n" +
                         "ORDER BY \n" +
-                        "    total_score DESC;\n";
+                        "    total_score;\n";
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
@@ -386,7 +386,7 @@ public class RetriveCbicDetailsController {
                         "WHERE \n" +
                         "    MM_YYYY = '" + month_date + "'\n" +
                         "ORDER BY \n" +
-                        "    total_score DESC;\n";
+                        "    total_score;\n";
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
