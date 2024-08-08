@@ -1490,8 +1490,8 @@ public class RetriveCbicDetailsController {
 
                     String formattedTotal = String.format("%.2f", t_score);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.marks3b(totalScore);
-                    int insentavization = score.marks3b(totalScore);
+                    int way_to_grade = score.marks3a(totalScore);
+                    int insentavization = score.marks3a(totalScore);
 
                     if (numerator_3b > median && way_to_grade < 10) {
                         insentavization += 1;
@@ -1501,7 +1501,7 @@ public class RetriveCbicDetailsController {
                     int Zonal_rank = 0;
                     String gst = "no";
 
-                    int sub_parameter_weighted_average = 0;
+                    Double sub_parameter_weighted_average = insentavization * 0.5 ;
 
                     gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
                     allGstaList.add(gsta);
@@ -1843,7 +1843,7 @@ public class RetriveCbicDetailsController {
                     int Zonal_rank = 0;
                     String gst = "no";
 
-                    int sub_parameter_weighted_average = 0;
+                    double sub_parameter_weighted_average = insentavization * 0.5 ;
 
                     gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
                     allGstaList.add(gsta);
