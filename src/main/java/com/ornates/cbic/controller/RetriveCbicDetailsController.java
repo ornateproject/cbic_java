@@ -1835,10 +1835,13 @@ public class RetriveCbicDetailsController {
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.marks3b(totalScore);
                     int insentavization = score.marks3b(totalScore);
+                    System.out.println("insentavization3b :-" + insentavization);
 
                     if (numerator_3b > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
+
+                    System.out.println("insentavization3b after :-" + insentavization);
 
                     int Zonal_rank = 0;
                     String gst = "no";
@@ -1849,7 +1852,7 @@ public class RetriveCbicDetailsController {
                     gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
-                //System.out.println("gst3b median:- " + median); //**************************** for testing ******************************************
+                System.out.println("gst3b median zone wise:- " + median); //**************************** for testing ******************************************
             }else if (type.equalsIgnoreCase("commissary")) {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
 

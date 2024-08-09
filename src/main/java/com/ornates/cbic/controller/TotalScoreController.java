@@ -742,55 +742,158 @@ public class TotalScoreController {
 //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "SELECT current_data.ZONE_NAME,current_data.ZONE_CODE,current_data.total_score3a,previous_data.total_score3b,\n" +
-						"    (((current_data.total_score3a * 0.5 * 10) + (previous_data.total_score3b * 0.5 * 10)) / 10) as parameter,\n" +
-						"    ROW_NUMBER() OVER (ORDER BY (((current_data.total_score3a * 0.5 * 10) + (previous_data.total_score3b * 0.5 * 10)) / 10) DESC) AS z_rank\n" +
-						"FROM  \n" +
-						"    (SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
-						"            (((SUM(14c.SCRUTINIZED_DISCRIPANCY_FOUND) + SUM(14c.OUTCOME_ASMT_12_ISSUED) + SUM(14c.OUTCOME_SECTION_61)) * 100) / (SUM(14c.RETURN_SCRUTINY) + previous_data.col1)) as total_score3a\n" +
-						"     FROM mis_gst_commcode AS cc  \n" +
-						"     RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-						"     LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-						"     LEFT JOIN (SELECT cc.ZONE_CODE, SUM(14c.CLOSING_NO) AS col1 \n" +
-						"                FROM mis_gst_commcode AS cc \n" +
-						"                RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-						"                LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-						"                WHERE 14c.MM_YYYY = '" + prev_month_new + "' \n" +
-						"                GROUP BY cc.ZONE_CODE) AS previous_data \n" +
-						"                ON cc.ZONE_CODE = previous_data.ZONE_CODE\n" +
-						"     WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
-						"     GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, previous_data.col1) AS current_data\n" +
-						"JOIN \n" +
-						"    (SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
-						"            (SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) * 100) / SUM(14c.TAX_LIABILITY_DETECTECT) AS total_score3b\n" +
-						"     FROM mis_gst_commcode AS cc \n" +
-						"     RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-						"     LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-						"     WHERE 14c.MM_YYYY <= '" + month_date + "' \n" +
-						"     GROUP BY cc.ZONE_CODE, zc.ZONE_NAME) AS previous_data\n" +
-						"ON current_data.ZONE_CODE = previous_data.ZONE_CODE\n" +
-						"ORDER BY parameter DESC;\n";
+				String query_assessment = "WITH ranked_data_3a AS (\n" +
+						"    SELECT current_data.ZONE_NAME, current_data.ZONE_CODE, current_data.col4, \n" +
+						"           current_data.col9, current_data.col10, current_data.col2, previous_data.col1,\n" +
+						"           (current_data.col4 + current_data.col9 + current_data.col10) / \n" +
+						"           (current_data.col2 + previous_data.col1) * 100 AS score_of_subpara3a\n" +
+						"    FROM  \n" +
+						"        (SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
+						"                   SUM(14c.SCRUTINIZED_DISCRIPANCY_FOUND) AS col4, SUM(14c.OUTCOME_ASMT_12_ISSUED) AS col9, \n" +
+						"                   SUM(14c.OUTCOME_SECTION_61) AS col10, SUM(14c.RETURN_SCRUTINY) AS col2  \n" +
+						"            FROM mis_gst_commcode AS cc  \n" +
+						"            RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+						"            LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"            WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
+						"            GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+						"        ) AS current_data\n" +
+						"    JOIN \n" +
+						"        (\n" +
+						"            SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(14c.CLOSING_NO) AS col1 \n" +
+						"            FROM mis_gst_commcode AS cc \n" +
+						"            RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"            LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+						"            WHERE 14c.MM_YYYY = '" + prev_month_new + "' \n" +
+						"            GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+						"        ) AS previous_data\n" +
+						"    ON current_data.ZONE_CODE = previous_data.ZONE_CODE\n" +
+						"),\n" +
+						"numerator_data_3a AS (\n" +
+						"    SELECT ZONE_NAME, ZONE_CODE, col4, col9, col10, col2, col1, score_of_subpara3a, \n" +
+						"           (col4 + col9 + col10) AS numerator_3a\n" +
+						"    FROM ranked_data_3a\n" +
+						"),\n" +
+						"ranked_numerator_3a AS (\n" +
+						"    SELECT *, ROW_NUMBER() OVER (ORDER BY numerator_3a) AS rn,\n" +
+						"              COUNT(*) OVER () AS cnt\n" +
+						"    FROM numerator_data_3a\n" +
+						"),\n" +
+						"median_3a AS (\n" +
+						"    SELECT ZONE_NAME, ZONE_CODE, score_of_subpara3a, numerator_3a,\n" +
+						"           CASE\n" +
+						"               WHEN cnt % 2 = 1 THEN (SELECT numerator_3a FROM ranked_numerator_3a WHERE rn = (cnt + 1) / 2)\n" +
+						"               ELSE (SELECT AVG(numerator_3a) FROM ranked_numerator_3a WHERE rn IN (cnt / 2, cnt / 2 + 1))\n" +
+						"           END AS median_numerator_3a\n" +
+						"    FROM ranked_numerator_3a\n" +
+						"),\n" +
+						"ranked_data_3b AS (\n" +
+						"    SELECT cc.ZONE_CODE,\n" +
+						"        SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) AS numerator_3b,\n" +
+						"        ROW_NUMBER() OVER (ORDER BY SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY)) AS row_num,\n" +
+						"        COUNT(*) OVER () AS total_count\n" +
+						"    FROM mis_gst_commcode AS cc\n" +
+						"    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+						"    WHERE 14c.MM_YYYY <= '" + month_date + "'\n" +
+						"    GROUP BY cc.ZONE_CODE\n" +
+						"),\n" +
+						"median_data_3b AS (\n" +
+						"    SELECT\n" +
+						"        CASE\n" +
+						"            WHEN total_count % 2 = 1 THEN\n" +
+						"                (SELECT numerator_3b FROM ranked_data_3b WHERE row_num = (total_count + 1) / 2)\n" +
+						"            ELSE\n" +
+						"                (SELECT AVG(numerator_3b) FROM ranked_data_3b WHERE row_num IN ((total_count / 2), (total_count / 2) + 1))\n" +
+						"        END AS median_numerator_3b\n" +
+						"    FROM ranked_data_3b\n" +
+						"    LIMIT 1\n" +
+						"),\n" +
+						"final_data_3b AS (\n" +
+						"    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) AS numerator_3b,\n" +
+						"           (SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) * 100) / \n" +
+						"           SUM(14c.TAX_LIABILITY_DETECTECT) AS score_of_parameter3b\n" +
+						"    FROM mis_gst_commcode AS cc\n" +
+						"    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+						"    WHERE 14c.MM_YYYY <= '" + month_date + "'\n" +
+						"    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+						")\n" +
+						"SELECT  \n" +
+						"       m3a.ZONE_NAME, m3a.ZONE_CODE, \n" +
+						"       m3a.score_of_subpara3a, m3a.numerator_3a, m3a.median_numerator_3a,\n" +
+						"       f3b.score_of_parameter3b, f3b.numerator_3b, md3b.median_numerator_3b,\n" +
+						"       ROW_NUMBER() OVER (ORDER BY m3a.ZONE_CODE) AS z_rank\n" +
+						"FROM median_3a AS m3a\n" +
+						"JOIN final_data_3b AS f3b ON m3a.ZONE_CODE = f3b.ZONE_CODE\n" +
+						"CROSS JOIN median_data_3b AS md3b;\n";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
-					double tScore = rsGst14aa.getDouble("parameter");
+					//double tScore = rsGst14aa.getDouble("parameter");
+					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
-					Integer insentavization = 0;
+
+					double total3a = rsGst14aa.getDouble("score_of_subpara3a");
+					double total3b = rsGst14aa.getDouble("score_of_parameter3b");
+
+
+					double median3a = rsGst14aa.getDouble("median_numerator_3a");
+					double median3b = rsGst14aa.getDouble("median_numerator_3b");
+
+					Double numerator_3a = rsGst14aa.getDouble("numerator_3a");
+					Double numerator_3b = rsGst14aa.getDouble("numerator_3b");
+
+					int way_to_grade3a = score.marks3b(total3a);
+					int way_to_grade3b = score.marks3b(total3b);
+
+					int insentavization3a = score.marks3b(way_to_grade3a);
+					int insentavization3b = score.marks3b(way_to_grade3b);
+
+
+					if (numerator_3a > median3a && way_to_grade3a < 10) {
+						insentavization3a += 1;
+					}
+					// System.out.println("insentavization3a after:-" + insentavization3a);
+					if (numerator_3b > median3b && way_to_grade3b < 10) {
+						insentavization3b += 1;
+					}
+
+					Integer way_to_grade = way_to_grade3a + way_to_grade3b;
+					Integer insentavization = insentavization3a + insentavization3b ;
+
+					double sub_parameter_weighted_average3a = insentavization3a * 0.5 ;
+					double sub_parameter_weighted_average3b = insentavization3b * 0.5 ;
+
+					double total_score = sub_parameter_weighted_average3a + sub_parameter_weighted_average3b;
 					double sub_parameter_weighted_average = 0.00;
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
-					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
 					String ra ="Number of Returns whose scrutiny completed for the month vis-à-vis total Returns pending for the month (Pro-rata basis) ||  Recoveries made upto the month vis-a-vis detections upto the month";
 
-					String formattedTotal = String.format("%.2f", tScore);
-					double total_score = Double.parseDouble(formattedTotal);
+//					String formattedTotal = String.format("%.2f", tScore);
+//					double total_score = Double.parseDouble(formattedTotal);
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
+
+					System.out.println("total3a: " + total3a);
+					System.out.println("numerator_3a : " + numerator_3a);
+					System.out.println("median3a : " + median3a);
+					System.out.println("way_to_grade3a: " + way_to_grade3a);
+					System.out.println("insentavization3a : " + insentavization3a);
+					System.out.println("sub_parameter_weighted_average3a : " + sub_parameter_weighted_average3a);
+
+					System.out.println("total3b: " + total3b);
+					System.out.println("numerator_3b : " + numerator_3b);
+					System.out.println("median3b : " + median3b);
+					System.out.println("way_to_grade3b: " + way_to_grade3b);
+					System.out.println("insentavization3b : " + insentavization3b);
+					System.out.println("sub_parameter_weighted_average3b : " + sub_parameter_weighted_average3b);
+					System.out.println("total_score : " + total_score);
+					System.out.println("********************************************************************************************");
 				}
+
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
 				//              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
