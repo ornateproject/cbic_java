@@ -65,7 +65,7 @@ public class CustomSubParameterController {
                         + "sum(14c.MONTHS_3_NO) as col12 \r\n"
                         + "FROM  mis_dgi_cus_4 as 14c right join  mis_gst_commcode as cc on 14c.COMM_CODE=cc.COMM_CODE\r\n"
                         + "left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE \r\n"
-                        + "where  14c.MM_YYYY='" + month_date + "'  group by ZONE_CODE,ZONE_NAME;";
+                        + "where  14c.MM_YYYY='2023-05-01'  group by ZONE_CODE,ZONE_NAME;";
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
                 while (rsGst14aa.next()) {
