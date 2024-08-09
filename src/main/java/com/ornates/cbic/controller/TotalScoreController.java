@@ -829,13 +829,11 @@ public class TotalScoreController {
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
-					//double tScore = rsGst14aa.getDouble("parameter");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 
 					double total3a = rsGst14aa.getDouble("score_of_subpara3a");
 					double total3b = rsGst14aa.getDouble("score_of_parameter3b");
-
 
 					double median3a = rsGst14aa.getDouble("median_numerator_3a");
 					double median3b = rsGst14aa.getDouble("median_numerator_3b");
@@ -843,40 +841,40 @@ public class TotalScoreController {
 					Double numerator_3a = rsGst14aa.getDouble("numerator_3a");
 					Double numerator_3b = rsGst14aa.getDouble("numerator_3b");
 
-					int way_to_grade3a = score.marks3b(total3a);
+					int way_to_grade3a = score.marks3a(total3a);
 					int way_to_grade3b = score.marks3b(total3b);
 
-					int insentavization3a = score.marks3b(way_to_grade3a);
-					int insentavization3b = score.marks3b(way_to_grade3b);
+					int insentavization3a = way_to_grade3a;
+					int insentavization3b = way_to_grade3b;
 
-
+					// Logic to adjust insentavization3a and insentavization3b based on the median and numerator values
 					if (numerator_3a > median3a && way_to_grade3a < 10) {
 						insentavization3a += 1;
 					}
-					// System.out.println("insentavization3a after:-" + insentavization3a);
 					if (numerator_3b > median3b && way_to_grade3b < 10) {
 						insentavization3b += 1;
 					}
 
 					Integer way_to_grade = way_to_grade3a + way_to_grade3b;
-					Integer insentavization = insentavization3a + insentavization3b ;
+					Integer insentavization = insentavization3a + insentavization3b;
 
-					double sub_parameter_weighted_average3a = insentavization3a * 0.5 ;
-					double sub_parameter_weighted_average3b = insentavization3b * 0.5 ;
+					double sub_parameter_weighted_average3a = insentavization3a * 0.5;
+					double sub_parameter_weighted_average3b = insentavization3b * 0.5;
 
 					double total_score = sub_parameter_weighted_average3a + sub_parameter_weighted_average3b;
 					double sub_parameter_weighted_average = 0.00;
-					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
+					 Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
-					String ra ="Number of Returns whose scrutiny completed for the month vis-à-vis total Returns pending for the month (Pro-rata basis) ||  Recoveries made upto the month vis-a-vis detections upto the month";
+					String ra = "Number of Returns whose scrutiny completed for the month vis-à-vis total Returns pending for the month (Pro-rata basis) ||  Recoveries made upto the month vis-a-vis detections upto the month";
 
-//					String formattedTotal = String.format("%.2f", tScore);
-//					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 
+
+
+					System.out.println(zoneName);
 					System.out.println("total3a: " + total3a);
 					System.out.println("numerator_3a : " + numerator_3a);
 					System.out.println("median3a : " + median3a);
