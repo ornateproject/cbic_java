@@ -1,6 +1,6 @@
 package com.ornates.cbic.controller;
 
-import com.ornates.cbic.dao.Query.ParameterWiseQuery;
+import com.ornates.cbic.dao.Query.CGSTParameterWiseQuery;
 import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.TotalScore;
@@ -744,7 +744,7 @@ public class TotalScoreController {
 //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
 				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = new ParameterWiseQuery().QueryForScrutinyAssessmentZoneWise(month_date);
+				String query_assessment = new CGSTParameterWiseQuery().QueryForScrutinyAssessmentZoneWise(month_date);
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -814,7 +814,7 @@ public class TotalScoreController {
 
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
 				// my sql query
-				String query_assessment = new ParameterWiseQuery().QueryForScrutinyAssessmentParticularZoneWise(month_date,zone_code);
+				String query_assessment = new CGSTParameterWiseQuery().QueryForScrutinyAssessmentParticularZoneWise(month_date,zone_code);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next() ) {
@@ -837,7 +837,7 @@ public class TotalScoreController {
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
 				// my sql query
-				String query_assessment = new ParameterWiseQuery().QueryForScrutinyAssessment_3_ParticularSubparameterWise(month_date,zone_code);
+				String query_assessment = new CGSTParameterWiseQuery().QueryForScrutinyAssessment_3_ParticularSubparameterWise(month_date,zone_code);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -863,7 +863,7 @@ public class TotalScoreController {
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
 				// my sql query
-				String query_assessment = new ParameterWiseQuery().QueryForScrutinyAssessment_3_AllCommissary(month_date);
+				String query_assessment = new CGSTParameterWiseQuery().QueryForScrutinyAssessment_3_AllCommissary(month_date);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -887,7 +887,7 @@ public class TotalScoreController {
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
 				// my sql query
-				String query_assessment = new ParameterWiseQuery().QueryForScrutinyAssessment_3_ParticularCommissonaryInSubparameter(month_date,zone_code,come_name);
+				String query_assessment = new CGSTParameterWiseQuery().QueryForScrutinyAssessment_3_ParticularCommissonaryInSubparameter(month_date,zone_code,come_name);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
