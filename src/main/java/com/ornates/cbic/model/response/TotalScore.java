@@ -1,6 +1,8 @@
 package com.ornates.cbic.model.response;
 
-public class TotalScore {
+import java.io.Serializable;
+
+public class TotalScore implements Serializable {
 
     private String zoneName;
     private String commName;
