@@ -853,7 +853,7 @@ public class TotalScoreController {
 					String ra =rsGst14aa.getString("ra");
 					Integer Zonal_rank = null;
 					String commName = "null";
-					//String ra = "null";
+					 ra = "SCRUTINY/ASSESSMENT";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
