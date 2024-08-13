@@ -2197,29 +2197,8 @@ public class RetriveCbicDetailsController {
         double total = 0.00;
         try {
             if (type.equalsIgnoreCase("zone")) {
-                //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-
                 String queryGst14aa =  new CGSTSubParameterWiseQuery().QueryFor_gst5b_ZoneWise(month_date);
-
-                // Query string
-//                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,sum(14c.ADC_COMMISSIONERATE_TIME_LESS_3_NO +14c.ADC_AUDIT_TIME_LESS_3_NO+14c.ADC_INVESTIGATION_TIME_LESS_3_NO+14c.ADC_CALLBOOK_TIME_LESS_3_NO+14c.DC_COMMISSIONERATE_TIME_LESS_3_NO +14c.DC_AUDIT_TIME_LESS_3_NO+14c.DC_INVESTIGATION_TIME_LESS_3_NO+14c.DC_CALLBOOK_TIME_LESS_3_NO+14c.SUPERINTENDENT_COMMISSIONERATE_TIME_LESS_3_NO +14c.SUPERINTENDENT_AUDIT_TIME_LESS_3_NO+14c.SUPERINTENDENT_INVESTIGATION_TIME_LESS_3_NO+14c.SUPERINTENDENT_CALLBOOK_TIME_LESS_3_NO) as col22, " +
-//                        "sum(14c.ADC_COMMISSIONERATE_TIME_3_TO_6_NO+14c.ADC_AUDIT_TIME_3_TO_6_NO+14c.ADC_INVESTIGATION_TIME_3_TO_6_NO+14c.ADC_CALLBOOK_TIME_3_TO_6_NO+14c.DC_COMMISSIONERATE_TIME_3_TO_6_NO +14c.DC_AUDIT_TIME_3_TO_6_NO+14c.DC_INVESTIGATION_TIME_3_TO_6_NO+14c.DC_CALLBOOK_TIME_3_TO_6_NO+14c.SUPERINTENDENT_COMMISSIONERATE_TIME_3_TO_6_NO +14c.SUPERINTENDENT_AUDIT_TIME_3_TO_6_NO+14c.SUPERINTENDENT_INVESTIGATION_TIME_3_TO_6_NO+14c.SUPERINTENDENT_CALLBOOK_TIME_3_TO_6_NO) AS col23 " +
-//                        " FROM mis_gst_commcode AS cc " +
-//                        "RIGHT JOIN mis_dpm_gst_adj_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE " +
-//                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE " +
-//                        "WHERE 14c.MM_YYYY = '" + month_date + "' GROUP BY cc.ZONE_CODE;";
-//
-//                //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-//                String next_month_new = DateCalculate.getNextMonth(month_date);
-//
-//                String queryGst3aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE, sum(14c.ADC_COMMISSIONERATE_OPENING_NO+14c.ADC_AUDIT_OPENING_NO+14c.ADC_INVESTIGATION_OPENING_NO+14c.ADC_CALLBOOK_OPENING_NO+14c.DC_COMMISSIONERATE_OPENING_NO+14c.DC_AUDIT_OPENING_NO+14c.DC_INVESTIGATION_OPENING_NO+14c.DC_CALLBOOK_OPENING_NO+14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO+14c.SUPERINTENDENT_AUDIT_OPENING_NO+14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO+14c.SUPERINTENDENT_CALLBOOK_OPENING_NO) AS col16 FROM mis_gst_commcode AS cc " +
-//                        "RIGHT JOIN mis_dpm_gst_adj_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE " +
-//                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE " +
-//                        "WHERE 14c.MM_YYYY = '" + next_month_new + "'GROUP BY cc.ZONE_CODE;";
-
-                //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
-                // ResultSet rsGst3aa = GetExecutionSQL.getResult(queryGst3aa);
                 while (rsGst14aa.next()) {
                     String ra = RelevantAspect.Gst5B_RA;
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
@@ -2232,14 +2211,10 @@ public class RetriveCbicDetailsController {
                     String gst = "no";
 
                     int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
-
-//                    total = (((double) (col22 + col23) * 100) / (col16));
-                    //}
-                    //rank = score.marks5b(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.marks5b(totalScore);
+                    double sub_parameter_weighted_average = way_to_grade * 0.5 ;
                     String absval = String.valueOf(col22 + col23) + "/" + String.valueOf(col16);
                     gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
