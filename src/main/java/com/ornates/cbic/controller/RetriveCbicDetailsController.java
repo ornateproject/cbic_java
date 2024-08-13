@@ -2061,6 +2061,7 @@ public class RetriveCbicDetailsController {
         GST4A gsta = null;
         int rank = 0;
         double total = 0.00;
+        Double median = 0.00;
         //Connection done
         Connection con= JDBCConnection.getTNConnection();
 
@@ -2068,34 +2069,38 @@ public class RetriveCbicDetailsController {
             if (type.equalsIgnoreCase("zone")) {
                 // Query string
                 String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst5a_ZoneWise(month_date);
-
-
-                //Prepared Statement
                 PreparedStatement psGst14aa = con.prepareStatement(queryGst14aa);
-
-                //Result Set
                 ResultSet rsGst14aa = psGst14aa.executeQuery();
-
                 while (rsGst14aa.next()) {
                     String ra = RelevantAspect.GST5A_RA;
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    String commname = "All";
                     int col10 = rsGst14aa.getInt("col10");
                     int col4 = rsGst14aa.getInt("col4");
+                    Double numerator_5a = rsGst14aa.getDouble("col10");
+                    median = rsGst14aa.getDouble("median5a");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
                     String absval = String.valueOf(col10) + "/" + String.valueOf(col4);
-                    total = rsGst14aa.getDouble("total_score");
+                    total = rsGst14aa.getDouble("score_of_subparameter5a");
 
                    // rank = score.marks5a(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.marks5a(totalScore);
-                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), "ALL", totalScore,absval,zoneCode,ra,
+                    int insentavization = score.marks5a(totalScore);
+                    if (numerator_5a > median && way_to_grade < 10) {
+                        insentavization += 1;
+                    }
+
+                    double sub_parameter_weighted_average = insentavization * 0.5 ;
+
+                    gsta = new GST4A(zoneName, commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
+                System.out.println("gst5a median zone wise:- " + median);
             }else if (type.equalsIgnoreCase("commissary")) {
                 // Query string
                 String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst5a_CommissonaryWise(month_date,zone_code);

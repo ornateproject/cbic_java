@@ -1,36 +1,32 @@
-//WITH ranked_data AS (
-//        SELECT
-//                SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) AS numerator_3b,
-//ROW_NUMBER() OVER (ORDER BY SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY)) AS row_num,
-//COUNT(*) OVER () AS total_count
-//FROM mis_gst_commcode AS cc
-//RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE
-//WHERE 14c.MM_YYYY <= '2023-05-01'
-//GROUP BY cc.ZONE_CODE
-//),
-//median_data AS (
-//        SELECT
-//                CASE
-//            WHEN total_count % 2 = 1 THEN
-//                (SELECT numerator_3b FROM ranked_data WHERE row_num = (total_count + 1) / 2)
-//ELSE
-//        (SELECT AVG(numerator_3b) FROM ranked_data WHERE row_num IN ((total_count / 2), (total_count / 2) + 1))
-//END AS median_numerator_3b
-//FROM ranked_data
-//LIMIT 1
-//        )
-//SELECT t.ZONE_NAME, t.ZONE_CODE, t.score_of_parameter3b,t.numerator_3b,
-//DENSE_RANK() OVER (ORDER BY t.score_of_parameter3b DESC) AS z_rank,
-//m.median_numerator_3b
-//FROM (
-//        SELECT zc.ZONE_NAME, cc.ZONE_CODE,
-//        SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) AS numerator_3b,
-//        (SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) * 100) / SUM(14c.TAX_LIABILITY_DETECTECT) AS score_of_parameter3b
-//FROM mis_gst_commcode AS cc
-//RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE
-//LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE
-//WHERE 14c.MM_YYYY <= '2023-05-01'
-//GROUP BY cc.ZONE_CODE, zc.ZONE_NAME
-//) AS t
-//CROSS JOIN median_data m
-//ORDER BY t.score_of_parameter3b DESC;
+//import com.ornates.cbic.service.RelevantAspect;while (rsGst14aa.next()) {
+//String commname = "All";
+//String ra = RelevantAspect.Gst3B_RA;
+//String zoneName = rsGst14aa.getString("ZONE_NAME");
+//String zoneCode = rsGst14aa.getString("ZONE_CODE");
+//String absval = rsGst14aa.getString("absval");
+//Double t_score = rsGst14aa.getDouble("score_of_parameter");
+//median = rsGst14aa.getDouble("median_numerator_3b");
+//Double numerator_3b = rsGst14aa.getDouble("numerator_3b");
+//
+//String formattedTotal = String.format("%.2f", t_score);
+//double totalScore = Double.parseDouble(formattedTotal);
+//int way_to_grade = score.marks3b(totalScore);
+//int insentavization = score.marks3b(totalScore);
+//                    System.out.println("insentavization3b :-" + insentavization);
+//
+//                    if (numerator_3b > median && way_to_grade < 10) {
+//insentavization += 1;
+//        }
+//
+//        System.out.println("insentavization3b after :-" + insentavization);
+//
+//int Zonal_rank = 0;
+//String gst = "no";
+//
+//double sub_parameter_weighted_average = insentavization * 0.5 ;
+////double sub_parameter_weighted_average = 0.00 ;
+//
+//gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
+//                    allGstaList.add(gsta);
+//                }
+//                        System.out.println("gst3b median zone wise:- " + median); //**************************** for testing ******************************************
