@@ -1137,14 +1137,14 @@ public class RetriveCbicDetailsController {
                     String absval = rsGst14aa.getString("absval");
                     Double t_score = rsGst14aa.getDouble("total_score");
                     median = rsGst14aa.getDouble("median_numerator_3a");
-                    Double numerator_3b = rsGst14aa.getDouble("numerator_3a");
+                    Double numerator_3a = rsGst14aa.getDouble("numerator_3a");
 
                     String formattedTotal = String.format("%.2f", t_score);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.marks3a(totalScore);
                     int insentavization = score.marks3a(totalScore);
 
-                    if (numerator_3b > median && way_to_grade < 10) {
+                    if (numerator_3a > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
 

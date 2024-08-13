@@ -857,7 +857,7 @@ public class TotalScoreController {
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
 					Integer way_to_grade = score.marks3a(total_score);
-					double sub_parameter_weighted_average = score.marks3a(total_score);
+					double sub_parameter_weighted_average = 0.00;
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
