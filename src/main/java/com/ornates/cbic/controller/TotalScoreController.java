@@ -1522,83 +1522,154 @@ public class TotalScoreController {
 
 				String query_assessment ="WITH ranked_data AS (\n" +
 						"    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
-						"           CASE \n" +
-						"               WHEN SUM(14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + 14c.ADC_CALLBOOK_OPENING_NO + 14c.DC_COMMISSIONERATE_OPENING_NO +\n" +
-						"                   14c.DC_AUDIT_OPENING_NO + 14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + 14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO +\n" +
-						"                   14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO) = 0 THEN NULL\n" +
-						"               ELSE SUM(14c.adc_commissionerate_disposal_no + 14c.adc_audit_disposal_no + 14c.adc_investigation_disposal_no + 14c.adc_callbook_disposal_no + \n" +
-						"                       14c.dc_commissionerate_disposal_no + 14c.dc_audit_disposal_no + 14c.dc_investigation_disposal_no + 14c.dc_callbook_disposal_no + \n" +
-						"                       14c.superintendent_commissionerate_disposal_no + 14c.superintendent_audit_disposal_no + 14c.superintendent_investigation_disposal_no + 14c.superintendent_callbook_disposal_no) / \n" +
-						"                   SUM(14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + 14c.ADC_CALLBOOK_OPENING_NO + \n" +
-						"                       14c.DC_COMMISSIONERATE_OPENING_NO + 14c.DC_AUDIT_OPENING_NO + 14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + \n" +
-						"                       14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO + 14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO) * 100\n" +
-						"           END AS score_of_subparameter5a\n" +
+						"        SUM(14c.adc_commissionerate_disposal_no + 14c.adc_audit_disposal_no + 14c.adc_investigation_disposal_no + 14c.adc_callbook_disposal_no + \n" +
+						"            14c.dc_commissionerate_disposal_no + 14c.dc_audit_disposal_no + 14c.dc_investigation_disposal_no + 14c.dc_callbook_disposal_no + \n" +
+						"            14c.superintendent_commissionerate_disposal_no + 14c.superintendent_audit_disposal_no + 14c.superintendent_investigation_disposal_no + 14c.superintendent_callbook_disposal_no\n" +
+						"        ) AS col10,\n" +
+						"        SUM(14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + 14c.ADC_CALLBOOK_OPENING_NO + \n" +
+						"            14c.DC_COMMISSIONERATE_OPENING_NO + 14c.DC_AUDIT_OPENING_NO + 14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + \n" +
+						"            14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO + 14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO\n" +
+						"        ) AS col4,\n" +
+						"        CASE \n" +
+						"            WHEN SUM(14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + 14c.ADC_CALLBOOK_OPENING_NO + \n" +
+						"                14c.DC_COMMISSIONERATE_OPENING_NO + 14c.DC_AUDIT_OPENING_NO + 14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + \n" +
+						"                14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO + 14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO\n" +
+						"            ) = 0 THEN NULL\n" +
+						"            ELSE SUM(14c.adc_commissionerate_disposal_no + 14c.adc_audit_disposal_no + 14c.adc_investigation_disposal_no + 14c.adc_callbook_disposal_no + \n" +
+						"                14c.dc_commissionerate_disposal_no + 14c.dc_audit_disposal_no + 14c.dc_investigation_disposal_no + 14c.dc_callbook_disposal_no + \n" +
+						"                14c.superintendent_commissionerate_disposal_no + 14c.superintendent_audit_disposal_no + 14c.superintendent_investigation_disposal_no + 14c.superintendent_callbook_disposal_no\n" +
+						"            ) / \n" +
+						"            SUM(14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + 14c.ADC_CALLBOOK_OPENING_NO + \n" +
+						"                14c.DC_COMMISSIONERATE_OPENING_NO + 14c.DC_AUDIT_OPENING_NO + 14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + \n" +
+						"                14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO + 14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO\n" +
+						"            ) * 100\n" +
+						"        END AS score_of_subparameter5a\n" +
 						"    FROM mis_gst_commcode AS cc\n" +
-						"    RIGHT JOIN mis_dpm_gst_adj_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"    RIGHT JOIN mis_dpm_gst_adj_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
 						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
 						"    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
 						"    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
 						"),\n" +
+						"ranked_col10 AS (\n" +
+						"    SELECT col10, @row_num := @row_num + 1 AS row_num, @total_rows AS total_rows\n" +
+						"    FROM ranked_data\n" +
+						"    CROSS JOIN (SELECT @row_num := 0, @total_rows := (SELECT COUNT(*) FROM ranked_data WHERE col10 IS NOT NULL)) AS vars\n" +
+						"    WHERE col10 IS NOT NULL\n" +
+						"    ORDER BY col10\n" +
+						"),\n" +
+						"median_data AS (\n" +
+						"    SELECT AVG(col10) AS median_col10\n" +
+						"    FROM ranked_col10\n" +
+						"    WHERE row_num IN (FLOOR((total_rows + 1) / 2), CEIL((total_rows + 1) / 2))\n" +
+						"),\n" +
 						"Query1 AS (\n" +
 						"    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
-						"           SUM(14c.ADC_COMMISSIONERATE_TIME_LESS_3_NO + 14c.ADC_AUDIT_TIME_LESS_3_NO + 14c.ADC_INVESTIGATION_TIME_LESS_3_NO + 14c.ADC_CALLBOOK_TIME_LESS_3_NO +\n" +
-						"               14c.DC_COMMISSIONERATE_TIME_LESS_3_NO + 14c.DC_AUDIT_TIME_LESS_3_NO + 14c.DC_INVESTIGATION_TIME_LESS_3_NO + 14c.DC_CALLBOOK_TIME_LESS_3_NO +\n" +
-						"               14c.SUPERINTENDENT_COMMISSIONERATE_TIME_LESS_3_NO + 14c.SUPERINTENDENT_AUDIT_TIME_LESS_3_NO + 14c.SUPERINTENDENT_INVESTIGATION_TIME_LESS_3_NO + 14c.SUPERINTENDENT_CALLBOOK_TIME_LESS_3_NO) AS col22,\n" +
-						"           SUM(14c.ADC_COMMISSIONERATE_TIME_3_TO_6_NO + 14c.ADC_AUDIT_TIME_3_TO_6_NO + 14c.ADC_INVESTIGATION_TIME_3_TO_6_NO + 14c.ADC_CALLBOOK_TIME_3_TO_6_NO +\n" +
-						"               14c.DC_COMMISSIONERATE_TIME_3_TO_6_NO + 14c.DC_AUDIT_TIME_3_TO_6_NO + 14c.DC_INVESTIGATION_TIME_3_TO_6_NO + 14c.DC_CALLBOOK_TIME_3_TO_6_NO +\n" +
-						"               14c.SUPERINTENDENT_COMMISSIONERATE_TIME_3_TO_6_NO + 14c.SUPERINTENDENT_AUDIT_TIME_3_TO_6_NO + 14c.SUPERINTENDENT_INVESTIGATION_TIME_3_TO_6_NO + 14c.SUPERINTENDENT_CALLBOOK_TIME_3_TO_6_NO) AS col23\n" +
+						"        SUM(14c.ADC_COMMISSIONERATE_TIME_LESS_3_NO + 14c.ADC_AUDIT_TIME_LESS_3_NO + 14c.ADC_INVESTIGATION_TIME_LESS_3_NO + 14c.ADC_CALLBOOK_TIME_LESS_3_NO +\n" +
+						"            14c.DC_COMMISSIONERATE_TIME_LESS_3_NO + 14c.DC_AUDIT_TIME_LESS_3_NO + 14c.DC_INVESTIGATION_TIME_LESS_3_NO + 14c.DC_CALLBOOK_TIME_LESS_3_NO +\n" +
+						"            14c.SUPERINTENDENT_COMMISSIONERATE_TIME_LESS_3_NO + 14c.SUPERINTENDENT_AUDIT_TIME_LESS_3_NO + 14c.SUPERINTENDENT_INVESTIGATION_TIME_LESS_3_NO + 14c.SUPERINTENDENT_CALLBOOK_TIME_LESS_3_NO\n" +
+						"        ) AS col22,\n" +
+						"        SUM(14c.ADC_COMMISSIONERATE_TIME_3_TO_6_NO + 14c.ADC_AUDIT_TIME_3_TO_6_NO + 14c.ADC_INVESTIGATION_TIME_3_TO_6_NO + 14c.ADC_CALLBOOK_TIME_3_TO_6_NO +\n" +
+						"            14c.DC_COMMISSIONERATE_TIME_3_TO_6_NO + 14c.DC_AUDIT_TIME_3_TO_6_NO + 14c.DC_INVESTIGATION_TIME_3_TO_6_NO + 14c.DC_CALLBOOK_TIME_3_TO_6_NO +\n" +
+						"            14c.SUPERINTENDENT_COMMISSIONERATE_TIME_3_TO_6_NO + 14c.SUPERINTENDENT_AUDIT_TIME_3_TO_6_NO + 14c.SUPERINTENDENT_INVESTIGATION_TIME_3_TO_6_NO + 14c.SUPERINTENDENT_CALLBOOK_TIME_3_TO_6_NO\n" +
+						"        ) AS col23\n" +
 						"    FROM mis_gst_commcode AS cc\n" +
-						"    RIGHT JOIN mis_dpm_gst_adj_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"    RIGHT JOIN mis_dpm_gst_adj_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
 						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
 						"    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
 						"    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
 						"),\n" +
 						"Query2 AS (\n" +
 						"    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
-						"           SUM(14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + 14c.ADC_CALLBOOK_OPENING_NO + 14c.DC_COMMISSIONERATE_OPENING_NO +\n" +
-						"               14c.DC_AUDIT_OPENING_NO + 14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + 14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO +\n" +
-						"               14c.SUPERINTENDENT_AUDIT_OPENING_NO + 14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO) AS col16\n" +
+						"        SUM(14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + 14c.ADC_CALLBOOK_OPENING_NO + \n" +
+						"            14c.DC_COMMISSIONERATE_OPENING_NO + 14c.DC_AUDIT_OPENING_NO + 14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + \n" +
+						"            14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO + 14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO\n" +
+						"        ) AS col16\n" +
 						"    FROM mis_gst_commcode AS cc\n" +
-						"    RIGHT JOIN mis_dpm_gst_adj_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+						"    RIGHT JOIN mis_dpm_gst_adj_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
 						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
 						"    WHERE 14c.MM_YYYY = '" + next_month_new + "'\n" +
 						"    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
 						"),\n" +
-						"ranked_data_combined AS (\n" +
+						"RankedData AS (\n" +
 						"    SELECT q1.ZONE_NAME, q1.ZONE_CODE,\n" +
-						"           COALESCE(q1.col22, 0) AS col22,COALESCE(q1.col23, 0) AS col23,COALESCE(q2.col16, 0) AS col16,\n" +
-						"           CASE\n" +
-						"               WHEN COALESCE(q2.col16, 0) = 0 THEN 0\n" +
-						"               ELSE ((COALESCE(q1.col22, 0) + COALESCE(q1.col23, 0)) / COALESCE(q2.col16, 0)) * 100\n" +
-						"           END AS score_of_subparameter5b\n" +
+						"        COALESCE(q1.col22, 0) AS col22, COALESCE(q1.col23, 0) AS col23, COALESCE(q2.col16, 0) AS col16,\n" +
+						"        CASE\n" +
+						"            WHEN COALESCE(q2.col16, 0) = 0 THEN 0\n" +
+						"            ELSE (((COALESCE(q1.col22, 0) + COALESCE(q1.col23, 0)) * 100) / COALESCE(q2.col16, 0))\n" +
+						"        END AS score_of_subparameter5b\n" +
 						"    FROM Query1 AS q1\n" +
 						"    LEFT JOIN Query2 AS q2 ON q1.ZONE_CODE = q2.ZONE_CODE\n" +
 						")\n" +
-						"SELECT ROW_NUMBER() OVER (ORDER BY ((((100 - rd.score_of_subparameter5a) * 0.5 * 10) + (rdc.score_of_subparameter5b * 0.5 * 10)) / 10)) AS z_rank,\n" +
-						"rd.ZONE_NAME, rd.ZONE_CODE, ((((100 - rd.score_of_subparameter5a) * 0.5 * 10) + (rdc.score_of_subparameter5b * 0.5 * 10)) / 10) as total_score\n" +
-						"FROM ranked_data AS rd\n" +
-						"JOIN ranked_data_combined AS rdc ON rd.ZONE_CODE = rdc.ZONE_CODE\n" +
-						"order by total_score;";
+						"SELECT rd.ZONE_NAME, rd.ZONE_CODE, rd.col10, rd.col4, rd.score_of_subparameter5a,\n" +
+						"       md.median_col10 AS median5a, r.col22, r.col23, r.col16, r.score_of_subparameter5b,\n" +
+						"       DENSE_RANK() OVER (PARTITION BY rd.ZONE_CODE ORDER BY r.score_of_subparameter5b ASC) AS z_rank\n" +
+						"FROM ranked_data rd\n" +
+						"CROSS JOIN median_data md\n" +
+						"LEFT JOIN RankedData r ON rd.ZONE_CODE = r.ZONE_CODE;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
-					double tScore = rsGst14aa.getDouble("total_score");
+					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
-					Integer insentavization = 0;
+
+					double total5a = rsGst14aa.getDouble("score_of_subparameter5a");
+					double total5b = rsGst14aa.getDouble("score_of_subparameter5b");
+
+					double median5a = rsGst14aa.getDouble("median5a");
+					//double median5b = rsGst14aa.getDouble("median_numerator_3b");
+
+					Double numerator_5a = rsGst14aa.getDouble("col10");
+					//Double numerator_5b = rsGst14aa.getDouble("numerator_3b");
+
+					int way_to_grade5a = score.marks5a(total5a);
+					int way_to_grade5b = score.marks5b(total5b);
+
+					int insentavization5a = way_to_grade5a;
+					int insentavization5b = way_to_grade5b;
+
+					if (numerator_5a > median5a && way_to_grade5a < 10) {
+						insentavization5a += 1;
+					}
+					Integer way_to_grade = way_to_grade5a + way_to_grade5b;
+					Integer insentavization = insentavization5a + insentavization5b;
+
+					double sub_parameter_weighted_average5a = insentavization5a * 0.5;
+					double sub_parameter_weighted_average5b = insentavization5b * 0.5;
+
+					double total_weighted_average = sub_parameter_weighted_average5a + sub_parameter_weighted_average5b;
+
+
 					double sub_parameter_weighted_average = 0.00;
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
-					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
 					String ra ="Adjudication";
 
-					String formattedTotal = String.format("%.2f", tScore);
-					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+//					String formattedTotal = String.format("%.2f", tScore);
+//					double total_score = Double.parseDouble(formattedTotal);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_weighted_average, absval, Zonal_rank, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
+
+
+					System.out.println(zoneName);
+					System.out.println("total5a: " + total5a);
+					System.out.println("numerator_5a : " + numerator_5a);
+					System.out.println("median5a : " + median5a);
+					System.out.println("way_to_grade5a: " + way_to_grade5a);
+					System.out.println("insentavization5a : " + insentavization5a);
+					System.out.println("sub_parameter_weighted_average5a : " + sub_parameter_weighted_average5a);
+
+					System.out.println("total5b: " + total5b);
+					//System.out.println("numerator_5b : " + numerator_5b);
+					//System.out.println("median5b : " + median5b);
+					System.out.println("way_to_grade5b: " + way_to_grade5b);
+					System.out.println("insentavization5b : " + insentavization5b);
+					System.out.println("sub_parameter_weighted_average5b : " + sub_parameter_weighted_average5b);
+					System.out.println("total_score : " + total_weighted_average);
+					System.out.println("********************************************************************************************");
+
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
