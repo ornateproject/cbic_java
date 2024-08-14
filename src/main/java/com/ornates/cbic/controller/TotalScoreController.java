@@ -737,6 +737,7 @@ public class TotalScoreController {
 		TotalScore totalScore = null;
 		Connection con = null;
 		ResultSet rsGst14aa = null;
+		double median =0.00;
 
 		try {
 
@@ -841,23 +842,28 @@ public class TotalScoreController {
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
-					zone_code = rsGst14aa.getString("ZONE_CODE");
-
-					Integer insentavization = 0;
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
+					zone_code = rsGst14aa.getString("ZONE_CODE");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absval");
-					double tScore = rsGst14aa.getDouble("score_of_parameter") * 100;
-					// String ra ="Number of Returns whose scrutiny completed for the month vis-à-vis total Returns pending for the month (Pro-rata basis) || Recoveries made upto the month vis-a-vis detections upto the month";
-					// String ra =rsGst14aa.getString("ra");
+					Double t_score = rsGst14aa.getDouble("score_of_parameter");
+					median = rsGst14aa.getDouble("median_numerator");
+					Double numerator = rsGst14aa.getDouble("numerator");
+
+					String formattedTotal = String.format("%.2f", t_score);
+					double total_score = Double.parseDouble(formattedTotal);
+					int way_to_grade = score.marks3a(total_score);
+					int insentavization = score.marks3a(total_score);
+
+					if (numerator > median && way_to_grade < 10) {
+						insentavization += 1;
+					}
+
 					Integer Zonal_rank = null;
 					String commName = "null";
 					String ra = "SCRUTINY/ASSESSMENT";
 
-					String formattedTotal = String.format("%.2f", tScore);
-					double total_score = Double.parseDouble(formattedTotal);
-					Integer way_to_grade = score.marks3a(total_score);
-					double sub_parameter_weighted_average = 0.00;
+					Double sub_parameter_weighted_average = insentavization * 0.5 ;
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
