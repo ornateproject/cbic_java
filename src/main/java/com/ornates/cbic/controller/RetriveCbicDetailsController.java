@@ -1171,6 +1171,7 @@ public class RetriveCbicDetailsController {
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
                     String commname=rsGst14aa.getString("COMM_NAME");
                     Double t_score = rsGst14aa.getDouble("total_score");
+
                     int col1 = rsGst14aa.getInt("prev_col1");
                     int col2 = rsGst14aa.getInt("col2");
                     int col4 = rsGst14aa.getInt("col4");

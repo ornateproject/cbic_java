@@ -504,35 +504,6 @@ public class CGSTSubParameterWiseQuery {
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
         String queryGst14aa= "WITH PreviousMonthData AS (\n" +
-                "    SELECT zc.ZONE_NAME AS prev_ZONE_NAME, cc.COMM_NAME AS prev_COMM_NAME, cc.ZONE_CODE AS prev_ZONE_CODE, 14c.CLOSING_NO AS prev_col1 \n" +
-                "    FROM mis_gst_commcode AS cc \n" +
-                "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE cc.ZONE_CODE = '" + zone_code + "' AND 14c.MM_YYYY = '" + prev_month_new + "'\n" +
-                ")\n" +
-                "SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, \n" +
-                "    14c.SCRUTINIZED_DISCRIPANCY_FOUND AS col4, \n" +
-                "    14c.OUTCOME_ASMT_12_ISSUED AS col9, \n" +
-                "    14c.OUTCOME_SECTION_61 AS col10,\n" +
-                "    14c.RETURN_SCRUTINY AS col2,pm.prev_col1 \n" +
-                "FROM mis_gst_commcode AS cc \n" +
-                "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c \n" +
-                "ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "LEFT JOIN PreviousMonthData AS pm ON pm.prev_ZONE_CODE = cc.ZONE_CODE AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
-                "WHERE cc.ZONE_CODE = '" + zone_code + "' AND 14c.MM_YYYY = '"+ month_date+"'\n" +
-                "GROUP BY zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, \n" +
-                "    14c.SCRUTINIZED_DISCRIPANCY_FOUND, \n" +
-                "    14c.OUTCOME_ASMT_12_ISSUED, \n" +
-                "    14c.OUTCOME_SECTION_61, \n" +
-                "    14c.RETURN_SCRUTINY, pm.prev_col1\n" +
-                "ORDER BY zc.ZONE_NAME, cc.COMM_NAME;";
-        return queryGst14aa;
-    }
-    public String QueryFor_gst3a_AllCommissonaryWise(String month_date){
-        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
-        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa= "WITH PreviousMonthData AS (\n" +
                 "    SELECT \n" +
                 "        zc.ZONE_NAME AS prev_ZONE_NAME, \n" +
                 "        cc.COMM_NAME AS prev_COMM_NAME, \n" +
@@ -543,7 +514,7 @@ public class CGSTSubParameterWiseQuery {
                 "        ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc \n" +
                 "        ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '2024-02-01'\n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
                 ")\n" +
                 "SELECT \n" +
                 "    zc.ZONE_NAME, \n" +
@@ -563,7 +534,55 @@ public class CGSTSubParameterWiseQuery {
                 "LEFT JOIN PreviousMonthData AS pm \n" +
                 "    ON pm.prev_ZONE_CODE = cc.ZONE_CODE \n" +
                 "    AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
-                "WHERE 14c.MM_YYYY = '2024-03-01'\n" +
+                "WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
+                "  AND cc.ZONE_CODE = '" + zone_code + "'  \n" +
+                "GROUP BY \n" +
+                "    zc.ZONE_NAME, \n" +
+                "    cc.COMM_NAME, \n" +
+                "    cc.ZONE_CODE, \n" +
+                "    14c.SCRUTINIZED_DISCRIPANCY_FOUND, \n" +
+                "    14c.OUTCOME_ASMT_12_ISSUED, \n" +
+                "    14c.OUTCOME_SECTION_61, \n" +
+                "    14c.RETURN_SCRUTINY, \n" +
+                "    pm.prev_col1\n" +
+                "ORDER BY total_score DESC, zc.ZONE_NAME, cc.COMM_NAME;\n";
+        return queryGst14aa;
+    }
+    public String QueryFor_gst3a_AllCommissonaryWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryGst14aa= "WITH PreviousMonthData AS (\n" +
+                "    SELECT \n" +
+                "        zc.ZONE_NAME AS prev_ZONE_NAME, \n" +
+                "        cc.COMM_NAME AS prev_COMM_NAME, \n" +
+                "        cc.ZONE_CODE AS prev_ZONE_CODE, \n" +
+                "        14c.CLOSING_NO AS prev_col1 \n" +
+                "    FROM mis_gst_commcode AS cc \n" +
+                "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c \n" +
+                "        ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc \n" +
+                "        ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
+                ")\n" +
+                "SELECT \n" +
+                "    zc.ZONE_NAME, \n" +
+                "    cc.COMM_NAME, \n" +
+                "    cc.ZONE_CODE, \n" +
+                "    14c.SCRUTINIZED_DISCRIPANCY_FOUND AS col4, \n" +
+                "    14c.OUTCOME_ASMT_12_ISSUED AS col9, \n" +
+                "    14c.OUTCOME_SECTION_61 AS col10,\n" +
+                "    14c.RETURN_SCRUTINY AS col2,\n" +
+                "    pm.prev_col1,\n" +
+                "    ((14c.SCRUTINIZED_DISCRIPANCY_FOUND + 14c.OUTCOME_ASMT_12_ISSUED + 14c.OUTCOME_SECTION_61) / (14c.RETURN_SCRUTINY + pm.prev_col1)) * 100 AS total_score\n" +
+                "FROM mis_gst_commcode AS cc \n" +
+                "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c \n" +
+                "    ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                "LEFT JOIN mis_gst_zonecode AS zc \n" +
+                "    ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "LEFT JOIN PreviousMonthData AS pm \n" +
+                "    ON pm.prev_ZONE_CODE = cc.ZONE_CODE \n" +
+                "    AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
+                "WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
                 "GROUP BY \n" +
                 "    zc.ZONE_NAME, \n" +
                 "    cc.COMM_NAME, \n" +
@@ -638,17 +657,16 @@ public class CGSTSubParameterWiseQuery {
     public String QueryFor_gst3b_AllCommissonaryWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa=  "SELECT zc.ZONE_NAME, \n" +
-                "       cc.COMM_NAME, \n" +
-                "       zc.ZONE_CODE, \n" +
-                "       SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / -- as col22\n" +
-                "       SUM(14c.TAX_LIABILITY_DETECTECT) AS score_of_parameter, -- as col14\n" +
-                "       CONCAT(SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY), '/', SUM(14c.TAX_LIABILITY_DETECTECT)) AS absval\n" +
-                "FROM mis_gst_commcode AS cc \n" +
-                "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "WHERE 14c.MM_YYYY <= '" +month_date+"' \n" +
-                "GROUP BY zc.ZONE_NAME, cc.COMM_NAME, zc.ZONE_CODE;\n";
+        String queryGst14aa=  " SELECT zc.ZONE_NAME, cc.COMM_NAME, zc.ZONE_CODE, \n" +
+                "                       SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / -- as col22\\n\" +\n" +
+                "                       SUM(14c.TAX_LIABILITY_DETECTECT) AS score_of_parameter, -- as col14\\n\" +\n" +
+                "                      CONCAT(SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY), '/', SUM(14c.TAX_LIABILITY_DETECTECT)) AS absval\n" +
+                "                FROM mis_gst_commcode AS cc \n" +
+                "                RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                "                LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "                WHERE 14c.MM_YYYY <= '" + month_date + "' \n" +
+                "                GROUP BY zc.ZONE_NAME, cc.COMM_NAME, zc.ZONE_CODE\n" +
+                "                order by score_of_parameter desc;";
         return queryGst14aa;
     }
     // ********************************************************************************************************************************
