@@ -852,8 +852,8 @@ public class TotalScoreController {
 
 					String formattedTotal = String.format("%.2f", t_score);
 					double total_score = Double.parseDouble(formattedTotal);
-					int way_to_grade = score.marks3a(total_score);
-					int insentavization = score.marks3a(total_score);
+					int way_to_grade = score.marks3b(total_score);
+					int insentavization = score.marks3b(total_score);
 
 					if (numerator > median && way_to_grade < 10) {
 						insentavization += 1;
