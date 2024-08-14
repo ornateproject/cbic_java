@@ -532,42 +532,48 @@ public class CGSTSubParameterWiseQuery {
     public String QueryFor_gst3a_AllCommissonaryWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa= "\n" +
-                "WITH PreviousMonthData AS (\n" +
+        String queryGst14aa= "WITH PreviousMonthData AS (\n" +
                 "    SELECT \n" +
                 "        zc.ZONE_NAME AS prev_ZONE_NAME, \n" +
                 "        cc.COMM_NAME AS prev_COMM_NAME, \n" +
                 "        cc.ZONE_CODE AS prev_ZONE_CODE, \n" +
                 "        14c.CLOSING_NO AS prev_col1 \n" +
                 "    FROM mis_gst_commcode AS cc \n" +
-                "right join  mis_dggst_gst_scr_1 AS 14c \n" +
-                "    ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c \n" +
+                "        ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc \n" +
-                "    ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
+                "        ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '2024-02-01'\n" +
                 ")\n" +
-                "SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, \n" +
+                "SELECT \n" +
+                "    zc.ZONE_NAME, \n" +
+                "    cc.COMM_NAME, \n" +
+                "    cc.ZONE_CODE, \n" +
                 "    14c.SCRUTINIZED_DISCRIPANCY_FOUND AS col4, \n" +
                 "    14c.OUTCOME_ASMT_12_ISSUED AS col9, \n" +
                 "    14c.OUTCOME_SECTION_61 AS col10,\n" +
                 "    14c.RETURN_SCRUTINY AS col2,\n" +
-                "    pm.prev_col1 \n" +
+                "    pm.prev_col1,\n" +
+                "    ((14c.SCRUTINIZED_DISCRIPANCY_FOUND + 14c.OUTCOME_ASMT_12_ISSUED + 14c.OUTCOME_SECTION_61) / (14c.RETURN_SCRUTINY + pm.prev_col1)) * 100 AS total_score\n" +
                 "FROM mis_gst_commcode AS cc \n" +
-                "right join  mis_dggst_gst_scr_1 AS 14c \n" +
-                "ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c \n" +
+                "    ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                 "LEFT JOIN mis_gst_zonecode AS zc \n" +
-                "ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
                 "LEFT JOIN PreviousMonthData AS pm \n" +
-                "ON pm.prev_ZONE_CODE = cc.ZONE_CODE AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
-                "WHERE 14c.MM_YYYY = '"+ month_date+"'\n" +
+                "    ON pm.prev_ZONE_CODE = cc.ZONE_CODE \n" +
+                "    AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
+                "WHERE 14c.MM_YYYY = '2024-03-01'\n" +
                 "GROUP BY \n" +
-                "    zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, \n" +
+                "    zc.ZONE_NAME, \n" +
+                "    cc.COMM_NAME, \n" +
+                "    cc.ZONE_CODE, \n" +
                 "    14c.SCRUTINIZED_DISCRIPANCY_FOUND, \n" +
                 "    14c.OUTCOME_ASMT_12_ISSUED, \n" +
                 "    14c.OUTCOME_SECTION_61, \n" +
                 "    14c.RETURN_SCRUTINY, \n" +
                 "    pm.prev_col1\n" +
-                "ORDER BY zc.ZONE_NAME, cc.COMM_NAME;";
+                "ORDER BY total_score DESC, zc.ZONE_NAME, cc.COMM_NAME;";
         return queryGst14aa;
     }
     // ********************************************************************************************************************************

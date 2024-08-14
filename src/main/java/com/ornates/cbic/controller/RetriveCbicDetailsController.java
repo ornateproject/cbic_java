@@ -1170,6 +1170,7 @@ public class RetriveCbicDetailsController {
                     String ra = RelevantAspect.Gst3A_RA;
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
                     String commname=rsGst14aa.getString("COMM_NAME");
+                    Double t_score = rsGst14aa.getDouble("total_score");
                     int col1 = rsGst14aa.getInt("prev_col1");
                     int col2 = rsGst14aa.getInt("col2");
                     int col4 = rsGst14aa.getInt("col4");
@@ -1180,11 +1181,11 @@ public class RetriveCbicDetailsController {
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
                     String absval = String.valueOf(col4 + col9 + col10) + "/" + String.valueOf(col2 + col1);
-                    if (col2 + col1 != 0) {
-                        total = (((double) (col4 + col9 + col10)) * 100 / (col2 + col1));
-                    }
+//                    if (col2 + col1 != 0) {
+//                        total = (((double) (col4 + col9 + col10)) * 100 / (col2 + col1));
+//                    }
                    //  rank = score.marks3a(total);
-                    String formattedTotal = String.format("%.2f", total);
+                    String formattedTotal = String.format("%.2f", t_score);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.marks3a(totalScore);
                     gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname,totalScore,absval,zoneCode,ra,
