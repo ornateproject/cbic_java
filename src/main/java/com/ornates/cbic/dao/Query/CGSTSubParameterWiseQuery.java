@@ -641,17 +641,16 @@ public class CGSTSubParameterWiseQuery {
     public String QueryFor_gst3b_CommissonaryWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa="SELECT zc.ZONE_NAME, \n" +
-                "       cc.COMM_NAME, \n" +
-                "       zc.ZONE_CODE, \n" +
-                "       SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / -- as col22\n" +
-                "       SUM(14c.TAX_LIABILITY_DETECTECT) AS score_of_parameter, -- as col14\n" +
-                "       CONCAT(SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY), '/', SUM(14c.TAX_LIABILITY_DETECTECT)) AS absval\n" +
-                "FROM mis_gst_commcode AS cc \n" +
-                "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "WHERE 14c.MM_YYYY <= '" +month_date+"' AND zc.ZONE_CODE = '" + zone_code + "'\n" +
-                "GROUP BY zc.ZONE_NAME, cc.COMM_NAME, zc.ZONE_CODE;\n";
+        String queryGst14aa=" SELECT zc.ZONE_NAME, cc.COMM_NAME, zc.ZONE_CODE, \n" +
+                "                       SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / -- as col22\\n\" +\n" +
+                "                       SUM(14c.TAX_LIABILITY_DETECTECT) AS score_of_parameter, -- as col14\\n\" +\n" +
+                "                      CONCAT(SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY), '/', SUM(14c.TAX_LIABILITY_DETECTECT)) AS absval\n" +
+                "                FROM mis_gst_commcode AS cc \n" +
+                "                RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                "                LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "                WHERE 14c.MM_YYYY <= '" + month_date + "' AND zc.ZONE_CODE = '" + zone_code + "'\n" +
+                "                GROUP BY zc.ZONE_NAME, cc.COMM_NAME, zc.ZONE_CODE\n" +
+                "                order by score_of_parameter desc;";
         return queryGst14aa;
     }
     public String QueryFor_gst3b_AllCommissonaryWise(String month_date){
