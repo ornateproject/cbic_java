@@ -606,7 +606,7 @@ public class CGSTSubParameterWiseQuery {
                 "        COUNT(*) OVER () AS total_count\n" +
                 "    FROM mis_gst_commcode AS cc \n" +
                 "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "    WHERE 14c.MM_YYYY <= '" +month_date+"'\n" +
+                "    WHERE 14c.MM_YYYY = '" +month_date+"'\n" +
                 "    GROUP BY cc.ZONE_CODE\n" +
                 "),\n" +
                 "median_data AS (\n" +
@@ -631,7 +631,7 @@ public class CGSTSubParameterWiseQuery {
                 "    FROM mis_gst_commcode AS cc \n" +
                 "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY <= '" +month_date+"' \n" +
+                "    WHERE 14c.MM_YYYY = '" +month_date+"' \n" +
                 "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                 ") AS t\n" +
                 "CROSS JOIN median_data m\n" +
