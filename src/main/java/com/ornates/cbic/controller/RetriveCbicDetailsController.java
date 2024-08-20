@@ -1088,11 +1088,9 @@ public class RetriveCbicDetailsController {
 //                        "    RANK() OVER (ORDER BY total_score DESC) AS z_rank FROM ranked_data;";
 
                 //Result Set
-
                 String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst3a_ZoneWise(month_date);
-
-
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
+
                 while(rsGst14aa.next()) {
                     String commname = "All";
                     String ra = RelevantAspect.Gst3A_RA;
@@ -2257,14 +2255,11 @@ public class RetriveCbicDetailsController {
         GST4A gsta = null;
         int rank = 0;
         double total = 0.00;
+        double median = 0.00;
 
         try {
             if (type.equalsIgnoreCase("zone")) {
-
-                String prev_month_new = DateCalculate.getPreviousMonth(month_date);
                 String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst6a_ZoneWise(month_date);
-
-
                 // Query string
 //                String queryGst14aa = "SELECT zc.ZONE_NAME,cc.ZONE_CODE,sum(14c.COMM_DISPOSAL_NO+14c.JC_DISPOSAL_NO+14c.AC_DISPOSAL_NO+14c.SUP_DISPOSAL_NO) as col9 " +
 //
@@ -2285,30 +2280,33 @@ public class RetriveCbicDetailsController {
                 // ResultSet rsGst3aa = GetExecutionSQL.getResult(queryGst3aa);
                 while (rsGst14aa.next()) {
                     String ra = RelevantAspect.Gst6A_RA;
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
                     String commname ="ALL";
                     int col9 = rsGst14aa.getInt("col9");
                     int col3 = rsGst14aa.getInt("col3");
-                    int Zonal_rank = 0;
-                    String gst = "no";
-                    int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
-
                     total = rsGst14aa.getDouble("total_score");
-//                    if (col3 != 0) {
-//                        total = (((double) (col9)* 100) / col3);
-//                    }
-
-                   // rank = score.marks6a(total);
-                    rank = rsGst14aa.getInt("z_rank");
+                    median = rsGst14aa.getDouble("median");
+                    Double numerator_6a = rsGst14aa.getDouble("col9");
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.marks6a(totalScore);
+                    int insentavization = score.marks6a(totalScore);
+
+                    if (numerator_6a > median && way_to_grade < 10) {
+                        insentavization += 1;
+                    }
+                    int Zonal_rank = 0;
+                    String gst = "no";
+                    double sub_parameter_weighted_average = insentavization * 0.25;
+                   // rank = score.marks6a(total);
+                    rank = rsGst14aa.getInt("z_rank");
                     String absval = String.valueOf(col9) + "/" + String.valueOf(col3);
-                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
+                    gsta = new GST4A(zoneName, commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
+                System.out.println("gst6a zone wise median :- " + median); //********************************** for testing ************************************
             }else if (type.equalsIgnoreCase("commissary")) { //6a
                 // Query string
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
@@ -2530,6 +2528,7 @@ public class RetriveCbicDetailsController {
         GST4A gsta = null;
         int rank = 0;
         double total = 0.00;
+        double median = 0.00;
         try {
             if (type.equalsIgnoreCase("zone")) {
                 // Query string
