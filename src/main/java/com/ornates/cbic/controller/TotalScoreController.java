@@ -2551,7 +2551,6 @@ public class TotalScoreController {
 				while (rsGst14aa.next()) {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					Integer insentavization = 0;
-					double sub_parameter_weighted_average = 0.00;
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					Zonal_rank = rsGst14aa.getInt("z_rank");
 					double tScore = rsGst14aa.getDouble("total_score"); // 100 is multiply in query
@@ -2564,6 +2563,7 @@ public class TotalScoreController {
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
 					int way_to_grade = score.marks7(total_score);
+					double sub_parameter_weighted_average = way_to_grade;
 					//System.out.println(way_to_grade);
 					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
@@ -2611,9 +2611,7 @@ public class TotalScoreController {
 				while (rsGst14aa.next()) {
 					double tScore = rsGst14aa.getDouble("total_score") * 100;
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
 					Integer insentavization = 0;
-					double sub_parameter_weighted_average = 0.00;
 					Zonal_rank = rsGst14aa.getInt("z_rank");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String gst = "null";
@@ -2625,6 +2623,8 @@ public class TotalScoreController {
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
+					int way_to_grade = score.marks7(total_score);
+					double sub_parameter_weighted_average = way_to_grade;
 					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
@@ -2652,9 +2652,7 @@ public class TotalScoreController {
 
 				while (rsGst14aa.next()) {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
 					Integer insentavization = 0;
-					double sub_parameter_weighted_average = 0.00;
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String gst = rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
@@ -2665,6 +2663,8 @@ public class TotalScoreController {
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
+					int way_to_grade = score.marks7(total_score);
+					double sub_parameter_weighted_average = way_to_grade;
 					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
@@ -2692,9 +2692,7 @@ public class TotalScoreController {
 
 				while (rsGst14aa.next()) {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
 					Integer insentavization = 0;
-					double sub_parameter_weighted_average = 0.00;
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					double tScore = rsGst14aa.getDouble("total_score") * 100;
@@ -2707,6 +2705,8 @@ public class TotalScoreController {
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
+					int way_to_grade = score.marks7(total_score);
+					double sub_parameter_weighted_average = way_to_grade;
 					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
@@ -2737,9 +2737,7 @@ public class TotalScoreController {
 
 				while (rsGst14aa.next()) {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
 					Integer insentavization = 0;
-					double sub_parameter_weighted_average = 0.00;
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					double tScore = rsGst14aa.getDouble("score_of_subParameter") * 100;
@@ -2751,6 +2749,8 @@ public class TotalScoreController {
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
+					int way_to_grade = score.marks7(total_score);
+					double sub_parameter_weighted_average = way_to_grade;
 					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
