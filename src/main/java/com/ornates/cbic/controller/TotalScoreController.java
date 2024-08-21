@@ -2544,7 +2544,7 @@ public class TotalScoreController {
 						+ "SELECT ZONE_CODE, ZONE_NAME, col16, col22, (col22 * 100 / col16) AS total_score,\n"
 						+ "CONCAT(col22, '/', col16) AS absolute_value,\n"
 						+ "    ROW_NUMBER() OVER (ORDER BY (col22 / col16) ) AS z_rank\n"
-						+ "FROM CTE ORDER BY total_score;";
+						+ "FROM CTE ORDER BY total_score ASC;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
