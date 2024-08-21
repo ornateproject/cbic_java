@@ -109,12 +109,9 @@ public class LastMonthYearController {
                         "    (col22_previous_month_2 * 100 / col16_previous_month_2) AS total_score_gst7_previous_month_2\n" +
                         "FROM CTE;\n";
 
-
                 rsGst14aa_gst2 = GetExecutionSQL.getResult(query_assessment_for_returnFiling);
-                rsGst14aa_gst7 = GetExecutionSQL.getResult(query_assessment_for_refunds);
 
-
-                while (rsGst14aa_gst2.next() && rsGst14aa_gst7.next()) {
+                while (rsGst14aa_gst2.next()) {
                     String zoneName = rsGst14aa_gst2.getString("ZONE_NAME");
                     zone_code = rsGst14aa_gst2.getString("ZONE_CODE");
                     double current_t_score = rsGst14aa_gst2.getDouble("total_score_of_month");
@@ -205,6 +202,7 @@ public class LastMonthYearController {
 //                        totalScore = new MonthlyYearlyScore(zoneName, "ALL", zone_code, "Return Filling",current_t_score, previous_t_score, previous_t_score_2, total_score,0,0  );
 //                        allGstaList.add(totalScore);
                 }
+                System.out.println("lasttttttttttttttttttttttttttt");
             } else if (type.equalsIgnoreCase("comm_name")) {
                 String query_assessment= "WITH monthly_scores AS (\r\n"
                         + "    SELECT\r\n"
@@ -317,6 +315,7 @@ public class LastMonthYearController {
                     allGstaList.add(totalScore);
 
                 }
+                System.out.println("last3 month commi");
 
 
             }
@@ -334,36 +333,3 @@ public class LastMonthYearController {
         return allGstaList;
     }
 }
-
-
-
-
-
-
-
-
-
-/*
-else if (type.equalsIgnoreCase("yearly")) { // for zone_wise 2
-//'" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
-String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-String next_month_new = DateCalculate.getNextMonth(month_date);
-
-String query_assessment = "";
-
- rsGst14aa = GetExecutionSQL.getResult(query_assessment);
-
-   while (rsGst14aa.next()) {
-   	String zoneName = rsGst14aa.getString("ZONE_NAME");
-		    zone_code = rsGst14aa.getString("ZONE_CODE");
-		  double tScore = rsGst14aa.getDouble("total_score");
-		    String commName = "ALL";
-
-		    // Formatting the total score
-		    String formattedTotal = String.format("%.2f", tScore);
-		    double total_score = Double.parseDouble(formattedTotal);
-		    totalScore = new AllParameterTotalScore(zoneName, commName, zone_code, total_score);
-		    allGstaList.add(totalScore);
-   }
-}
-*/
