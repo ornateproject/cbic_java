@@ -1109,8 +1109,6 @@ public class RetriveCbicDetailsController {
                     if (numerator_3a > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
-
-
                     int Zonal_rank = 0;
                     String gst = "no";
 
@@ -1352,13 +1350,13 @@ public class RetriveCbicDetailsController {
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.marks3b(totalScore);
                     int insentavization = score.marks3b(totalScore);
-                    System.out.println("insentavization3b :-" + insentavization);
+                   // System.out.println("insentavization3b :-" + insentavization);
 
                     if (numerator_3b > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
 
-                    System.out.println("insentavization3b after :-" + insentavization);
+                    //System.out.println("insentavization3b after :-" + insentavization);
 
                     int Zonal_rank = 0;
                     String gst = "no";
