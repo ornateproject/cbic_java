@@ -59,7 +59,7 @@ public class CGSTParameterWiseQuery {
                 "        COUNT(*) OVER () AS total_count\n" +
                 "    FROM mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                "    WHERE 14c.MM_YYYY <= '" + month_date + "'\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
                 "    GROUP BY cc.ZONE_CODE\n" +
                 "),\n" +
                 "median_data_3b AS (\n" +
@@ -80,7 +80,7 @@ public class CGSTParameterWiseQuery {
                 "    FROM mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 14c.MM_YYYY <= '" + month_date + "'\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
                 "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                 ")\n" +
                 "SELECT  \n" +
@@ -199,7 +199,7 @@ public class CGSTParameterWiseQuery {
                 "        COUNT(*) OVER () AS total_count\n" +
                 "    FROM mis_gst_commcode AS cc \n" +
                 "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "    WHERE 14c.MM_YYYY <= '" + month_date + "' \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
                 "    GROUP BY cc.ZONE_CODE\n" +
                 "),\n" +
                 "median_numerator_gst3b AS (\n" +
@@ -222,7 +222,7 @@ public class CGSTParameterWiseQuery {
                 "    FROM mis_gst_commcode AS cc \n" +
                 "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY <= '" + month_date + "' \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
                 "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                 ")\n" +
                 "\n" +
