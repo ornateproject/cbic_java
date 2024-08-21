@@ -51,7 +51,11 @@ public class LastMonthYearController {
         MonthlyYearlyScore totalScore = null;
         Connection con = null;
         ResultSet rsGst14aa= null;
+        ResultSet rsGst14aa_gst2= null;ResultSet rsGst14aa_gst7= null;
         ResultSet currentMonthValue= null;
+        double total_score_of_year = 0;
+        double total_score_previous_year = 0;
+        double total_score_previous_year_2 = 0;
         try {
 
             if (type.equalsIgnoreCase("last3month")) { // for parameter 1
@@ -63,7 +67,7 @@ public class LastMonthYearController {
 //					String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 //		            String next_month_new = DateCalculate.getNextMonth(month_date);
 
-                String query_assessment = "SELECT zc.ZONE_NAME,cc.ZONE_CODE,'Return Filling' AS parameter_name,\n"
+                String query_assessment_for_returnFiling= "SELECT zc.ZONE_NAME,cc.ZONE_CODE,'Return Filling' AS parameter_name,\n"
                         + "    (SUM(14c.GSTR_3BM_F - 14c.GSTR_3BM_D) / NULLIF(SUM(14c.GSTR_3BM_F), 0)) * 100 AS total_score_of_month,\n"
                         + "    (SELECT (SUM(sub1.GSTR_3BM_F - sub1.GSTR_3BM_D) / NULLIF(SUM(sub1.GSTR_3BM_F), 0)) * 100\n"
                         + "     FROM mis_gst_gst_2 AS sub1\n"
@@ -81,22 +85,43 @@ public class LastMonthYearController {
                         + "WHERE 14c.MM_YYYY = '" + month_date + "'  AND cc.ZONE_CODE = '" + zone_code + "'\n"
                         + "GROUP BY zc.ZONE_NAME, cc.ZONE_CODE;\n"
                         + "";
+                String query_assessment_for_refunds="WITH CTE AS (\n" +
+                        "    SELECT cc.ZONE_CODE,zc.ZONE_NAME,\n" +
+                        "        -- Calculate values for the given month\n" +
+                        "        SUM(CASE WHEN 14c.MM_YYYY = '2024-04-01' THEN (14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) END) AS col16_current_month,\n" +
+                        "        SUM(CASE WHEN 14c.MM_YYYY = '2024-04-01' THEN 14c.age_breakup_above60_no END) AS col22_current_month,\n" +
+                        "        -- Calculate values for the previous month\n" +
+                        "        SUM(CASE WHEN 14c.MM_YYYY = DATE_SUB('2024-04-01', INTERVAL 1 MONTH) THEN (14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) END) AS col16_previous_month,\n" +
+                        "        SUM(CASE WHEN 14c.MM_YYYY = DATE_SUB('2024-04-01', INTERVAL 1 MONTH) THEN 14c.age_breakup_above60_no END) AS col22_previous_month,\n" +
+                        "        -- Calculate values for the month before the previous month\n" +
+                        "        SUM(CASE WHEN 14c.MM_YYYY = DATE_SUB('2024-04-01', INTERVAL 2 MONTH) THEN (14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) END) AS col16_previous_month_2,\n" +
+                        "        SUM(CASE WHEN 14c.MM_YYYY = DATE_SUB('2024-04-01', INTERVAL 2 MONTH) THEN 14c.age_breakup_above60_no END) AS col22_previous_month_2\n" +
+                        "    FROM mis_gst_commcode AS cc \n" +
+                        "    RIGHT JOIN mis_dpm_gst_4 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "    WHERE 14c.MM_YYYY IN ('2024-04-01', DATE_SUB('2024-04-01', INTERVAL 1 MONTH), DATE_SUB('2024-04-01', INTERVAL 2 MONTH))\n" +
+                        "        AND cc.ZONE_CODE = '70' \n" +
+                        "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                        ")\n" +
+                        "SELECT ZONE_CODE, ZONE_NAME,\n" +
+                        "    (col22_current_month * 100 / col16_current_month) AS total_score_gst7_of_month,\n" +
+                        "    (col22_previous_month * 100 / col16_previous_month) AS total_score_gst7_previous_month,\n" +
+                        "    (col22_previous_month_2 * 100 / col16_previous_month_2) AS total_score_gst7_previous_month_2\n" +
+                        "FROM CTE;\n";
 
 
-                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+                rsGst14aa_gst2 = GetExecutionSQL.getResult(query_assessment_for_returnFiling);
+                rsGst14aa_gst7 = GetExecutionSQL.getResult(query_assessment_for_refunds);
 
-                while (rsGst14aa.next()) {
-                    String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    zone_code = rsGst14aa.getString("ZONE_CODE");
-                    double current_t_score = rsGst14aa.getDouble("total_score_of_month");
-                    double previous_t_score = rsGst14aa.getDouble("total_score_previous_month");
-                    double previous_t_score_2 = rsGst14aa.getDouble("total_score_previous_month_2");
+
+                while (rsGst14aa_gst2.next() && rsGst14aa_gst7.next()) {
+                    String zoneName = rsGst14aa_gst2.getString("ZONE_NAME");
+                    zone_code = rsGst14aa_gst2.getString("ZONE_CODE");
+                    double current_t_score = rsGst14aa_gst2.getDouble("total_score_of_month");
+                    double previous_t_score = rsGst14aa_gst2.getDouble("total_score_previous_month");
+                    double previous_t_score_2 = rsGst14aa_gst2.getDouble("total_score_previous_month_2");
                     String commName = "ALL";
-                    String parameter_name = rsGst14aa.getString("parameter_name");
-                    double total_score_of_year = 0;
-                    double total_score_previous_year = 0;
-                    double total_score_previous_year_2 = 0;
-
+                    String parameter_name = rsGst14aa_gst2.getString("parameter_name");
 
                     // Formatting the total score
                     String formattedTotal = String.format("%.2f", current_t_score);
@@ -107,10 +132,12 @@ public class LastMonthYearController {
 
                     String formattedTotal3 = String.format("%.2f", previous_t_score_2);
                     double total_score_previous_month_2 = Double.parseDouble(formattedTotal3);
+
                     totalScore = new MonthlyYearlyScore(zoneName, commName, zone_code, parameter_name, total_score_of_month, total_score_previous_month,
                             total_score_previous_month_2, total_score_of_year, total_score_previous_year, total_score_previous_year_2);
                     allGstaList.add(totalScore);
                 }
+                System.out.println("last 3 month");
             } else if (type.equalsIgnoreCase("monthly")) { // all zone-wise monthly score calculation
                 //String query_assessment;
                 String query_assessment= "WITH monthly_scores AS (" +
@@ -159,9 +186,6 @@ public class LastMonthYearController {
                     int z_rank = rsGst14aa.getInt("z_rank");
 
 //                         String parameter_name = rsGst14aa.getString("parameter_name");
-                    double total_score_of_year = 0;
-                    double total_score_previous_year = 0;
-                    double total_score_previous_year_2 = 0;
 
 
                     // Formatting the total score
@@ -276,9 +300,7 @@ public class LastMonthYearController {
                     int z_rank = rsGst14aa.getInt("z_rank");
 
 //                     String parameter_name = rsGst14aa.getString("parameter_name");
-                    double total_score_of_year = 0;
-                    double total_score_previous_year = 0;
-                    double total_score_previous_year_2 = 0;
+
 
 
                     // Formatting the total score
