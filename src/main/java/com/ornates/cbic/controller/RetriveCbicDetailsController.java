@@ -2199,15 +2199,15 @@ public class RetriveCbicDetailsController {
                     int Zonal_rank = 0;
                     String gst = "no";
                     int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
+
 //                    if (col16 != 0) {
 //                        total=(((double) (col22+col23) * 100)/ (col16));
 //                    }
                     //rank=score.marks5b(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal) ;
-                    int way_to_grade = 0;
-                    //int way_to_grade = score.marks5b(totalScore);
+                    int way_to_grade = score.marks5b(totalScore);
+                    Double sub_parameter_weighted_average = way_to_grade * 0.5;
                     String absval = String.valueOf(col22+col23) + "/" + String.valueOf(col16);
                     gsta = new GST4A(zoneName, commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -2229,13 +2229,14 @@ public class RetriveCbicDetailsController {
                     int Zonal_rank = 0;
                     String gst = "no";
                     int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
+
 //                    if (col16 != 0) {
 //                        total=(((double) (col22+col23) * 100)/ (col16));}
                     //rank=score.marks5b(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.marks5b(totalScore);
+                    Double sub_parameter_weighted_average = way_to_grade * 0.5;
                     String absval = String.valueOf(col22+col23) + "/" + String.valueOf(col16);
                     gsta = new GST4A(zoneName, commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
