@@ -787,7 +787,7 @@ public class TotalScoreController {
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
-					String ra = "SCRUTINY/ASSESSMENT";
+					String ra = "SCRUTINY & ASSESSMENT";
 
 					totalScore = new TotalScore(zoneName, commName, zone_code, total_weighted_average, absval, Zonal_rank, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
