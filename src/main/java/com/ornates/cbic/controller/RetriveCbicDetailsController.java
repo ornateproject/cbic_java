@@ -2426,7 +2426,7 @@ public class RetriveCbicDetailsController {
                     int Zonal_rank = 0;
                     String gst = "no";
                     int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
+
 
                     total = rsGst14aa.getDouble("total_score");
 
@@ -2438,6 +2438,7 @@ public class RetriveCbicDetailsController {
                     double totalScore = Double.parseDouble(formattedTotal);
                     String absval = String.valueOf(col18) + "/" + String.valueOf(col13);
                     int way_to_grade = score.marks6b(totalScore);
+                    Double sub_parameter_weighted_average = way_to_grade * 0.25;
 
                     gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -2568,12 +2569,13 @@ public class RetriveCbicDetailsController {
                     int Zonal_rank = 0;
                     String gst = "no";
                     int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
                     total = rsGst14aa.getDouble("score_of_parameter6c");
 
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.marks6c(totalScore);
+                    Double sub_parameter_weighted_average = way_to_grade * 0.25;
+
                     gsta = new GST4A(zone_name, commname, totalScore,absval,zoneCode,ra,
                                                          Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
@@ -2591,9 +2593,7 @@ public class RetriveCbicDetailsController {
                     int col3=rsGst14aa.getInt("col3");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
                     int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
 
                     if(col3!=0) {
                         total = (((double) (col9) * 100) / col3);
@@ -2602,6 +2602,8 @@ public class RetriveCbicDetailsController {
                     rank=score.marks6c(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal) ;
+                    int way_to_grade = score.marks6c(totalScore);
+                    Double sub_parameter_weighted_average = way_to_grade * 0.25;
                     String absval = String.valueOf(col9) + "/" + String.valueOf(col3);
                     gsta = new GST4A(zoneName, commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -2620,9 +2622,7 @@ public class RetriveCbicDetailsController {
                     int col3=rsGst14aa.getInt("col3");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
                     int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
 
                     if(col3!=0) {
                         total = (((double) (col9) * 100) / col3);
@@ -2630,6 +2630,8 @@ public class RetriveCbicDetailsController {
                     rank=score.marks6c(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal) ;
+                    int way_to_grade = score.marks6c(totalScore);
+                    Double sub_parameter_weighted_average = way_to_grade * 0.25;
                     String absval = String.valueOf(col9) + "/" + String.valueOf(col3);
                     gsta = new GST4A(zoneName, commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -2674,19 +2676,19 @@ public class RetriveCbicDetailsController {
                     int col13 = rsGst14aa.getInt("col13");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
                     int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
 
                     if ((col13) != 0) {
                         total = (((double) (col18) * 100) / (col13));
                     }
 
                     //}
-                    rank = score.marks6d(total);
+                    //rank = score.marks6d(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     String absval = String.valueOf(col18) + "/" + String.valueOf(col13);
+                    int way_to_grade = score.marks6d(totalScore);
+                    double sub_parameter_weighted_average = way_to_grade * 0.25;
                     gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
@@ -2705,17 +2707,18 @@ public class RetriveCbicDetailsController {
                     int col13=rsGst14aa.getInt("col13");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
                     int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
 
                     if((col13)!=0) {
                         total= (((double) (col18) * 100) / (col13));
                     }
 
-                    rank=score.marks6d(total);
+                    //rank=score.marks6d(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.marks6d(totalScore);
+                    Double sub_parameter_weighted_average = way_to_grade * 0.25;
+
                     String absval=String.valueOf(col18)+"/"+String.valueOf(col13);
                     gsta=new GST4A(zoneName, commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -2737,9 +2740,7 @@ public class RetriveCbicDetailsController {
                     int col13=rsGst14aa.getInt("col13");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
                     int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
 
                     if((col13)!=0) {
                         total= (((double) (col18) * 100) / (col13));
@@ -2748,6 +2749,9 @@ public class RetriveCbicDetailsController {
                     rank=score.marks6d(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal) * 100;
+                    int way_to_grade = score.marks6d(totalScore);
+                    Double sub_parameter_weighted_average = way_to_grade * 0.25;
+
                     String absval=String.valueOf(col18)+"/"+String.valueOf(col13);
                     gsta=new GST4A(zoneName, commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
