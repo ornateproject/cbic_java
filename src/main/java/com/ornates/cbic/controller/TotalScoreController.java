@@ -554,7 +554,7 @@ public class TotalScoreController {
 					String formattedTotal = String.format("%.2f", total);
 					double total_score = Double.parseDouble(formattedTotal);
 					Integer way_to_grade =score.marks2(total_score);
-					double sub_parameter_weighted_average = way_to_grade;
+					double sub_parameter_weighted_average = way_to_grade * 0.5;
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
@@ -2563,7 +2563,7 @@ public class TotalScoreController {
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
 					int way_to_grade = score.marks7(total_score);
-					double sub_parameter_weighted_average = way_to_grade;
+					double sub_parameter_weighted_average = way_to_grade * 0.5;
 					//System.out.println(way_to_grade);
 					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
