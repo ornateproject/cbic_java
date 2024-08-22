@@ -828,7 +828,7 @@ public class TotalScoreController {
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String gst = "null";
 					String absval = "null";
-					String ra ="null";
+					String ra ="SCRUTINY & ASSESSMENT";
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
@@ -860,7 +860,7 @@ public class TotalScoreController {
 
 					Integer Zonal_rank = null;
 					String commName = "null";
-					String ra = "SCRUTINY/ASSESSMENT";
+					String ra = "SCRUTINY & ASSESSMENT";
 
 					Double sub_parameter_weighted_average = insentavization * 0.5 ;
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -882,7 +882,7 @@ public class TotalScoreController {
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst ="null";
 					String absval = "null";
-					String ra =rsGst14aa.getString("ra");
+					String ra ="SCRUTINY & ASSESSMENT";
 
 
 					String formattedTotal = String.format("%.2f", tScore);
@@ -905,7 +905,7 @@ public class TotalScoreController {
 					double tScore = rsGst14aa.getDouble("score_of_parameter") * 100;
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absvl");
-					String ra =rsGst14aa.getString("ra");
+					String ra ="SCRUTINY & ASSESSMENT";
 					Integer Zonal_rank = null;
 
 
