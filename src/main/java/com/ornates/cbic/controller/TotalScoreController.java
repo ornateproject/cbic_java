@@ -2673,18 +2673,19 @@ public class TotalScoreController {
 				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
 				String query_assessment = "WITH calculated_values AS (\n" +
-						"    SELECT  cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME, \n" +
-						"        SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO) AS col16,\n" +
-						"        SUM(dpm.age_breakup_above60_no) AS col22,\n" +
-						"        SUM(dpm.age_breakup_above60_no) * 1.0 / NULLIF(SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO), 0) AS total_score\n" +
-						"    FROM mis_gst_commcode AS cc\n" +
-						"    RIGHT JOIN mis_dpm_gst_4 AS dpm ON cc.COMM_CODE = dpm.COMM_CODE\n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-						"    WHERE dpm.MM_YYYY = '" + month_date + "'\n" +
-						"    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
+						"SELECT  cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME, \n" +
+						"SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO) AS col16,\n" +
+						"SUM(dpm.age_breakup_above60_no) AS col22,\n" +
+						"SUM(dpm.age_breakup_above60_no) * 1.0 / NULLIF(SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO), 0) AS total_score\n" +
+						"FROM mis_gst_commcode AS cc\n" +
+						"RIGHT JOIN mis_dpm_gst_4 AS dpm ON cc.COMM_CODE = dpm.COMM_CODE\n" +
+						"LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+						"WHERE dpm.MM_YYYY = '2024-04-01'\n" +
+						"GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
 						")\n" +
 						"SELECT ZONE_CODE, ZONE_NAME, COMM_NAME, col16,col22,total_score,\n" +
-						"    ROW_NUMBER() OVER (ORDER BY total_score ) AS z_rank\n" +
+						"concat(col22 ,'/', col16 ) as absval,\n" +
+						"ROW_NUMBER() OVER (ORDER BY total_score ) AS z_rank\n" +
 						"FROM calculated_values\n" +
 						"ORDER BY total_score ;";
 
@@ -2698,7 +2699,7 @@ public class TotalScoreController {
 					double tScore = rsGst14aa.getDouble("total_score") * 100;
 					Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst = "null";
-					String absval = "null";
+					String absval = rsGst14aa.getString("absval");
 					//String ra ="null";
 					String ra = RelevantAspect.Gst7_RA;
 
