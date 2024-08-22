@@ -135,7 +135,7 @@ public class TotalScoreController {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
-					String ra ="null";
+					String ra ="Registration";
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
