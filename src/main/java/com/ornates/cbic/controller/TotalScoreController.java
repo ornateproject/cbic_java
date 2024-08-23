@@ -542,7 +542,7 @@ public class TotalScoreController {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					Integer insentavization = 0;
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
-					Zonal_rank = rsGst14aa.getInt("z_rank");
+					//Zonal_rank = rsGst14aa.getInt("z_rank");
 					double  total = rsGst14aa.getDouble("total_score");
 					String commName = "ALL";
 					String gst = "ALL";
@@ -555,7 +555,7 @@ public class TotalScoreController {
 					double total_score = Double.parseDouble(formattedTotal);
 					Integer way_to_grade =score.marks2(total_score);
 					double sub_parameter_weighted_average = way_to_grade * 0.5;
-					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
 			} else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -721,6 +721,24 @@ public class TotalScoreController {
 				e.printStackTrace();
 			}
 		}
+
+		// Sort by sub_parameter_weighted_average in descending order
+		allGstaList = allGstaList.stream()
+				.sorted(Comparator.comparing(TotalScore::getSub_parameter_weighted_average).reversed())
+				.collect(Collectors.toList());
+
+		// Set Zonal_rank based on the sorted sub_parameter_weighted_average
+		int currentRank = 1;
+		double previousValue = Double.NaN;
+		for (int i = 0; i < allGstaList.size(); i++) {
+			TotalScore currentScore = allGstaList.get(i);
+			if (Double.compare(currentScore.getSub_parameter_weighted_average(), previousValue) != 0) {
+				currentRank = i + 1; // Update rank when the value changes
+			}
+			currentScore.setZonal_rank(currentRank);
+			previousValue = currentScore.getSub_parameter_weighted_average();
+		}
+
 		return allGstaList;
 	}
 

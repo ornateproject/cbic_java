@@ -5,9 +5,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.ornates.cbic.dao.Query.CGSTSubParameterWiseQuery;
+import com.ornates.cbic.model.response.TotalScore;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -1194,7 +1197,8 @@ public class RetriveCbicDetailsController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return allGstaList;
+        return allGstaList.stream()
+                .sorted(Comparator.comparing(GST4A::getSub_parameter_weighted_average).reversed()).collect(Collectors.toList());
     }
 
     /*
@@ -1449,7 +1453,8 @@ public class RetriveCbicDetailsController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return allGstaList;
+        return allGstaList.stream()
+                .sorted(Comparator.comparing(GST4A::getSub_parameter_weighted_average).reversed()).collect(Collectors.toList());
     }
 
 
