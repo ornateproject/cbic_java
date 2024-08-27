@@ -1627,19 +1627,12 @@ public class TotalScoreController {
 
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
-				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
-				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-				//String next_month_new = DateCalculate.getNextMonth(month_date);
 				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Adjudication_5_ParticularZoneWise(month_date,zone_code);
-
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
 					double tScore = rsGst14aa.getDouble("parameter");
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
-					Integer insentavization = 0;
-					double sub_parameter_weighted_average = 0.00;
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = rsGst14aa.getString("COMM_NAME");
@@ -1649,13 +1642,13 @@ public class TotalScoreController {
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
+					Integer way_to_grade = 0;
+					Integer insentavization = 0;
+					double sub_parameter_weighted_average = 0.00;
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
-				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
-				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-				//String next_month_new = DateCalculate.getNextMonth(month_date);
 				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Adjudication_5_ParticularSubparameterWise(month_date,zone_code);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
