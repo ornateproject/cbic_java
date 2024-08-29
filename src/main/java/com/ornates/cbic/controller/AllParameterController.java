@@ -29,7 +29,7 @@ public class AllParameterController {
 
     /*
      * Date: july 2, 2024
-     * Purpose: This methods for performing check the database  .
+     * Purpose: This methods for performing check the database
      */
     @ResponseBody
     @RequestMapping(value = "/db_check")
