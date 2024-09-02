@@ -1741,13 +1741,14 @@ public class RetriveCbicDetailsController {
                     String zoneName = rsGst3aa.getString("ZONE_NAME");
                     String zoneCode = rsGst3aa.getString("ZONE_CODE");
                     Double t_score = rsGst3aa.getDouble("score_of_parameter4c");
-                    int col1_7=rsGst3aa.getInt("col1_7");
-                    int col1_8=rsGst3aa.getInt("col1_8");
+                    String absval = rsGst3aa.getString("avsvl");
+                    double col1_7=rsGst3aa.getInt("col1_7");
+                    double col1_8=rsGst3aa.getInt("col1_8");
                     int Zonal_rank = 0;
                     String gst = "no";
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
-                    String absval = String.valueOf(col1_7) + "/" + String.valueOf(col1_8);
+                   // String absval = String.valueOf(col1_7) + "/" + String.valueOf(col1_8);
 //                    if ((col1_8) != 0){
 //                        total =(((double) (col1_7) * 100)/(col1_8));
 //                    }

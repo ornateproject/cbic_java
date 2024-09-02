@@ -743,42 +743,45 @@ public class CGSTSubParameterWiseQuery {
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
         String queryGst14aa= "WITH FirstQuery AS (\n" +
                 "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
-                "           SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col1_7 \n" +
+                "    SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col1_7 \n" +
                 "    FROM mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 14c.MM_YYYY <= '"+ month_date+"' \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
                 "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                 "),\n" +
                 "SecondQuery AS (\n" +
                 "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
-                "           SUM(7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) AS col1_8 \n" +
+                "    SUM(7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) * 100 AS col1_8 -- convert crore into lakhs\n" +
                 "    FROM mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN mis_ddm_gst_1 AS 7c ON cc.COMM_CODE = 7c.COMM_CODE\n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 7c.MM_YYYY <= '"+ month_date+"' \n" +
+                "    WHERE 7c.MM_YYYY = '" + month_date + "' \n" +
                 "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                 ")\n" +
                 "SELECT \n" +
-                "    COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME, \n" +
+                "    COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME,\n" +
                 "    COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) AS ZONE_CODE, \n" +
                 "    fq.col1_7, sq.col1_8, \n" +
+                "    CONCAT((fq.col1_7), '/', (sq.col1_8)) AS avsvl,\n" +
                 "    (fq.col1_7 * 100 / sq.col1_8) AS score_of_parameter4c\n" +
                 "FROM FirstQuery fq\n" +
                 "LEFT JOIN SecondQuery sq ON fq.ZONE_CODE = sq.ZONE_CODE\n" +
+                "WHERE COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) REGEXP '^[0-9]+$'\n" +
                 "\n" +
-                "UNION ALL\n" +
+                "UNION ALL\t\t\n" +
                 "\n" +
                 "SELECT \n" +
-                "    COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME, \n" +
+                "    COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME,\n" +
                 "    COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) AS ZONE_CODE, \n" +
                 "    fq.col1_7, sq.col1_8, \n" +
+                "    CONCAT((fq.col1_7), '/', (sq.col1_8)) AS avsvl,\n" +
                 "    (fq.col1_7 * 100 / sq.col1_8) AS score_of_parameter4c\n" +
                 "FROM SecondQuery sq\n" +
                 "LEFT JOIN FirstQuery fq ON fq.ZONE_CODE = sq.ZONE_CODE\n" +
                 "WHERE fq.ZONE_CODE IS NULL\n" +
-                "\n" +
-                "ORDER BY score_of_parameter4c DESC;\n";
+                "AND COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) REGEXP '^[0-9]+$'\n" +
+                "ORDER BY score_of_parameter4c DESC;";
         return queryGst14aa;
     }
     public String QueryFor_gst4c_CommissonaryWise(String month_date, String zone_code){
@@ -1414,7 +1417,6 @@ public class CGSTSubParameterWiseQuery {
     }
     // ********************************************************************************************************************************
     public String QueryFor_gst6c_ZoneWise(String month_date){       //  gst6c is disposal
-        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
         String queryGst14aa="WITH disposal_data AS (\n" +
                 "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
