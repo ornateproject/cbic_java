@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @Controller
 public class TotalScoreController {
 	GradeScore score=new GradeScore();
+	double median =0.00;
 	@ResponseBody
 	@RequestMapping(value = "/")
 	public String home() {
@@ -754,7 +755,7 @@ public class TotalScoreController {
 		TotalScore totalScore = null;
 		Connection con = null;
 		ResultSet rsGst14aa = null;
-		double median =0.00;
+		//double median =0.00;
 
 		try {
 
@@ -1653,21 +1654,43 @@ public class TotalScoreController {
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
-					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
-					Integer insentavization = 0;
-					double sub_parameter_weighted_average = 0.00;
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
-					String gst =rsGst14aa.getString("gst");
-					String absval = rsGst14aa.getString("absolute_value");
-					double tScore = rsGst14aa.getDouble("score_of_subParameter") * 100;
-					String ra = rsGst14aa.getString("ra");
+					zone_code = rsGst14aa.getString("ZONE_CODE");
+					String gst = rsGst14aa.getString("gst");
+					String absval = rsGst14aa.getString("absvl");
+					Double t_score = rsGst14aa.getDouble("total_score");
+					median = rsGst14aa.getDouble("median");
+					Double numerator = rsGst14aa.getDouble("numerator");
+
+					String formattedTotal = String.format("%.2f", t_score);
+					double total_score = Double.parseDouble(formattedTotal);
+
+					int way_to_grade;
+					int insentavization;
+
+					// Logic based on parameter type
+					if ("GST5A".equalsIgnoreCase(gst)) {
+						way_to_grade = score.marks5a(total_score);
+						insentavization = score.marks5a(total_score);
+
+						if (numerator > median && way_to_grade < 10) {
+							insentavization += 1;
+						}
+					} else if ("GST5B".equalsIgnoreCase(gst)) {
+						way_to_grade = score.marks5b(total_score);
+						insentavization = way_to_grade;
+					} else {
+						// Default handling if parameter type is neither 3a nor 3b
+						way_to_grade = 0;
+						insentavization = 0;
+					}
+
 					Integer Zonal_rank = null;
 					String commName = "null";
+					String ra = "Adjudication";
 
-					String formattedTotal = String.format("%.2f", tScore);
-					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+					Double sub_parameter_weighted_average = insentavization * 0.5;
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
