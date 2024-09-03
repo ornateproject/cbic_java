@@ -792,7 +792,7 @@ public class CGSTSubParameterWiseQuery {
                 "        zc.ZONE_NAME, \n" +
                 "        cc.ZONE_CODE,\n" +
                 "        cc.COMM_NAME,\n" +
-                "        SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col1_7\n" +
+                "        14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT AS col1_7\n" +
                 "    FROM \n" +
                 "        mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN \n" +
@@ -802,17 +802,13 @@ public class CGSTSubParameterWiseQuery {
                 "    WHERE \n" +
                 "        14c.MM_YYYY = '" + month_date + "' \n" +
                 "        AND cc.ZONE_CODE = '" + zone_code + "'\n" +
-                "    GROUP BY \n" +
-                "        cc.ZONE_CODE, \n" +
-                "        zc.ZONE_NAME, \n" +
-                "        cc.COMM_NAME\n" +
                 "), \n" +
                 "SecondQuery AS (\n" +
                 "    SELECT \n" +
                 "        zc.ZONE_NAME, \n" +
                 "        cc.ZONE_CODE,\n" +
                 "        cc.COMM_NAME,\n" +
-                "        SUM(7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) * 100 AS col1_8 -- convert crore into lakhs\n" +
+                "        (7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) * 100 AS col1_8 -- convert crore into lakhs\n" +
                 "    FROM \n" +
                 "        mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN \n" +
@@ -822,11 +818,7 @@ public class CGSTSubParameterWiseQuery {
                 "    WHERE \n" +
                 "        7c.MM_YYYY = '" + month_date + "' \n" +
                 "        AND cc.ZONE_CODE = '" + zone_code + "'\n" +
-                "    GROUP BY \n" +
-                "        cc.ZONE_CODE, \n" +
-                "        zc.ZONE_NAME, \n" +
-                "        cc.COMM_NAME\n" +
-                ") \n" +
+                ")\n" +
                 "SELECT \n" +
                 "    COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME,\n" +
                 "    COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) AS ZONE_CODE,\n" +
@@ -871,7 +863,7 @@ public class CGSTSubParameterWiseQuery {
                 "        zc.ZONE_NAME, \n" +
                 "        cc.ZONE_CODE,\n" +
                 "        cc.COMM_NAME,\n" +
-                "        SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col1_7\n" +
+                "        14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT AS col1_7\n" +
                 "    FROM \n" +
                 "        mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN \n" +
@@ -880,18 +872,14 @@ public class CGSTSubParameterWiseQuery {
                 "        mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
                 "    WHERE \n" +
                 "        14c.MM_YYYY = '" + month_date + "' \n" +
-                "      \n" +
-                "    GROUP BY \n" +
-                "        cc.ZONE_CODE, \n" +
-                "        zc.ZONE_NAME, \n" +
-                "        cc.COMM_NAME\n" +
+                "       \n" +
                 "), \n" +
                 "SecondQuery AS (\n" +
                 "    SELECT \n" +
                 "        zc.ZONE_NAME, \n" +
                 "        cc.ZONE_CODE,\n" +
                 "        cc.COMM_NAME,\n" +
-                "        SUM(7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) * 100 AS col1_8 -- convert crore into lakhs\n" +
+                "        (7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) * 100 AS col1_8 -- convert crore into lakhs\n" +
                 "    FROM \n" +
                 "        mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN \n" +
@@ -900,12 +888,8 @@ public class CGSTSubParameterWiseQuery {
                 "        mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
                 "    WHERE \n" +
                 "        7c.MM_YYYY = '" + month_date + "' \n" +
-                "        \n" +
-                "    GROUP BY \n" +
-                "        cc.ZONE_CODE, \n" +
-                "        zc.ZONE_NAME, \n" +
-                "        cc.COMM_NAME\n" +
-                ") \n" +
+                "       \n" +
+                ")\n" +
                 "SELECT \n" +
                 "    COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME,\n" +
                 "    COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) AS ZONE_CODE,\n" +
@@ -1008,36 +992,34 @@ public class CGSTSubParameterWiseQuery {
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
         String queryGst14aa= "WITH may_data AS (\n" +
-                "    SELECT \n" +
-                "        cc.ZONE_CODE, \n" +
+                "    SELECT\n" +
+                "        cc.ZONE_CODE,\n" +
                 "        zc.ZONE_NAME,\n" +
-                "        cc.COMM_NAME, -- Added COMM_NAME\n" +
-                "        SUM(14c.REALISATION_CGST_AMT + 14c.REALISATION_IGST_AMT + 14c.REALISATION_SGST_AMT + 14c.REALISATION_CESS_AMT) AS col6_1,\n" +
-                "        SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col6_3 \n" +
-                "    FROM mis_gst_commcode AS cc \n" +
-                "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND cc.ZONE_CODE = '"+zone_code+"'\n" +
-                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
+                "        cc.COMM_NAME,\n" +
+                "        14c.REALISATION_CGST_AMT + 14c.REALISATION_IGST_AMT + 14c.REALISATION_SGST_AMT + 14c.REALISATION_CESS_AMT AS col6_1,\n" +
+                "        14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT AS col6_3\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND cc.ZONE_CODE = '" + zone_code + "'\n" +
                 "),\n" +
                 "april_data AS (\n" +
-                "    SELECT \n" +
-                "        cc.ZONE_CODE, \n" +
+                "    SELECT\n" +
+                "        cc.ZONE_CODE,\n" +
                 "        zc.ZONE_NAME,\n" +
-                "        cc.COMM_NAME, -- Added COMM_NAME\n" +
-                "        SUM(14c.REALISATION_CGST_AMT + 14c.REALISATION_IGST_AMT + 14c.REALISATION_SGST_AMT + 14c.REALISATION_CESS_AMT) AS col6_2,\n" +
-                "        SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col6_4\n" +
+                "        cc.COMM_NAME,\n" +
+                "        14c.REALISATION_CGST_AMT + 14c.REALISATION_IGST_AMT + 14c.REALISATION_SGST_AMT + 14c.REALISATION_CESS_AMT AS col6_2,\n" +
+                "        14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT AS col6_4\n" +
                 "    FROM mis_gst_commcode AS cc\n" +
-                "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND cc.ZONE_CODE = '"+zone_code+"'\n" +
-                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
+                "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND cc.ZONE_CODE = '" + zone_code + "'\n" +
                 ")\n" +
-                "SELECT \n" +
+                "SELECT\n" +
                 "    COALESCE(may_data.ZONE_CODE, april_data.ZONE_CODE) AS ZONE_CODE,\n" +
                 "    COALESCE(may_data.ZONE_NAME, april_data.ZONE_NAME) AS ZONE_NAME,\n" +
-                "    COALESCE(may_data.COMM_NAME, april_data.COMM_NAME) AS COMM_NAME, -- Added COMM_NAME\n" +
-                "    COALESCE(may_data.col6_1, 0) AS col6_1, \n" +
+                "    COALESCE(may_data.COMM_NAME, april_data.COMM_NAME) AS COMM_NAME,\n" +
+                "    COALESCE(may_data.col6_1, 0) AS col6_1,\n" +
                 "    COALESCE(may_data.col6_3, 0) AS col6_3,\n" +
                 "    COALESCE(april_data.col6_2, 0) AS col6_2,\n" +
                 "    COALESCE(april_data.col6_4, 0) AS col6_4,\n" +
@@ -1046,15 +1028,15 @@ public class CGSTSubParameterWiseQuery {
                 "        WHEN COALESCE(may_data.col6_3, 0) = 0 THEN 0\n" +
                 "        ELSE (COALESCE(may_data.col6_1, 0) / COALESCE(may_data.col6_3, 0)) * 100\n" +
                 "    END AS total_score\n" +
-                "FROM \n" +
+                "FROM\n" +
                 "    may_data\n" +
-                "LEFT JOIN april_data ON may_data.ZONE_CODE = april_data.ZONE_CODE AND may_data.COMM_NAME = april_data.COMM_NAME -- Added COMM_NAME in the join condition\n" +
+                "LEFT JOIN april_data ON may_data.ZONE_CODE = april_data.ZONE_CODE AND may_data.COMM_NAME = april_data.COMM_NAME\n" +
                 "UNION\n" +
-                "SELECT \n" +
+                "SELECT\n" +
                 "    COALESCE(may_data.ZONE_CODE, april_data.ZONE_CODE) AS ZONE_CODE,\n" +
                 "    COALESCE(may_data.ZONE_NAME, april_data.ZONE_NAME) AS ZONE_NAME,\n" +
-                "    COALESCE(may_data.COMM_NAME, april_data.COMM_NAME) AS COMM_NAME, -- Added COMM_NAME\n" +
-                "    COALESCE(may_data.col6_1, 0) AS col6_1, \n" +
+                "    COALESCE(may_data.COMM_NAME, april_data.COMM_NAME) AS COMM_NAME,\n" +
+                "    COALESCE(may_data.col6_1, 0) AS col6_1,\n" +
                 "    COALESCE(may_data.col6_3, 0) AS col6_3,\n" +
                 "    COALESCE(april_data.col6_2, 0) AS col6_2,\n" +
                 "    COALESCE(april_data.col6_4, 0) AS col6_4,\n" +
@@ -1063,9 +1045,9 @@ public class CGSTSubParameterWiseQuery {
                 "        WHEN COALESCE(may_data.col6_3, 0) = 0 THEN 0\n" +
                 "        ELSE (COALESCE(may_data.col6_1, 0) / COALESCE(may_data.col6_3, 0)) * 100\n" +
                 "    END AS total_score\n" +
-                "FROM \n" +
+                "FROM\n" +
                 "    may_data\n" +
-                "RIGHT JOIN april_data ON may_data.ZONE_CODE = april_data.ZONE_CODE AND may_data.COMM_NAME = april_data.COMM_NAME -- Added COMM_NAME in the join condition\n" +
+                "RIGHT JOIN april_data ON may_data.ZONE_CODE = april_data.ZONE_CODE AND may_data.COMM_NAME = april_data.COMM_NAME\n" +
                 "ORDER BY total_score DESC;\n";
         return queryGst14aa;
     }
@@ -1073,36 +1055,34 @@ public class CGSTSubParameterWiseQuery {
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
         String queryGst14aa="WITH may_data AS (\n" +
-                "    SELECT \n" +
-                "        cc.ZONE_CODE, \n" +
+                "    SELECT\n" +
+                "        cc.ZONE_CODE,\n" +
                 "        zc.ZONE_NAME,\n" +
-                "        cc.COMM_NAME, -- Added COMM_NAME\n" +
-                "        SUM(14c.REALISATION_CGST_AMT + 14c.REALISATION_IGST_AMT + 14c.REALISATION_SGST_AMT + 14c.REALISATION_CESS_AMT) AS col6_1,\n" +
-                "        SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col6_3 \n" +
-                "    FROM mis_gst_commcode AS cc \n" +
-                "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
-                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
+                "        cc.COMM_NAME,\n" +
+                "        14c.REALISATION_CGST_AMT + 14c.REALISATION_IGST_AMT + 14c.REALISATION_SGST_AMT + 14c.REALISATION_CESS_AMT AS col6_1,\n" +
+                "        14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT AS col6_3\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'  \n" +
                 "),\n" +
                 "april_data AS (\n" +
-                "    SELECT \n" +
-                "        cc.ZONE_CODE, \n" +
+                "    SELECT\n" +
+                "        cc.ZONE_CODE,\n" +
                 "        zc.ZONE_NAME,\n" +
-                "        cc.COMM_NAME, -- Added COMM_NAME\n" +
-                "        SUM(14c.REALISATION_CGST_AMT + 14c.REALISATION_IGST_AMT + 14c.REALISATION_SGST_AMT + 14c.REALISATION_CESS_AMT) AS col6_2,\n" +
-                "        SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col6_4\n" +
+                "        cc.COMM_NAME,\n" +
+                "        14c.REALISATION_CGST_AMT + 14c.REALISATION_IGST_AMT + 14c.REALISATION_SGST_AMT + 14c.REALISATION_CESS_AMT AS col6_2,\n" +
+                "        14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT AS col6_4\n" +
                 "    FROM mis_gst_commcode AS cc\n" +
-                "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
                 "    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
-                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
                 ")\n" +
-                "SELECT \n" +
+                "SELECT\n" +
                 "    COALESCE(may_data.ZONE_CODE, april_data.ZONE_CODE) AS ZONE_CODE,\n" +
                 "    COALESCE(may_data.ZONE_NAME, april_data.ZONE_NAME) AS ZONE_NAME,\n" +
-                "    COALESCE(may_data.COMM_NAME, april_data.COMM_NAME) AS COMM_NAME, -- Added COMM_NAME\n" +
-                "    COALESCE(may_data.col6_1, 0) AS col6_1, \n" +
+                "    COALESCE(may_data.COMM_NAME, april_data.COMM_NAME) AS COMM_NAME,\n" +
+                "    COALESCE(may_data.col6_1, 0) AS col6_1,\n" +
                 "    COALESCE(may_data.col6_3, 0) AS col6_3,\n" +
                 "    COALESCE(april_data.col6_2, 0) AS col6_2,\n" +
                 "    COALESCE(april_data.col6_4, 0) AS col6_4,\n" +
@@ -1111,15 +1091,15 @@ public class CGSTSubParameterWiseQuery {
                 "        WHEN COALESCE(may_data.col6_3, 0) = 0 THEN 0\n" +
                 "        ELSE (COALESCE(may_data.col6_1, 0) / COALESCE(may_data.col6_3, 0)) * 100\n" +
                 "    END AS total_score\n" +
-                "FROM \n" +
+                "FROM\n" +
                 "    may_data\n" +
-                "LEFT JOIN april_data ON may_data.ZONE_CODE = april_data.ZONE_CODE AND may_data.COMM_NAME = april_data.COMM_NAME -- Added COMM_NAME in the join condition\n" +
+                "LEFT JOIN april_data ON may_data.ZONE_CODE = april_data.ZONE_CODE AND may_data.COMM_NAME = april_data.COMM_NAME\n" +
                 "UNION\n" +
-                "SELECT \n" +
+                "SELECT\n" +
                 "    COALESCE(may_data.ZONE_CODE, april_data.ZONE_CODE) AS ZONE_CODE,\n" +
                 "    COALESCE(may_data.ZONE_NAME, april_data.ZONE_NAME) AS ZONE_NAME,\n" +
-                "    COALESCE(may_data.COMM_NAME, april_data.COMM_NAME) AS COMM_NAME, -- Added COMM_NAME\n" +
-                "    COALESCE(may_data.col6_1, 0) AS col6_1, \n" +
+                "    COALESCE(may_data.COMM_NAME, april_data.COMM_NAME) AS COMM_NAME,\n" +
+                "    COALESCE(may_data.col6_1, 0) AS col6_1,\n" +
                 "    COALESCE(may_data.col6_3, 0) AS col6_3,\n" +
                 "    COALESCE(april_data.col6_2, 0) AS col6_2,\n" +
                 "    COALESCE(april_data.col6_4, 0) AS col6_4,\n" +
@@ -1128,9 +1108,9 @@ public class CGSTSubParameterWiseQuery {
                 "        WHEN COALESCE(may_data.col6_3, 0) = 0 THEN 0\n" +
                 "        ELSE (COALESCE(may_data.col6_1, 0) / COALESCE(may_data.col6_3, 0)) * 100\n" +
                 "    END AS total_score\n" +
-                "FROM \n" +
+                "FROM\n" +
                 "    may_data\n" +
-                "RIGHT JOIN april_data ON may_data.ZONE_CODE = april_data.ZONE_CODE AND may_data.COMM_NAME = april_data.COMM_NAME -- Added COMM_NAME in the join condition\n" +
+                "RIGHT JOIN april_data ON may_data.ZONE_CODE = april_data.ZONE_CODE AND may_data.COMM_NAME = april_data.COMM_NAME\n" +
                 "ORDER BY total_score DESC;\n";
         return queryGst14aa;
     }
