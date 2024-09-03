@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 @Controller
 public class TotalScoreController {
 	GradeScore score=new GradeScore();
-	double median =0.00;
 	@ResponseBody
 	@RequestMapping(value = "/")
 	public String home() {
@@ -865,7 +864,7 @@ public class TotalScoreController {
 					String gst = rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absval");
 					Double t_score = rsGst14aa.getDouble("score_of_parameter");
-					median = rsGst14aa.getDouble("median_numerator");
+					Double median = rsGst14aa.getDouble("median_numerator");
 					Double numerator = rsGst14aa.getDouble("numerator");
 
 					String formattedTotal = String.format("%.2f", t_score);
@@ -1659,7 +1658,7 @@ public class TotalScoreController {
 					String gst = rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absvl");
 					Double t_score = rsGst14aa.getDouble("total_score");
-					median = rsGst14aa.getDouble("median");
+					Double median = rsGst14aa.getDouble("median");
 					Double numerator = rsGst14aa.getDouble("numerator");
 
 					String formattedTotal = String.format("%.2f", t_score);
@@ -1680,7 +1679,7 @@ public class TotalScoreController {
 						way_to_grade = score.marks5b(total_score);
 						insentavization = way_to_grade;
 					} else {
-						// Default handling if parameter type is neither 3a nor 3b
+						// Default handling if parameter type is neither 5a nor 5b
 						way_to_grade = 0;
 						insentavization = 0;
 					}
