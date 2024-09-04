@@ -1193,20 +1193,37 @@ public class CGSTSubParameterWiseQuery {
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
         String queryGst14aa= "WITH cte AS (\n" +
                 "    SELECT zc.ZONE_NAME,cc.COMM_NAME,cc.ZONE_CODE,\n" +
-                "           (14c.adc_commissionerate_disposal_no + 14c.adc_audit_disposal_no + 14c.adc_investigation_disposal_no + 14c.adc_callbook_disposal_no + 14c.dc_commissionerate_disposal_no + 14c.dc_audit_disposal_no + 14c.dc_investigation_disposal_no + 14c.dc_callbook_disposal_no + 14c.superintendent_commissionerate_disposal_no + 14c.superintendent_audit_disposal_no + 14c.superintendent_investigation_disposal_no + 14c.superintendent_callbook_disposal_no) as col10,\n" +
-                "           (14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + 14c.ADC_CALLBOOK_OPENING_NO + 14c.DC_COMMISSIONERATE_OPENING_NO + 14c.DC_AUDIT_OPENING_NO + 14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + 14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO + 14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO) as col4\n" +
+                "        (14c.adc_commissionerate_disposal_no + 14c.adc_audit_disposal_no + 14c.adc_investigation_disposal_no + \n" +
+                "         14c.adc_callbook_disposal_no + 14c.dc_commissionerate_disposal_no + 14c.dc_audit_disposal_no + \n" +
+                "         14c.dc_investigation_disposal_no + 14c.dc_callbook_disposal_no + \n" +
+                "         14c.superintendent_commissionerate_disposal_no + 14c.superintendent_audit_disposal_no + \n" +
+                "         14c.superintendent_investigation_disposal_no + 14c.superintendent_callbook_disposal_no) as col10,\n" +
+                "        (14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + \n" +
+                "         14c.ADC_CALLBOOK_OPENING_NO + 14c.DC_COMMISSIONERATE_OPENING_NO + 14c.DC_AUDIT_OPENING_NO + \n" +
+                "         14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + \n" +
+                "         14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO + \n" +
+                "         14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO) as col4\n" +
                 "    FROM mis_gst_commcode as cc\n" +
                 "    RIGHT JOIN mis_dpm_gst_adj_1 as 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                 "    LEFT JOIN mis_gst_zonecode as zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 14c.MM_YYYY = '"+month_date+"'\n" +
+                "    WHERE 14c.MM_YYYY = '2024-04-01'\n" +
+                "),\n" +
+                "median_cte AS (\n" +
+                "    SELECT col10,ROW_NUMBER() OVER (ORDER BY col10) as rn,\n" +
+                "        COUNT(*) OVER () as cnt\n" +
+                "    FROM cte\n" +
+                "),\n" +
+                "median_value AS (\n" +
+                "    SELECT AVG(col10) as median\n" +
+                "    FROM median_cte\n" +
+                "    WHERE rn IN (FLOOR((cnt + 1) / 2), CEIL((cnt + 1) / 2))\n" +
                 ")\n" +
                 "SELECT ZONE_NAME,COMM_NAME,ZONE_CODE,col10,col4,\n" +
-                "       CASE \n" +
-                "           WHEN col4 = 0 THEN 0 \n" +
-                "           ELSE col10 * 100 / col4 \n" +
-                "       END AS score_of_subparameter\n" +
+                "    CASE WHEN col4 = 0 THEN 0 ELSE col10 * 100 / col4 \n" +
+                "    END AS score_of_subparameter,\n" +
+                "    (SELECT median FROM median_value) as median\n" +
                 "FROM cte\n" +
-                "order by score_of_subparameter desc;";
+                "ORDER BY score_of_subparameter DESC;\n";
         return queryGst14aa;
     }
     // ********************************************************************************************************************************
