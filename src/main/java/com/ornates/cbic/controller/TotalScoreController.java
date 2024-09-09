@@ -2499,7 +2499,8 @@ public class TotalScoreController {
 				e.printStackTrace();
 			}
 		}
-		return allGstaList;
+		return allGstaList.stream()
+				.sorted(Comparator.comparing(TotalScore::getTotalScore).reversed()).collect(Collectors.toList());
 	}
 
 	/*
