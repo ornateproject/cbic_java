@@ -350,7 +350,10 @@ public class RetriveCbicDetailsController {
         }catch (SQLException e) {
             e.printStackTrace();
         }
-        return allGstaList;
+        return allGstaList.stream()
+                .sorted(Comparator.comparing(GST4A::getSub_parameter_weighted_average))
+                .collect(Collectors.toList());
+
     }
     /*
      * Date: May 04, 2024

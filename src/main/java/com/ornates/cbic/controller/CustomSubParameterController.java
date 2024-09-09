@@ -44,7 +44,7 @@ public class CustomSubParameterController {
         System.out.println("Connection :"+con);
         return "its working api";
     }
-    // conpleted codes are - 1, 4d, 5a, 5b,5c, 6a(only zone )---------no one is running properly
+    // conpleted codes are - 1, 2a, 4d, 5a, 5b,5c, 6a(only zone )---------no one is running properly
     @ResponseBody
     @RequestMapping(value = "/cus1")
     //  http://localhost:8080/cbicApi/cbic/custom/cus1?month_date=2015-03-01&type=zone
