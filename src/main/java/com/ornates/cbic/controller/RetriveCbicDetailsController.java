@@ -1146,22 +1146,29 @@ public class RetriveCbicDetailsController {
                     String ra = RelevantAspect.Gst3A_RA;
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
                     String commname=rsGst14aa.getString("COMM_NAME");
-                    Double t_score = rsGst14aa.getDouble("total_score");
-
                     int col1 = rsGst14aa.getInt("prev_col1");
                     int col2 = rsGst14aa.getInt("col2");
                     int col4 = rsGst14aa.getInt("col4");
                     int col9 = rsGst14aa.getInt("col9");
                     int col10 = rsGst14aa.getInt("col10");
-                    int Zonal_rank = 0;
-                    String gst = "no";
-                    int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
+                    Double t_score = rsGst14aa.getDouble("total_score");
+                    median = rsGst14aa.getDouble("median");
+                    Double numerator_3a = rsGst14aa.getDouble("numerator_3a");
+
                     String absval = String.valueOf(col4 + col9 + col10) + "/" + String.valueOf(col2 + col1);
                     String formattedTotal = String.format("%.2f", t_score);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.marks3a(totalScore);
-                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname,totalScore,absval,zoneCode,ra,
+                    int insentavization = score.marks3a(totalScore);
+
+                    if (numerator_3a > median && way_to_grade < 10) {
+                        insentavization += 1;
+                    }
+                    int Zonal_rank = 0;
+                    String gst = "no";
+
+                    Double sub_parameter_weighted_average = insentavization * 0.5 ;
+                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
@@ -1178,20 +1185,23 @@ public class RetriveCbicDetailsController {
                     int col4 = rsGst14aa.getInt("col4");
                     int col9 = rsGst14aa.getInt("col9");
                     int col10 = rsGst14aa.getInt("col10");
-                    int Zonal_rank = 0;
-                    String gst = "no";
-                    int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
+                    Double t_score = rsGst14aa.getDouble("total_score");
+                    median = rsGst14aa.getDouble("median");
+                    Double numerator_3a = rsGst14aa.getDouble("numerator_3a");
 
                     String absval = String.valueOf(col4 + col9 + col10) + "/" + String.valueOf(col2 + col1);
-                    if (col2 + col1 != 0) {
-                        total = (((double) (col4 + col9 + col10)) * 100 / (col2 + col1));
-                    }
-                    // rank = score.marks3a(total);
-                    String formattedTotal = String.format("%.2f", total);
+                    String formattedTotal = String.format("%.2f", t_score);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.marks3a(totalScore);
-                    // System.out.println(totalScore);
+                    int insentavization = score.marks3a(totalScore);
+
+                    if (numerator_3a > median && way_to_grade < 10) {
+                        insentavization += 1;
+                    }
+                    int Zonal_rank = 0;
+                    String gst = "no";
+
+                    Double sub_parameter_weighted_average = insentavization * 0.5 ;
                     gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
