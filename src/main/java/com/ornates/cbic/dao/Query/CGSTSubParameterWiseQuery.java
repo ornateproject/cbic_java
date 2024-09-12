@@ -1362,7 +1362,7 @@ public class CGSTSubParameterWiseQuery {
                 "    FROM mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 14c.MM_YYYY = '2024-04-01'\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
                 "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                 "),\n" +
                 "col3_data AS (\n" +
@@ -1370,7 +1370,7 @@ public class CGSTSubParameterWiseQuery {
                 "    FROM mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 14c.MM_YYYY = '2024-03-01'\n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
                 "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                 "),\n" +
                 "ranked_data AS (\n" +

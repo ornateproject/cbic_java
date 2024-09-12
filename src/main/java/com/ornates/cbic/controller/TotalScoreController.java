@@ -752,11 +752,11 @@ public class TotalScoreController {
 
 	@ResponseBody
 	@RequestMapping(value = "/scrutiny/assessment") //3  
-	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-05-01&type=parameter							// for scrutiny/assessment button
-	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-05-01&type=zone&zone_code=59 				// for all button
-	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-05-01&type=commissary&zone_code=59			// for show button, zone wise
-	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-05-01&type=all_commissary					// for all commissary
-	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2023-05-01&type=come_name&zone_code=64&come_name=Rajkot			// for only commissary wise, show button
+	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2024-04-01&type=parameter							// for scrutiny/assessment button
+	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2024-04-01&type=zone&zone_code=59 				// for all button
+	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2024-04-01&type=commissary&zone_code=59			// for show button, zone wise
+	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2024-04-01&type=all_commissary					// for all commissary
+	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2024-04-01&type=come_name&zone_code=64&come_name=Rajkot			// for only commissary wise, show button
 	public Object scrutinyAssessment(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code, @RequestParam(required = false) String come_name) {
 		List<TotalScore> allGstaList = new ArrayList<>();
 		TotalScore totalScore = null;
@@ -917,21 +917,49 @@ public class TotalScoreController {
 
 				while (rsGst14aa.next()) {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
-					Integer insentavization = 0;
-					double sub_parameter_weighted_average = 0.00;
+					//Integer way_to_grade = 0;
+					//Integer insentavization = 0;
+					//double sub_parameter_weighted_average = 0.00;
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					double tScore = rsGst14aa.getDouble("total_score");
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
+					double tScore_3a = rsGst14aa.getDouble("total_score");
+					double tScore_3b = rsGst14aa.getDouble("total_score");
+					Double median_3a = rsGst14aa.getDouble("median_numerator_3a");
+					Double numerator_3a = rsGst14aa.getDouble("numerator_3a");
+					Double median_3b = rsGst14aa.getDouble("median_numerator_3b");
+					Double numerator_3b = rsGst14aa.getDouble("numerator_3b");
 					String gst ="null";
 					String absval = "null";
 					String ra ="SCRUTINY & ASSESSMENT";
 
+					int way_to_grade3a = score.marks3a(tScore_3a);
+					int way_to_grade3b = score.marks3b(tScore_3b);
+
+					int insentavization3a = way_to_grade3a;
+					int insentavization3b = way_to_grade3b;
+
+					// Logic to adjust insentavization3a and insentavization3b based on the median and numerator values
+					if (numerator_3a > median_3a && way_to_grade3a < 10) {
+						insentavization3a += 1;
+					}
+					if (numerator_3b > median_3b && way_to_grade3b < 10) {
+						insentavization3b += 1;
+					}
+
+					Integer way_to_grade = way_to_grade3a + way_to_grade3b;
+					Integer insentavization = insentavization3a + insentavization3b;
+
+					double sub_parameter_weighted_average3a = insentavization3a * 0.5;
+					double sub_parameter_weighted_average3b = insentavization3b * 0.5;
+
+					double total_weighted_average = sub_parameter_weighted_average3a + sub_parameter_weighted_average3b;
+					double sub_parameter_weighted_average = 0.00;
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_weighted_average);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
