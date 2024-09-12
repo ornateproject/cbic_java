@@ -872,9 +872,9 @@ public class CustomSubParameterController {
     }
     @ResponseBody
     @RequestMapping(value = "/cus9a")
-    //  http://localhost:8080/cbicApi/cbic/custom/cus9a?month_date=2022-02-01&type=zone
-    //  http://localhost:8080/cbicApi/cbic/custom/cus9a?month_date=2022-02-01&zone_code=58&type=commissary
-    //  http://localhost:8080/cbicApi/cbic/custom/cus9a?month_date=2022-02-01&type=all_commissary
+    //  http://localhost:8080/cbicApi/cbic/custom/cus9a?month_date=2024-04-01&type=zone
+    //  http://localhost:8080/cbicApi/cbic/custom/cus9a?month_date=2024-04-01&zone_code=58&type=commissary
+    //  http://localhost:8080/cbicApi/cbic/custom/cus9a?month_date=2024-04-01&type=all_commissary
     public Object CustomGst9a(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code){
         List<GST4A> allGstaList = new ArrayList<>();
         GST4A gsta = null;
@@ -885,93 +885,162 @@ public class CustomSubParameterController {
         try {
             // Query string
             if (type.equalsIgnoreCase("zone")) {
-                String queryGst14aa ="";
+                //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+                String queryGst14aa ="SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
+                        "    SUM(CASE WHEN 14c.COMMODITY_CODE = 3 THEN 14c.SALE_QUAN ELSE 0 END) AS s3col9, \n" +
+                        "    SUM(CASE WHEN 14c.COMMODITY_CODE = 3 THEN PARTY_QUAN ELSE 0 END) AS s3col12, \n" +
+                        "    SUM(CASE WHEN 14c.COMMODITY_CODE = 3 THEN RECEIPT_QUAN ELSE 0 END) AS s3col5,\n" +
+                        "    SUM(CASE WHEN 14c.COMMODITY_CODE = 6 THEN 14c.SALE_QUAN ELSE 0 END) AS s6col9, \n" +
+                        "    SUM(CASE WHEN 14c.COMMODITY_CODE = 6 THEN PARTY_QUAN ELSE 0 END) AS s6col12, \n" +
+                        "    SUM(CASE WHEN 14c.COMMODITY_CODE = 6 THEN RECEIPT_QUAN ELSE 0 END) AS s6col5,\n" +
+                        "    ( \n" +
+                        "      (SUM(CASE WHEN 14c.COMMODITY_CODE = 3 THEN 14c.SALE_QUAN ELSE 0 END) + \n" +
+                        "       SUM(CASE WHEN 14c.COMMODITY_CODE = 3 THEN PARTY_QUAN ELSE 0 END) + \n" +
+                        "       SUM(CASE WHEN 14c.COMMODITY_CODE = 6 THEN 14c.SALE_QUAN ELSE 0 END) + \n" +
+                        "       SUM(CASE WHEN 14c.COMMODITY_CODE = 6 THEN PARTY_QUAN ELSE 0 END)) \n" +
+                        "      / \n" +
+                        "      (SUM(CASE WHEN 14c.COMMODITY_CODE = 3 THEN RECEIPT_QUAN ELSE 0 END) + \n" +
+                        "       SUM(CASE WHEN 14c.COMMODITY_CODE = 6 THEN RECEIPT_QUAN ELSE 0 END))\n" +
+                        "    ) AS total_score\n" +
+                        "FROM mis_gst_commcode AS cc \n" +
+                        "RIGHT JOIN mis_dol_cus_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
+                        "AND 14c.COMMODITY_CODE IN (3, 6)\n" +
+                        "GROUP BY zc.ZONE_NAME, cc.ZONE_CODE order by total_score desc ;\n";
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
 
                 while(rsGst14aa.next()) {
-                    String ra= CustomRelaventAspect.cus5B_RA;
+                    String ra= CustomRelaventAspect.cus9a_RA;
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    String zoneName =rsGst14aa.getString("ZONE_NAME");
                     String commname= "ALL";
-                    int col7d=rsGst14aa.getInt("col7d");
-                    int col6a=rsGst14aa.getInt("col6a");
+                    double s3col9=rsGst14aa.getDouble("s3col9");
+                    double s3col12=rsGst14aa.getDouble("s3col12");
+                    double s3col5=rsGst14aa.getDouble("s3col5");
+                    double s6col9=rsGst14aa.getDouble("s6col9");
+                    double s6col12=rsGst14aa.getDouble("s6col12");
+                    double s6col5=rsGst14aa.getDouble("s6col5");
+                    total=rsGst14aa.getDouble("total_score") * 100;
                     int Zonal_rank = 0;
                     String gst = "no";
                     int way_to_grade = 0;
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
-                    String absval=String.valueOf(col7d)+"/"+String.valueOf(col6a);
-
-                    if(col6a !=0){
-                        total = ((double) col7d * 100 / col6a);
-                    }else {
-                        total=0.00;
-                    }
+                    String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col5 + s6col5);
 
                     rank=score.c_marks5b(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
 
-            } else if (type.equalsIgnoreCase("commissary")) {  // cus5b
-                String queryGst14aa="";
+            } else if (type.equalsIgnoreCase("commissary")) {  // cus9a
+                //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+                String queryGst14aa="SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, \n" +
+                        "       SUM(CASE WHEN c.COMMODITY_CODE = 3 THEN c.SALE_QUAN ELSE 0 END) AS s3col9, \n" +
+                        "       SUM(CASE WHEN c.COMMODITY_CODE = 3 THEN c.PARTY_QUAN ELSE 0 END) AS s3col12, \n" +
+                        "       SUM(CASE WHEN c.COMMODITY_CODE = 3 THEN c.RECEIPT_QUAN ELSE 0 END) AS s3col5,\n" +
+                        "       SUM(CASE WHEN c.COMMODITY_CODE = 6 THEN c.SALE_QUAN ELSE 0 END) AS s6col9, \n" +
+                        "       SUM(CASE WHEN c.COMMODITY_CODE = 6 THEN c.PARTY_QUAN ELSE 0 END) AS s6col12, \n" +
+                        "       SUM(CASE WHEN c.COMMODITY_CODE = 6 THEN c.RECEIPT_QUAN ELSE 0 END) AS s6col5,\n" +
+                        "       (\n" +
+                        "         (SUM(CASE WHEN c.COMMODITY_CODE = 3 THEN c.SALE_QUAN ELSE 0 END) + \n" +
+                        "          SUM(CASE WHEN c.COMMODITY_CODE = 3 THEN c.PARTY_QUAN ELSE 0 END) + \n" +
+                        "          SUM(CASE WHEN c.COMMODITY_CODE = 6 THEN c.SALE_QUAN ELSE 0 END) + \n" +
+                        "          SUM(CASE WHEN c.COMMODITY_CODE = 6 THEN c.PARTY_QUAN ELSE 0 END)) \n" +
+                        "         / \n" +
+                        "         (SUM(CASE WHEN c.COMMODITY_CODE = 3 THEN c.RECEIPT_QUAN ELSE 0 END) + \n" +
+                        "          SUM(CASE WHEN c.COMMODITY_CODE = 6 THEN c.RECEIPT_QUAN ELSE 0 END))\n" +
+                        "       ) AS total_score\n" +
+                        "FROM mis_gst_commcode AS cc \n" +
+                        "RIGHT JOIN mis_dol_cus_1 AS c ON cc.COMM_CODE = c.COMM_CODE \n" +
+                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "WHERE c.MM_YYYY = '" + month_date + "'\n" +
+                        "AND c.COMMODITY_CODE IN (3, 6)\n" +
+                        "AND cc.ZONE_CODE = '" + zone_code + "'\n" +
+                        "GROUP BY zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME\n" +
+                        "ORDER BY total_score DESC;\n";
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
-                    String ra= CustomRelaventAspect.cus5B_RA;
+                    String ra= CustomRelaventAspect.cus9a_RA;
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
-                    String commname=rsGst14aa.getString("COMM_NAME");
-                    int col7d=rsGst14aa.getInt("col7d");
-                    int col6a=rsGst14aa.getInt("col6a");
+                    String zoneName =rsGst14aa.getString("ZONE_NAME");
+                    String commname= rsGst14aa.getString("COMM_NAME");
+                    double s3col9=rsGst14aa.getDouble("s3col9");
+                    double s3col12=rsGst14aa.getDouble("s3col12");
+                    double s3col5=rsGst14aa.getDouble("s3col5");
+                    double s6col9=rsGst14aa.getDouble("s6col9");
+                    double s6col12=rsGst14aa.getDouble("s6col12");
+                    double s6col5=rsGst14aa.getDouble("s6col5");
+                    total=rsGst14aa.getDouble("total_score") * 100;
                     int Zonal_rank = 0;
                     String gst = "no";
                     int way_to_grade = 0;
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
-                    String absval=String.valueOf(col7d)+"/"+String.valueOf(col6a);
-
-                    if(col6a !=0){
-                        total = ((double) col7d * 100 / col6a);
-                    }else {
-                        total=0.00;
-                    }
+                    String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col5 + s6col5);
 
                     rank=score.c_marks5b(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
-            }else if (type.equalsIgnoreCase("all_commissary")) {  // cus5b
-                String queryGst14aa="";
+            }else if (type.equalsIgnoreCase("all_commissary")) {  // cus9a
+                //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
 
+                String queryGst14aa="SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, \n" +
+                        "       SUM(CASE WHEN c.COMMODITY_CODE = 3 THEN c.SALE_QUAN ELSE 0 END) AS s3col9, \n" +
+                        "       SUM(CASE WHEN c.COMMODITY_CODE = 3 THEN c.PARTY_QUAN ELSE 0 END) AS s3col12, \n" +
+                        "       SUM(CASE WHEN c.COMMODITY_CODE = 3 THEN c.RECEIPT_QUAN ELSE 0 END) AS s3col5,\n" +
+                        "       SUM(CASE WHEN c.COMMODITY_CODE = 6 THEN c.SALE_QUAN ELSE 0 END) AS s6col9, \n" +
+                        "       SUM(CASE WHEN c.COMMODITY_CODE = 6 THEN c.PARTY_QUAN ELSE 0 END) AS s6col12, \n" +
+                        "       SUM(CASE WHEN c.COMMODITY_CODE = 6 THEN c.RECEIPT_QUAN ELSE 0 END) AS s6col5,\n" +
+                        "       (\n" +
+                        "         (SUM(CASE WHEN c.COMMODITY_CODE = 3 THEN c.SALE_QUAN ELSE 0 END) + \n" +
+                        "          SUM(CASE WHEN c.COMMODITY_CODE = 3 THEN c.PARTY_QUAN ELSE 0 END) + \n" +
+                        "          SUM(CASE WHEN c.COMMODITY_CODE = 6 THEN c.SALE_QUAN ELSE 0 END) + \n" +
+                        "          SUM(CASE WHEN c.COMMODITY_CODE = 6 THEN c.PARTY_QUAN ELSE 0 END)) \n" +
+                        "         / \n" +
+                        "         (SUM(CASE WHEN c.COMMODITY_CODE = 3 THEN c.RECEIPT_QUAN ELSE 0 END) + \n" +
+                        "          SUM(CASE WHEN c.COMMODITY_CODE = 6 THEN c.RECEIPT_QUAN ELSE 0 END))\n" +
+                        "       ) AS total_score\n" +
+                        "FROM mis_gst_commcode AS cc \n" +
+                        "RIGHT JOIN mis_dol_cus_1 AS c ON cc.COMM_CODE = c.COMM_CODE \n" +
+                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "WHERE c.MM_YYYY = '" + month_date + "' \n" +
+                        "AND c.COMMODITY_CODE IN (3, 6)\n" +
+                        "GROUP BY zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME\n" +
+                        "ORDER BY total_score DESC;\n";
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
-                    String ra= CustomRelaventAspect.cus5B_RA;
+                    String ra= CustomRelaventAspect.cus9a_RA;
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
-                    String commname=rsGst14aa.getString("COMM_NAME");
-                    int col7d=rsGst14aa.getInt("col7d");
-                    int col6a=rsGst14aa.getInt("col6a");
+                    String zoneName =rsGst14aa.getString("ZONE_NAME");
+                    String commname= rsGst14aa.getString("COMM_NAME");
+                    double s3col9=rsGst14aa.getDouble("s3col9");
+                    double s3col12=rsGst14aa.getDouble("s3col12");
+                    double s3col5=rsGst14aa.getDouble("s3col5");
+                    double s6col9=rsGst14aa.getDouble("s6col9");
+                    double s6col12=rsGst14aa.getDouble("s6col12");
+                    double s6col5=rsGst14aa.getDouble("s6col5");
+                    total=rsGst14aa.getDouble("total_score") * 100;
                     int Zonal_rank = 0;
                     String gst = "no";
                     int way_to_grade = 0;
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
-                    String absval=String.valueOf(col7d)+"/"+String.valueOf(col6a);
-
-                    if(col6a !=0){
-                        total = ((double) col7d * 100 / col6a);
-                    }else {
-                        total=0.00;
-                    }
+                    String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col5 + s6col5);
 
                     rank=score.c_marks5b(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
