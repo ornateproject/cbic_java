@@ -2248,11 +2248,11 @@ public class TotalScoreController {
 
 	@ResponseBody
 	@RequestMapping(value = "/refunds") //7
-	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2023-05-01&type=parameter							// for return filing button
-	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2023-05-01&type=zone&zone_code=59 				// for all button
-	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2023-05-01&type=commissary&zone_code=59			// for show button, zone wise
-	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2023-05-01&type=all_commissary					// for all commissary
-	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2023-05-01&type=come_name&zone_code=64&come_name=Rajkot			// for particular commissary wise, show button
+	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2024-04-01&type=parameter							// for return filing button
+	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2024-04-01&type=zone&zone_code=59 				// for all button
+	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2024-04-01&type=commissary&zone_code=59			// for show button, zone wise
+	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2024-04-01&type=all_commissary					// for all commissary
+	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2024-04-01&type=come_name&zone_code=64&come_name=Rajkot			// for particular commissary wise, show button
 	public Object refunds(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code, @RequestParam(required = false) String come_name) {
 		List<TotalScore> allGstaList = new ArrayList<>();
 		TotalScore totalScore = null;
@@ -2305,39 +2305,37 @@ public class TotalScoreController {
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "-- First query to get the COMM_NAME\n" +
-						"WITH calculated_values_1 AS (\n" +
-						"    SELECT  cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME, \n" +
-						"        SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO) AS col16,\n" +
-						"        SUM(dpm.age_breakup_above60_no) AS col22,\n" +
-						"        SUM(dpm.age_breakup_above60_no) * 1.0 / NULLIF(SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO), 0) AS total_score\n" +
-						"    FROM mis_gst_commcode AS cc\n" +
-						"    RIGHT JOIN mis_dpm_gst_4 AS dpm ON cc.COMM_CODE = dpm.COMM_CODE\n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-						"    WHERE dpm.MM_YYYY = '" + month_date + "' AND cc.ZONE_CODE = '" + zone_code + "'\n" +
-						"    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
+				String query_assessment = "WITH calculated_values_1 AS (\n" +
+						"SELECT  cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME, \n" +
+						"SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO) AS col16,\n" +
+						"SUM(dpm.age_breakup_above60_no) AS col22,\n" +
+						"SUM(dpm.age_breakup_above60_no) * 1.0 / NULLIF(SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO), 0) AS total_score\n" +
+						"FROM mis_gst_commcode AS cc\n" +
+						"RIGHT JOIN mis_dpm_gst_4 AS dpm ON cc.COMM_CODE = dpm.COMM_CODE\n" +
+						"LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+						"WHERE dpm.MM_YYYY = '2024-04-01' AND cc.ZONE_CODE = '56'\n" +
+						"GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
 						"),\n" +
 						"calculated_values_2 AS (\n" +
-						"    SELECT  cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME, \n" +
-						"        SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO) AS col16,\n" +
-						"        SUM(dpm.age_breakup_above60_no) AS col22,\n" +
-						"        SUM(dpm.age_breakup_above60_no) * 1.0 / NULLIF(SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO), 0) AS total_score\n" +
-						"    FROM mis_gst_commcode AS cc\n" +
-						"    RIGHT JOIN mis_dpm_gst_4 AS dpm ON cc.COMM_CODE = dpm.COMM_CODE\n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-						"    WHERE dpm.MM_YYYY = '" + month_date + "'\n" +
-						"    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
+						"SELECT  cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME, \n" +
+						"SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO) AS col16,\n" +
+						"SUM(dpm.age_breakup_above60_no) AS col22,\n" +
+						"SUM(dpm.age_breakup_above60_no) * 1.0 / NULLIF(SUM(dpm.opening_balance_no + dpm.RFD_01_NO - dpm.RFD_03_NO - dpm.RFD_06_SANCTIONED_NO - dpm.RFD_06_REJECTED_NO), 0) AS total_score\n" +
+						"FROM mis_gst_commcode AS cc\n" +
+						"RIGHT JOIN mis_dpm_gst_4 AS dpm ON cc.COMM_CODE = dpm.COMM_CODE\n" +
+						"LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+						"WHERE dpm.MM_YYYY = '2024-04-01' GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
 						"),\n" +
 						"ranked_values AS (\n" +
-						"    SELECT cv2.ZONE_CODE, cv2.ZONE_NAME, cv2.COMM_NAME, cv2.col16, cv2.col22, cv2.total_score,\n" +
-						"           ROW_NUMBER() OVER (ORDER BY cv2.total_score) AS z_rank\n" +
-						"    FROM calculated_values_2 cv2\n" +
+						"SELECT cv2.ZONE_CODE, cv2.ZONE_NAME, cv2.COMM_NAME, cv2.col16, cv2.col22, cv2.total_score,\n" +
+						"ROW_NUMBER() OVER (ORDER BY cv2.total_score) AS z_rank\n" +
+						"FROM calculated_values_2 cv2\n" +
 						")\n" +
-						"SELECT rv.ZONE_CODE, rv.ZONE_NAME, rv.COMM_NAME, rv.col16, rv.col22, rv.total_score, rv.z_rank\n" +
+						"SELECT rv.ZONE_CODE, rv.ZONE_NAME, rv.COMM_NAME, rv.col16, rv.col22, \n" +
+						"concat(rv.col22,'/',rv.col16) as absval, rv.total_score, rv.z_rank\n" +
 						"FROM ranked_values rv\n" +
-						"JOIN (SELECT DISTINCT COMM_NAME FROM calculated_values_1) cv1\n" +
-						"ON rv.COMM_NAME = cv1.COMM_NAME\n" +
-						"ORDER BY rv.z_rank;\n";
+						"JOIN (SELECT DISTINCT COMM_NAME FROM calculated_values_1) cv1 ON rv.COMM_NAME = cv1.COMM_NAME\n" +
+						"ORDER BY rv.z_rank;";
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -2348,7 +2346,7 @@ public class TotalScoreController {
 					Zonal_rank = rsGst14aa.getInt("z_rank");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String gst = "null";
-					String absval = "null";
+					String absval = rsGst14aa.getString("absval");
 					//String ra ="null";
 					String ra = RelevantAspect.Gst7_RA;
 					String commName = rsGst14aa.getString("COMM_NAME");
