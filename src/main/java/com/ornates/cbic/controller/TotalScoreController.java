@@ -2413,7 +2413,7 @@ public class TotalScoreController {
 						"FROM mis_gst_commcode AS cc\n" +
 						"RIGHT JOIN mis_dpm_gst_4 AS dpm ON cc.COMM_CODE = dpm.COMM_CODE\n" +
 						"LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-						"WHERE dpm.MM_YYYY = '2024-04-01'\n" +
+						"WHERE dpm.MM_YYYY = '" + month_date + "'\n" +
 						"GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
 						")\n" +
 						"SELECT ZONE_CODE, ZONE_NAME, COMM_NAME, col16,col22,total_score,\n" +
