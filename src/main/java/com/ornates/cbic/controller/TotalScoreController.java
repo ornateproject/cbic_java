@@ -579,12 +579,16 @@ public class TotalScoreController {
 
 				while (rsGst14aa.next()) {
 					double tScore = rsGst14aa.getDouble("total_score") * 100;
+					int col21=rsGst14aa.getInt("col21");
+					int col3=rsGst14aa.getInt("col3");
+
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					Integer insentavization = 0;
 					Zonal_rank = rsGst14aa.getInt("z_rank");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String gst = "null";
-					String absval = "null";
+					//String absval = "null";
+					String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
 					//String ra ="null";
 					String ra=RelevantAspect.Gst2_RA;
 					String commName = rsGst14aa.getString("COMM_NAME");
@@ -654,12 +658,15 @@ public class TotalScoreController {
 				while (rsGst14aa.next()) {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					Integer insentavization = 0;
+					int col21=rsGst14aa.getInt("col21");
+					int col3=rsGst14aa.getInt("col3");
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					double tScore = rsGst14aa.getDouble("total_score") * 100;
 					Zonal_rank = rsGst14aa.getInt("z_rank");
 					String gst = "null";
-					String absval = "null";
+					String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
+					//String absval = "null";
 					//String ra ="null";
 					String ra=RelevantAspect.Gst2_RA;
 
@@ -741,6 +748,7 @@ public class TotalScoreController {
 
 		return allGstaList;
 	}
+
 
 	@ResponseBody
 	@RequestMapping(value = "/scrutiny/assessment") //3  
