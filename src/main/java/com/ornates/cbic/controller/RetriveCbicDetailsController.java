@@ -1397,14 +1397,9 @@ public class RetriveCbicDetailsController {
                 System.out.println("gst3b median zone wise:- " + median); //**************************** for testing ******************************************
             }else if (type.equalsIgnoreCase("commissary")) {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
-
                 // Query string
                 String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst3b_CommissonaryWise(month_date,zone_code);
-
-
-                //Prepared Statement
                 PreparedStatement psGst14aa=con.prepareStatement(queryGst14aa);
-                //Result Set
                 ResultSet rsGst14aa= psGst14aa.executeQuery();
 
                 while(rsGst14aa.next() ) {
@@ -1447,17 +1442,23 @@ public class RetriveCbicDetailsController {
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
                     String absval=rsGst14aa.getString("absval");
-                    double total = rsGst14aa.getDouble("score_of_parameter") * 100;
-                    int Zonal_rank = 0;
-                    String gst = "no";
-                    int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
+                    double t_score = rsGst14aa.getDouble("score_of_parameter") * 100;
+                    median = rsGst14aa.getDouble("median_3b");
+                    Double numerator_3b = rsGst14aa.getDouble("numerator_3b");
 
 
-                    // rank=score.marks3b(total);
-                    String formattedTotal = String.format("%.2f", total);
+                    String formattedTotal = String.format("%.2f", t_score);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.marks3b(totalScore);
+                    int insentavization = score.marks3b(totalScore);
+
+                    if (numerator_3b > median && way_to_grade < 10) {
+                        insentavization += 1;
+                    }
+                    int Zonal_rank = 0;
+                    String gst = "no";
+
+                    Double sub_parameter_weighted_average = insentavization * 0.5 ;
                     gsta=new GST4A(zoneName, commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
