@@ -997,21 +997,46 @@ public class TotalScoreController {
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
+					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					zone_code = rsGst14aa.getString("ZONE_CODE");
+					String commName = rsGst14aa.getString("COMM_NAME");
 					Integer way_to_grade = 0;
 					Integer insentavization = 0;
-					double sub_parameter_weighted_average = 0.00;
-					String zoneName = rsGst14aa.getString("ZONE_NAME");
-					String commName = rsGst14aa.getString("COMM_NAME");
-					double tScore = rsGst14aa.getDouble("score_of_parameter") * 100;
+					//double sub_parameter_weighted_average = 0.00;
+					double tScore = rsGst14aa.getDouble("score_of_parameter");
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absvl");
+					Double median = rsGst14aa.getDouble("median");
+					Double numerator_3a = rsGst14aa.getDouble("numerator_3a");
+					Double numerator_3b = rsGst14aa.getDouble("numerator_3b");
 					String ra ="SCRUTINY & ASSESSMENT";
 					Integer Zonal_rank = null;
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
+
+					// Logic based on parameter type
+					if ("GST3A".equalsIgnoreCase(gst)) {
+						way_to_grade = score.marks3a(total_score);
+						insentavization = score.marks3a(total_score);
+
+						if (numerator_3a > median && way_to_grade < 10) {
+							insentavization += 1;
+						}
+					} else if ("GST3B".equalsIgnoreCase(gst)) {
+						way_to_grade = score.marks3b(total_score);
+						insentavization = score.marks3b(total_score);
+
+						if (numerator_3b > median && way_to_grade < 10) {
+							insentavization += 1;
+						}
+					} else {
+						// Default handling if parameter type is neither 3a nor 3b
+						way_to_grade = 0;
+						insentavization = 0;
+					}
+					Double sub_parameter_weighted_average = insentavization * 0.5;
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}

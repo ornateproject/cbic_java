@@ -557,53 +557,206 @@ public class CGSTParameterWiseQuery {
     public String QueryForScrutinyAssessment_3_ParticularCommissonaryInSubparameter(String month_date, String zone_code,String come_name){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-
-        String query_assessment = "WITH PreviousMonthData AS (\n" +
-                "    SELECT zc.ZONE_NAME AS prev_ZONE_NAME, cc.COMM_NAME AS prev_COMM_NAME, cc.ZONE_CODE AS prev_ZONE_CODE,  \n" +
-                "        14c.CLOSING_NO AS prev_col1 \n" +
+        String query_assessment ="WITH PreviousMonthData AS (\n" +
+                "    SELECT zc.ZONE_NAME AS prev_ZONE_NAME, \n" +
+                "           cc.COMM_NAME AS prev_COMM_NAME, \n" +
+                "           cc.ZONE_CODE AS prev_ZONE_CODE,  \n" +
+                "           14c.CLOSING_NO AS prev_col1\n" +
+                "    FROM mis_gst_commcode AS cc \n" +
+                "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c \n" +
+                "        ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc \n" +
+                "        ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' \n" +
+                "),\n" +
+                "Parameter3a AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, \n" +
+                "        ((14c.SCRUTINIZED_DISCRIPANCY_FOUND + 14c.OUTCOME_ASMT_12_ISSUED + 14c.OUTCOME_SECTION_61) * 100) / \n" +
+                "        (pm.prev_col1 + 14c.RETURN_SCRUTINY) AS score_of_parameter3a,\n" +
+                "        CONCAT((14c.SCRUTINIZED_DISCRIPANCY_FOUND + 14c.OUTCOME_ASMT_12_ISSUED + 14c.OUTCOME_SECTION_61), '/', \n" +
+                "        (pm.prev_col1 + 14c.RETURN_SCRUTINY)) AS absvl3a\n" +
                 "    FROM mis_gst_commcode AS cc \n" +
                 "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' and zc.ZONE_CODE = '" + zone_code + "' and cc.COMM_NAME = '" + come_name + "'\n" +
+                "    LEFT JOIN PreviousMonthData AS pm ON pm.prev_ZONE_CODE = cc.ZONE_CODE \n" +
+                "    AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+                "    GROUP BY zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, 14c.SCRUTINIZED_DISCRIPANCY_FOUND, \n" +
+                "             14c.OUTCOME_ASMT_12_ISSUED, 14c.OUTCOME_SECTION_61, 14c.RETURN_SCRUTINY, pm.prev_col1\n" +
+                "),\n" +
+                "Parameter3b AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.COMM_NAME, zc.ZONE_CODE,\n" +
+                "       (SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) * 100 / \n" +
+                "        SUM(14c.TAX_LIABILITY_DETECTECT)) AS score_of_parameter3b,\n" +
+                "        CONCAT(SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY), '/', \n" +
+                "        SUM(14c.TAX_LIABILITY_DETECTECT)) AS absvl3b\n" +
+                "    FROM mis_gst_commcode AS cc \n" +
+                "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+                "    GROUP BY zc.ZONE_NAME, cc.COMM_NAME, zc.ZONE_CODE\n" +
+                "),\n" +
+                "ComputedScores AS (\n" +
+                "    SELECT p3a.ZONE_NAME, p3a.COMM_NAME, p3a.ZONE_CODE, \n" +
+                "           COALESCE(p3a.score_of_parameter3a, 0) AS score_of_parameter3a,\n" +
+                "           p3a.absvl3a,\n" +
+                "           COALESCE(p3b.score_of_parameter3b, 0) AS score_of_parameter3b,\n" +
+                "           p3b.absvl3b,\n" +
+                "           ((COALESCE(p3a.score_of_parameter3a, 0) * 0.5 * 10) + (COALESCE(p3b.score_of_parameter3b, 0) * 0.5 * 10)) / 10 AS total_score,\n" +
+                "           CAST(SUBSTRING_INDEX(p3a.absvl3a, '/', 1) AS DECIMAL(10, 2)) AS numerator_3a,\n" +
+                "           CAST(SUBSTRING_INDEX(p3b.absvl3b, '/', 1) AS DECIMAL(10, 2)) AS numerator_3b\n" +
+                "    FROM Parameter3a AS p3a\n" +
+                "    JOIN Parameter3b AS p3b ON p3a.ZONE_CODE = p3b.ZONE_CODE AND p3a.COMM_NAME = p3b.COMM_NAME\n" +
+                "),\n" +
+                "MedianCalculation AS (\n" +
+                "    SELECT AVG(mid_value) AS median_numerator_3a\n" +
+                "    FROM (\n" +
+                "        SELECT numerator_3a AS mid_value,\n" +
+                "               ROW_NUMBER() OVER (ORDER BY numerator_3a) AS rn_asc,\n" +
+                "               ROW_NUMBER() OVER (ORDER BY numerator_3a DESC) AS rn_desc\n" +
+                "        FROM ComputedScores\n" +
+                "    ) AS ranked\n" +
+                "    WHERE rn_asc = rn_desc\n" +
+                "       OR rn_asc + 1 = rn_desc\n" +
+                "       OR rn_asc = rn_desc + 1\n" +
+                "),\n" +
+                "MedianCalculation_3b AS (\n" +
+                "    SELECT AVG(mid_value) AS median_numerator_3b\n" +
+                "    FROM (\n" +
+                "        SELECT numerator_3b AS mid_value,\n" +
+                "               ROW_NUMBER() OVER (ORDER BY numerator_3b) AS rn_asc,\n" +
+                "               ROW_NUMBER() OVER (ORDER BY numerator_3b DESC) AS rn_desc\n" +
+                "        FROM ComputedScores\n" +
+                "    ) AS ranked\n" +
+                "    WHERE rn_asc = rn_desc\n" +
+                "       OR rn_asc + 1 = rn_desc\n" +
+                "       OR rn_asc = rn_desc + 1\n" +
+                "),\n" +
+                "ParameterData AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, \n" +
+                "           COALESCE(\n" +
+                "               (14c.SCRUTINIZED_DISCRIPANCY_FOUND + 14c.OUTCOME_ASMT_12_ISSUED + 14c.OUTCOME_SECTION_61) / \n" +
+                "               (pm.prev_col1 + 14c.RETURN_SCRUTINY), 0\n" +
+                "           ) * 100 AS score_of_parameter,\n" +
+                "           CONCAT(\n" +
+                "               (14c.SCRUTINIZED_DISCRIPANCY_FOUND + 14c.OUTCOME_ASMT_12_ISSUED + 14c.OUTCOME_SECTION_61), \n" +
+                "               '/', \n" +
+                "               (pm.prev_col1 + 14c.RETURN_SCRUTINY)\n" +
+                "           ) AS absvl, \n" +
+                "           'GST3A' AS gst\n" +
+                "    FROM mis_gst_commcode AS cc \n" +
+                "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c \n" +
+                "        ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc \n" +
+                "        ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    LEFT JOIN PreviousMonthData AS pm \n" +
+                "        ON pm.prev_ZONE_CODE = cc.ZONE_CODE \n" +
+                "       AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+                "    AND zc.ZONE_CODE = '" + zone_code + "' \n" +
+                "    AND cc.COMM_NAME = '" + come_name + "'\n" +
+                "    GROUP BY zc.ZONE_NAME, \n" +
+                "             cc.COMM_NAME, \n" +
+                "             cc.ZONE_CODE, \n" +
+                "             14c.SCRUTINIZED_DISCRIPANCY_FOUND, \n" +
+                "             14c.OUTCOME_ASMT_12_ISSUED, \n" +
+                "             14c.OUTCOME_SECTION_61, \n" +
+                "             14c.RETURN_SCRUTINY, \n" +
+                "             pm.prev_col1\n" +
+                "\n" +
+                "    UNION ALL\n" +
+                "\n" +
+                "    SELECT zc.ZONE_NAME, \n" +
+                "           cc.COMM_NAME, \n" +
+                "           zc.ZONE_CODE, \n" +
+                "           COALESCE(\n" +
+                "               SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / \n" +
+                "               SUM(14c.TAX_LIABILITY_DETECTECT), 0\n" +
+                "           ) * 100 AS score_of_parameter,\n" +
+                "           CONCAT(\n" +
+                "               SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY), \n" +
+                "               '/', \n" +
+                "               SUM(14c.TAX_LIABILITY_DETECTECT)\n" +
+                "           ) AS absvl, \n" +
+                "           'GST3B' AS gst\n" +
+                "    FROM mis_gst_commcode AS cc \n" +
+                "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c \n" +
+                "        ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc \n" +
+                "        ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
+                "    AND zc.ZONE_CODE = '" + zone_code + "' \n" +
+                "    AND cc.COMM_NAME = '" + come_name + "'\n" +
+                "    GROUP BY zc.ZONE_NAME, \n" +
+                "             cc.COMM_NAME, \n" +
+                "             zc.ZONE_CODE\n" +
                 ")\n" +
-                "SELECT zc.ZONE_NAME,cc.COMM_NAME,cc.ZONE_CODE, \n" +
-                "    COALESCE((14c.SCRUTINIZED_DISCRIPANCY_FOUND + 14c.OUTCOME_ASMT_12_ISSUED + 14c.OUTCOME_SECTION_61) / (pm.prev_col1 + 14c.RETURN_SCRUTINY), \n" +
-                "        0\n" +
-                "    ) AS score_of_parameter,\n" +
-                "    concat(\n" +
-                "        (14c.SCRUTINIZED_DISCRIPANCY_FOUND + 14c.OUTCOME_ASMT_12_ISSUED + 14c.OUTCOME_SECTION_61),\n" +
-                "        '/',\n" +
-                "        (pm.prev_col1 + 14c.RETURN_SCRUTINY)\n" +
-                "    ) AS absvl, \n" +
-                "    \"GST3A\" AS gst, \n" +
-                "    \"Number of Returns whose scrutiny completed for the month vis-à-vis total Returns pending for the month (Pro-rata basis)\" AS ra\n" +
-                "FROM mis_gst_commcode AS cc \n" +
-                "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "LEFT JOIN PreviousMonthData AS pm ON pm.prev_ZONE_CODE = cc.ZONE_CODE AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
-                "WHERE 14c.MM_YYYY = '" + month_date + "' AND zc.ZONE_CODE = '" + zone_code + "' AND cc.COMM_NAME = '" + come_name + "'\n" +
-                "GROUP BY zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, \n" +
-                "14c.SCRUTINIZED_DISCRIPANCY_FOUND, 14c.OUTCOME_ASMT_12_ISSUED, 14c.OUTCOME_SECTION_61, 14c.RETURN_SCRUTINY, pm.prev_col1\n" +
-                "\n" +
-                "UNION ALL\n" +
-                "\n" +
-                "SELECT zc.ZONE_NAME,cc.COMM_NAME,zc.ZONE_CODE,\n" +
-                "    COALESCE(\n" +
-                "        SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / SUM(14c.TAX_LIABILITY_DETECTECT), \n" +
-                "        0\n" +
-                "    ) AS score_of_parameter, \n" +
-                "    concat(\n" +
-                "        SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY),\n" +
-                "        '/',\n" +
-                "        SUM(14c.TAX_LIABILITY_DETECTECT)\n" +
-                "    ) AS absvl,\n" +
-                "    \"GST3B\" AS gst, \n" +
-                "    \"Recoveries made upto the month vis-a-vis detections upto the month\" AS ra\n" +
-                "FROM mis_gst_commcode AS cc \n" +
-                "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "WHERE 14c.MM_YYYY <= '" + month_date + "' AND zc.ZONE_CODE = '" + zone_code + "' AND cc.COMM_NAME = '" + come_name + "'\n" +
-                "GROUP BY zc.ZONE_NAME, cc.COMM_NAME, zc.ZONE_CODE;\n";
+                "SELECT pd.ZONE_NAME, \n" +
+                "       pd.COMM_NAME, \n" +
+                "       pd.ZONE_CODE, \n" +
+                "       pd.score_of_parameter,\n" +
+                "       pd.absvl,\n" +
+                "       pd.gst,\n" +
+                "       CASE \n" +
+                "           WHEN pd.gst = 'GST3A' THEN COALESCE(mc.median_numerator_3a, 0)\n" +
+                "           WHEN pd.gst = 'GST3B' THEN COALESCE(mc3b.median_numerator_3b, 0)\n" +
+                "       END AS median,\n" +
+                "       cs.numerator_3a,\n" +
+                "       cs.numerator_3b\n" +
+                "FROM ParameterData AS pd\n" +
+                "CROSS JOIN MedianCalculation AS mc\n" +
+                "CROSS JOIN MedianCalculation_3b AS mc3b\n" +
+                "LEFT JOIN ComputedScores AS cs \n" +
+                "    ON pd.ZONE_CODE = cs.ZONE_CODE \n" +
+                "   AND pd.COMM_NAME = cs.COMM_NAME\n" +
+                "ORDER BY pd.gst, pd.ZONE_CODE, pd.COMM_NAME;\n";
+
+//        String query_assessment = "WITH PreviousMonthData AS (\n" +
+//                "    SELECT zc.ZONE_NAME AS prev_ZONE_NAME, cc.COMM_NAME AS prev_COMM_NAME, cc.ZONE_CODE AS prev_ZONE_CODE,  \n" +
+//                "        14c.CLOSING_NO AS prev_col1 \n" +
+//                "    FROM mis_gst_commcode AS cc \n" +
+//                "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+//                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+//                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' and zc.ZONE_CODE = '" + zone_code + "' and cc.COMM_NAME = '" + come_name + "'\n" +
+//                ")\n" +
+//                "SELECT zc.ZONE_NAME,cc.COMM_NAME,cc.ZONE_CODE, \n" +
+//                "    COALESCE((14c.SCRUTINIZED_DISCRIPANCY_FOUND + 14c.OUTCOME_ASMT_12_ISSUED + 14c.OUTCOME_SECTION_61) / (pm.prev_col1 + 14c.RETURN_SCRUTINY), \n" +
+//                "        0\n" +
+//                "    ) AS score_of_parameter,\n" +
+//                "    concat(\n" +
+//                "        (14c.SCRUTINIZED_DISCRIPANCY_FOUND + 14c.OUTCOME_ASMT_12_ISSUED + 14c.OUTCOME_SECTION_61),\n" +
+//                "        '/',\n" +
+//                "        (pm.prev_col1 + 14c.RETURN_SCRUTINY)\n" +
+//                "    ) AS absvl, \n" +
+//                "    \"GST3A\" AS gst, \n" +
+//                "    \"Number of Returns whose scrutiny completed for the month vis-à-vis total Returns pending for the month (Pro-rata basis)\" AS ra\n" +
+//                "FROM mis_gst_commcode AS cc \n" +
+//                "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+//                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+//                "LEFT JOIN PreviousMonthData AS pm ON pm.prev_ZONE_CODE = cc.ZONE_CODE AND pm.prev_COMM_NAME = cc.COMM_NAME\n" +
+//                "WHERE 14c.MM_YYYY = '" + month_date + "' AND zc.ZONE_CODE = '" + zone_code + "' AND cc.COMM_NAME = '" + come_name + "'\n" +
+//                "GROUP BY zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, \n" +
+//                "14c.SCRUTINIZED_DISCRIPANCY_FOUND, 14c.OUTCOME_ASMT_12_ISSUED, 14c.OUTCOME_SECTION_61, 14c.RETURN_SCRUTINY, pm.prev_col1\n" +
+//                "\n" +
+//                "UNION ALL\n" +
+//                "\n" +
+//                "SELECT zc.ZONE_NAME,cc.COMM_NAME,zc.ZONE_CODE,\n" +
+//                "    COALESCE(\n" +
+//                "        SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) / SUM(14c.TAX_LIABILITY_DETECTECT), \n" +
+//                "        0\n" +
+//                "    ) AS score_of_parameter, \n" +
+//                "    concat(\n" +
+//                "        SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY),\n" +
+//                "        '/',\n" +
+//                "        SUM(14c.TAX_LIABILITY_DETECTECT)\n" +
+//                "    ) AS absvl,\n" +
+//                "    \"GST3B\" AS gst, \n" +
+//                "    \"Recoveries made upto the month vis-a-vis detections upto the month\" AS ra\n" +
+//                "FROM mis_gst_commcode AS cc \n" +
+//                "RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+//                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+//                "WHERE 14c.MM_YYYY <= '" + month_date + "' AND zc.ZONE_CODE = '" + zone_code + "' AND cc.COMM_NAME = '" + come_name + "'\n" +
+//                "GROUP BY zc.ZONE_NAME, cc.COMM_NAME, zc.ZONE_CODE;\n";
         return query_assessment;
     }
 
