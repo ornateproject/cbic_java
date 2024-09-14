@@ -2337,7 +2337,7 @@ public class TotalScoreController {
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/refunds") //7
+	@RequestMapping(value = "/refunds") //7//
 	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2024-04-01&type=parameter							// for return filing button
 	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2024-04-01&type=zone&zone_code=59 				// for all button
 	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2024-04-01&type=commissary&zone_code=59			// for show button, zone wise
