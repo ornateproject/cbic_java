@@ -2403,7 +2403,7 @@ public class TotalScoreController {
 						"FROM mis_gst_commcode AS cc\n" +
 						"RIGHT JOIN mis_dpm_gst_4 AS dpm ON cc.COMM_CODE = dpm.COMM_CODE\n" +
 						"LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-						"WHERE dpm.MM_YYYY = '2024-04-01' AND cc.ZONE_CODE = '56'\n" +
+						"WHERE dpm.MM_YYYY = '" + month_date + "' AND cc.ZONE_CODE = '" + zone_code + "'\n" +
 						"GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
 						"),\n" +
 						"calculated_values_2 AS (\n" +
@@ -2414,7 +2414,7 @@ public class TotalScoreController {
 						"FROM mis_gst_commcode AS cc\n" +
 						"RIGHT JOIN mis_dpm_gst_4 AS dpm ON cc.COMM_CODE = dpm.COMM_CODE\n" +
 						"LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-						"WHERE dpm.MM_YYYY = '2024-04-01' GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
+						"WHERE dpm.MM_YYYY = '" + month_date + "' GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
 						"),\n" +
 						"ranked_values AS (\n" +
 						"SELECT cv2.ZONE_CODE, cv2.ZONE_NAME, cv2.COMM_NAME, cv2.col16, cv2.col22, cv2.total_score,\n" +
