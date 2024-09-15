@@ -269,4 +269,18 @@ public class CustomGreadeScore {
         }
         return rank;
     }
+    // Custom grade score for custom 9A
+    public int c_marks9a(double total) {
+        int rank=0;
+        if(total >=50 ) {
+            rank=10;
+        }else if(total >= 40 && total < 50) {
+            rank=7;
+        }else if(total >= 30 && total <40) {
+            rank=4;
+        }else {
+            rank=2;
+        }
+        return rank;
+    }
 }

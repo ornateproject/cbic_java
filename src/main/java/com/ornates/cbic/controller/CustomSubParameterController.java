@@ -933,7 +933,7 @@ public class CustomSubParameterController {
                     rank=score.c_marks5b(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.c_marks5b(totalScore);
+                    int way_to_grade = score.c_marks9a(totalScore);
                     gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
@@ -987,7 +987,7 @@ public class CustomSubParameterController {
                     rank=score.c_marks5b(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.c_marks5b(totalScore);
+                    int way_to_grade = score.c_marks9a(totalScore);
                     gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
@@ -1040,7 +1040,7 @@ public class CustomSubParameterController {
                     rank=score.c_marks5b(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.c_marks5b(totalScore);
+                    int way_to_grade = score.c_marks9a(totalScore);
                     gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
