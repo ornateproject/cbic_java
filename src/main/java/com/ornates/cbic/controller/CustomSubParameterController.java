@@ -880,36 +880,57 @@ public class CustomSubParameterController {
         GST4A gsta = null;
         int rank = 0;
         double total = 0.00;
-
+        Double median = 0.00;
 
         try {
             // Query string
             if (type.equalsIgnoreCase("zone")) {
                 //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
                 String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-                String queryGst14aa ="SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
-                        "    SUM(CASE WHEN 14c.COMMODITY_CODE = 3 and 14c.MM_YYYY= '" + month_date + "' THEN 14c.SALE_QUAN ELSE 0 END) AS s3col9, \n" +
-                        "    SUM(CASE WHEN 14c.COMMODITY_CODE = 3 and 14c.MM_YYYY= '" + month_date + "' THEN PARTY_QUAN ELSE 0 END) AS s3col12, \n" +
-                        "    SUM(CASE WHEN 14c.COMMODITY_CODE = 3 and 14c.MM_YYYY= '" + prev_month_new + "' THEN CB_QUAN ELSE 0 END) AS s3col3,\n" +
-                        "    SUM(CASE WHEN 14c.COMMODITY_CODE = 6 and 14c.MM_YYYY= '" + month_date + "' THEN 14c.SALE_QUAN ELSE 0 END) AS s6col9, \n" +
-                        "    SUM(CASE WHEN 14c.COMMODITY_CODE = 6 and 14c.MM_YYYY= '" + month_date + "' THEN PARTY_QUAN ELSE 0 END) AS s6col12, \n" +
-                        "    SUM(CASE WHEN 14c.COMMODITY_CODE = 6 and 14c.MM_YYYY= '" + prev_month_new + "' THEN CB_QUAN ELSE 0 END) AS s6col3,\n" +
-                        "    ( \n" +
-                        "      (SUM(CASE WHEN 14c.COMMODITY_CODE = 3 and 14c.MM_YYYY= '" + month_date + "' THEN 14c.SALE_QUAN ELSE 0 END) + \n" +
-                        "       SUM(CASE WHEN 14c.COMMODITY_CODE = 3 and 14c.MM_YYYY= '" + month_date + "' THEN PARTY_QUAN ELSE 0 END) + \n" +
-                        "       SUM(CASE WHEN 14c.COMMODITY_CODE = 6 and 14c.MM_YYYY= '" + month_date + "' THEN 14c.SALE_QUAN ELSE 0 END) + \n" +
-                        "       SUM(CASE WHEN 14c.COMMODITY_CODE = 6 and 14c.MM_YYYY= '" + month_date + "' THEN PARTY_QUAN ELSE 0 END)) \n" +
-                        "      / \n" +
-                        "      (SUM(CASE WHEN 14c.COMMODITY_CODE = 3 and 14c.MM_YYYY= '" + prev_month_new + "' THEN CB_QUAN ELSE 0 END) + \n" +
-                        "       SUM(CASE WHEN 14c.COMMODITY_CODE = 6 and 14c.MM_YYYY= '" + prev_month_new + "' THEN CB_QUAN ELSE 0 END))\n" +
-                        "    ) AS total_score\n" +
-                        "FROM mis_gst_commcode AS cc \n" +
-                        "RIGHT JOIN mis_dol_cus_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "WHERE 14c.MM_YYYY IN ('" + month_date + "' , '" + prev_month_new + "')\n" +
-                        "AND 14c.COMMODITY_CODE IN (3, 6)\n" +
-                        "GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
-                        "order by total_score desc;\n";
+                String queryGst14aa ="WITH main_query AS (\n" +
+                        "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
+                        "        SUM(CASE WHEN 14c.COMMODITY_CODE = 3 and 14c.MM_YYYY = '" + month_date + "' THEN 14c.SALE_QUAN ELSE 0 END) AS s3col9, \n" +
+                        "        SUM(CASE WHEN 14c.COMMODITY_CODE = 3 and 14c.MM_YYYY = '" + month_date + "' THEN PARTY_QUAN ELSE 0 END) AS s3col12, \n" +
+                        "        SUM(CASE WHEN 14c.COMMODITY_CODE = 3 and 14c.MM_YYYY = '" + prev_month_new + "' THEN CB_QUAN ELSE 0 END) AS s3col3,\n" +
+                        "        SUM(CASE WHEN 14c.COMMODITY_CODE = 6 and 14c.MM_YYYY = '" + month_date + "' THEN 14c.SALE_QUAN ELSE 0 END) AS s6col9, \n" +
+                        "        SUM(CASE WHEN 14c.COMMODITY_CODE = 6 and 14c.MM_YYYY = '" + month_date + "' THEN PARTY_QUAN ELSE 0 END) AS s6col12, \n" +
+                        "        SUM(CASE WHEN 14c.COMMODITY_CODE = 6 and 14c.MM_YYYY = '" + prev_month_new + "' THEN CB_QUAN ELSE 0 END) AS s6col3,\n" +
+                        "        \n" +
+                        "        (SUM(CASE WHEN 14c.COMMODITY_CODE = 3 and 14c.MM_YYYY = '" + month_date + "' THEN 14c.SALE_QUAN ELSE 0 END) + \n" +
+                        "         SUM(CASE WHEN 14c.COMMODITY_CODE = 3 and 14c.MM_YYYY = '" + month_date + "' THEN PARTY_QUAN ELSE 0 END) + \n" +
+                        "         SUM(CASE WHEN 14c.COMMODITY_CODE = 6 and 14c.MM_YYYY = '" + month_date + "' THEN 14c.SALE_QUAN ELSE 0 END) + \n" +
+                        "         SUM(CASE WHEN 14c.COMMODITY_CODE = 6 and 14c.MM_YYYY = '" + month_date + "' THEN PARTY_QUAN ELSE 0 END)) AS numerator_9a,\n" +
+                        "\n" +
+                        "        ( \n" +
+                        "          (SUM(CASE WHEN 14c.COMMODITY_CODE = 3 and 14c.MM_YYYY = '" + month_date + "' THEN 14c.SALE_QUAN ELSE 0 END) + \n" +
+                        "           SUM(CASE WHEN 14c.COMMODITY_CODE = 3 and 14c.MM_YYYY = '" + month_date + "' THEN PARTY_QUAN ELSE 0 END) + \n" +
+                        "           SUM(CASE WHEN 14c.COMMODITY_CODE = 6 and 14c.MM_YYYY = '" + month_date + "' THEN 14c.SALE_QUAN ELSE 0 END) + \n" +
+                        "           SUM(CASE WHEN 14c.COMMODITY_CODE = 6 and 14c.MM_YYYY = '" + month_date + "' THEN PARTY_QUAN ELSE 0 END)) \n" +
+                        "          / \n" +
+                        "          (SUM(CASE WHEN 14c.COMMODITY_CODE = 3 and 14c.MM_YYYY = '" + prev_month_new + "' THEN CB_QUAN ELSE 0 END) + \n" +
+                        "           SUM(CASE WHEN 14c.COMMODITY_CODE = 6 and 14c.MM_YYYY = '" + prev_month_new + "' THEN CB_QUAN ELSE 0 END))\n" +
+                        "        ) AS total_score\n" +
+                        "    FROM mis_gst_commcode AS cc \n" +
+                        "    RIGHT JOIN mis_dol_cus_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                        "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "    WHERE 14c.MM_YYYY IN ('" + month_date + "', '" + prev_month_new + "')\n" +
+                        "    AND 14c.COMMODITY_CODE IN (3, 6)\n" +
+                        "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                        "),\n" +
+                        "ranked_query AS (\n" +
+                        "    SELECT *,\n" +
+                        "           ROW_NUMBER() OVER (ORDER BY numerator_9a) AS row_num,\n" +
+                        "           COUNT(*) OVER () AS total_rows\n" +
+                        "    FROM main_query\n" +
+                        "),\n" +
+                        "median_query AS (\n" +
+                        "    SELECT AVG(numerator_9a) AS median_9a\n" +
+                        "    FROM ranked_query\n" +
+                        "    WHERE row_num IN (FLOOR((total_rows + 1) / 2), CEIL((total_rows + 1) / 2))\n" +
+                        ")\n" +
+                        "SELECT rq.*, mq.median_9a\n" +
+                        "FROM ranked_query rq, median_query mq\n" +
+                        "ORDER BY rq.total_score DESC;";
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
 
                 while(rsGst14aa.next()) {
@@ -924,16 +945,27 @@ public class CustomSubParameterController {
                     double s6col12=rsGst14aa.getDouble("s6col12");
                     double s6col3 =rsGst14aa.getDouble("s6col3");
                     total=rsGst14aa.getDouble("total_score") * 100;
-                    int Zonal_rank = 0;
-                    String gst = "no";
-                    int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
+                    median = rsGst14aa.getDouble("median_9a");
+                    Double numerator_9a = rsGst14aa.getDouble("numerator_9a");
                     String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col3 + s6col3);
 
                     rank=score.c_marks5b(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.c_marks9a(totalScore);
+                    int insentavization = score.c_marks9a(totalScore);
+                    // System.out.println("insentavization3b :-" + insentavization);
+
+                    if (numerator_9a > median && way_to_grade < 10) {
+                        insentavization += 1;
+                    }
+
+                    //System.out.println("insentavization3b after :-" + insentavization);
+
+                    int Zonal_rank = 0;
+                    String gst = "no";
+
+                    double sub_parameter_weighted_average = insentavization * 0.5 ;
                     gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
@@ -995,29 +1027,51 @@ public class CustomSubParameterController {
             }else if (type.equalsIgnoreCase("all_commissary")) {  // cus9a
                 //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
                 String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-                String queryGst14aa="SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, \n" +
-                        "       SUM(CASE WHEN c.COMMODITY_CODE = 3 and c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) AS s3col9, \n" +
-                        "       SUM(CASE WHEN c.COMMODITY_CODE = 3 and c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END) AS s3col12, \n" +
-                        "       SUM(CASE WHEN c.COMMODITY_CODE = 3 and c.MM_YYYY= '" + prev_month_new + "' THEN c.CB_QUAN ELSE 0 END) AS s3col3,\n" +
-                        "       SUM(CASE WHEN c.COMMODITY_CODE = 6 and c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) AS s6col9, \n" +
-                        "       SUM(CASE WHEN c.COMMODITY_CODE = 6 and c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END) AS s6col12, \n" +
-                        "       SUM(CASE WHEN c.COMMODITY_CODE = 6 and c.MM_YYYY= '" + prev_month_new + "' THEN c.CB_QUAN ELSE 0 END) AS s6col3,\n" +
-                        "       (\n" +
-                        "         (SUM(CASE WHEN c.COMMODITY_CODE = 3 and c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) + \n" +
-                        "          SUM(CASE WHEN c.COMMODITY_CODE = 3 and c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END) + \n" +
-                        "          SUM(CASE WHEN c.COMMODITY_CODE = 6 and c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) + \n" +
-                        "          SUM(CASE WHEN c.COMMODITY_CODE = 6 and c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END)) \n" +
-                        "         / \n" +
-                        "         (SUM(CASE WHEN c.COMMODITY_CODE = 3 and c.MM_YYYY= '" + prev_month_new + "' THEN c.CB_QUAN ELSE 0 END) + \n" +
-                        "          SUM(CASE WHEN c.COMMODITY_CODE = 6 and c.MM_YYYY= '" + prev_month_new + "' THEN c.CB_QUAN ELSE 0 END))\n" +
-                        "       ) AS total_score\n" +
-                        "FROM mis_gst_commcode AS cc \n" +
-                        "RIGHT JOIN mis_dol_cus_1 AS c ON cc.COMM_CODE = c.COMM_CODE \n" +
-                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "WHERE c.MM_YYYY IN ('" + month_date + "' , '" + prev_month_new + "')\n" +
-                        "AND c.COMMODITY_CODE IN (3, 6)\n" +
-                        "GROUP BY zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME\n" +
-                        "ORDER BY total_score DESC;";
+                String queryGst14aa="WITH RankedData AS (\n" +
+                        "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, \n" +
+                        "           SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) AS s3col9, \n" +
+                        "           SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END) AS s3col12, \n" +
+                        "           SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + prev_month_new + "' THEN c.CB_QUAN ELSE 0 END) AS s3col3,\n" +
+                        "           SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) AS s6col9, \n" +
+                        "           SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END) AS s6col12, \n" +
+                        "           SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + prev_month_new + "' THEN c.CB_QUAN ELSE 0 END) AS s6col3,\n" +
+                        "           -- numerator_9a as the sum of relevant columns\n" +
+                        "           (\n" +
+                        "             SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) + \n" +
+                        "             SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END) + \n" +
+                        "             SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) + \n" +
+                        "             SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END)\n" +
+                        "           ) AS numerator_9a,\n" +
+                        "           -- total_score calculation\n" +
+                        "           (\n" +
+                        "             (SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) + \n" +
+                        "              SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END) + \n" +
+                        "              SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) + \n" +
+                        "              SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END)) \n" +
+                        "             / \n" +
+                        "             (SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + prev_month_new + "' THEN c.CB_QUAN ELSE 0 END) + \n" +
+                        "              SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + prev_month_new + "' THEN c.CB_QUAN ELSE 0 END))\n" +
+                        "           ) AS total_score\n" +
+                        "    FROM mis_gst_commcode AS cc \n" +
+                        "    RIGHT JOIN mis_dol_cus_1 AS c ON cc.COMM_CODE = c.COMM_CODE \n" +
+                        "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                        "    WHERE c.MM_YYYY IN ('" + month_date + "', '" + prev_month_new + "') \n" +
+                        "      AND c.COMMODITY_CODE IN (3, 6)\n" +
+                        "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME\n" +
+                        "),\n" +
+                        "-- Calculate the median of numerator_9a\n" +
+                        "OrderedData AS (\n" +
+                        "    SELECT *,\n" +
+                        "           ROW_NUMBER() OVER (ORDER BY numerator_9a) AS row_num,\n" +
+                        "           COUNT(*) OVER() AS total_rows FROM RankedData\n" +
+                        "),\n" +
+                        "MedianValue AS (\n" +
+                        "    SELECT AVG(numerator_9a) AS median_9a\n" +
+                        "    FROM OrderedData WHERE row_num IN (FLOOR((total_rows + 1) / 2), CEIL((total_rows + 1) / 2))\n" +
+                        ")\n" +
+                        "-- Final output query\n" +
+                        "SELECT rd.*, mv.median_9a\n" +
+                        "FROM OrderedData rd, MedianValue mv ORDER BY rd.total_score DESC;";
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String ra= CustomRelaventAspect.cus9a_RA;
@@ -1031,16 +1085,23 @@ public class CustomSubParameterController {
                     double s6col12=rsGst14aa.getDouble("s6col12");
                     double s6col3=rsGst14aa.getDouble("s6col3");
                     total=rsGst14aa.getDouble("total_score") * 100;
+                    median = rsGst14aa.getDouble("median_9a");
+                    Double numerator_9a = rsGst14aa.getDouble("numerator_9a");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
                     String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col3 + s6col3);
 
                     rank=score.c_marks5b(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.c_marks9a(totalScore);
+                    int insentavization = score.c_marks9a(totalScore);
+                    // System.out.println("insentavization3b :-" + insentavization);
+
+                    if (numerator_9a > median && way_to_grade < 10) {
+                        insentavization += 1;
+                    }
+                    double sub_parameter_weighted_average = insentavization * 0.5 ;
                     gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
