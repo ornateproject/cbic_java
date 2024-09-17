@@ -1226,7 +1226,7 @@ public class CGSTSubParameterWiseQuery {
                 "    FROM mis_gst_commcode as cc\n" +
                 "    RIGHT JOIN mis_dpm_gst_adj_1 as 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                 "    LEFT JOIN mis_gst_zonecode as zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
                 "),\n" +
                 "median_cte AS (\n" +
                 "    SELECT col10,ROW_NUMBER() OVER (ORDER BY col10) as rn,\n" +

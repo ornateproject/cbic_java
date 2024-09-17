@@ -1790,21 +1790,40 @@ public class TotalScoreController {
 
 				while (rsGst14aa.next()) {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
-					Integer insentavization = 0;
-					double sub_parameter_weighted_average = 0.00;
 					String commName = rsGst14aa.getString("COMM_NAME");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
-					double tScore = rsGst14aa.getDouble("total_score") * 100;
-					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
-					String gst ="null";
+					int numerator_5a = rsGst14aa.getInt("col10");
+					double median_5a = rsGst14aa.getDouble("median_5a");
+					double score_of_subparameter_5a = rsGst14aa.getDouble("score_of_subparameter_5a");
+					double score_of_parameter_5b = rsGst14aa.getDouble("score_of_parameter_5b");
+					//double tScore = rsGst14aa.getDouble("total_score") * 100;
+					Integer Zonal_rank = 0;
+					int way_to_grade5a = score.marks5a(score_of_subparameter_5a);
+					int way_to_grade5b = score.marks5b(score_of_parameter_5b);
+
+					int insentavization5a = way_to_grade5a;
+					int insentavization5b = way_to_grade5b;
+
+					if (numerator_5a > median_5a && way_to_grade5a < 10) {
+						insentavization5a += 1;
+					}
+					Integer way_to_grade = way_to_grade5a + way_to_grade5b;
+					Integer insentavization = insentavization5a + insentavization5b;
+
+					double sub_parameter_weighted_average5a = insentavization5a * 0.5;
+					double sub_parameter_weighted_average5b = insentavization5b * 0.5;
+
+					double total_weighted_average = sub_parameter_weighted_average5a + sub_parameter_weighted_average5b;
+
+
+					double total_score = 0.00;
+					String gst = "ALL";
 					String absval = "null";
-					String ra ="null";
+					String ra ="Adjudication";
 
-
-					String formattedTotal = String.format("%.2f", tScore);
-					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+//					String formattedTotal = String.format("%.2f", tScore);
+//					double total_score = Double.parseDouble(formattedTotal);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst, ra, way_to_grade, insentavization, total_weighted_average);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
@@ -1845,7 +1864,10 @@ public class TotalScoreController {
 				e.printStackTrace();
 			}
 		}
-		return allGstaList;
+		return allGstaList.stream()
+				.sorted(Comparator.comparing(TotalScore::getSub_parameter_weighted_average).reversed())
+				.collect(Collectors.toList());
+
 
 	}
 	/*

@@ -949,7 +949,7 @@ public class CustomSubParameterController {
                     Double numerator_9a = rsGst14aa.getDouble("numerator_9a");
                     String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col3 + s6col3);
 
-                    rank=score.c_marks5b(total);
+                    rank=score.c_marks9a(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.c_marks9a(totalScore);
@@ -1016,7 +1016,7 @@ public class CustomSubParameterController {
                     int sub_parameter_weighted_average = 0;
                     String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col3 + s6col3);
 
-                    rank=score.c_marks5b(total);
+                    rank=score.c_marks9a(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.c_marks9a(totalScore);
@@ -1091,7 +1091,7 @@ public class CustomSubParameterController {
                     String gst = "no";
                     String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col3 + s6col3);
 
-                    rank=score.c_marks5b(total);
+                    rank=score.c_marks9a(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.c_marks9a(totalScore);
