@@ -1841,7 +1841,7 @@ public class TotalScoreController {
 					double sub_parameter_weighted_average = 0.00;
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = rsGst14aa.getString("COMM_NAME");
-					double tScore = rsGst14aa.getDouble("score_of_subParameter") * 100;
+					double tScore = rsGst14aa.getDouble("score_of_subparameter") * 100;
 					String gst =rsGst14aa.getString("gst");
 					String absval = rsGst14aa.getString("absolute_value");
 					String ra = rsGst14aa.getString("ra");
@@ -2359,7 +2359,7 @@ public class TotalScoreController {
 	 */
 
 	@ResponseBody
-	@RequestMapping(value = "/refunds") //7//
+	@RequestMapping(value = "/refunds") //7
 	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2024-04-01&type=parameter							// for return filing button
 	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2024-04-01&type=zone&zone_code=59 				// for all button
 	//  http://localhost:8080/cbicApi/cbic/t_score/refunds?month_date=2024-04-01&type=commissary&zone_code=59			// for show button, zone wise
