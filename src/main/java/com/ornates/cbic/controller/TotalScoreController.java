@@ -1836,20 +1836,41 @@ public class TotalScoreController {
 
 				while (rsGst14aa.next()) {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
-					Integer insentavization = 0;
-					double sub_parameter_weighted_average = 0.00;
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = rsGst14aa.getString("COMM_NAME");
-					double tScore = rsGst14aa.getDouble("score_of_subparameter") * 100;
+					double tScore = rsGst14aa.getDouble("score_of_subparameter") ;
 					String gst =rsGst14aa.getString("gst");
-					String absval = rsGst14aa.getString("absolute_value");
-					String ra = rsGst14aa.getString("ra");
+					String absval = rsGst14aa.getString("absvl");
+					Double median = rsGst14aa.getDouble("median");
+					Double numerator = rsGst14aa.getDouble("numerator");
+					String ra = "Adjudication";
 					Integer Zonal_rank = null;
 
 
 					String formattedTotal = String.format("%.2f", tScore);
 					double total_score = Double.parseDouble(formattedTotal);
+
+					int way_to_grade;
+					Integer insentavization = 0;
+
+					// Logic based on parameter type
+					if ("GST5A".equalsIgnoreCase(gst)) {
+						way_to_grade = score.marks5a(total_score);
+						insentavization = score.marks5a(total_score);
+
+						if (numerator > median && way_to_grade < 10) {
+							insentavization += 1;
+						}
+					} else if ("GST5B".equalsIgnoreCase(gst)) {
+						way_to_grade = score.marks5b(total_score);
+						insentavization = way_to_grade;
+					} else {
+						// Default handling if parameter type is neither 5a nor 5b
+						way_to_grade = 0;
+						insentavization = 0;
+					}
+
+					Double sub_parameter_weighted_average = insentavization * 0.5;
 					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
