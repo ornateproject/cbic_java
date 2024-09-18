@@ -899,55 +899,58 @@ public class CGSTParameterWiseQuery {
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
         String next_month_new = DateCalculate.getNextMonth(month_date);
-        String query_assessment = "WITH total_score1_query AS (\n"
-                + "    SELECT zc.ZONE_NAME AS ZONE_NAME,cc.ZONE_CODE AS ZONE_CODE,cc.COMM_NAME AS COMM_NAME,\n"
-                + "        (14c.adc_commissionerate_disposal_no + 14c.adc_audit_disposal_no + 14c.adc_investigation_disposal_no + 14c.adc_callbook_disposal_no + 14c.dc_commissionerate_disposal_no + 14c.dc_audit_disposal_no + 14c.dc_investigation_disposal_no + 14c.dc_callbook_disposal_no + 14c.superintendent_commissionerate_disposal_no + 14c.superintendent_audit_disposal_no + 14c.superintendent_investigation_disposal_no + 14c.superintendent_callbook_disposal_no) / \n"
-                + "        NULLIF((14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + 14c.ADC_CALLBOOK_OPENING_NO + 14c.DC_COMMISSIONERATE_OPENING_NO + 14c.DC_AUDIT_OPENING_NO + 14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + 14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO + 14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO), 0) AS total_score1,\n"
-                + "        NULL AS total_score2\n"
-                + "    FROM mis_gst_commcode AS cc \n"
-                + "	RIGHT JOIN mis_dpm_gst_adj_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE  LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
-                + "    WHERE 14c.MM_YYYY = '" + month_date + "'\n"
-                + "),\n"
-                + "total_score2_query AS (\n"
-                + "    SELECT ZONE_NAME,ZONE_CODE,COMM_NAME,NULL AS total_score1,(MAX(col22) + MAX(col23)) / MAX(col16) AS total_score2\n"
-                + "    FROM (\n"
-                + "        SELECT zc.ZONE_NAME AS ZONE_NAME,cc.ZONE_CODE AS ZONE_CODE,cc.COMM_NAME AS COMM_NAME,\n"
-                + "            (14c.ADC_COMMISSIONERATE_TIME_LESS_3_NO +14c.ADC_AUDIT_TIME_LESS_3_NO +14c.ADC_INVESTIGATION_TIME_LESS_3_NO +14c.ADC_CALLBOOK_TIME_LESS_3_NO +14c.DC_COMMISSIONERATE_TIME_LESS_3_NO +14c.DC_AUDIT_TIME_LESS_3_NO +14c.DC_INVESTIGATION_TIME_LESS_3_NO +14c.DC_CALLBOOK_TIME_LESS_3_NO +\n"
-                + "             14c.SUPERINTENDENT_COMMISSIONERATE_TIME_LESS_3_NO + 14c.SUPERINTENDENT_AUDIT_TIME_LESS_3_NO + 14c.SUPERINTENDENT_INVESTIGATION_TIME_LESS_3_NO + 14c.SUPERINTENDENT_CALLBOOK_TIME_LESS_3_NO) AS col22,\n"
-                + "            (14c.ADC_COMMISSIONERATE_TIME_3_TO_6_NO +14c.ADC_AUDIT_TIME_3_TO_6_NO +14c.ADC_INVESTIGATION_TIME_3_TO_6_NO + 14c.ADC_CALLBOOK_TIME_3_TO_6_NO + 14c.DC_COMMISSIONERATE_TIME_3_TO_6_NO + 14c.DC_AUDIT_TIME_3_TO_6_NO +\n"
-                + "             14c.DC_INVESTIGATION_TIME_3_TO_6_NO +14c.DC_CALLBOOK_TIME_3_TO_6_NO +14c.SUPERINTENDENT_COMMISSIONERATE_TIME_3_TO_6_NO +14c.SUPERINTENDENT_AUDIT_TIME_3_TO_6_NO +14c.SUPERINTENDENT_INVESTIGATION_TIME_3_TO_6_NO +14c.SUPERINTENDENT_CALLBOOK_TIME_3_TO_6_NO) AS col23,\n"
-                + "            (14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO +14c.ADC_INVESTIGATION_OPENING_NO +14c.ADC_CALLBOOK_OPENING_NO + 14c.DC_COMMISSIONERATE_OPENING_NO + 14c.DC_AUDIT_OPENING_NO +\n"
-                + "             14c.DC_INVESTIGATION_OPENING_NO +14c.DC_CALLBOOK_OPENING_NO +14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO +14c.SUPERINTENDENT_AUDIT_OPENING_NO +14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO +14c.SUPERINTENDENT_CALLBOOK_OPENING_NO) AS col16\n"
-                + "        FROM mis_gst_commcode AS cc\n"
-                + "		RIGHT JOIN mis_dpm_gst_adj_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE  LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n"
-                + "        WHERE 14c.MM_YYYY IN ('" + month_date + "', '" + next_month_new + "')\n"
-                + "    ) AS merged_data GROUP BY ZONE_NAME, ZONE_CODE, COMM_NAME\n"
-                + "),\n"
-                + "combined_scores AS (\n"
-                + "    SELECT COALESCE(t1.ZONE_NAME, t2.ZONE_NAME) AS ZONE_NAME, COALESCE(t1.ZONE_CODE, t2.ZONE_CODE) AS ZONE_CODE, COALESCE(t1.COMM_NAME, t2.COMM_NAME) AS COMM_NAME,\n"
-                + "        t1.total_score1, t2.total_score2,\n"
-                + "        COALESCE(t1.total_score1, 0) + COALESCE(t2.total_score2, 0) AS parameter\n"
-                + "    FROM total_score1_query t1\n"
-                + "    LEFT JOIN total_score2_query t2 ON t1.ZONE_NAME = t2.ZONE_NAME AND t1.ZONE_CODE = t2.ZONE_CODE AND t1.COMM_NAME = t2.COMM_NAME\n"
-                + "\n"
-                + "    UNION ALL\n"
-                + "\n"
-                + "    SELECT \n"
-                + "        COALESCE(t1.ZONE_NAME, t2.ZONE_NAME) AS ZONE_NAME, COALESCE(t1.ZONE_CODE, t2.ZONE_CODE) AS ZONE_CODE, COALESCE(t1.COMM_NAME, t2.COMM_NAME) AS COMM_NAME,\n"
-                + "        t1.total_score1, t2.total_score2,\n"
-                + "        COALESCE(t1.total_score1, 0) + COALESCE(t2.total_score2, 0) AS parameter\n"
-                + "    FROM total_score2_query t2\n"
-                + "    LEFT JOIN total_score1_query t1 ON t1.ZONE_NAME = t2.ZONE_NAME AND t1.ZONE_CODE = t2.ZONE_CODE AND t1.COMM_NAME = t2.COMM_NAME\n"
-                + "    WHERE t1.ZONE_NAME IS NULL\n"
-                + "),\n"
-                + "ranked_scores AS (\n"
-                + "    SELECT ZONE_NAME, ZONE_CODE, COMM_NAME, total_score1, total_score2, parameter,\n"
-                + "	ROW_NUMBER() OVER (ORDER BY parameter DESC) AS z_rank\n"
-                + "    FROM combined_scores\n"
-                + ")\n"
-                + "SELECT ZONE_NAME, ZONE_CODE, COMM_NAME, total_score1, total_score2, parameter, z_rank\n"
-                + "FROM ranked_scores WHERE ZONE_CODE = '" + zone_code + "';\n"
-                + "";
+        String query_assessment = "WITH cte AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,\n" +
+                "    (14c.adc_commissionerate_disposal_no + 14c.adc_audit_disposal_no + 14c.adc_investigation_disposal_no + \n" +
+                "    14c.adc_callbook_disposal_no + 14c.dc_commissionerate_disposal_no + 14c.dc_audit_disposal_no + \n" +
+                "    14c.dc_investigation_disposal_no + 14c.dc_callbook_disposal_no + \n" +
+                "    14c.superintendent_commissionerate_disposal_no + 14c.superintendent_audit_disposal_no +\n" +
+                "    14c.superintendent_investigation_disposal_no + 14c.superintendent_callbook_disposal_no) as numerator_5a, -- col10\n" +
+                "    (14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + \n" +
+                "    14c.ADC_CALLBOOK_OPENING_NO + 14c.DC_COMMISSIONERATE_OPENING_NO + 14c.DC_AUDIT_OPENING_NO + \n" +
+                "    14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + \n" +
+                "    14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO + \n" +
+                "    14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO) as col4,\n" +
+                "    (14c.ADC_COMMISSIONERATE_TIME_LESS_3_NO + 14c.ADC_AUDIT_TIME_LESS_3_NO + 14c.ADC_INVESTIGATION_TIME_LESS_3_NO + 14c.ADC_CALLBOOK_TIME_LESS_3_NO +\n" +
+                "     14c.DC_COMMISSIONERATE_TIME_LESS_3_NO + 14c.DC_AUDIT_TIME_LESS_3_NO + 14c.DC_INVESTIGATION_TIME_LESS_3_NO + 14c.DC_CALLBOOK_TIME_LESS_3_NO +\n" +
+                "     14c.SUPERINTENDENT_COMMISSIONERATE_TIME_LESS_3_NO + 14c.SUPERINTENDENT_AUDIT_TIME_LESS_3_NO + 14c.SUPERINTENDENT_INVESTIGATION_TIME_LESS_3_NO + 14c.SUPERINTENDENT_CALLBOOK_TIME_LESS_3_NO) AS col22, \n" +
+                "    (14c.ADC_COMMISSIONERATE_TIME_3_TO_6_NO + 14c.ADC_AUDIT_TIME_3_TO_6_NO + 14c.ADC_INVESTIGATION_TIME_3_TO_6_NO + 14c.ADC_CALLBOOK_TIME_3_TO_6_NO +\n" +
+                "     14c.DC_COMMISSIONERATE_TIME_3_TO_6_NO + 14c.DC_AUDIT_TIME_3_TO_6_NO + 14c.DC_INVESTIGATION_TIME_3_TO_6_NO + 14c.DC_CALLBOOK_TIME_3_TO_6_NO +\n" +
+                "     14c.SUPERINTENDENT_COMMISSIONERATE_TIME_3_TO_6_NO + 14c.SUPERINTENDENT_AUDIT_TIME_3_TO_6_NO + 14c.SUPERINTENDENT_INVESTIGATION_TIME_3_TO_6_NO + 14c.SUPERINTENDENT_CALLBOOK_TIME_3_TO_6_NO) AS col23\n" +
+                "    FROM mis_gst_commcode as cc\n" +
+                "    RIGHT JOIN mis_dpm_gst_adj_1 as 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode as zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+                "),\n" +
+                "cte2 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+                "        (14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + 14c.ADC_CALLBOOK_OPENING_NO +\n" +
+                "         14c.DC_COMMISSIONERATE_OPENING_NO + 14c.DC_AUDIT_OPENING_NO + 14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO +\n" +
+                "         14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO + 14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO) AS col16\n" +
+                "    FROM mis_gst_commcode AS cc \n" +
+                "    RIGHT JOIN mis_dpm_gst_adj_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + next_month_new + "'\n" +
+                "),\n" +
+                "median_cte AS (\n" +
+                "    SELECT numerator_5a, ROW_NUMBER() OVER (ORDER BY numerator_5a) as rn,\n" +
+                "        COUNT(*) OVER () as cnt\n" +
+                "    FROM cte\n" +
+                "),\n" +
+                "median_value AS (\n" +
+                "    SELECT AVG(numerator_5a) as median_5a\n" +
+                "    FROM median_cte\n" +
+                "    WHERE rn IN (FLOOR((cnt + 1) / 2), CEIL((cnt + 1) / 2))\n" +
+                ")\n" +
+                "SELECT \n" +
+                "    cte.ZONE_NAME, cte.COMM_NAME, cte.ZONE_CODE, cte.numerator_5a,\n" +
+                "    CASE WHEN cte.col4 = 0 THEN 0 ELSE cte.numerator_5a * 100 / cte.col4 END AS score_of_subparameter_5a,\n" +
+                "    (SUM(cte.col22) + SUM(cte.col23)) * 100 / SUM(cte2.col16) AS score_of_subparameter_5b,\n" +
+                "    (SELECT median_5a FROM median_value) as median_5a\n" +
+                "FROM cte\n" +
+                "JOIN cte2 ON cte.ZONE_CODE = cte2.ZONE_CODE AND cte.COMM_NAME = cte2.COMM_NAME\n" +
+                "WHERE cte.ZONE_CODE = '" + zone_code + "'\n" +
+                "GROUP BY cte.ZONE_NAME, cte.ZONE_CODE, cte.COMM_NAME, cte.numerator_5a, cte.col4;";
         return query_assessment;
     }
     //  for perticular subparameter wise ||  3 no url
