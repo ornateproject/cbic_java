@@ -1191,21 +1191,38 @@ public class CGSTSubParameterWiseQuery {
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
         String queryGst14aa= "WITH cte AS (\n" +
-                "    SELECT zc.ZONE_NAME,cc.COMM_NAME,cc.ZONE_CODE,\n" +
-                "           (14c.adc_commissionerate_disposal_no + 14c.adc_audit_disposal_no + 14c.adc_investigation_disposal_no + 14c.adc_callbook_disposal_no + 14c.dc_commissionerate_disposal_no + 14c.dc_audit_disposal_no + 14c.dc_investigation_disposal_no + 14c.dc_callbook_disposal_no + 14c.superintendent_commissionerate_disposal_no + 14c.superintendent_audit_disposal_no + 14c.superintendent_investigation_disposal_no + 14c.superintendent_callbook_disposal_no) as col10,\n" +
-                "           (14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + 14c.ADC_CALLBOOK_OPENING_NO + 14c.DC_COMMISSIONERATE_OPENING_NO + 14c.DC_AUDIT_OPENING_NO + 14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + 14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO + 14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO) as col4\n" +
+                "    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,\n" +
+                "    (14c.adc_commissionerate_disposal_no + 14c.adc_audit_disposal_no + 14c.adc_investigation_disposal_no + \n" +
+                "    14c.adc_callbook_disposal_no + 14c.dc_commissionerate_disposal_no + 14c.dc_audit_disposal_no + \n" +
+                "    14c.dc_investigation_disposal_no + 14c.dc_callbook_disposal_no + \n" +
+                "    14c.superintendent_commissionerate_disposal_no + 14c.superintendent_audit_disposal_no +\n" +
+                "    14c.superintendent_investigation_disposal_no + 14c.superintendent_callbook_disposal_no) as numerator_5a, -- col10\n" +
+                "    (14c.ADC_COMMISSIONERATE_OPENING_NO + 14c.ADC_AUDIT_OPENING_NO + 14c.ADC_INVESTIGATION_OPENING_NO + \n" +
+                "    14c.ADC_CALLBOOK_OPENING_NO + 14c.DC_COMMISSIONERATE_OPENING_NO + 14c.DC_AUDIT_OPENING_NO + \n" +
+                "    14c.DC_INVESTIGATION_OPENING_NO + 14c.DC_CALLBOOK_OPENING_NO + \n" +
+                "    14c.SUPERINTENDENT_COMMISSIONERATE_OPENING_NO + 14c.SUPERINTENDENT_AUDIT_OPENING_NO + \n" +
+                "    14c.SUPERINTENDENT_INVESTIGATION_OPENING_NO + 14c.SUPERINTENDENT_CALLBOOK_OPENING_NO) as col4\n" +
                 "    FROM mis_gst_commcode as cc\n" +
                 "    RIGHT JOIN mis_dpm_gst_adj_1 as 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                 "    LEFT JOIN mis_gst_zonecode as zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND zc.ZONE_CODE='" + zone_code + "'\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+                "),\n" +
+                "median_cte AS (\n" +
+                "    SELECT numerator_5a, ROW_NUMBER() OVER (ORDER BY numerator_5a) as rn,\n" +
+                "        COUNT(*) OVER () as cnt\n" +
+                "    FROM cte\n" +
+                "),\n" +
+                "median_value AS (\n" +
+                "    SELECT AVG(numerator_5a) as median_5a\n" +
+                "    FROM median_cte\n" +
+                "    WHERE rn IN (FLOOR((cnt + 1) / 2), CEIL((cnt + 1) / 2))\n" +
                 ")\n" +
-                "SELECT ZONE_NAME,COMM_NAME,ZONE_CODE,col10,col4,\n" +
-                "       CASE \n" +
-                "           WHEN col4 = 0 THEN 0 \n" +
-                "           ELSE col10 * 100 / col4 \n" +
-                "       END AS score_of_subparameter\n" +
+                "SELECT ZONE_NAME, COMM_NAME, ZONE_CODE, numerator_5a,col4 ,\n" +
+                "    CASE WHEN col4 = 0 THEN 0 ELSE numerator_5a * 100 / col4 END AS score_of_subparameter_5a,\n" +
+                "    (SELECT median_5a FROM median_value) as median_5a,\n" +
+                "    CONCAT(numerator_5a, '/', col4) as absvl_5a\n" +
                 "FROM cte\n" +
-                "order by score_of_subparameter desc;";
+                "WHERE ZONE_CODE = '" + zone_code + "';";
         return queryGst14aa;
     }
     public String QueryFor_gst5a_AllCommissonaryWise(String month_date){
