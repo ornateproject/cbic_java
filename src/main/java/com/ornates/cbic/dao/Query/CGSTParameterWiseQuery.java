@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 public class CGSTParameterWiseQuery {
     // ***********************************GST 1 parameter wise *****************************************************************
-
     //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
     // this query will show all zone || 1no url
     public String QueryFor_Registration_ZoneWise(String month_date){
@@ -13,7 +12,6 @@ public class CGSTParameterWiseQuery {
         String query_assessment = "";
         return query_assessment;
     }
-
     // for 2no url , all india rank will show in this query
     public String QueryFor_Registration_ParticularZoneWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
@@ -52,7 +50,6 @@ public class CGSTParameterWiseQuery {
         String query_assessment = "";
         return query_assessment;
     }
-
     // for 2no url , all india rank will show in this query
     public String QueryFor_ReturnFilling_2_ParticularZoneWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
@@ -84,7 +81,6 @@ public class CGSTParameterWiseQuery {
     }
 
     // ***********************************GST 3 parameter wise *****************************************************************
-
     //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
     // this query will show all zone || 1no url
     public String QueryForScrutinyAssessmentZoneWise(String month_date){
@@ -768,7 +764,6 @@ public class CGSTParameterWiseQuery {
         String query_assessment = "";
         return query_assessment;
     }
-
     // for 2no url , all india rank will show in this query
     public String QueryFor_Investigation_4_ParticularZoneWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
@@ -800,7 +795,6 @@ public class CGSTParameterWiseQuery {
     }
 
     // ***********************************GST 5 parameter wise *****************************************************************
-
     //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
     // this query will show all zone || 1no url
     public String QueryFor_Adjudication_5_ZoneWise(String month_date){
@@ -1221,7 +1215,6 @@ public class CGSTParameterWiseQuery {
         String query_assessment = "";
         return query_assessment;
     }
-
     // for 2no url , all india rank will show in this query
     public String QueryFor_Adjudication_Legacy_6_ParticularZoneWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
@@ -1261,7 +1254,6 @@ public class CGSTParameterWiseQuery {
         String query_assessment = "";
         return query_assessment;
     }
-
     // for 2no url , all india rank will show in this query
     public String QueryFor_Refunds_7_ParticularZoneWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
@@ -1301,7 +1293,6 @@ public class CGSTParameterWiseQuery {
         String query_assessment = "";
         return query_assessment;
     }
-
     // for 2no url , all india rank will show in this query
     public String QueryFor_Recovery_Of_Arrears_8_ParticularZoneWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
@@ -1341,7 +1332,6 @@ public class CGSTParameterWiseQuery {
         String query_assessment = "";
         return query_assessment;
     }
-
     // for 2no url , all india rank will show in this query
     public String QueryFor_Arrests_And_Prosecution_9_ParticularZoneWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
@@ -1381,7 +1371,6 @@ public class CGSTParameterWiseQuery {
         String query_assessment = "";
         return query_assessment;
     }
-
     // for 2no url , all india rank will show in this query
     public String QueryFor_Audit_10_ParticularZoneWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
@@ -1421,7 +1410,6 @@ public class CGSTParameterWiseQuery {
         String query_assessment = "";
         return query_assessment;
     }
-
     // for 2no url , all india rank will show in this query
     public String QueryFor_Appeals_11_ParticularZoneWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'

@@ -970,6 +970,7 @@ public class CustomSubParameterController {
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
+                System.out.println("cus 9a median zone wise :- "+median);
 
             } else if (type.equalsIgnoreCase("commissary")) {  // cus9a
                 //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
@@ -1064,7 +1065,7 @@ public class CustomSubParameterController {
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
 
-                }
+                }System.out.println("cus 9a median commissionary rate wise :- "+median);
             }else if (type.equalsIgnoreCase("all_commissary")) {  // cus9a
                 //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
                 String prev_month_new = DateCalculate.getPreviousMonth(month_date);
@@ -1146,7 +1147,7 @@ public class CustomSubParameterController {
                     gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
-                }
+                }System.out.println("cus 9a median commissionary rate wise :- "+median);
             }
         } catch (SQLException e) {
             e.printStackTrace();
