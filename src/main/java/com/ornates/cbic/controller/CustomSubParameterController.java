@@ -904,7 +904,9 @@ public class CustomSubParameterController {
                     total=rsGst14aa.getDouble("total_score") * 100;
                     median = rsGst14aa.getDouble("median_9a");
                     Double numerator_9a = rsGst14aa.getDouble("numerator_9a");
-                    String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col3 + s6col3);
+                    //String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col3 + s6col3);
+                    String absval = String.format("%.2f", s3col9 + s3col12 + s6col9 + s6col12) + "/" + String.format("%.2f", s3col3 + s6col3);
+
 
                     rank=score.c_marks9a(total);
                     String formattedTotal = String.format("%.2f", total);
@@ -951,7 +953,9 @@ public class CustomSubParameterController {
                     int Zonal_rank = 0;
                     String gst = "no";
 
-                    String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col3 + s6col3);
+                    //String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col3 + s6col3);
+                    String absval = String.format("%.2f", s3col9 + s3col12 + s6col9 + s6col12) + "/" + String.format("%.2f", s3col3 + s6col3);
+
                     rank=score.c_marks9a(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
@@ -988,7 +992,9 @@ public class CustomSubParameterController {
                     Double numerator_9a = rsGst14aa.getDouble("numerator_9a");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col3 + s6col3);
+                    //String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col3 + s6col3);
+                    String absval = String.format("%.2f", s3col9 + s3col12 + s6col9 + s6col12) + "/" + String.format("%.2f", s3col3 + s6col3);
+
 
                     rank=score.c_marks9a(total);
                     String formattedTotal = String.format("%.2f", total);
