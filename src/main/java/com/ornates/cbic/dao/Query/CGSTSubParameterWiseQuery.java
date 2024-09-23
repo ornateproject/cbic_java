@@ -1688,9 +1688,7 @@ public class CGSTSubParameterWiseQuery {
         return queryGst14aa;
     }
     // ********************************************************************************************************************************
-    public String QueryFor_gst6c_ZoneWise(String month_date){       //  gst6c is disposal
-        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
-
+    public String QueryFor_gst6c_ZoneWise(String month_date){
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
         String queryGst14aa="WITH disposal_data AS (\n" +
                 "                    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
@@ -1747,63 +1745,45 @@ public class CGSTSubParameterWiseQuery {
     public String QueryFor_gst6c_CommissonaryWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa="WITH cte1 AS (\n" +
-                "    SELECT \n" +
-                "        zc.ZONE_NAME, \n" +
-                "        cc.COMM_NAME, \n" +
-                "        cc.ZONE_CODE, \n" +
-                "        (14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO + 14c.SUP_DISPOSAL_NO) AS col9\n" +
-                "    FROM \n" +
-                "        mis_gst_commcode AS cc\n" +
-                "    RIGHT JOIN \n" +
-                "        mis_dgi_ce_1a AS 14c \n" +
-                "    ON \n" +
-                "        cc.COMM_CODE = 14c.COMM_CODE\n" +
-                "    LEFT JOIN \n" +
-                "        mis_gst_zonecode AS zc \n" +
-                "    ON \n" +
-                "        zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE \n" +
-                "        cc.ZONE_CODE = '"+zone_code+"'\n" +
-                "        AND 14c.MM_YYYY =  '" + month_date + "'\n" +
+        String queryGst14aa="WITH CTE1 AS (\n" +
+                "SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,\n" +
+                "(14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO + 14c.SUP_DISPOSAL_NO) AS col9\n" +
+                "FROM mis_gst_commcode AS cc\n" +
+                "RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
                 "),\n" +
-                "cte2 AS (\n" +
-                "    SELECT \n" +
-                "        zc.ZONE_NAME, \n" +
-                "        cc.COMM_NAME, \n" +
-                "        cc.ZONE_CODE, \n" +
-                "        (14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col3\n" +
-                "    FROM \n" +
-                "        mis_gst_commcode AS cc\n" +
-                "    RIGHT JOIN \n" +
-                "        mis_dgi_ce_1a AS 14c \n" +
-                "    ON \n" +
-                "        cc.COMM_CODE = 14c.COMM_CODE\n" +
-                "    LEFT JOIN \n" +
-                "        mis_gst_zonecode AS zc \n" +
-                "    ON \n" +
-                "        zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE \n" +
-                "        cc.ZONE_CODE = '"+zone_code+"' \n" +
-                "        AND 14c.MM_YYYY = '" + prev_month_new + "'\n" +
+                "CTE2 AS (\n" +
+                "SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,\n" +
+                "(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col3\n" +
+                "FROM mis_gst_commcode AS cc\n" +
+                "RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
+                "),\n" +
+                "CTE_Median AS (\n" +
+                "SELECT ZONE_NAME, COMM_NAME, ZONE_CODE, col9,\n" +
+                "(SELECT col9\n" +
+                "FROM (SELECT col9, ROW_NUMBER() OVER (ORDER BY col9) AS row_num\n" +
+                "FROM CTE1) AS ranked\n" +
+                "WHERE row_num = FLOOR((SELECT COUNT(*) FROM CTE1) / 2) + 1\n" +
+                ") AS median_6c\n" +
+                "FROM CTE1\n" +
                 ")\n" +
-                "SELECT \n" +
-                "    cte1.ZONE_NAME,\n" +
-                "    cte1.COMM_NAME,\n" +
-                "    cte1.ZONE_CODE,\n" +
-                "    cte1.col9,\n" +
-                "    cte2.col3,\n" +
-                "    (cte1.col9 / cte2.col3) * 100 AS total_score\n" +
-                "FROM \n" +
-                "    cte1 \n" +
-                "INNER JOIN \n" +
-                "    cte2\n" +
-                "ON\n" +
-                "    cte1.ZONE_NAME = cte2.ZONE_NAME\n" +
-                "    AND cte1.COMM_NAME = cte2.COMM_NAME\n" +
-                "    AND cte1.ZONE_CODE = cte2.ZONE_CODE\n" +
-                "ORDER BY \n" +
-                "    total_score DESC;\n";
+                "SELECT CTE1.ZONE_NAME, CTE1.COMM_NAME, CTE1.ZONE_CODE, CTE1.col9, CTE2.col3,\n" +
+                "(CASE WHEN CTE2.col3 = 0 THEN 0 ELSE (CTE1.col9 / CTE2.col3) * 100 END) AS total_score,\n" +
+                "CTE_Median.median_6c\n" +
+                "FROM CTE1\n" +
+                "JOIN CTE2 \n" +
+                "ON CTE1.ZONE_NAME = CTE2.ZONE_NAME \n" +
+                "AND CTE1.COMM_NAME = CTE2.COMM_NAME \n" +
+                "AND CTE1.ZONE_CODE = CTE2.ZONE_CODE\n" +
+                "JOIN CTE_Median \n" +
+                "ON CTE1.ZONE_NAME = CTE_Median.ZONE_NAME \n" +
+                "AND CTE1.COMM_NAME = CTE_Median.COMM_NAME \n" +
+                "AND CTE1.ZONE_CODE = CTE_Median.ZONE_CODE\n" +
+                "WHERE CTE1.ZONE_CODE ='" + zone_code + "'\n" +
+                "ORDER BY total_score DESC;";
         return queryGst14aa;
     }
     public String QueryFor_gst6c_AllCommissonaryWise(String month_date){

@@ -2641,30 +2641,33 @@ public class RetriveCbicDetailsController {
                 String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst6c_CommissonaryWise(month_date,zone_code);
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
-                    String commname=rsGst14aa.getString("COMM_NAME");
-                    String ra=RelevantAspect.Gst6C_RA;
+                    String commname = rsGst14aa.getString("COMM_NAME");
+                    String ra = RelevantAspect.Gst6C_RA;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
-                    int col9=rsGst14aa.getInt("col9");
-                    int col3=rsGst14aa.getInt("col3");
+                    int col9 = rsGst14aa.getInt("col9");
+                    int col3 = rsGst14aa.getInt("col3");
+                    total = rsGst14aa.getDouble("total_score");
+                    median = rsGst14aa.getDouble("median_6c");
+                    Double numerator_6c = rsGst14aa.getDouble("col9");
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.marks6c(totalScore);
+                    int insentavization = score.marks6c(totalScore);
+
+                    if (numerator_6c > median && way_to_grade < 10) {
+                        insentavization += 1;
+                    }
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int insentavization = 0;
-
-                    if(col3!=0) {
-                        total = (((double) (col9) * 100) / col3);
-                    }
-
-                    rank=score.marks6c(total);
-                    String formattedTotal = String.format("%.2f", total);
-                    double totalScore = Double.parseDouble(formattedTotal) ;
-                    int way_to_grade = score.marks6c(totalScore);
-                    Double sub_parameter_weighted_average = way_to_grade * 0.25;
+                    double sub_parameter_weighted_average = insentavization * 0.25;
+                    // rank = score.marks6a(total);
+                    rank = 0;
                     String absval = String.valueOf(col9) + "/" + String.valueOf(col3);
                     gsta = new GST4A(zoneName, commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
-                }
+                }System.out.println("gst6c commmi(2no url) wise median " + median);
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst6c_AllCommissonaryWise(month_date);
                 //Result Set
