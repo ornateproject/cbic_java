@@ -1795,15 +1795,16 @@ public class RetriveCbicDetailsController {
      */
     @ResponseBody
     @RequestMapping(value = "/gst4c")
-    //  http://localhost:8080/cbicApi/cbic/gst4c?month_date=2023-05-01&type=zone                        // updated
-    //  http://localhost:8080/cbicApi/cbic/gst4c?month_date=2023-05-01&zone_code=70&type=commissary     //  updated
-    //	http://localhost:8080/cbicApi/cbic/gst4c?month_date=2023-05-01&type=all_commissary              //  updated
+    //  http://localhost:8080/cbicApi/cbic/gst4c?month_date=2024-04-01&type=zone                        // updated
+    //  http://localhost:8080/cbicApi/cbic/gst4c?month_date=2024-04-01&zone_code=70&type=commissary     //  updated
+    //	http://localhost:8080/cbicApi/cbic/gst4c?month_date=2024-04-01&type=all_commissary              //  updated
     public Object getGst4AC(@RequestParam String month_date ,@RequestParam String type, @RequestParam(required = false) String zone_code) {
 
         List<GST4A> allGstaList=new ArrayList<>();
         GST4A gsta=null;
         int rank = 0;
         double total = 0.00;
+        double median = 0.00;
 
         try {
             if (type.equalsIgnoreCase("zone")) {
@@ -1885,23 +1886,25 @@ public class RetriveCbicDetailsController {
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
                     Double t_score = rsGst14aa.getDouble("score_of_subparameter4c");
+                    String absval = rsGst14aa.getString("avsvl");
+                    median = rsGst14aa.getDouble("median");
                     int col1_7=rsGst14aa.getInt("col1_7");
                     int col1_8=rsGst14aa.getInt("col1_8");
-                    int Zonal_rank = 0;
-                    String absval = rsGst14aa.getString("avsvl");
-                    String gst = "no";
-                    int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
-                    //String absval = String.valueOf(col1_7) + "/" + String.valueOf(col1_8);
-//                    if ((col1_7) != 0){
-//                        total =(((double) (col1_6) * 100)/(col1_7));
-//                    }
-//                    else{total=0;}
 
                     //rank=score.marks4c(total);
                     String formattedTotal = String.format("%.2f", t_score);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.marks4c(totalScore);
+                    int insentavization = score.marks4c(totalScore);
+
+                    if (col1_7 > median && way_to_grade < 10) {
+                        insentavization += 1;
+                    }
+                    int Zonal_rank = 0;
+                    String gst = "no";
+                    double sub_parameter_weighted_average = insentavization * 0.2;
+                    // rank = score.marks6a(total);
+                    rank = 0;
                     gsta = new GST4A(zoneName, commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
