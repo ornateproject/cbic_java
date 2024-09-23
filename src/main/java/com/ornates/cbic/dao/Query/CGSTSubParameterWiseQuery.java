@@ -692,41 +692,103 @@ public class CGSTSubParameterWiseQuery {
     public String QueryFor_gst4a_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa= "SELECT zc.ZONE_NAME,  cc.ZONE_CODE, SUM(14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) AS col13,  SUM(14c.OPENING_BALANCE_NO) AS col1 ,\n" +
-                "((SUM(14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) * 100)/ SUM(14c.OPENING_BALANCE_NO)) as total_score\n" +
-                "FROM mis_gst_commcode AS cc\n" +
-                "RIGHT JOIN mis_gi_gst_2 AS 14c  ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "LEFT JOIN    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "WHERE 14c.MM_YYYY = '"+ month_date+"' GROUP BY  cc.ZONE_CODE\n" +
-                "order by total_score desc;";
+        String queryGst14aa="-- ----gst4a zone wise \n" +
+                "WITH CTE AS (\n" +
+                "SELECT zc.ZONE_NAME,cc.ZONE_CODE,\n" +
+                "SUM(14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) AS col13, SUM(14c.OPENING_BALANCE_NO) AS col1,\n" +
+                "((SUM(14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) * 100) / SUM(14c.OPENING_BALANCE_NO)) AS total_score\n" +
+                "FROM mis_gst_commcode cc RIGHT JOIN mis_gi_gst_2 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "LEFT JOIN mis_gst_zonecode zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "WHERE 14c.MM_YYYY = '" + month_date + "' GROUP BY cc.ZONE_CODE\n" +
+                "),\n" +
+                "CTE_ranked AS (\n" +
+                "SELECT CTE.*, \n" +
+                "ROW_NUMBER() OVER (ORDER BY col13 ASC) AS row_num,\n" +
+                "COUNT(*) OVER () AS total_rows\n" +
+                "FROM CTE\n" +
+                ")\n" +
+                "SELECT CTE_ranked.*,\n" +
+                "(SELECT AVG(subquery.col13)\n" +
+                "FROM ( SELECT col13\n" +
+                "FROM CTE_ranked WHERE row_num IN (FLOOR((total_rows + 1) / 2), CEIL((total_rows + 1) / 2))\n" +
+                ") AS subquery) AS median_4a\n" +
+                "FROM CTE_ranked ORDER BY total_score DESC;";
+//        String queryGst14aa= "SELECT zc.ZONE_NAME,  cc.ZONE_CODE, SUM(14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) AS col13,  SUM(14c.OPENING_BALANCE_NO) AS col1 ,\n" +
+//                "((SUM(14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) * 100)/ SUM(14c.OPENING_BALANCE_NO)) as total_score\n" +
+//                "FROM mis_gst_commcode AS cc\n" +
+//                "RIGHT JOIN mis_gi_gst_2 AS 14c  ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+//                "LEFT JOIN    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+//                "WHERE 14c.MM_YYYY = '"+ month_date+"' GROUP BY  cc.ZONE_CODE\n" +
+//                "order by total_score desc;";
         return queryGst14aa;
     }
     public String QueryFor_gst4a_CommissonaryWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa="SELECT zc.ZONE_NAME,cc.ZONE_CODE,cc.COMM_NAME,\n" +
-                "                            (14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) AS col13,\n" +
-                "                            (14c.OPENING_BALANCE_NO) AS col1,\n" +
-                "                            ((14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) * 100 / (14c.OPENING_BALANCE_NO)) as score_of_parameter4a\n" +
-                "                        FROM mis_gst_commcode AS cc\n" +
-                "                        right  join  mis_gi_gst_2 as 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                "                        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "                        WHERE 14c.MM_YYYY = '" + month_date+ "' and cc.ZONE_CODE = '53'\n" +
-                "                        order by score_of_parameter4a desc;";
+        String queryGst14aa= "WITH RankedData AS (\n" +
+                "SELECT zc.ZONE_NAME, cc.ZONE_CODE,cc.COMM_NAME, (14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) AS col13,\n" +
+                "(14c.OPENING_BALANCE_NO) AS col1,\n" +
+                "((14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) * 100 / 14c.OPENING_BALANCE_NO) AS score_of_parameter4a,\n" +
+                "ROW_NUMBER() OVER (ORDER BY (14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO)) AS row_num,\n" +
+                "COUNT(*) OVER () AS total_count\n" +
+                "FROM mis_gst_commcode AS cc\n" +
+                "RIGHT JOIN mis_gi_gst_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "WHERE 14c.MM_YYYY = '" + month_date + "'),\n" +
+                "MedianData AS (\n" +
+                "SELECT ZONE_NAME, ZONE_CODE, COMM_NAME, col13, col1, score_of_parameter4a,\n" +
+                "(SELECT AVG(col13) FROM (SELECT col13\n" +
+                "FROM RankedData WHERE\n" +
+                "row_num IN (FLOOR((total_count + 1) / 2.0), CEIL((total_count + 1) / 2.0))\n" +
+                ") AS MedianSubquery\n" +
+                ") AS median_4a\n" +
+                "FROM RankedData\n" +
+                ")\n" +
+                "SELECT ZONE_NAME, ZONE_CODE, COMM_NAME, col13, col1, score_of_parameter4a, median_4a\n" +
+                "FROM MedianData WHERE ZONE_CODE = '" + zone_code + "'\n" +
+                "ORDER BY score_of_parameter4a DESC;";
+//        String queryGst14aa="SELECT zc.ZONE_NAME,cc.ZONE_CODE,cc.COMM_NAME,\n" +
+//                "                            (14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) AS col13,\n" +
+//                "                            (14c.OPENING_BALANCE_NO) AS col1,\n" +
+//                "                            ((14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) * 100 / (14c.OPENING_BALANCE_NO)) as score_of_parameter4a\n" +
+//                "                        FROM mis_gst_commcode AS cc\n" +
+//                "                        right  join  mis_gi_gst_2 as 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+//                "                        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+//                "                        WHERE 14c.MM_YYYY = '" + month_date+ "' and cc.ZONE_CODE = '" + zone_code + "'\n" +
+//                "                        order by score_of_parameter4a desc;";
         return queryGst14aa;
     }
     public String QueryFor_gst4a_AllCommissonaryWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa="SELECT zc.ZONE_NAME,cc.ZONE_CODE,cc.COMM_NAME,\n" +
-                "                            (14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) AS col13,\n" +
-                "                            (14c.OPENING_BALANCE_NO) AS col1,\n" +
-                "                            ((14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) * 100 / (14c.OPENING_BALANCE_NO)) as score_of_parameter4a\n" +
-                "                        FROM mis_gst_commcode AS cc\n" +
-                "                        right  join  mis_gi_gst_2 as 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                "                        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "                        WHERE 14c.MM_YYYY = '" + month_date+ "'\n" +
-                "                        order by score_of_parameter4a desc;";
+        String queryGst14aa="WITH RankedData AS (\n" +
+                "SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, (14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) AS col13, (14c.OPENING_BALANCE_NO) AS col1,\n" +
+                "((14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) * 100 / 14c.OPENING_BALANCE_NO) AS score_of_parameter4a,\n" +
+                "ROW_NUMBER() OVER (ORDER BY (14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO)) AS row_num, COUNT(*) OVER () AS total_count\n" +
+                "FROM mis_gst_commcode AS cc\n" +
+                "RIGHT JOIN mis_gi_gst_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "WHERE 14c.MM_YYYY = '" + month_date + "'),\n" +
+                "MedianData AS (\n" +
+                "SELECT ZONE_NAME, ZONE_CODE, COMM_NAME, col13,col1,score_of_parameter4a,\n" +
+                "(SELECT AVG(col13)\n" +
+                "FROM\n" +
+                "(SELECT col13 FROM RankedData\n" +
+                "WHERE row_num IN (FLOOR((total_count + 1) / 2.0), CEIL((total_count + 1) / 2.0))\n" +
+                ") AS MedianSubquery\n" +
+                ") AS median_4a\n" +
+                "FROM RankedData )\n" +
+                "SELECT ZONE_NAME,ZONE_CODE,COMM_NAME,col13,col1,score_of_parameter4a,median_4a\n" +
+                "FROM MedianData ORDER BY score_of_parameter4a DESC;";
+//        String queryGst14aa="SELECT zc.ZONE_NAME,cc.ZONE_CODE,cc.COMM_NAME,\n" +
+//                "                            (14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) AS col13,\n" +
+//                "                            (14c.OPENING_BALANCE_NO) AS col1,\n" +
+//                "                            ((14c.SCN_NO + 14c.VOLUNTARY_NO + 14c.MERIT_NO + 14c.TRANSFER_NO) * 100 / (14c.OPENING_BALANCE_NO)) as score_of_parameter4a\n" +
+//                "                        FROM mis_gst_commcode AS cc\n" +
+//                "                        right  join  mis_gi_gst_2 as 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+//                "                        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+//                "                        WHERE 14c.MM_YYYY = '" + month_date+ "'\n" +
+//                "                        order by score_of_parameter4a desc;";
         return queryGst14aa;
     }
     // ********************************************************************************************************************************
