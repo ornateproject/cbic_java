@@ -1920,11 +1920,11 @@ public class TotalScoreController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/adjudication(legacy cases)") //6
-	//  http://localhost:8080/cbicApi/cbic/t_score/adjudication(legacy cases)?month_date=2023-05-01&type=parameter							// for scrutiny/assessment button
-	//  http://localhost:8080/cbicApi/cbic/t_score/adjudication(legacy cases)?month_date=2023-05-01&type=zone&zone_code=59 				// for all button
-	//  http://localhost:8080/cbicApi/cbic/t_score/adjudication(legacy cases)?month_date=2023-05-01&type=commissary&zone_code=59			// for show button, zone wise
-	//  http://localhost:8080/cbicApi/cbic/t_score/adjudication(legacy cases)?month_date=2023-05-01&type=all_commissary					// for all commissary
-	//  http://localhost:8080/cbicApi/cbic/t_score/adjudication(legacy cases)?month_date=2023-05-01&type=come_name&zone_code=64&come_name=Rajkot			// for only commissary wise, show button
+	//  http://localhost:8080/cbicApi/cbic/t_score/adjudication(legacy cases)?month_date=2024-04-01&type=parameter							// for scrutiny/assessment button
+	//  http://localhost:8080/cbicApi/cbic/t_score/adjudication(legacy cases)?month_date=2024-04-01&type=zone&zone_code=59 				// for all button
+	//  http://localhost:8080/cbicApi/cbic/t_score/adjudication(legacy cases)?month_date=2024-04-01&type=commissary&zone_code=59			// for show button, zone wise
+	//  http://localhost:8080/cbicApi/cbic/t_score/adjudication(legacy cases)?month_date=2024-04-01&type=all_commissary					// for all commissary
+	//  http://localhost:8080/cbicApi/cbic/t_score/adjudication(legacy cases)?month_date=2024-04-01&type=come_name&zone_code=64&come_name=Rajkot			// for only commissary wise, show button
 	public Object adjudicationLegacy(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code, @RequestParam(required = false) String come_name) {
 		List<TotalScore> allGstaList = new ArrayList<>();
 		TotalScore totalScore = null;
@@ -1934,87 +1934,59 @@ public class TotalScoreController {
 		try {
 
 			if (type.equalsIgnoreCase("parameter")) { // returnFiling all zone name 1
-				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-
-				String query_assessment = "WITH DisposalData AS (\n" +
-						"    SELECT cc.ZONE_CODE, SUM(14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO + 14c.SUP_DISPOSAL_NO) AS col9\n" +
-						"    FROM mis_gst_commcode AS cc\n" +
-						"    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-						"    WHERE 14c.MM_YYYY = '" + month_date + "' GROUP BY cc.ZONE_CODE\n" +
-						"),\n" +
-						"ClosingData AS (\n" +
-						"    SELECT cc.ZONE_CODE, SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col3\n" +
-						"    FROM mis_gst_commcode AS cc\n" +
-						"    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-						"    WHERE 14c.MM_YYYY = '" + prev_month_new + "' GROUP BY cc.ZONE_CODE\n" +
-						"),\n" +
-						"Subpara1 AS (\n" +
-						"    SELECT zc.ZONE_NAME, d.ZONE_CODE, d.col9 / c.col3 AS total_score_of_subpara1\n" +
-						"    FROM DisposalData d \n" +
-						"    LEFT JOIN ClosingData c ON d.ZONE_CODE = c.ZONE_CODE \n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = d.ZONE_CODE\n" +
-						"),\n" +
-						"Subpara2 AS (\n" +
-						"    SELECT zc.ZONE_NAME, cc.ZONE_CODE, (SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) / SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO)) AS total_score_of_subpara2\n" +
-						"    FROM mis_gst_commcode AS cc \n" +
-						"    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-						"    WHERE 14c.MM_YYYY = '" + month_date + "' GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
-						"),\n" +
-						"Subpara3 AS (\n" +
-						"    SELECT t1.ZONE_NAME, t1.ZONE_CODE, CASE WHEN t2.col3 != 0 THEN t1.col9 / t2.col3 ELSE NULL END AS total_score_of_subpara3\n" +
-						"    FROM (\n" +
-						"        SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO + 14c.SUP_DISPOSAL_NO) AS col9\n" +
-						"        FROM mis_gst_commcode AS cc\n" +
-						"        RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-						"        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-						"        WHERE 14c.MM_YYYY = '" + month_date + "' GROUP BY cc.ZONE_CODE\n" +
-						"    ) AS t1\n" +
-						"    LEFT JOIN (\n" +
-						"        SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col3\n" +
-						"        FROM mis_gst_commcode AS cc\n" +
-						"        RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-						"        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-						"        WHERE 14c.MM_YYYY = '" + prev_month_new + "' GROUP BY cc.ZONE_CODE\n" +
-						"    ) AS t2 ON t1.ZONE_CODE = t2.ZONE_CODE ORDER BY t1.ZONE_NAME, t1.ZONE_CODE\n" +
-						"),\n" +
-						"Subpara4 AS (\n" +
-						"    SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
-						"           SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) AS col18, \n" +
-						"           SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col13,\n" +
-						"           SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) / SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS total_score_of_subpara4\n" +
-						"    FROM mis_gst_commcode AS cc\n" +
-						"    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-						"    WHERE 14c.MM_YYYY = '" + month_date + "' GROUP BY cc.ZONE_CODE\n" +
-						")\n" +
-						"SELECT ROW_NUMBER() OVER (ORDER BY (sp1.total_score_of_subpara1 + sp2.total_score_of_subpara2 + sp3.total_score_of_subpara3 + sp4.total_score_of_subpara4) DESC) AS z_rank,\n" +
-						"       sp1.ZONE_NAME,sp1.ZONE_CODE,sp1.total_score_of_subpara1,sp2.total_score_of_subpara2,sp3.total_score_of_subpara3,sp4.total_score_of_subpara4,\n" +
-						"       (sp1.total_score_of_subpara1 + sp2.total_score_of_subpara2 + sp3.total_score_of_subpara3 + sp4.total_score_of_subpara4) AS total_score\n" +
-						"FROM Subpara1 sp1\n" +
-						"LEFT JOIN Subpara2 sp2 ON sp1.ZONE_CODE = sp2.ZONE_CODE\n" +
-						"LEFT JOIN Subpara3 sp3 ON sp1.ZONE_CODE = sp3.ZONE_CODE\n" +
-						"LEFT JOIN Subpara4 sp4 ON sp1.ZONE_CODE = sp4.ZONE_CODE\n" +
-						"ORDER BY total_score DESC;\n";
-
+				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Adjudication_Legacy_6_ZoneWise(month_date);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
-					double tScore = rsGst14aa.getDouble("total_score") * 100;
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
-					Integer insentavization = 0;
-					double sub_parameter_weighted_average = 0.00;
-					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
+					double total_score_6a = rsGst14aa.getDouble("total_score_6a");
+					double total_score_6b = rsGst14aa.getDouble("total_score_6b");
+					double total_score_6c = rsGst14aa.getDouble("score_of_parameter6c");
+					double total_score_6d = rsGst14aa.getDouble("total_score_6d");
+
+					double numerator_6a = rsGst14aa.getDouble("col9_6a");
+					double median_6a = rsGst14aa.getDouble("median_6a");
+					double numerator_6c = rsGst14aa.getDouble("numerator_6c");
+					double median_6c = rsGst14aa.getDouble("median_numerator_6c");
+
+					Integer Zonal_rank = 0;
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
 					String ra ="ADJUDICATION(LEGACY CASES)";
 
-					String formattedTotal = String.format("%.2f", tScore);
-					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+					double total_score = 0.00;
+					int way_to_grade = 0;
+					int insentavization = 0;
+
+					Integer way_to_grade_6a = score.marks6a(total_score_6a);
+					Integer way_to_grade_6b = score.marks6b(total_score_6b);
+					Integer way_to_grade_6c = score.marks6c(total_score_6c);
+					Integer way_to_grade_6d = score.marks6d(total_score_6d);
+
+					int insentavization_6a = way_to_grade_6a;
+					int insentavization_6b = way_to_grade_6b;
+					int insentavization_6c = way_to_grade_6c;
+					int insentavization_6d = way_to_grade_6d;
+
+					if (numerator_6a > median_6a && way_to_grade_6a < 10) {
+						insentavization_6a += 1;
+					}
+					if (numerator_6c > median_6c && way_to_grade_6c < 10) {
+						insentavization_6c += 1;
+					}
+
+					double sub_parameter_weighted_average_6a = insentavization_6a * 0.3;
+					double sub_parameter_weighted_average_6b = insentavization_6b * 0.3;
+					double sub_parameter_weighted_average_6c = insentavization_6c * 0.2;
+					double sub_parameter_weighted_average_6d = insentavization_6d * 0.2;
+
+					double total_parameter_weight_average = sub_parameter_weighted_average_6a + sub_parameter_weighted_average_6b + sub_parameter_weighted_average_6c + sub_parameter_weighted_average_6d ;
+
+//					String formattedTotal = String.format("%.2f", tScore);
+//					double total_score = Double.parseDouble(formattedTotal);
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_parameter_weight_average);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -2389,7 +2361,9 @@ public class TotalScoreController {
 				e.printStackTrace();
 			}
 		}
-		return allGstaList;
+		return allGstaList.stream()
+				.sorted(Comparator.comparing(TotalScore::getSub_parameter_weighted_average).reversed())
+				.collect(Collectors.toList());
 
 	}
 

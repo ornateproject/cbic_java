@@ -1212,7 +1212,110 @@ public class CGSTParameterWiseQuery {
     // this query will show all zone || 1no url
     public String QueryFor_Adjudication_Legacy_6_ZoneWise(String month_date){
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String query_assessment = "";
+        String query_assessment = "WITH col9_data AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO + 14c.SUP_DISPOSAL_NO) AS col9_6a\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '2024-04-01'\n" +
+                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                "),\n" +
+                "col3_data AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col3\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '2024-03-01'\n" +
+                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                "),\n" +
+                "ranked_data_6a AS (\n" +
+                "    SELECT col9_data.ZONE_NAME, col9_data.ZONE_CODE, col9_data.col9_6a, col3_data.col3,\n" +
+                "           CASE\n" +
+                "               WHEN col3_data.col3 = 0 THEN 0\n" +
+                "               ELSE (col9_data.col9_6a / col3_data.col3) * 100\n" +
+                "           END AS total_score_6a\n" +
+                "    FROM col9_data\n" +
+                "    LEFT JOIN col3_data ON col9_data.ZONE_CODE = col3_data.ZONE_CODE AND col9_data.ZONE_NAME = col3_data.ZONE_NAME\n" +
+                "),\n" +
+                "median_calc_6a AS (\n" +
+                "    SELECT col9_6a, ROW_NUMBER() OVER (ORDER BY col9_6a) AS row_num, COUNT(*) OVER () AS total_rows\n" +
+                "    FROM ranked_data_6a\n" +
+                "),\n" +
+                "median_value_6a AS (\n" +
+                "    SELECT AVG(col9_6a) AS median\n" +
+                "    FROM median_calc_6a\n" +
+                "    WHERE row_num IN (FLOOR((total_rows + 1) / 2), FLOOR((total_rows + 2) / 2))\n" +
+                "),\n" +
+                "ranked_data_6b AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
+                "           SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) AS col18,\n" +
+                "           SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col13,\n" +
+                "           CASE\n" +
+                "               WHEN SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) = 0 THEN 0\n" +
+                "               ELSE (SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) /\n" +
+                "                    NULLIF(SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO), 0)) * 100\n" +
+                "           END AS total_score_6b\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '2024-04-01'\n" +
+                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                "),\n" +
+                "disposal_data_6c AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(COALESCE(14c.COMM_DISPOSAL_NO, 0) + COALESCE(14c.JC_DISPOSAL_NO, 0) + COALESCE(14c.AC_DISPOSAL_NO, 0) + COALESCE(14c.SUP_DISPOSAL_NO, 0)) AS numerator_6c,\n" +
+                "           ROW_NUMBER() OVER (ORDER BY SUM(COALESCE(14c.COMM_DISPOSAL_NO, 0) + COALESCE(14c.JC_DISPOSAL_NO, 0) + COALESCE(14c.AC_DISPOSAL_NO, 0) + COALESCE(14c.SUP_DISPOSAL_NO, 0))) AS row_num,\n" +
+                "           COUNT(*) OVER () AS total_count\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '2023-04-01'\n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),\n" +
+                "median_data_6c AS (\n" +
+                "    SELECT CASE\n" +
+                "               WHEN total_count % 2 = 1 THEN (SELECT numerator_6c FROM disposal_data_6c WHERE row_num = (total_count + 1) / 2)\n" +
+                "               ELSE (SELECT numerator_6c FROM disposal_data_6c WHERE row_num = total_count / 2)\n" +
+                "           END AS median_numerator_6c\n" +
+                "    FROM disposal_data_6c\n" +
+                "    LIMIT 1\n" +
+                "),\n" +
+                "closing_data_6c AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(COALESCE(14c.COMM_CLOSING_NO, 0) + COALESCE(14c.JC_CLOSING_NO, 0) + COALESCE(14c.AC_CLOSING_NO, 0) + COALESCE(14c.SUP_CLOSING_NO, 0)) AS col3\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '2024-04-01'\n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),\n" +
+                "ranked_data_6c AS (\n" +
+                "    SELECT d.ZONE_NAME, d.ZONE_CODE, d.numerator_6c,\n" +
+                "           COALESCE(c.col3, 0) AS col3,\n" +
+                "           CASE WHEN COALESCE(c.col3, 0) = 0 THEN 0\n" +
+                "                ELSE (d.numerator_6c * 100 / COALESCE(c.col3, 0))\n" +
+                "           END AS score_of_parameter6c\n" +
+                "    FROM disposal_data_6c AS d\n" +
+                "    LEFT JOIN closing_data_6c AS c ON d.ZONE_NAME = c.ZONE_NAME AND d.ZONE_CODE = c.ZONE_CODE\n" +
+                "),\n" +
+                "ranked_data_6d AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
+                "           COALESCE(\n" +
+                "               (SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) /\n" +
+                "                NULLIF(SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO), 0)) * 100, 0\n" +
+                "           ) AS total_score_6d\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '2024-04-01'\n" +
+                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                ")\n" +
+                "SELECT r6a.ZONE_NAME, r6a.ZONE_CODE, r6a.col9_6a, r6a.total_score_6a, m6a.median AS median_6a,r6b.total_score_6b,r6c.numerator_6c, r6c.score_of_parameter6c, m6c.median_numerator_6c,r6d.total_score_6d\n" +
+                "FROM ranked_data_6a AS r6a\n" +
+                "CROSS JOIN median_value_6a AS m6a\n" +
+                "LEFT JOIN ranked_data_6b AS r6b ON r6a.ZONE_NAME = r6b.ZONE_NAME AND r6a.ZONE_CODE = r6b.ZONE_CODE\n" +
+                "LEFT JOIN ranked_data_6c AS r6c ON r6a.ZONE_NAME = r6c.ZONE_NAME AND r6a.ZONE_CODE = r6c.ZONE_CODE\n" +
+                "CROSS JOIN median_data_6c AS m6c\n" +
+                "LEFT JOIN ranked_data_6d AS r6d ON r6a.ZONE_NAME = r6d.ZONE_NAME AND r6a.ZONE_CODE = r6d.ZONE_CODE\n" +
+                "WHERE r6a.ZONE_NAME NOT IN ('DG East', 'CEI DG');\n";
         return query_assessment;
     }
     // for 2no url , all india rank will show in this query
