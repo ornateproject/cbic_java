@@ -111,6 +111,37 @@ public class TestingController2 {
         }
         return allGstaList.stream()
                 .sorted(Comparator.comparing(TotalScore::getTotalScore).reversed()).collect(Collectors.toList());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
 }
