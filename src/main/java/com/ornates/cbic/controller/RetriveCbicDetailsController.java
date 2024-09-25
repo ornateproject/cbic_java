@@ -1903,6 +1903,7 @@ public class RetriveCbicDetailsController {
                     int Zonal_rank = 0;
                     String gst = "no";
                     double sub_parameter_weighted_average = insentavization * 0.2;
+                    sub_parameter_weighted_average = Double.parseDouble(String.format("%.2f", sub_parameter_weighted_average));
                     // rank = score.marks6a(total);
                     rank = 0;
                     gsta = new GST4A(zoneName, commname, totalScore,absval,zoneCode,ra,
