@@ -823,118 +823,138 @@ public class CGSTSubParameterWiseQuery {
     public String QueryFor_gst4c_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa= "WITH FirstQuery AS (\n" +
-                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
-                "    SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col1_7 \n" +
-                "    FROM mis_gst_commcode AS cc\n" +
-                "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
-                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
-                "),\n" +
-                "SecondQuery AS (\n" +
-                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
-                "    SUM(7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) * 100 AS col1_8 -- convert crore into lakhs\n" +
-                "    FROM mis_gst_commcode AS cc\n" +
-                "    RIGHT JOIN mis_ddm_gst_1 AS 7c ON cc.COMM_CODE = 7c.COMM_CODE\n" +
-                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 7c.MM_YYYY = '" + month_date + "' \n" +
-                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
-                ")\n" +
-                "SELECT \n" +
-                "    COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME,\n" +
-                "    COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) AS ZONE_CODE, \n" +
-                "    fq.col1_7, sq.col1_8, \n" +
-                "    CONCAT((fq.col1_7), '/', (sq.col1_8)) AS avsvl,\n" +
-                "    (fq.col1_7 * 100 / sq.col1_8) AS score_of_parameter4c\n" +
-                "FROM FirstQuery fq\n" +
-                "LEFT JOIN SecondQuery sq ON fq.ZONE_CODE = sq.ZONE_CODE\n" +
-                "WHERE COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) REGEXP '^[0-9]+$'\n" +
-                "\n" +
-                "UNION ALL\t\t\n" +
-                "\n" +
-                "SELECT \n" +
-                "    COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME,\n" +
-                "    COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) AS ZONE_CODE, \n" +
-                "    fq.col1_7, sq.col1_8, \n" +
-                "    CONCAT((fq.col1_7), '/', (sq.col1_8)) AS avsvl,\n" +
-                "    (fq.col1_7 * 100 / sq.col1_8) AS score_of_parameter4c\n" +
-                "FROM SecondQuery sq\n" +
-                "LEFT JOIN FirstQuery fq ON fq.ZONE_CODE = sq.ZONE_CODE\n" +
-                "WHERE fq.ZONE_CODE IS NULL\n" +
-                "AND COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) REGEXP '^[0-9]+$'\n" +
-                "ORDER BY score_of_parameter4c DESC;";
+        String queryGst14aa= "WITH FirstQuery AS (\n"
+                + "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n"
+                + "           SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col1_7\n"
+                + "    FROM mis_gst_commcode AS cc\n"
+                + "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n"
+                + "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n"
+                + "    WHERE 14c.MM_YYYY = '" + month_date + "'\n"
+                + "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n"
+                + "),\n"
+                + "SecondQuery AS (\n"
+                + "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n"
+                + "           SUM(7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) * 100 AS col1_8 -- convert crore into lakhs\n"
+                + "    FROM mis_gst_commcode AS cc\n"
+                + "    RIGHT JOIN mis_ddm_gst_1 AS 7c ON cc.COMM_CODE = 7c.COMM_CODE\n"
+                + "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n"
+                + "    WHERE 7c.MM_YYYY = '" + month_date + "'\n"
+                + "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n"
+                + "),\n"
+                + "CombinedQuery AS (\n"
+                + "    SELECT \n"
+                + "        COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME,\n"
+                + "        COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) AS ZONE_CODE,\n"
+                + "        fq.col1_7, sq.col1_8,\n"
+                + "        CONCAT(fq.col1_7, '/', sq.col1_8) AS avsvl,\n"
+                + "        (fq.col1_7 * 100 / sq.col1_8) AS score_of_parameter4c\n"
+                + "    FROM FirstQuery fq\n"
+                + "    LEFT JOIN SecondQuery sq ON fq.ZONE_CODE = sq.ZONE_CODE\n"
+                + "    WHERE COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) REGEXP '^[0-9]+$'\n"
+                + "    \n"
+                + "    UNION ALL\n"
+                + "    \n"
+                + "    SELECT \n"
+                + "        COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME,\n"
+                + "        COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) AS ZONE_CODE,\n"
+                + "        fq.col1_7, sq.col1_8,\n"
+                + "        CONCAT(fq.col1_7, '/', sq.col1_8) AS avsvl,\n"
+                + "        (fq.col1_7 * 100 / sq.col1_8) AS score_of_parameter4c\n"
+                + "    FROM SecondQuery sq\n"
+                + "    LEFT JOIN FirstQuery fq ON fq.ZONE_CODE = sq.ZONE_CODE\n"
+                + "    WHERE fq.ZONE_CODE IS NULL\n"
+                + "    AND COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) REGEXP '^[0-9]+$'\n"
+                + "),\n"
+                + "RankedQuery AS (\n"
+                + "    SELECT *,\n"
+                + "           ROW_NUMBER() OVER (ORDER BY col1_7) AS rn,\n"
+                + "           COUNT(*) OVER () AS total_count\n"
+                + "    FROM CombinedQuery\n"
+                + "),\n"
+                + "MedianCalculation AS (\n"
+                + "    SELECT *,\n"
+                + "           CASE\n"
+                + "               WHEN total_count % 2 = 1 THEN \n"
+                + "                   (SELECT col1_7 FROM RankedQuery WHERE rn = (total_count + 1) / 2)\n"
+                + "               ELSE \n"
+                + "                   (SELECT AVG(col1_7) FROM RankedQuery WHERE rn IN (total_count / 2, total_count / 2 + 1))\n"
+                + "           END AS median_4c\n"
+                + "    FROM RankedQuery\n"
+                + ")\n"
+                + "SELECT ZONE_NAME, ZONE_CODE, col1_7, col1_8, avsvl, score_of_parameter4c, median_4c\n"
+                + "FROM MedianCalculation\n"
+                + "ORDER BY score_of_parameter4c DESC;\n"
+                + "";
         return queryGst14aa;
     }
     public String QueryFor_gst4c_CommissonaryWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
         String queryGst14aa= "WITH FirstQuery AS (\n" +
-                "    SELECT \n" +
-                "        zc.ZONE_NAME, \n" +
-                "        cc.ZONE_CODE,\n" +
-                "        cc.COMM_NAME,\n" +
-                "        14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT AS col1_7\n" +
-                "    FROM \n" +
-                "        mis_gst_commcode AS cc\n" +
-                "    RIGHT JOIN \n" +
-                "        mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                "    LEFT JOIN \n" +
-                "        mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE \n" +
-                "        14c.MM_YYYY = '" + month_date + "' \n" +
-                "        AND cc.ZONE_CODE = '" + zone_code + "'\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+                "           14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT AS col1_7\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
                 "), \n" +
                 "SecondQuery AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+                "           (7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) * 100 AS col1_8\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_ddm_gst_1 AS 7c ON cc.COMM_CODE = 7c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 7c.MM_YYYY = '" + month_date + "' \n" +
+                "),\n" +
+                "CombinedQuery AS (\n" +
                 "    SELECT \n" +
-                "        zc.ZONE_NAME, \n" +
-                "        cc.ZONE_CODE,\n" +
-                "        cc.COMM_NAME,\n" +
-                "        (7c.GROSS_TAX_CGST_FOR_C + 7c.GROSS_TAX_SGST_FOR_C + 7c.GROSS_TAX_IGST_FOR_C + 7c.GROSS_TAX_CESS_FOR_C) * 100 AS col1_8 -- convert crore into lakhs\n" +
-                "    FROM \n" +
-                "        mis_gst_commcode AS cc\n" +
-                "    RIGHT JOIN \n" +
-                "        mis_ddm_gst_1 AS 7c ON cc.COMM_CODE = 7c.COMM_CODE\n" +
-                "    LEFT JOIN \n" +
-                "        mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE \n" +
-                "        7c.MM_YYYY = '" + month_date + "' \n" +
-                "        AND cc.ZONE_CODE = '" + zone_code + "'\n" +
-                ")\n" +
-                "SELECT \n" +
-                "    COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME,\n" +
-                "    COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) AS ZONE_CODE,\n" +
-                "    COALESCE(fq.COMM_NAME, sq.COMM_NAME) AS COMM_NAME,\n" +
-                "    fq.col1_7, \n" +
-                "    sq.col1_8,\n" +
-                "    CONCAT((fq.col1_7), '/', (sq.col1_8)) AS avsvl,\n" +
-                "    (fq.col1_7 * 100 / sq.col1_8) AS score_of_subparameter4c\n" +
-                "FROM \n" +
-                "    FirstQuery fq \n" +
-                "LEFT JOIN \n" +
-                "    SecondQuery sq ON fq.ZONE_CODE = sq.ZONE_CODE AND fq.COMM_NAME = sq.COMM_NAME\n" +
-                "WHERE \n" +
-                "    COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) REGEXP '^[0-9]+$'\n" +
+                "        COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME,\n" +
+                "        COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) AS ZONE_CODE,\n" +
+                "        COALESCE(fq.COMM_NAME, sq.COMM_NAME) AS COMM_NAME,\n" +
+                "        fq.col1_7, sq.col1_8,\n" +
+                "        CONCAT((fq.col1_7), '/', (sq.col1_8)) AS avsvl,\n" +
+                "        (fq.col1_7 * 100 / sq.col1_8) AS score_of_subparameter4c\n" +
+                "    FROM FirstQuery fq \n" +
+                "    LEFT JOIN SecondQuery sq ON fq.ZONE_CODE = sq.ZONE_CODE AND fq.COMM_NAME = sq.COMM_NAME\n" +
+                "    WHERE COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) REGEXP '^[0-9]+$'\n" +
                 "\n" +
-                "UNION ALL\n" +
+                "    UNION ALL\n" +
                 "\n" +
-                "SELECT \n" +
-                "    COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME,\n" +
-                "    COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) AS ZONE_CODE,\n" +
-                "    COALESCE(fq.COMM_NAME, sq.COMM_NAME) AS COMM_NAME,\n" +
-                "    fq.col1_7, \n" +
-                "    sq.col1_8,\n" +
-                "    CONCAT((fq.col1_7), '/', (sq.col1_8)) AS avsvl,\n" +
-                "    (fq.col1_7 * 100 / sq.col1_8) AS score_of_subparameter4c\n" +
-                "FROM \n" +
-                "    SecondQuery sq \n" +
-                "LEFT JOIN \n" +
-                "    FirstQuery fq ON fq.ZONE_CODE = sq.ZONE_CODE AND fq.COMM_NAME = sq.COMM_NAME\n" +
-                "WHERE \n" +
-                "    fq.ZONE_CODE IS NULL \n" +
+                "    SELECT \n" +
+                "        COALESCE(fq.ZONE_NAME, sq.ZONE_NAME) AS ZONE_NAME,\n" +
+                "        COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) AS ZONE_CODE,\n" +
+                "        COALESCE(fq.COMM_NAME, sq.COMM_NAME) AS COMM_NAME,\n" +
+                "        fq.col1_7, sq.col1_8,\n" +
+                "        CONCAT((fq.col1_7), '/', (sq.col1_8)) AS avsvl,\n" +
+                "        (fq.col1_7 * 100 / sq.col1_8) AS score_of_subparameter4c\n" +
+                "    FROM SecondQuery sq \n" +
+                "    LEFT JOIN FirstQuery fq ON fq.ZONE_CODE = sq.ZONE_CODE AND fq.COMM_NAME = sq.COMM_NAME\n" +
+                "    WHERE fq.ZONE_CODE IS NULL \n" +
                 "    AND COALESCE(fq.ZONE_CODE, sq.ZONE_CODE) REGEXP '^[0-9]+$'\n" +
-                "ORDER BY \n" +
-                "    score_of_subparameter4c DESC;\n";
+                "),\n" +
+                "RankedQuery AS (\n" +
+                "    SELECT *,\n" +
+                "           ROW_NUMBER() OVER (ORDER BY col1_7 ASC) AS row_num,\n" +
+                "           COUNT(*) OVER () AS total_rows\n" +
+                "    FROM CombinedQuery\n" +
+                "),\n" +
+                "MedianValue AS (\n" +
+                "    SELECT \n" +
+                "        CASE \n" +
+                "            WHEN total_rows % 2 = 1 THEN \n" +
+                "                (SELECT col1_7 FROM RankedQuery WHERE row_num = (total_rows + 1) / 2)\n" +
+                "            ELSE \n" +
+                "                (SELECT AVG(col1_7) FROM RankedQuery WHERE row_num IN (total_rows / 2, total_rows / 2 + 1))\n" +
+                "        END AS median_col1_7\n" +
+                "    FROM RankedQuery\n" +
+                "    LIMIT 1 -- To ensure that the median is returned as a single value\n" +
+                ")\n" +
+                "SELECT rq.ZONE_NAME, rq.ZONE_CODE, rq.COMM_NAME, rq.col1_7, rq.col1_8, \n" +
+                "       rq.avsvl, rq.score_of_subparameter4c, mv.median_col1_7 AS median\n" +
+                "FROM RankedQuery rq\n" +
+                "CROSS JOIN MedianValue mv\n" +
+                "WHERE rq.ZONE_CODE = 56 -- Filter for ZONE_CODE = 56\n" +
+                "ORDER BY rq.score_of_subparameter4c DESC;\n";
         return queryGst14aa;
     }
     public String QueryFor_gst4c_AllCommissonaryWise(String month_date){
