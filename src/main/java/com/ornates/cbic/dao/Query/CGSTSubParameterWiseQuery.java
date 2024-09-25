@@ -2370,43 +2370,122 @@ public class CGSTSubParameterWiseQuery {
     public String QueryFor_gst9b_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa= "SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
-                "SUM(14c.PROSECUTION_LAUNCHED) AS col4_4, SUM(14c.ARRESTS_MADE) AS col1_4,\n" +
-                "(SUM(14c.PROSECUTION_LAUNCHED) * 100 / SUM(14c.ARRESTS_MADE)) as score_of_subparameter9b\n" +
-                "FROM mis_gst_commcode AS cc \n" +
-                "RIGHT JOIN mis_gi_gst_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "WHERE 14c.MM_YYYY <= '" + month_date + "' \n" +
-                "GROUP BY cc.ZONE_CODE, zc.ZONE_NAME \n" +
-                "ORDER BY score_of_subparameter9b desc;";
+        String queryGst14aa=  "WITH score_data AS (\n"
+                + "    SELECT \n"
+                + "        zc.ZONE_NAME,\n"
+                + "        cc.ZONE_CODE,\n"
+                + "        SUM(14c.PROSECUTION_LAUNCHED) AS col4_4,\n"
+                + "        SUM(14c.ARRESTS_MADE) AS col1_4,\n"
+                + "        (SUM(14c.PROSECUTION_LAUNCHED) * 100 / SUM(14c.ARRESTS_MADE)) AS score_of_subparameter9b\n"
+                + "    FROM \n"
+                + "        mis_gst_commcode AS cc\n"
+                + "    RIGHT JOIN \n"
+                + "        mis_gi_gst_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n"
+                + "    LEFT JOIN \n"
+                + "        mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n"
+                + "    WHERE \n"
+                + "        14c.MM_YYYY <= '" + month_date + "'\n"
+                + "    GROUP BY \n"
+                + "        cc.ZONE_CODE, zc.ZONE_NAME\n"
+                + "),\n"
+                + "ranked_data AS (\n"
+                + "    SELECT \n"
+                + "        col4_4,\n"
+                + "        @row_number := @row_number + 1 AS row_num,\n"
+                + "        @total_rows := @total_rows + 1\n"
+                + "    FROM \n"
+                + "        score_data, (SELECT @row_number := 0, @total_rows := 0) AS vars\n"
+                + "    ORDER BY \n"
+                + "        col4_4\n"
+                + ")\n"
+                + "SELECT \n"
+                + "    ZONE_NAME,\n"
+                + "    ZONE_CODE,\n"
+                + "    col4_4,\n"
+                + "    col1_4,\n"
+                + "    score_of_subparameter9b,\n"
+                + "    (SELECT \n"
+                + "        AVG(col4_4) \n"
+                + "     FROM \n"
+                + "        ranked_data \n"
+                + "     WHERE \n"
+                + "        row_num IN (FLOOR((@total_rows + 1) / 2), CEIL((@total_rows + 1) / 2))) AS median9_b\n"
+                + "FROM \n"
+                + "    score_data\n"
+                + "ORDER BY \n"
+                + "    score_of_subparameter9b DESC;\n"
+                + "";
         return queryGst14aa;
     }
     public String QueryFor_gst9b_CommissonaryWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa= "SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
-                "SUM(gst.PROSECUTION_LAUNCHED) AS col4_4, SUM(gst.ARRESTS_MADE) AS col1_4,\n" +
-                "    (SUM(gst.PROSECUTION_LAUNCHED) * 100 / SUM(gst.ARRESTS_MADE)) AS score_of_subparameter9b\n" +
-                "FROM mis_gst_commcode AS cc \n" +
-                "    RIGHT JOIN mis_gi_gst_1a AS gst ON cc.COMM_CODE = gst.COMM_CODE \n" +
-                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "WHERE gst.MM_YYYY <= '" + month_date + "' and cc.ZONE_CODE = '" + zone_code + "'\n" +
-                "GROUP BY zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME\n" +
-                "ORDER BY score_of_subparameter9b DESC;";
+        String queryGst14aa= "SELECT \n"
+                + "    zc.ZONE_NAME,\n"
+                + "    cc.ZONE_CODE,\n"
+                + "    cc.COMM_NAME,\n"
+                + "    SUM(gst.PROSECUTION_LAUNCHED) AS col4_4,\n"
+                + "    SUM(gst.ARRESTS_MADE) AS col1_4,\n"
+                + "    (SUM(gst.PROSECUTION_LAUNCHED) * 100 / SUM(gst.ARRESTS_MADE)) AS score_of_subparameter9b,\n"
+                + "    (SELECT AVG(sub.prosecution_launched) AS median_9b\n"
+                + "     FROM (\n"
+                + "         SELECT SUM(gst.PROSECUTION_LAUNCHED) AS prosecution_launched\n"
+                + "         FROM mis_gst_commcode AS cc\n"
+                + "         RIGHT JOIN mis_gi_gst_1a AS gst ON cc.COMM_CODE = gst.COMM_CODE\n"
+                + "         LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n"
+                + "         WHERE gst.MM_YYYY <= '" + month_date + "'\n"
+                + "         GROUP BY cc.COMM_CODE\n"
+                + "         ORDER BY prosecution_launched\n"
+                + "         LIMIT 2) AS sub) AS median_9b\n"
+                + "FROM \n"
+                + "    mis_gst_commcode AS cc\n"
+                + "RIGHT JOIN \n"
+                + "    mis_gi_gst_1a AS gst ON cc.COMM_CODE = gst.COMM_CODE\n"
+                + "LEFT JOIN \n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n"
+                + "WHERE \n"
+                + "    gst.MM_YYYY <= '" + month_date + "' \n"
+                + "    AND cc.ZONE_CODE = '" + zone_code + "'\n"
+                + "GROUP BY \n"
+                + "    zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME \n"
+                + "ORDER BY \n"
+                + "    score_of_subparameter9b DESC;\n"
+                + "";
         return queryGst14aa;
     }
     public String QueryFor_gst9b_AllCommissonaryWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa="SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
-                "SUM(gst.PROSECUTION_LAUNCHED) AS col4_4, SUM(gst.ARRESTS_MADE) AS col1_4,\n" +
-                "    (SUM(gst.PROSECUTION_LAUNCHED) * 100 / SUM(gst.ARRESTS_MADE)) AS score_of_subparameter9b\n" +
-                "FROM mis_gst_commcode AS cc \n" +
-                "    RIGHT JOIN mis_gi_gst_1a AS gst ON cc.COMM_CODE = gst.COMM_CODE \n" +
-                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "WHERE gst.MM_YYYY <= '" + month_date + "'\n" +
-                "GROUP BY zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME\n" +
-                "ORDER BY score_of_subparameter9b DESC;";
+        String queryGst14aa="SELECT \n"
+                + "    zc.ZONE_NAME,\n"
+                + "    cc.ZONE_CODE,\n"
+                + "    cc.COMM_NAME,\n"
+                + "    SUM(gst.PROSECUTION_LAUNCHED) AS col4_4,\n"
+                + "    SUM(gst.ARRESTS_MADE) AS col1_4,\n"
+                + "    (SUM(gst.PROSECUTION_LAUNCHED) * 100 / SUM(gst.ARRESTS_MADE)) AS score_of_subparameter9b,\n"
+                + "    (SELECT AVG(sub.prosecution_launched) AS median_9b\n"
+                + "     FROM (\n"
+                + "         SELECT SUM(gst.PROSECUTION_LAUNCHED) AS prosecution_launched\n"
+                + "         FROM mis_gst_commcode AS cc\n"
+                + "         RIGHT JOIN mis_gi_gst_1a AS gst ON cc.COMM_CODE = gst.COMM_CODE\n"
+                + "         LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n"
+                + "         WHERE gst.MM_YYYY <= '" + month_date + "'\n"
+                + "         GROUP BY cc.COMM_CODE\n"
+                + "         ORDER BY prosecution_launched\n"
+                + "         LIMIT 2) AS sub) AS median_9b\n"
+                + "FROM \n"
+                + "    mis_gst_commcode AS cc\n"
+                + "RIGHT JOIN \n"
+                + "    mis_gi_gst_1a AS gst ON cc.COMM_CODE = gst.COMM_CODE\n"
+                + "LEFT JOIN \n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n"
+                + "WHERE \n"
+                + "    gst.MM_YYYY <= '" + month_date + "' \n"
+                + "GROUP BY \n"
+                + "    zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME \n"
+                + "ORDER BY \n"
+                + "    score_of_subparameter9b DESC;\n"
+                + "";
         return queryGst14aa;
     }
     // ********************************************************************************************************************************
