@@ -1208,8 +1208,7 @@ public class RetriveCbicDetailsController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return allGstaList.stream()
-                .sorted(Comparator.comparing(GST4A::getSub_parameter_weighted_average).reversed()).collect(Collectors.toList());
+        return allGstaList;
     }
 
     /*
@@ -1470,8 +1469,7 @@ public class RetriveCbicDetailsController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return allGstaList.stream()
-                .sorted(Comparator.comparing(GST4A::getSub_parameter_weighted_average).reversed()).collect(Collectors.toList());
+        return allGstaList;
     }
 
 
