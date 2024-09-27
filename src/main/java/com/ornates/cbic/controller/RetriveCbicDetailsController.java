@@ -2665,7 +2665,7 @@ public class RetriveCbicDetailsController {
     @RequestMapping(value = "/gst6c")
     //  http://localhost:8080/cbicApi/cbic/gst6c?month_date=2024-04-01&type=zone
     //  http://localhost:8080/cbicApi/cbic/gst6c?month_date=2024-04-01&zone_code=70&type=commissary
-    //	  http://localhost:8080/cbicApi/cbic/gst6c?month_date=2024-04-01&type=all_commissary
+    //	http://localhost:8080/cbicApi/cbic/gst6c?month_date=2024-04-01&type=all_commissary
     public Object getGst6C(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code) {
 
         List<GST4A> allGstaList = new ArrayList<>();
@@ -2722,6 +2722,7 @@ public class RetriveCbicDetailsController {
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
+                System.out.println("GST6C zone wise median :" + median);
             }else if (type.equalsIgnoreCase("commissary")) { // gst 6c
                 // Query string
                 String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst6c_CommissonaryWise(month_date,zone_code);
