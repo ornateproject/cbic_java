@@ -1217,7 +1217,7 @@ public class CGSTParameterWiseQuery {
                 "    FROM mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 14c.MM_YYYY = '2024-04-01'\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
                 "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                 "),\n" +
                 "col3_data AS (\n" +
@@ -1225,7 +1225,7 @@ public class CGSTParameterWiseQuery {
                 "    FROM mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 14c.MM_YYYY = '2024-03-01'\n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
                 "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                 "),\n" +
                 "ranked_data_6a AS (\n" +
@@ -1258,7 +1258,7 @@ public class CGSTParameterWiseQuery {
                 "    FROM mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 14c.MM_YYYY = '2024-04-01'\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
                 "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                 "),\n" +
                 "disposal_data_6c AS (\n" +
@@ -1284,7 +1284,7 @@ public class CGSTParameterWiseQuery {
                 "    FROM mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 14c.MM_YYYY = '2024-04-01'\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
                 "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
                 "),\n" +
                 "ranked_data_6c AS (\n" +
@@ -1305,7 +1305,7 @@ public class CGSTParameterWiseQuery {
                 "    FROM mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 14c.MM_YYYY = '2024-04-01'\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
                 "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
                 ")\n" +
                 "SELECT r6a.ZONE_NAME, r6a.ZONE_CODE, r6a.col9_6a, r6a.total_score_6a, m6a.median AS median_6a,r6b.total_score_6b,r6c.numerator_6c, r6c.score_of_parameter6c, m6c.median_numerator_6c,r6d.total_score_6d\n" +
@@ -1330,106 +1330,137 @@ public class CGSTParameterWiseQuery {
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
         String query_assessment = "WITH col9_data AS (\n" +
-                "        SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO + 14c.SUP_DISPOSAL_NO) AS numerator\n" +
-                "        FROM mis_gst_commcode AS cc\n" +
-                "        RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                "        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "        WHERE 14c.MM_YYYY = '2024-04-01'\n" +
-                "        GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
-                "    ),\n" +
-                "    col3_data AS (\n" +
-                "        SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col3\n" +
-                "        FROM mis_gst_commcode AS cc\n" +
-                "        RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                "        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "        WHERE 14c.MM_YYYY = '2024-03-01'\n" +
-                "        GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
-                "    ),\n" +
-                "    ranked_data AS (\n" +
-                "        SELECT col9_data.ZONE_NAME, col9_data.ZONE_CODE, col9_data.numerator, col3_data.col3,\n" +
-                "               CASE WHEN col3_data.col3 = 0 THEN 0\n" +
-                "                    ELSE (col9_data.numerator / col3_data.col3) * 100 END AS total_score\n" +
-                "        FROM col9_data\n" +
-                "        LEFT JOIN col3_data ON col9_data.ZONE_CODE = col3_data.ZONE_CODE AND col9_data.ZONE_NAME = col3_data.ZONE_NAME\n" +
-                "    ),\n" +
-                "    median_calc AS (\n" +
-                "        SELECT numerator, ROW_NUMBER() OVER (ORDER BY numerator) AS row_num, COUNT(*) OVER () AS total_rows\n" +
-                "        FROM ranked_data\n" +
-                "    ),\n" +
-                "    median_value AS (\n" +
-                "        SELECT AVG(numerator) AS median\n" +
-                "        FROM median_calc\n" +
-                "        WHERE row_num IN (FLOOR((total_rows + 1) / 2), FLOOR((total_rows + 2) / 2))\n" +
-                "    ),\n" +
-                "    disposal_data AS (\n" +
-                "        SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(COALESCE(14c.COMM_DISPOSAL_NO, 0) + COALESCE(14c.JC_DISPOSAL_NO, 0) + COALESCE(14c.AC_DISPOSAL_NO, 0) + COALESCE(14c.SUP_DISPOSAL_NO, 0)) AS numerator,\n" +
-                "               ROW_NUMBER() OVER (ORDER BY SUM(COALESCE(14c.COMM_DISPOSAL_NO, 0) + COALESCE(14c.JC_DISPOSAL_NO, 0) + COALESCE(14c.AC_DISPOSAL_NO, 0) + COALESCE(14c.SUP_DISPOSAL_NO, 0))) AS row_num,\n" +
-                "               COUNT(*) OVER () AS total_count\n" +
-                "        FROM mis_gst_commcode AS cc\n" +
-                "        RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                "        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "        WHERE 14c.MM_YYYY = '2024-04-01'\n" +
-                "        GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
-                "        ORDER BY numerator\n" +
-                "    ),\n" +
-                "    median_data AS (\n" +
-                "        SELECT CASE\n" +
-                "                WHEN total_count % 2 = 1 THEN (SELECT numerator FROM disposal_data WHERE row_num = (total_count + 1) / 2)\n" +
-                "                ELSE (SELECT numerator FROM disposal_data WHERE row_num = total_count / 2)\n" +
-                "               END AS median\n" +
-                "        FROM disposal_data\n" +
-                "        LIMIT 1\n" +
-                "    ),\n" +
-                "    closing_data AS (\n" +
-                "        SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(COALESCE(14c.COMM_CLOSING_NO, 0) + COALESCE(14c.JC_CLOSING_NO, 0) + COALESCE(14c.AC_CLOSING_NO, 0) + COALESCE(14c.SUP_CLOSING_NO, 0)) AS col3\n" +
-                "        FROM mis_gst_commcode AS cc\n" +
-                "        RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                "        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "        WHERE 14c.MM_YYYY = '2024-04-01'\n" +
-                "        GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
-                "    ),\n" +
-                "    ranked_data_2 AS (\n" +
-                "        SELECT d.ZONE_NAME, d.ZONE_CODE, d.numerator, COALESCE(c.col3, 0) AS col3,\n" +
-                "               CASE WHEN COALESCE(c.col3, 0) = 0 THEN 0\n" +
-                "                    ELSE (d.numerator * 100 / COALESCE(c.col3, 0)) END AS total_score\n" +
-                "        FROM disposal_data AS d\n" +
-                "        LEFT JOIN closing_data AS c ON d.ZONE_NAME = c.ZONE_NAME AND d.ZONE_CODE = c.ZONE_CODE\n" +
-                "    )\n" +
-                "SELECT r.ZONE_NAME, r.ZONE_CODE, r.total_score, 'GST6A' AS gst, r.numerator, m.median\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
+                "           SUM(14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO + 14c.SUP_DISPOSAL_NO) AS numerator\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                "),\n" +
+                "col3_data AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
+                "           SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col3\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
+                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                "),\n" +
+                "ranked_data AS (\n" +
+                "    SELECT col9_data.ZONE_NAME, col9_data.ZONE_CODE, col9_data.numerator, col3_data.col3,\n" +
+                "           CASE\n" +
+                "               WHEN col3_data.col3 = 0 THEN 0\n" +
+                "               ELSE (col9_data.numerator / col3_data.col3) * 100\n" +
+                "           END AS total_score\n" +
+                "    FROM col9_data\n" +
+                "    LEFT JOIN col3_data ON col9_data.ZONE_CODE = col3_data.ZONE_CODE AND col9_data.ZONE_NAME = col3_data.ZONE_NAME\n" +
+                "),\n" +
+                "median_calc AS (\n" +
+                "    SELECT numerator, ROW_NUMBER() OVER (ORDER BY numerator) AS row_num, COUNT(*) OVER () AS total_rows\n" +
+                "    FROM ranked_data\n" +
+                "),\n" +
+                "median_value AS (\n" +
+                "    SELECT AVG(numerator) AS median\n" +
+                "    FROM median_calc\n" +
+                "    WHERE row_num IN (FLOOR((total_rows + 1) / 2), FLOOR((total_rows + 2) / 2))\n" +
+                "),\n" +
+                "ranked_data_2 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
+                "           SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) AS col18,\n" +
+                "           SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col13,\n" +
+                "           CASE\n" +
+                "               WHEN SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) = 0 THEN 0\n" +
+                "               ELSE (SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) / \n" +
+                "                     NULLIF(SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO), 0)) * 100\n" +
+                "           END AS total_score\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                "),\n" +
+                "ranked_data_with_rank AS (\n" +
+                "    SELECT *, 0 AS numerator, 0 AS median\n" +
+                "    FROM ranked_data_2\n" +
+                "),\n" +
+                "disposal_data AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
+                "           SUM(COALESCE(14c.COMM_DISPOSAL_NO, 0) + COALESCE(14c.JC_DISPOSAL_NO, 0) + COALESCE(14c.AC_DISPOSAL_NO, 0) + COALESCE(14c.SUP_DISPOSAL_NO, 0)) AS numerator,\n" +
+                "           ROW_NUMBER() OVER (ORDER BY SUM(COALESCE(14c.COMM_DISPOSAL_NO, 0) + COALESCE(14c.JC_DISPOSAL_NO, 0) + COALESCE(14c.AC_DISPOSAL_NO, 0) + COALESCE(14c.SUP_DISPOSAL_NO, 0)) ) AS row_num,\n" +
+                "           COUNT(*) OVER () AS total_count\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),\n" +
+                "median_data AS (\n" +
+                "    SELECT\n" +
+                "           CASE\n" +
+                "               WHEN total_count % 2 = 1 THEN\n" +
+                "                   (SELECT numerator FROM disposal_data WHERE row_num = (total_count + 1) / 2)\n" +
+                "               ELSE\n" +
+                "                   (SELECT AVG(numerator) FROM disposal_data WHERE row_num IN (total_count / 2, total_count / 2 + 1))\n" +
+                "           END AS median\n" +
+                "    FROM disposal_data\n" +
+                "    LIMIT 1\n" +
+                "),\n" +
+                "closing_data AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
+                "           SUM(COALESCE(14c.COMM_CLOSING_NO, 0) + COALESCE(14c.JC_CLOSING_NO, 0) + COALESCE(14c.AC_CLOSING_NO, 0) + COALESCE(14c.SUP_CLOSING_NO, 0)) AS col3\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),\n" +
+                "ranked_data_3 AS (\n" +
+                "    SELECT d.ZONE_NAME, d.ZONE_CODE, d.numerator,\n" +
+                "           COALESCE(c.col3, 0) AS col3,\n" +
+                "           CASE WHEN COALESCE(c.col3, 0) = 0 THEN 0\n" +
+                "           ELSE (d.numerator * 100 / COALESCE(c.col3, 0))\n" +
+                "           END AS total_score\n" +
+                "    FROM disposal_data AS d\n" +
+                "    LEFT JOIN closing_data AS c ON d.ZONE_NAME = c.ZONE_NAME AND d.ZONE_CODE = c.ZONE_CODE\n" +
+                ")\n" +
+                "SELECT r.ZONE_NAME, r.ZONE_CODE, r.total_score, 'GST6A' AS gst, r.numerator, m.median, CONCAT(r.numerator, '/', col3) AS absvl\n" +
                 "FROM ranked_data r\n" +
                 "CROSS JOIN median_value m\n" +
-                "WHERE r.ZONE_NAME NOT IN ('DG East', 'CEI DG') AND r.ZONE_CODE = 57\n" +
+                "WHERE r.ZONE_NAME NOT IN ('DG East', 'CEI DG') \n" +
+                "  AND r.ZONE_CODE = '" + zone_code + "' \n" +
                 "\n" +
                 "UNION ALL\n" +
                 "\n" +
-                "SELECT zc.ZONE_NAME, cc.ZONE_CODE, COALESCE((SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) /\n" +
-                "        NULLIF(SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO), 0)) * 100, 0) AS total_score,\n" +
-                "        'GST6B' AS gst, 0 AS numerator, 0 AS median\n" +
-                "FROM mis_gst_commcode AS cc\n" +
-                "RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
-                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "WHERE 14c.MM_YYYY = '2024-04-01'\n" +
-                "GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
-                "HAVING cc.ZONE_CODE = 57\n" +
+                "SELECT ZONE_NAME, ZONE_CODE, total_score, 'GST6B' AS gst, numerator, median, CONCAT(col18, '/', col13) AS absvl\n" +
+                "FROM ranked_data_with_rank\n" +
+                "WHERE ZONE_CODE = '" + zone_code + "' \n" +
                 "\n" +
                 "UNION ALL\n" +
                 "\n" +
-                "SELECT t.ZONE_NAME, t.ZONE_CODE, t.total_score, 'GST6C' AS gst, t.numerator, m.median\n" +
-                "FROM ranked_data_2 AS t\n" +
+                "SELECT t.ZONE_NAME, t.ZONE_CODE, t.total_score, 'GST6C' AS gst, t.numerator, m.median, CONCAT(t.numerator, '/', col3) AS absvl\n" +
+                "FROM ranked_data_3 AS t\n" +
                 "CROSS JOIN median_data AS m\n" +
-                "WHERE t.ZONE_NAME NOT IN ('DG East', 'CEI DG') AND t.ZONE_CODE = 57\n" +
+                "WHERE t.ZONE_NAME NOT IN ('DG East', 'CEI DG') \n" +
+                "  AND t.ZONE_CODE = '" + zone_code + "'  \n" +
                 "\n" +
                 "UNION ALL\n" +
                 "\n" +
-                "SELECT zc.ZONE_NAME, cc.ZONE_CODE, COALESCE((SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) /\n" +
-                "        NULLIF(SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO), 0)) * 100, 0) AS total_score,\n" +
-                "        'GST6D' AS gst, 0 AS numerator, 0 AS median\n" +
+                "SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
+                "       COALESCE((SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) /\n" +
+                "       NULLIF(SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO), 0)) * 100, 0) AS total_score,\n" +
+                "       'GST6D' AS gst,\n" +
+                "       0 AS numerator, \n" +
+                "       0 AS median,\n" +
+                "       CONCAT(SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT), \n" +
+                "              '/', \n" +
+                "              SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) ) AS absvl\n" +
                 "FROM mis_gst_commcode AS cc\n" +
                 "RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                 "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "WHERE 14c.MM_YYYY = '2024-04-01'\n" +
-                "GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
-                "HAVING cc.ZONE_CODE = 57;\n";
+                "WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+                "  AND cc.ZONE_CODE = '" + zone_code + "' \n" +
+                "GROUP BY cc.ZONE_CODE, zc.ZONE_NAME;\n";
         return query_assessment;
     }
     //  for all commissary wise || for 4no url
@@ -1442,11 +1473,11 @@ public class CGSTParameterWiseQuery {
                 "    (14a.COMM_DISPOSAL_NO + 14a.JC_DISPOSAL_NO + 14a.AC_DISPOSAL_NO + 14a.SUP_DISPOSAL_NO) AS col9_6a,\n" +
                 "    (SELECT (14b.COMM_CLOSING_NO + 14b.JC_CLOSING_NO + 14b.AC_CLOSING_NO + 14b.SUP_CLOSING_NO)\n" +
                 "     FROM mis_dgi_st_1a 14b \n" +
-                "     WHERE 14b.MM_YYYY = '2024-03-01' AND 14b.COMM_CODE = cc.COMM_CODE) AS col3_6a\n" +
+                "     WHERE 14b.MM_YYYY = '" + prev_month_new + "' AND 14b.COMM_CODE = cc.COMM_CODE) AS col3_6a\n" +
                 "FROM mis_gst_commcode cc\n" +
                 "RIGHT JOIN mis_dgi_st_1a 14a ON cc.COMM_CODE = 14a.COMM_CODE\n" +
                 "LEFT JOIN mis_gst_zonecode zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "WHERE 14a.MM_YYYY = '2024-04-01' AND zc.ZONE_NAME NOT IN ('DG East', 'CEI DG')\n" +
+                "WHERE 14a.MM_YYYY = '" + month_date + "' AND zc.ZONE_NAME NOT IN ('DG East', 'CEI DG')\n" +
                 "\n" +
                 "),\n" +
                 "cte3 AS (\n" +
@@ -1459,16 +1490,16 @@ public class CGSTParameterWiseQuery {
                 "           END AS total_score_6b\n" +
                 "    FROM mis_gst_commcode cc \n" +
                 "    RIGHT JOIN mis_dgi_st_1a 14a ON cc.COMM_CODE = 14a.COMM_CODE\n" +
-                "    LEFT JOIN mis_gst_zonecode zc ON zc.ZONE_CODE = cc.ZONE_CODE WHERE 14a.MM_YYYY = '2024-04-01'\n" +
+                "    LEFT JOIN mis_gst_zonecode zc ON zc.ZONE_CODE = cc.ZONE_CODE WHERE 14a.MM_YYYY = '" + month_date + "'\n" +
                 "),\n" +
                 "cte4 AS (\n" +
                 "    -- GST6C\n" +
                 "    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,(14b.COMM_DISPOSAL_NO + 14b.JC_DISPOSAL_NO + 14b.AC_DISPOSAL_NO + 14b.SUP_DISPOSAL_NO) AS col9_6c,\n" +
                 "    (SELECT (14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) \n" +
-                "     FROM mis_dgi_ce_1a 14c WHERE 14c.MM_YYYY = '2024-03-01' AND 14c.COMM_CODE = cc.COMM_CODE) AS col3_6c\n" +
+                "     FROM mis_dgi_ce_1a 14c WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND 14c.COMM_CODE = cc.COMM_CODE) AS col3_6c\n" +
                 "FROM mis_gst_commcode cc\n" +
                 "RIGHT JOIN mis_dgi_ce_1a 14b ON cc.COMM_CODE = 14b.COMM_CODE\n" +
-                "LEFT JOIN mis_gst_zonecode zc ON zc.ZONE_CODE = cc.ZONE_CODE WHERE 14b.MM_YYYY = '2024-04-01'\n" +
+                "LEFT JOIN mis_gst_zonecode zc ON zc.ZONE_CODE = cc.ZONE_CODE WHERE 14b.MM_YYYY = '" + month_date + "'\n" +
                 "),\n" +
                 "cte_median_6a AS (\n" +
                 "    -- GST6A Median Calculation\n" +
@@ -1494,7 +1525,7 @@ public class CGSTParameterWiseQuery {
                 "                  (14b.COMM_CLOSING_NO + 14b.JC_CLOSING_NO + 14b.AC_CLOSING_NO + 14b.SUP_CLOSING_NO)) * 100, 0) AS total_score_6d\n" +
                 "    FROM mis_gst_commcode cc \n" +
                 "    RIGHT JOIN mis_dgi_ce_1a 14b ON cc.COMM_CODE = 14b.COMM_CODE\n" +
-                "    LEFT JOIN mis_gst_zonecode zc ON zc.ZONE_CODE = cc.ZONE_CODE WHERE 14b.MM_YYYY = '2024-04-01'\n" +
+                "    LEFT JOIN mis_gst_zonecode zc ON zc.ZONE_CODE = cc.ZONE_CODE WHERE 14b.MM_YYYY = '" + month_date + "'\n" +
                 ")\n" +
                 "SELECT cte1.ZONE_NAME, cte1.ZONE_CODE, cte1.COMM_NAME,\n" +
                 "       cte1.col9_6a, cte1.col3_6a,CASE WHEN cte1.col3_6a = 0 THEN 0 ELSE (cte1.col9_6a / cte1.col3_6a) * 100 END AS total_score_6a,\n" +

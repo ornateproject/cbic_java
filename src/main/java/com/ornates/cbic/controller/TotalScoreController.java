@@ -1978,10 +1978,10 @@ public class TotalScoreController {
 						insentavization_6c += 1;
 					}
 
-					double sub_parameter_weighted_average_6a = insentavization_6a * 0.3;
-					double sub_parameter_weighted_average_6b = insentavization_6b * 0.3;
-					double sub_parameter_weighted_average_6c = insentavization_6c * 0.2;
-					double sub_parameter_weighted_average_6d = insentavization_6d * 0.2;
+					double sub_parameter_weighted_average_6a = insentavization_6a * 0.25;
+					double sub_parameter_weighted_average_6b = insentavization_6b * 0.25;
+					double sub_parameter_weighted_average_6c = insentavization_6c * 0.25;
+					double sub_parameter_weighted_average_6d = insentavization_6d * 0.25;
 
 					double total_parameter_weight_average = sub_parameter_weighted_average_6a + sub_parameter_weighted_average_6b + sub_parameter_weighted_average_6c + sub_parameter_weighted_average_6d ;
 
@@ -2075,30 +2075,58 @@ public class TotalScoreController {
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
-					zone_code = rsGst14aa.getString("ZONE_CODE");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
+					zone_code = rsGst14aa.getString("ZONE_CODE");
+					String gst = rsGst14aa.getString("gst");
+					String absval = rsGst14aa.getString("absvl");
+					Double t_score = rsGst14aa.getDouble("total_score");
+					Double median = rsGst14aa.getDouble("median");
+					Double numerator = rsGst14aa.getDouble("numerator");
 
-					Integer way_to_grade = 0;
-					Integer insentavization = 0;
-					double sub_parameter_weighted_average = 0.00;
-					String gst =rsGst14aa.getString("gst");
-					String absval = rsGst14aa.getString("absolute_value");
-					double tScore = rsGst14aa.getDouble("score_of_subpara") * 100;
-					String ra =rsGst14aa.getString("ra");
+					String formattedTotal = String.format("%.2f", t_score);
+					double total_score = Double.parseDouble(formattedTotal);
+
+					int way_to_grade;
+					int insentavization;
+
+					// Logic based on parameter type
+					if ("GST6A".equalsIgnoreCase(gst)) {
+						way_to_grade = score.marks6a(total_score);
+						insentavization = score.marks6a(total_score);
+
+						if (numerator > median && way_to_grade < 10) {
+							insentavization += 1;
+						}
+					} else if ("GST6B".equalsIgnoreCase(gst)) {
+						way_to_grade = score.marks6b(total_score);
+						insentavization = way_to_grade;
+					}else if ("GST6C".equalsIgnoreCase(gst)) {
+						way_to_grade = score.marks6c(total_score);
+						insentavization = score.marks6c(total_score);
+
+						if (numerator > median && way_to_grade < 10) {
+							insentavization += 1;
+						}
+					}else if ("GST6D".equalsIgnoreCase(gst)) {
+						way_to_grade = score.marks6d(total_score);
+						insentavization = way_to_grade;
+					} else {
+						// Default handling if parameter type is neither 6a nor 6b or 6c, 6d
+						way_to_grade = 0;
+						insentavization = 0;
+					}
+
 					Integer Zonal_rank = null;
 					String commName = "null";
+					String ra = "Adjudication(legacy cases)";
 
-					String formattedTotal = String.format("%.2f", tScore);
-					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+					Double sub_parameter_weighted_average = insentavization * 0.25;
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'
-				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-
 				String query_assessment =new CGSTParameterWiseQuery().QueryFor_Adjudication_Legacy_6_AllCommissary(month_date);
-
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -2140,11 +2168,10 @@ public class TotalScoreController {
 					if (numerator_6c > median_6c && way_to_grade_6c < 10) {
 						insentavization_6c += 1;
 					}
-
-					double sub_parameter_weighted_average_6a = insentavization_6a * 0.3;
-					double sub_parameter_weighted_average_6b = insentavization_6b * 0.3;
-					double sub_parameter_weighted_average_6c = insentavization_6c * 0.2;
-					double sub_parameter_weighted_average_6d = insentavization_6d * 0.2;
+					double sub_parameter_weighted_average_6a = insentavization_6a * 0.25;
+					double sub_parameter_weighted_average_6b = insentavization_6b * 0.25;
+					double sub_parameter_weighted_average_6c = insentavization_6c * 0.25;
+					double sub_parameter_weighted_average_6d = insentavization_6d * 0.25;
 
 					double total_parameter_weight_average = sub_parameter_weighted_average_6a + sub_parameter_weighted_average_6b + sub_parameter_weighted_average_6c + sub_parameter_weighted_average_6d ;
 					double roundedTotalParameterWeightAverage = Math.round(total_parameter_weight_average * 100.0) / 100.0;
