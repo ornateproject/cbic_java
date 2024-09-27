@@ -1994,79 +1994,57 @@ public class TotalScoreController {
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-				String query_assessment = "WITH cte1 AS (\n" +
-						"    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, (14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO + 14c.SUP_DISPOSAL_NO) AS col9\n" +
-						"    FROM mis_gst_commcode AS cc \n" +
-						"    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
-						"),\n" +
-						"cte2 AS (\n" +
-						"    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, (14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col3\n" +
-						"    FROM mis_gst_commcode AS cc \n" +
-						"    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE WHERE 14c.MM_YYYY = '" + prev_month_new + "' \n" +
-						"),\n" +
-						"cte3 AS (\n" +
-						"    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, (14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) / (14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS total_score2\n" +
-						"    FROM mis_gst_commcode AS cc \n" +
-						"    RIGHT JOIN mis_dgi_st_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
-						"),\n" +
-						"cte4 AS (\n" +
-						"    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, (14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO + 14c.SUP_DISPOSAL_NO) AS col9\n" +
-						"    FROM mis_gst_commcode AS cc \n" +
-						"    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
-						"),\n" +
-						"cte5 AS (\n" +
-						"    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, (14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS col3\n" +
-						"    FROM mis_gst_commcode AS cc \n" +
-						"    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE WHERE 14c.MM_YYYY = '" + prev_month_new + "' \n" +
-						"),\n" +
-						"cte6 AS (\n" +
-						"    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE, (14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT + 14c.SUP_MORE_YEAR_AMT) / (14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) AS total_score4\n" +
-						"    FROM mis_gst_commcode AS cc \n" +
-						"    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-						"    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
-						"),\n" +
-						"ranked_scores AS (\n" +
-						"    SELECT ROW_NUMBER() OVER (ORDER BY total_score DESC) AS z_rank, ZONE_NAME, COMM_NAME, ZONE_CODE, total_score\n" +
-						"    FROM (\n" +
-						"        SELECT cte1.ZONE_NAME, cte1.COMM_NAME, cte1.ZONE_CODE, \n" +
-						"               cte1.col9 / cte2.col3 AS total_score1, cte3.total_score2, \n" +
-						"               cte4.col9 / cte5.col3 AS total_score3, cte6.total_score4,\n" +
-						"               (COALESCE(cte1.col9 / cte2.col3, 0) + COALESCE(cte3.total_score2, 0) + COALESCE(cte4.col9 / cte5.col3, 0) + COALESCE(cte6.total_score4, 0)) AS total_score \n" +
-						"        FROM cte1 \n" +
-						"        LEFT JOIN cte2 ON cte1.ZONE_NAME = cte2.ZONE_NAME AND cte1.COMM_NAME = cte2.COMM_NAME AND cte1.ZONE_CODE = cte2.ZONE_CODE\n" +
-						"        LEFT JOIN cte3 ON cte1.ZONE_NAME = cte3.ZONE_NAME AND cte1.COMM_NAME = cte3.COMM_NAME AND cte1.ZONE_CODE = cte3.ZONE_CODE\n" +
-						"        LEFT JOIN cte4 ON cte1.ZONE_NAME = cte4.ZONE_NAME AND cte1.COMM_NAME = cte4.COMM_NAME AND cte1.ZONE_CODE = cte4.ZONE_CODE\n" +
-						"        LEFT JOIN cte5 ON cte1.ZONE_NAME = cte5.ZONE_NAME AND cte1.COMM_NAME = cte5.COMM_NAME AND cte1.ZONE_CODE = cte5.ZONE_CODE\n" +
-						"        LEFT JOIN cte6 ON cte1.ZONE_NAME = cte6.ZONE_NAME AND cte1.COMM_NAME = cte6.COMM_NAME AND cte1.ZONE_CODE = cte6.ZONE_CODE\n" +
-						"    ) sub\n" +
-						")\n" +
-						"SELECT z_rank,ZONE_NAME, COMM_NAME, ZONE_CODE, total_score\n" +
-						"FROM ranked_scores\n" +
-						"WHERE ZONE_CODE = '" + zone_code + "';\n";
+				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Adjudication_Legacy_6_ParticularZoneWise(month_date,zone_code);
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
-					double tScore = rsGst14aa.getDouble("total_score") * 100;
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
-					Integer insentavization = 0;
-					double sub_parameter_weighted_average = 0.00;
-					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					String commName = rsGst14aa.getString("COMM_NAME");
-					String gst = "null";
+					double total_score_6a = rsGst14aa.getDouble("total_score_6a");
+					double total_score_6b = rsGst14aa.getDouble("total_score_6b");
+					double total_score_6c = rsGst14aa.getDouble("total_score_6c");
+					double total_score_6d = rsGst14aa.getDouble("total_score_6d");
+
+					double numerator_6a = rsGst14aa.getDouble("col9_6a");
+					double median_6a = rsGst14aa.getDouble("median_6a");
+					double numerator_6c = rsGst14aa.getDouble("col9_6c");
+					double median_6c = rsGst14aa.getDouble("median_6c");
+
+					Integer Zonal_rank = 0;
+					String gst = "ALL";
 					String absval = "null";
 					String ra ="ADJUDICATION(LEGACY CASES)";
 
-					String formattedTotal = String.format("%.2f", tScore);
-					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+					double total_score = 0.00;
+					int way_to_grade = 0;
+					int insentavization = 0;
+
+					Integer way_to_grade_6a = score.marks6a(total_score_6a);
+					Integer way_to_grade_6b = score.marks6b(total_score_6b);
+					Integer way_to_grade_6c = score.marks6c(total_score_6c);
+					Integer way_to_grade_6d = score.marks6d(total_score_6d);
+
+					int insentavization_6a = way_to_grade_6a;
+					int insentavization_6b = way_to_grade_6b;
+					int insentavization_6c = way_to_grade_6c;
+					int insentavization_6d = way_to_grade_6d;
+
+					if (numerator_6a > median_6a && way_to_grade_6a < 10) {
+						insentavization_6a += 1;
+					}
+					if (numerator_6c > median_6c && way_to_grade_6c < 10) {
+						insentavization_6c += 1;
+					}
+					double sub_parameter_weighted_average_6a = insentavization_6a * 0.25;
+					double sub_parameter_weighted_average_6b = insentavization_6b * 0.25;
+					double sub_parameter_weighted_average_6c = insentavization_6c * 0.25;
+					double sub_parameter_weighted_average_6d = insentavization_6d * 0.25;
+
+					double total_parameter_weight_average = sub_parameter_weighted_average_6a + sub_parameter_weighted_average_6b + sub_parameter_weighted_average_6c + sub_parameter_weighted_average_6d ;
+					double roundedTotalParameterWeightAverage = Math.round(total_parameter_weight_average * 100.0) / 100.0;
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,roundedTotalParameterWeightAverage);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3

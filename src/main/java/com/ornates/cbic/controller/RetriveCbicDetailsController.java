@@ -2429,7 +2429,7 @@ public class RetriveCbicDetailsController {
                         insentavization += 1;
                     }
                     int Zonal_rank = 0;
-                    String gst = "no";
+                    String gst = "GST6A";
                     double sub_parameter_weighted_average = insentavization * 0.25;
                     // rank = score.marks6a(total);
                     rank = rsGst14aa.getInt("z_rank");
@@ -2465,7 +2465,7 @@ public class RetriveCbicDetailsController {
                         insentavization += 1;
                     }
                     int Zonal_rank = 0;
-                    String gst = "no";
+                    String gst = "GST6A";
                     double sub_parameter_weighted_average = insentavization * 0.25;
                     // rank = score.marks6a(total);
                     rank = rsGst14aa.getInt("z_rank");
@@ -2496,7 +2496,7 @@ public class RetriveCbicDetailsController {
                         insentavization += 1;
                     }
                     int Zonal_rank = 0;
-                    String gst = "no";
+                    String gst = "GST6A";
                     double sub_parameter_weighted_average = insentavization * 0.25;
                     // rank = score.marks6a(total);
                     rank = rsGst14aa.getInt("z_rank");
@@ -2552,7 +2552,7 @@ public class RetriveCbicDetailsController {
                     int col18 = rsGst14aa.getInt("col18");
                     int col13 = rsGst14aa.getInt("col13");
                     int Zonal_rank = 0;
-                    String gst = "no";
+                    String gst = "GST6B";
                     int insentavization = 0;
 
 
@@ -2592,7 +2592,7 @@ public class RetriveCbicDetailsController {
                     int col18 = rsGst14aa.getInt("col18");
                     int col13 = rsGst14aa.getInt("col13");
                     int Zonal_rank = 0;
-                    String gst = "no";
+                    String gst = "GST6B";
                     //int way_to_grade = 0;
                     int insentavization = 0;
                     //  int sub_parameter_weighted_average = 0;
@@ -2630,7 +2630,7 @@ public class RetriveCbicDetailsController {
                     int col18 = rsGst14aa.getInt("col18");
                     int col13 = rsGst14aa.getInt("col13");
                     int Zonal_rank = 0;
-                    String gst = "no";
+                    String gst = "GST6B";
                     // int way_to_grade = 0;
                     int insentavization = 0;
                     // int sub_parameter_weighted_average = 0;
@@ -2713,7 +2713,7 @@ public class RetriveCbicDetailsController {
                         insentavization += 1;
                     }
                     int Zonal_rank = 0;
-                    String gst = "no";
+                    String gst = "GST6C";
                     double sub_parameter_weighted_average = insentavization * 0.25;
                     // rank = score.marks6a(total);
                     rank = 0;
@@ -2746,7 +2746,7 @@ public class RetriveCbicDetailsController {
                         insentavization += 1;
                     }
                     int Zonal_rank = 0;
-                    String gst = "no";
+                    String gst = "GST6C";
                     double sub_parameter_weighted_average = insentavization * 0.25;
                     // rank = score.marks6a(total);
                     rank = 0;
@@ -2778,7 +2778,7 @@ public class RetriveCbicDetailsController {
                         insentavization += 1;
                     }
                     int Zonal_rank = 0;
-                    String gst = "no";
+                    String gst = "GST6C";
                     double sub_parameter_weighted_average = insentavization * 0.25;
                     // rank = score.marks6a(total);
                     rank = 0;
@@ -2827,7 +2827,7 @@ public class RetriveCbicDetailsController {
                     int col18 = rsGst14aa.getInt("col18");
                     int col13 = rsGst14aa.getInt("col13");
                     int Zonal_rank = 0;
-                    String gst = "no";
+                    String gst = "GST6D";
                     int insentavization = 0;
 
                     if ((col13) != 0) {
@@ -2858,7 +2858,7 @@ public class RetriveCbicDetailsController {
                     int col18=rsGst14aa.getInt("col18");
                     int col13=rsGst14aa.getInt("col13");
                     int Zonal_rank = 0;
-                    String gst = "no";
+                    String gst = "GST6D";
                     int insentavization = 0;
 
                     if((col13)!=0) {
@@ -2891,7 +2891,7 @@ public class RetriveCbicDetailsController {
                     int col18=rsGst14aa.getInt("col18");
                     int col13=rsGst14aa.getInt("col13");
                     int Zonal_rank = 0;
-                    String gst = "no";
+                    String gst = "GST6D";
                     int insentavization = 0;
 
                     if((col13)!=0) {

@@ -1322,7 +1322,79 @@ public class CGSTParameterWiseQuery {
     public String QueryFor_Adjudication_Legacy_6_ParticularZoneWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String query_assessment = "";
+        String query_assessment = "WITH cte1 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,(14a.COMM_DISPOSAL_NO + 14a.JC_DISPOSAL_NO + 14a.AC_DISPOSAL_NO + 14a.SUP_DISPOSAL_NO) AS col9_6a,\n" +
+                "        (SELECT \n" +
+                "            (14b.COMM_CLOSING_NO + 14b.JC_CLOSING_NO + 14b.AC_CLOSING_NO + 14b.SUP_CLOSING_NO)\n" +
+                "         FROM mis_dgi_st_1a 14b \n" +
+                "         WHERE 14b.MM_YYYY = '" + prev_month_new + "' AND 14b.COMM_CODE = cc.COMM_CODE) AS col3_6a\n" +
+                "    FROM mis_gst_commcode cc\n" +
+                "    RIGHT JOIN mis_dgi_st_1a 14a ON cc.COMM_CODE = 14a.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14a.MM_YYYY = '" + month_date + "' AND zc.ZONE_NAME NOT IN ('DG East', 'CEI DG')\n" +
+                "),\n" +
+                "cte3 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+                "        CASE \n" +
+                "            WHEN (14a.COMM_CLOSING_NO + 14a.JC_CLOSING_NO + 14a.AC_CLOSING_NO + 14a.SUP_CLOSING_NO) = 0 \n" +
+                "            THEN 0\n" +
+                "            ELSE ((14a.COMM_MORE_YEAR_AMT + 14a.JC_MORE_YEAR_AMT + 14a.AC_MORE_YEAR_AMT + 14a.SUP_MORE_YEAR_AMT) /\n" +
+                "                  (14a.COMM_CLOSING_NO + 14a.JC_CLOSING_NO + 14a.AC_CLOSING_NO + 14a.SUP_CLOSING_NO)) * 100\n" +
+                "        END AS total_score_6b\n" +
+                "    FROM mis_gst_commcode cc \n" +
+                "    RIGHT JOIN mis_dgi_st_1a 14a ON cc.COMM_CODE = 14a.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14a.MM_YYYY = '" + month_date + "'\n" +
+                "),\n" +
+                "cte4 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,(14b.COMM_DISPOSAL_NO + 14b.JC_DISPOSAL_NO + 14b.AC_DISPOSAL_NO + 14b.SUP_DISPOSAL_NO) AS col9_6c,\n" +
+                "        (SELECT \n" +
+                "            (14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO + 14c.SUP_CLOSING_NO) \n" +
+                "         FROM mis_dgi_ce_1a 14c \n" +
+                "         WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND 14c.COMM_CODE = cc.COMM_CODE) AS col3_6c\n" +
+                "    FROM mis_gst_commcode cc\n" +
+                "    RIGHT JOIN mis_dgi_ce_1a 14b ON cc.COMM_CODE = 14b.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14b.MM_YYYY = '" + month_date + "'\n" +
+                "),\n" +
+                "cte_median_6a AS (\n" +
+                "    SELECT ZONE_NAME, COMM_NAME, ZONE_CODE, col9_6a,\n" +
+                "           (SELECT AVG(col9_6a)\n" +
+                "            FROM (SELECT col9_6a, ROW_NUMBER() OVER (ORDER BY col9_6a) AS row_num, COUNT(*) OVER () AS total_count \n" +
+                "                  FROM cte1) ranked\n" +
+                "            WHERE row_num IN (FLOOR((total_count + 1) / 2), CEIL((total_count + 1) / 2))) AS median_6a\n" +
+                "    FROM cte1\n" +
+                "),\n" +
+                "cte_median_6c AS (\n" +
+                "    SELECT ZONE_NAME, COMM_NAME, ZONE_CODE, col9_6c,\n" +
+                "           (SELECT col9_6c\n" +
+                "            FROM (SELECT col9_6c, ROW_NUMBER() OVER (ORDER BY col9_6c) AS row_num FROM cte4) ranked\n" +
+                "            WHERE row_num = FLOOR((SELECT COUNT(*) FROM cte4) / 2) + 1) AS median_6c\n" +
+                "    FROM cte4\n" +
+                "),\n" +
+                "cte6 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.COMM_NAME, cc.ZONE_CODE,\n" +
+                "           IFNULL(((14b.COMM_MORE_YEAR_AMT + 14b.JC_MORE_YEAR_AMT + 14b.AC_MORE_YEAR_AMT + 14b.SUP_MORE_YEAR_AMT) /\n" +
+                "                  (14b.COMM_CLOSING_NO + 14b.JC_CLOSING_NO + 14b.AC_CLOSING_NO + 14b.SUP_CLOSING_NO)) * 100, 0) AS total_score_6d\n" +
+                "    FROM mis_gst_commcode cc \n" +
+                "    RIGHT JOIN mis_dgi_ce_1a 14b ON cc.COMM_CODE = 14b.COMM_CODE\n" +
+                "    LEFT JOIN \n" +
+                "        mis_gst_zonecode zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14b.MM_YYYY = '" + month_date + "'\n" +
+                ")\n" +
+                "SELECT cte1.ZONE_NAME, cte1.ZONE_CODE, cte1.COMM_NAME,cte1.col9_6a, cte1.col3_6a,\n" +
+                "    CASE WHEN cte1.col3_6a = 0 THEN 0 ELSE (cte1.col9_6a / cte1.col3_6a) * 100 END AS total_score_6a,\n" +
+                "    cte_median_6a.median_6a,cte3.total_score_6b,cte4.col9_6c, cte4.col3_6c,\n" +
+                "    CASE WHEN cte4.col3_6c = 0 THEN 0 ELSE (cte4.col9_6c / cte4.col3_6c) * 100 END AS total_score_6c,\n" +
+                "    cte_median_6c.median_6c,cte6.total_score_6d\n" +
+                "FROM cte1\n" +
+                "JOIN cte3 ON cte1.ZONE_NAME = cte3.ZONE_NAME AND cte1.ZONE_CODE = cte3.ZONE_CODE AND cte1.COMM_NAME = cte3.COMM_NAME\n" +
+                "JOIN cte4 ON cte1.ZONE_NAME = cte4.ZONE_NAME AND cte1.ZONE_CODE = cte4.ZONE_CODE AND cte1.COMM_NAME = cte4.COMM_NAME\n" +
+                "JOIN cte_median_6a ON cte1.ZONE_NAME = cte_median_6a.ZONE_NAME AND cte1.ZONE_CODE = cte_median_6a.ZONE_CODE AND cte1.COMM_NAME = cte_median_6a.COMM_NAME\n" +
+                "JOIN cte_median_6c ON cte4.ZONE_NAME = cte_median_6c.ZONE_NAME AND cte4.COMM_NAME = cte_median_6c.COMM_NAME AND cte4.ZONE_CODE = cte_median_6c.ZONE_CODE\n" +
+                "JOIN cte6 ON cte4.ZONE_NAME = cte6.ZONE_NAME AND cte4.COMM_NAME = cte6.COMM_NAME AND cte4.ZONE_CODE = cte6.ZONE_CODE\n" +
+                "WHERE cte1.ZONE_CODE = '" + zone_code + "' \n" +
+                "ORDER BY cte1.ZONE_CODE;\n";
         return query_assessment;
     }
     //  for perticular subparameter wise ||  3 no url
