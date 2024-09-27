@@ -1731,7 +1731,7 @@ public class TotalScoreController {
 					//Double numerator_3b = rsGst14aa.getDouble("numerator_3b");
 					String gst ="null";
 					String absval = "null";
-					String ra ="SCRUTINY & ASSESSMENT";
+					String ra ="Adjudication";
 					Integer Zonal_rank = 0;
 
 					int way_to_grade5a = score.marks5a(tScore_5a);
