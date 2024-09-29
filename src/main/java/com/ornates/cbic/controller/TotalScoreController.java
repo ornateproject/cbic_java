@@ -1990,6 +1990,7 @@ public class TotalScoreController {
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_parameter_weight_average);
 					allGstaList.add(totalScore);
 				}
+				System.out.println("gst6 parameter wise median6a");
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
