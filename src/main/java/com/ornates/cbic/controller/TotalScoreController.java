@@ -3292,7 +3292,7 @@ public class TotalScoreController {
 				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Appeals_11_ParticularSubparameterWise(month_date,zone_code);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
-				while (rsGst14aa.next()) { //   query is correct but result is giving wrong data , some mistake is happneing in code
+				while (rsGst14aa.next()) { // query is correct but result is giving wrong data , some mistake is happneing in code
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					String gst = rsGst14aa.getString("gst");
