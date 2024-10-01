@@ -382,8 +382,9 @@ public class CustomSubParameterController {
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.c_marks5a(totalScore);
+                    // 2 floating point
                     double sub_parameter_weighted_average = way_to_grade * 0.3;
-                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
@@ -412,8 +413,9 @@ public class CustomSubParameterController {
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.c_marks5a(totalScore);
+                    // 2 floating point
                     double sub_parameter_weighted_average = way_to_grade * 0.3;
-                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
@@ -443,8 +445,9 @@ public class CustomSubParameterController {
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.c_marks5a(totalScore);
+                    // 2 floating point
                     double sub_parameter_weighted_average = way_to_grade * 0.3;
-                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
@@ -495,7 +498,9 @@ public class CustomSubParameterController {
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.c_marks5b(totalScore);
+                    // 2 floating point
                     double sub_parameter_weighted_average = way_to_grade * 0.4;
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
                     gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
@@ -526,8 +531,9 @@ public class CustomSubParameterController {
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.c_marks5b(totalScore);
+                    // 2 floating point
                     double sub_parameter_weighted_average = way_to_grade * 0.4;
-                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
@@ -556,8 +562,9 @@ public class CustomSubParameterController {
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.c_marks5b(totalScore);
+                    // 2 floating point
                     double sub_parameter_weighted_average = way_to_grade * 0.4;
-                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
@@ -600,8 +607,9 @@ public class CustomSubParameterController {
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.c_marks5c(totalScore);
+                    // 2 floating point
                     double sub_parameter_weighted_average = way_to_grade * 0.3;
-                    gsta=new GST4A(zonename,commname,totalScore,absval,zoneCode,ra,
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;                    gsta=new GST4A(zonename,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
@@ -625,8 +633,9 @@ public class CustomSubParameterController {
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.c_marks5c(totalScore);
+                    // 2 floating point
                     double sub_parameter_weighted_average = way_to_grade * 0.3;
-                    gsta=new GST4A(zonename,commname,totalScore,absval,zoneCode,ra,
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;                    gsta=new GST4A(zonename,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
@@ -649,8 +658,9 @@ public class CustomSubParameterController {
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
                     int way_to_grade = score.c_marks5c(totalScore);
+                    // 2 floating point
                     double sub_parameter_weighted_average = way_to_grade * 0.3;
-                    gsta=new GST4A(zonename,commname,totalScore,absval,zoneCode,ra,
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;                    gsta=new GST4A(zonename,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
@@ -661,6 +671,7 @@ public class CustomSubParameterController {
         }
         return allGstaList;
     }
+
     @ResponseBody
     @RequestMapping(value = "/cus6a")
     //  http://localhost:8080/cbicApi/cbic/custom/cus6a?month_date=2015-03-01&type=zone
@@ -813,7 +824,9 @@ public class CustomSubParameterController {
                     int Zonal_rank = 0;
                     String gst = "no";
 
+                    // 2 floating point
                     double sub_parameter_weighted_average = insentavization * 0.5 ;
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
                     gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
@@ -855,8 +868,9 @@ public class CustomSubParameterController {
                     if (numerator_9a > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
+                    // 2 floating point
                     double sub_parameter_weighted_average = insentavization * 0.5 ;
-                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
 
@@ -895,8 +909,9 @@ public class CustomSubParameterController {
                     if (numerator_9a > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
+                    // 2 floating point
                     double sub_parameter_weighted_average = insentavization * 0.5 ;
-                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }System.out.println("cus 9a median commissionary rate wise :- "+median);
