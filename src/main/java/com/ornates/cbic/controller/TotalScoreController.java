@@ -542,14 +542,11 @@ public class TotalScoreController {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
 					Integer insentavization = 0;
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
-					//Zonal_rank = rsGst14aa.getInt("z_rank");
 					double  total = rsGst14aa.getDouble("total_score");
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
 
-					// Object total = ((double) col21*100 / col3);
-					//String ra ="null";
 					String ra= RelevantAspect.Gst2_RA;
 					String formattedTotal = String.format("%.2f", total);
 					double total_score = Double.parseDouble(formattedTotal);
