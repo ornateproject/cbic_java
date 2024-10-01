@@ -143,6 +143,20 @@ public class CustomGreadeScore {
         }
         return rank;
     }
+    // Custom grade score for custom 4c
+    public int c_marks4d(double total) {
+        int rank=0;
+        if(total >=30) {
+            rank=10;
+        }else if(total >= 20 && total <= 29) {
+            rank=7;
+        }else if(total >= 10 && total <= 19) {
+            rank=4;
+        }else {
+            rank=2;
+        }
+        return rank;
+    }
     // Custom grade score for custom 5a
     public int c_marks5a(double total) {
         int rank=0;
