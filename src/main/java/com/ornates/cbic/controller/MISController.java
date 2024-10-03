@@ -1076,143 +1076,142 @@ public class MISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_CurrentMonth(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Refunds_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-                    int col21=rsGst14aa.getInt("col21");
-                    int col3=rsGst14aa.getInt("col3");
                     zone_code = rsGst14aa.getString("ZONE_CODE");
                     Integer insentavization = 0;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    double  total = rsGst14aa.getDouble("total_score");
+                    double tScore = rsGst14aa.getDouble("total_score"); // 100 is multiply in query
+                    String absval = rsGst14aa.getString("absolute_value");
                     String commName = "ALL";
                     String gst = "ALL";
-                    String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
+                    //String ra ="null";
+                    String ra = RelevantAspect.Gst7_RA;
 
-                    String ra= RelevantAspect.Gst2_RA;
-                    String formattedTotal = String.format("%.2f", total);
+                    String formattedTotal = String.format("%.2f", tScore);
                     double total_score = Double.parseDouble(formattedTotal);
-                    Integer way_to_grade =score.marks2(total_score);
+                    int way_to_grade = score.marks7(total_score);
                     double sub_parameter_weighted_average = way_to_grade * 0.5;
-                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    //System.out.println(way_to_grade);
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(totalScore);
-
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_SReturnFiling_1_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Refunds_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-                    int col21=rsGst14aa.getInt("col21");
-                    int col3=rsGst14aa.getInt("col3");
                     zone_code = rsGst14aa.getString("ZONE_CODE");
                     Integer insentavization = 0;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    double  total = rsGst14aa.getDouble("total_score");
+                    double tScore = rsGst14aa.getDouble("total_score"); // 100 is multiply in query
+                    String absval = rsGst14aa.getString("absolute_value");
                     String commName = "ALL";
                     String gst = "ALL";
-                    String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
+                    //String ra ="null";
+                    String ra = RelevantAspect.Gst7_RA;
 
-                    String ra= RelevantAspect.Gst2_RA;
-                    String formattedTotal = String.format("%.2f", total);
+                    String formattedTotal = String.format("%.2f", tScore);
                     double total_score = Double.parseDouble(formattedTotal);
-                    Integer way_to_grade =score.marks2(total_score);
+                    int way_to_grade = score.marks7(total_score);
                     double sub_parameter_weighted_average = way_to_grade * 0.5;
-                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    //System.out.println(way_to_grade);
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_2_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Refunds_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-                    int col21=rsGst14aa.getInt("col21");
-                    int col3=rsGst14aa.getInt("col3");
                     zone_code = rsGst14aa.getString("ZONE_CODE");
                     Integer insentavization = 0;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    double  total = rsGst14aa.getDouble("total_score");
+                    double tScore = rsGst14aa.getDouble("total_score"); // 100 is multiply in query
+                    String absval = rsGst14aa.getString("absolute_value");
                     String commName = "ALL";
                     String gst = "ALL";
-                    String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
+                    //String ra ="null";
+                    String ra = RelevantAspect.Gst7_RA;
 
-                    String ra= RelevantAspect.Gst2_RA;
-                    String formattedTotal = String.format("%.2f", total);
+                    String formattedTotal = String.format("%.2f", tScore);
                     double total_score = Double.parseDouble(formattedTotal);
-                    Integer way_to_grade =score.marks2(total_score);
+                    int way_to_grade = score.marks7(total_score);
                     double sub_parameter_weighted_average = way_to_grade * 0.5;
-                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    //System.out.println(way_to_grade);
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_3_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Refunds_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-                    int col21=rsGst14aa.getInt("col21");
-                    int col3=rsGst14aa.getInt("col3");
                     zone_code = rsGst14aa.getString("ZONE_CODE");
                     Integer insentavization = 0;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    double  total = rsGst14aa.getDouble("total_score");
+                    double tScore = rsGst14aa.getDouble("total_score"); // 100 is multiply in query
+                    String absval = rsGst14aa.getString("absolute_value");
                     String commName = "ALL";
                     String gst = "ALL";
-                    String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
+                    //String ra ="null";
+                    String ra = RelevantAspect.Gst7_RA;
 
-                    String ra= RelevantAspect.Gst2_RA;
-                    String formattedTotal = String.format("%.2f", total);
+                    String formattedTotal = String.format("%.2f", tScore);
                     double total_score = Double.parseDouble(formattedTotal);
-                    Integer way_to_grade =score.marks2(total_score);
+                    int way_to_grade = score.marks7(total_score);
                     double sub_parameter_weighted_average = way_to_grade * 0.5;
-                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    //System.out.println(way_to_grade);
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_4_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Refunds_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-                    int col21=rsGst14aa.getInt("col21");
-                    int col3=rsGst14aa.getInt("col3");
                     zone_code = rsGst14aa.getString("ZONE_CODE");
                     Integer insentavization = 0;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    double  total = rsGst14aa.getDouble("total_score");
+                    double tScore = rsGst14aa.getDouble("total_score"); // 100 is multiply in query
+                    String absval = rsGst14aa.getString("absolute_value");
                     String commName = "ALL";
                     String gst = "ALL";
-                    String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
+                    //String ra ="null";
+                    String ra = RelevantAspect.Gst7_RA;
 
-                    String ra= RelevantAspect.Gst2_RA;
-                    String formattedTotal = String.format("%.2f", total);
+                    String formattedTotal = String.format("%.2f", tScore);
                     double total_score = Double.parseDouble(formattedTotal);
-                    Integer way_to_grade =score.marks2(total_score);
+                    int way_to_grade = score.marks7(total_score);
                     double sub_parameter_weighted_average = way_to_grade * 0.5;
-                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    //System.out.println(way_to_grade);
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_5_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Refunds_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-                    int col21=rsGst14aa.getInt("col21");
-                    int col3=rsGst14aa.getInt("col3");
                     zone_code = rsGst14aa.getString("ZONE_CODE");
                     Integer insentavization = 0;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    double  total = rsGst14aa.getDouble("total_score");
+                    double tScore = rsGst14aa.getDouble("total_score"); // 100 is multiply in query
+                    String absval = rsGst14aa.getString("absolute_value");
                     String commName = "ALL";
                     String gst = "ALL";
-                    String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
+                    //String ra ="null";
+                    String ra = RelevantAspect.Gst7_RA;
 
-                    String ra= RelevantAspect.Gst2_RA;
-                    String formattedTotal = String.format("%.2f", total);
+                    String formattedTotal = String.format("%.2f", tScore);
                     double total_score = Double.parseDouble(formattedTotal);
-                    Integer way_to_grade =score.marks2(total_score);
+                    int way_to_grade = score.marks7(total_score);
                     double sub_parameter_weighted_average = way_to_grade * 0.5;
-                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    //System.out.println(way_to_grade);
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(totalScore);
                 }
             }
