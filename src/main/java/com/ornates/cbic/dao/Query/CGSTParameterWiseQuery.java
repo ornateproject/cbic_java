@@ -1268,7 +1268,7 @@ public class CGSTParameterWiseQuery {
                 "    FROM mis_gst_commcode AS cc\n" +
                 "    RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-                "    WHERE 14c.MM_YYYY = '2023-04-01'\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
                 "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
                 "),\n" +
                 "median_data_6c AS (\n" +

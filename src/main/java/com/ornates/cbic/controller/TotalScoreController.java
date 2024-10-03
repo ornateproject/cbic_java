@@ -1989,8 +1989,6 @@ public class TotalScoreController {
 				System.out.println("gst6 parameter wise median6a");
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
-				String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-
 				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Adjudication_Legacy_6_ParticularZoneWise(month_date,zone_code);
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
