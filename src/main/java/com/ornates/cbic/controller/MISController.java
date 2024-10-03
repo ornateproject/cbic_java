@@ -2232,24 +2232,53 @@ public class MISController {
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-                    int col21=rsGst14aa.getInt("col21");
-                    int col3=rsGst14aa.getInt("col3");
                     zone_code = rsGst14aa.getString("ZONE_CODE");
-                    Integer insentavization = 0;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    double  total = rsGst14aa.getDouble("total_score");
+                    double total_score_11a = rsGst14aa.getDouble("total_score_11a") * 100;
+                    double total_score_11b = rsGst14aa.getDouble("total_score_11b") * 100;
+                    double total_score_11c = rsGst14aa.getDouble("total_score_11c") * 100;
+                    double total_score_11d = rsGst14aa.getDouble("total_score_11d") * 100;
+
+                    double numerator_11a = rsGst14aa.getDouble("numerator_11a");
+                    double median_11a = rsGst14aa.getDouble("median_11a");
+                    double numerator_11c = rsGst14aa.getDouble("numerator_11c");
+                    double median_11c = rsGst14aa.getDouble("median_11c");
+
+                    Integer Zonal_rank = 0;
                     String commName = "ALL";
                     String gst = "ALL";
-                    String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
+                    String absval = "null";
+                    String ra ="Appeals";
 
-                    String ra= RelevantAspect.Gst2_RA;
-                    String formattedTotal = String.format("%.2f", total);
-                    double total_score = Double.parseDouble(formattedTotal);
-                    Integer way_to_grade =score.marks2(total_score);
-                    double sub_parameter_weighted_average = way_to_grade * 0.5;
-                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    double total_score = 0.00;
+                    int way_to_grade = 0;
+                    int insentavization = 0;
+
+                    Integer way_to_grade_11a = score.marks11a(total_score_11a, total_score_11a);
+                    Integer way_to_grade_11b = score.marks11b(total_score_11b);
+                    Integer way_to_grade_11c = score.marks11c(total_score_11c,total_score_11c);
+                    Integer way_to_grade_11d = score.marks11d(total_score_11d);
+
+                    int insentavization_11a = way_to_grade_11a;
+                    int insentavization_11b = way_to_grade_11b;
+                    int insentavization_11c = way_to_grade_11c;
+                    int insentavization_11d = way_to_grade_11d;
+
+                    if (numerator_11a > median_11a && way_to_grade_11a < 10) {
+                        insentavization_11a += 1;
+                    }
+                    if (numerator_11c > median_11c && way_to_grade_11c < 10) {
+                        insentavization_11c += 1;
+                    }
+
+                    double sub_parameter_weighted_average_11a = insentavization_11a * 0.25;
+                    double sub_parameter_weighted_average_11b = insentavization_11b * 0.25;
+                    double sub_parameter_weighted_average_11c = insentavization_11c * 0.25;
+                    double sub_parameter_weighted_average_11d = insentavization_11d * 0.25;
+
+                    double total_parameter_weight_average = sub_parameter_weighted_average_11a + sub_parameter_weighted_average_11b + sub_parameter_weighted_average_11c + sub_parameter_weighted_average_11d ;
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_parameter_weight_average);
                     allGstaList.add(totalScore);
-
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
@@ -2257,22 +2286,52 @@ public class MISController {
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-                    int col21=rsGst14aa.getInt("col21");
-                    int col3=rsGst14aa.getInt("col3");
                     zone_code = rsGst14aa.getString("ZONE_CODE");
-                    Integer insentavization = 0;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    double  total = rsGst14aa.getDouble("total_score");
+                    double total_score_11a = rsGst14aa.getDouble("total_score_11a") * 100;
+                    double total_score_11b = rsGst14aa.getDouble("total_score_11b") * 100;
+                    double total_score_11c = rsGst14aa.getDouble("total_score_11c") * 100;
+                    double total_score_11d = rsGst14aa.getDouble("total_score_11d") * 100;
+
+                    double numerator_11a = rsGst14aa.getDouble("numerator_11a");
+                    double median_11a = rsGst14aa.getDouble("median_11a");
+                    double numerator_11c = rsGst14aa.getDouble("numerator_11c");
+                    double median_11c = rsGst14aa.getDouble("median_11c");
+
+                    Integer Zonal_rank = 0;
                     String commName = "ALL";
                     String gst = "ALL";
-                    String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
+                    String absval = "null";
+                    String ra ="Appeals";
 
-                    String ra= RelevantAspect.Gst2_RA;
-                    String formattedTotal = String.format("%.2f", total);
-                    double total_score = Double.parseDouble(formattedTotal);
-                    Integer way_to_grade =score.marks2(total_score);
-                    double sub_parameter_weighted_average = way_to_grade * 0.5;
-                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    double total_score = 0.00;
+                    int way_to_grade = 0;
+                    int insentavization = 0;
+
+                    Integer way_to_grade_11a = score.marks11a(total_score_11a, total_score_11a);
+                    Integer way_to_grade_11b = score.marks11b(total_score_11b);
+                    Integer way_to_grade_11c = score.marks11c(total_score_11c,total_score_11c);
+                    Integer way_to_grade_11d = score.marks11d(total_score_11d);
+
+                    int insentavization_11a = way_to_grade_11a;
+                    int insentavization_11b = way_to_grade_11b;
+                    int insentavization_11c = way_to_grade_11c;
+                    int insentavization_11d = way_to_grade_11d;
+
+                    if (numerator_11a > median_11a && way_to_grade_11a < 10) {
+                        insentavization_11a += 1;
+                    }
+                    if (numerator_11c > median_11c && way_to_grade_11c < 10) {
+                        insentavization_11c += 1;
+                    }
+
+                    double sub_parameter_weighted_average_11a = insentavization_11a * 0.25;
+                    double sub_parameter_weighted_average_11b = insentavization_11b * 0.25;
+                    double sub_parameter_weighted_average_11c = insentavization_11c * 0.25;
+                    double sub_parameter_weighted_average_11d = insentavization_11d * 0.25;
+
+                    double total_parameter_weight_average = sub_parameter_weighted_average_11a + sub_parameter_weighted_average_11b + sub_parameter_weighted_average_11c + sub_parameter_weighted_average_11d ;
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_parameter_weight_average);
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
@@ -2280,22 +2339,52 @@ public class MISController {
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-                    int col21=rsGst14aa.getInt("col21");
-                    int col3=rsGst14aa.getInt("col3");
                     zone_code = rsGst14aa.getString("ZONE_CODE");
-                    Integer insentavization = 0;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    double  total = rsGst14aa.getDouble("total_score");
+                    double total_score_11a = rsGst14aa.getDouble("total_score_11a") * 100;
+                    double total_score_11b = rsGst14aa.getDouble("total_score_11b") * 100;
+                    double total_score_11c = rsGst14aa.getDouble("total_score_11c") * 100;
+                    double total_score_11d = rsGst14aa.getDouble("total_score_11d") * 100;
+
+                    double numerator_11a = rsGst14aa.getDouble("numerator_11a");
+                    double median_11a = rsGst14aa.getDouble("median_11a");
+                    double numerator_11c = rsGst14aa.getDouble("numerator_11c");
+                    double median_11c = rsGst14aa.getDouble("median_11c");
+
+                    Integer Zonal_rank = 0;
                     String commName = "ALL";
                     String gst = "ALL";
-                    String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
+                    String absval = "null";
+                    String ra ="Appeals";
 
-                    String ra= RelevantAspect.Gst2_RA;
-                    String formattedTotal = String.format("%.2f", total);
-                    double total_score = Double.parseDouble(formattedTotal);
-                    Integer way_to_grade =score.marks2(total_score);
-                    double sub_parameter_weighted_average = way_to_grade * 0.5;
-                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    double total_score = 0.00;
+                    int way_to_grade = 0;
+                    int insentavization = 0;
+
+                    Integer way_to_grade_11a = score.marks11a(total_score_11a, total_score_11a);
+                    Integer way_to_grade_11b = score.marks11b(total_score_11b);
+                    Integer way_to_grade_11c = score.marks11c(total_score_11c,total_score_11c);
+                    Integer way_to_grade_11d = score.marks11d(total_score_11d);
+
+                    int insentavization_11a = way_to_grade_11a;
+                    int insentavization_11b = way_to_grade_11b;
+                    int insentavization_11c = way_to_grade_11c;
+                    int insentavization_11d = way_to_grade_11d;
+
+                    if (numerator_11a > median_11a && way_to_grade_11a < 10) {
+                        insentavization_11a += 1;
+                    }
+                    if (numerator_11c > median_11c && way_to_grade_11c < 10) {
+                        insentavization_11c += 1;
+                    }
+
+                    double sub_parameter_weighted_average_11a = insentavization_11a * 0.25;
+                    double sub_parameter_weighted_average_11b = insentavization_11b * 0.25;
+                    double sub_parameter_weighted_average_11c = insentavization_11c * 0.25;
+                    double sub_parameter_weighted_average_11d = insentavization_11d * 0.25;
+
+                    double total_parameter_weight_average = sub_parameter_weighted_average_11a + sub_parameter_weighted_average_11b + sub_parameter_weighted_average_11c + sub_parameter_weighted_average_11d ;
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_parameter_weight_average);
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
@@ -2303,22 +2392,52 @@ public class MISController {
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-                    int col21=rsGst14aa.getInt("col21");
-                    int col3=rsGst14aa.getInt("col3");
                     zone_code = rsGst14aa.getString("ZONE_CODE");
-                    Integer insentavization = 0;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    double  total = rsGst14aa.getDouble("total_score");
+                    double total_score_11a = rsGst14aa.getDouble("total_score_11a") * 100;
+                    double total_score_11b = rsGst14aa.getDouble("total_score_11b") * 100;
+                    double total_score_11c = rsGst14aa.getDouble("total_score_11c") * 100;
+                    double total_score_11d = rsGst14aa.getDouble("total_score_11d") * 100;
+
+                    double numerator_11a = rsGst14aa.getDouble("numerator_11a");
+                    double median_11a = rsGst14aa.getDouble("median_11a");
+                    double numerator_11c = rsGst14aa.getDouble("numerator_11c");
+                    double median_11c = rsGst14aa.getDouble("median_11c");
+
+                    Integer Zonal_rank = 0;
                     String commName = "ALL";
                     String gst = "ALL";
-                    String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
+                    String absval = "null";
+                    String ra ="Appeals";
 
-                    String ra= RelevantAspect.Gst2_RA;
-                    String formattedTotal = String.format("%.2f", total);
-                    double total_score = Double.parseDouble(formattedTotal);
-                    Integer way_to_grade =score.marks2(total_score);
-                    double sub_parameter_weighted_average = way_to_grade * 0.5;
-                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    double total_score = 0.00;
+                    int way_to_grade = 0;
+                    int insentavization = 0;
+
+                    Integer way_to_grade_11a = score.marks11a(total_score_11a, total_score_11a);
+                    Integer way_to_grade_11b = score.marks11b(total_score_11b);
+                    Integer way_to_grade_11c = score.marks11c(total_score_11c,total_score_11c);
+                    Integer way_to_grade_11d = score.marks11d(total_score_11d);
+
+                    int insentavization_11a = way_to_grade_11a;
+                    int insentavization_11b = way_to_grade_11b;
+                    int insentavization_11c = way_to_grade_11c;
+                    int insentavization_11d = way_to_grade_11d;
+
+                    if (numerator_11a > median_11a && way_to_grade_11a < 10) {
+                        insentavization_11a += 1;
+                    }
+                    if (numerator_11c > median_11c && way_to_grade_11c < 10) {
+                        insentavization_11c += 1;
+                    }
+
+                    double sub_parameter_weighted_average_11a = insentavization_11a * 0.25;
+                    double sub_parameter_weighted_average_11b = insentavization_11b * 0.25;
+                    double sub_parameter_weighted_average_11c = insentavization_11c * 0.25;
+                    double sub_parameter_weighted_average_11d = insentavization_11d * 0.25;
+
+                    double total_parameter_weight_average = sub_parameter_weighted_average_11a + sub_parameter_weighted_average_11b + sub_parameter_weighted_average_11c + sub_parameter_weighted_average_11d ;
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_parameter_weight_average);
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
@@ -2326,22 +2445,52 @@ public class MISController {
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-                    int col21=rsGst14aa.getInt("col21");
-                    int col3=rsGst14aa.getInt("col3");
                     zone_code = rsGst14aa.getString("ZONE_CODE");
-                    Integer insentavization = 0;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    double  total = rsGst14aa.getDouble("total_score");
+                    double total_score_11a = rsGst14aa.getDouble("total_score_11a") * 100;
+                    double total_score_11b = rsGst14aa.getDouble("total_score_11b") * 100;
+                    double total_score_11c = rsGst14aa.getDouble("total_score_11c") * 100;
+                    double total_score_11d = rsGst14aa.getDouble("total_score_11d") * 100;
+
+                    double numerator_11a = rsGst14aa.getDouble("numerator_11a");
+                    double median_11a = rsGst14aa.getDouble("median_11a");
+                    double numerator_11c = rsGst14aa.getDouble("numerator_11c");
+                    double median_11c = rsGst14aa.getDouble("median_11c");
+
+                    Integer Zonal_rank = 0;
                     String commName = "ALL";
                     String gst = "ALL";
-                    String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
+                    String absval = "null";
+                    String ra ="Appeals";
 
-                    String ra= RelevantAspect.Gst2_RA;
-                    String formattedTotal = String.format("%.2f", total);
-                    double total_score = Double.parseDouble(formattedTotal);
-                    Integer way_to_grade =score.marks2(total_score);
-                    double sub_parameter_weighted_average = way_to_grade * 0.5;
-                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    double total_score = 0.00;
+                    int way_to_grade = 0;
+                    int insentavization = 0;
+
+                    Integer way_to_grade_11a = score.marks11a(total_score_11a, total_score_11a);
+                    Integer way_to_grade_11b = score.marks11b(total_score_11b);
+                    Integer way_to_grade_11c = score.marks11c(total_score_11c,total_score_11c);
+                    Integer way_to_grade_11d = score.marks11d(total_score_11d);
+
+                    int insentavization_11a = way_to_grade_11a;
+                    int insentavization_11b = way_to_grade_11b;
+                    int insentavization_11c = way_to_grade_11c;
+                    int insentavization_11d = way_to_grade_11d;
+
+                    if (numerator_11a > median_11a && way_to_grade_11a < 10) {
+                        insentavization_11a += 1;
+                    }
+                    if (numerator_11c > median_11c && way_to_grade_11c < 10) {
+                        insentavization_11c += 1;
+                    }
+
+                    double sub_parameter_weighted_average_11a = insentavization_11a * 0.25;
+                    double sub_parameter_weighted_average_11b = insentavization_11b * 0.25;
+                    double sub_parameter_weighted_average_11c = insentavization_11c * 0.25;
+                    double sub_parameter_weighted_average_11d = insentavization_11d * 0.25;
+
+                    double total_parameter_weight_average = sub_parameter_weighted_average_11a + sub_parameter_weighted_average_11b + sub_parameter_weighted_average_11c + sub_parameter_weighted_average_11d ;
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_parameter_weight_average);
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
@@ -2349,22 +2498,52 @@ public class MISController {
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-                    int col21=rsGst14aa.getInt("col21");
-                    int col3=rsGst14aa.getInt("col3");
                     zone_code = rsGst14aa.getString("ZONE_CODE");
-                    Integer insentavization = 0;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    double  total = rsGst14aa.getDouble("total_score");
+                    double total_score_11a = rsGst14aa.getDouble("total_score_11a") * 100;
+                    double total_score_11b = rsGst14aa.getDouble("total_score_11b") * 100;
+                    double total_score_11c = rsGst14aa.getDouble("total_score_11c") * 100;
+                    double total_score_11d = rsGst14aa.getDouble("total_score_11d") * 100;
+
+                    double numerator_11a = rsGst14aa.getDouble("numerator_11a");
+                    double median_11a = rsGst14aa.getDouble("median_11a");
+                    double numerator_11c = rsGst14aa.getDouble("numerator_11c");
+                    double median_11c = rsGst14aa.getDouble("median_11c");
+
+                    Integer Zonal_rank = 0;
                     String commName = "ALL";
                     String gst = "ALL";
-                    String absval = String.valueOf(col21)+"/"+String.valueOf(col3);
+                    String absval = "null";
+                    String ra ="Appeals";
 
-                    String ra= RelevantAspect.Gst2_RA;
-                    String formattedTotal = String.format("%.2f", total);
-                    double total_score = Double.parseDouble(formattedTotal);
-                    Integer way_to_grade =score.marks2(total_score);
-                    double sub_parameter_weighted_average = way_to_grade * 0.5;
-                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    double total_score = 0.00;
+                    int way_to_grade = 0;
+                    int insentavization = 0;
+
+                    Integer way_to_grade_11a = score.marks11a(total_score_11a, total_score_11a);
+                    Integer way_to_grade_11b = score.marks11b(total_score_11b);
+                    Integer way_to_grade_11c = score.marks11c(total_score_11c,total_score_11c);
+                    Integer way_to_grade_11d = score.marks11d(total_score_11d);
+
+                    int insentavization_11a = way_to_grade_11a;
+                    int insentavization_11b = way_to_grade_11b;
+                    int insentavization_11c = way_to_grade_11c;
+                    int insentavization_11d = way_to_grade_11d;
+
+                    if (numerator_11a > median_11a && way_to_grade_11a < 10) {
+                        insentavization_11a += 1;
+                    }
+                    if (numerator_11c > median_11c && way_to_grade_11c < 10) {
+                        insentavization_11c += 1;
+                    }
+
+                    double sub_parameter_weighted_average_11a = insentavization_11a * 0.25;
+                    double sub_parameter_weighted_average_11b = insentavization_11b * 0.25;
+                    double sub_parameter_weighted_average_11c = insentavization_11c * 0.25;
+                    double sub_parameter_weighted_average_11d = insentavization_11d * 0.25;
+
+                    double total_parameter_weight_average = sub_parameter_weighted_average_11a + sub_parameter_weighted_average_11b + sub_parameter_weighted_average_11c + sub_parameter_weighted_average_11d ;
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_parameter_weight_average);
                     allGstaList.add(totalScore);
                 }
             }
