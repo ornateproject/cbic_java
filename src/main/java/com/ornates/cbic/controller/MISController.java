@@ -1,10 +1,8 @@
 package com.ornates.cbic.controller;
 
-import com.ornates.cbic.dao.Query.CGSTParameterWiseQuery;
 import com.ornates.cbic.dao.Query.MISQuery;
 import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
-import com.ornates.cbic.model.response.MonthlyYearlyScore;
 import com.ornates.cbic.model.response.TotalScore;
 import com.ornates.cbic.service.GradeScore;
 import com.ornates.cbic.service.RelevantAspect;
@@ -45,6 +43,164 @@ public class MISController {
         System.out.println("Connection :"+con);
         return "its working api";
     }
+
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=registration__1__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+
+    @ResponseBody
+    @RequestMapping(value = "/registration") //1
+    //  http://localhost:8080/cbicApi/cbic/MIS/registration?month_date=2024-04-01&zone_code=59&type=CurrentMonth
+    //  http://localhost:8080/cbicApi/cbic/MIS/registration?month_date=2024-04-01&zone_code=59&type=1_MonthBack
+    //  http://localhost:8080/cbicApi/cbic/MIS/registration?month_date=2024-04-01&zone_code=59&type=2_MonthBack
+    //  http://localhost:8080/cbicApi/cbic/MIS/registration?month_date=2024-04-01&zone_code=59&type=3_MonthBack
+    //  http://localhost:8080/cbicApi/cbic/MIS/registration?month_date=2024-04-01&zone_code=59&type=4_MonthBack
+    //  http://localhost:8080/cbicApi/cbic/MIS/registration?month_date=2024-04-01&zone_code=59&type=5_MonthBack
+    public Object registration(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code, @RequestParam(required = false) String come_name) {
+        List<TotalScore> allGstaList = new ArrayList<>();
+        TotalScore totalScore = null;
+        Connection con = null;
+        ResultSet rsGst14aa = null;
+        //double median =0.00;
+
+        try {
+            if (type.equalsIgnoreCase("CurrentMonth")) {
+                String query_assessment = new MISQuery().QueryFor_Registration_CurrentMonth(month_date,zone_code);
+                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+                while (rsGst14aa.next()) {
+                    double total_score = rsGst14aa.getDouble("total_score");
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    Integer Zonal_rank = rsGst14aa.getInt("z_rank");
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    String ra ="Registration";
+                    String commName = "ALL";
+                    String gst = "ALL";
+                    String absval = "null";
+                    Integer way_to_grade = 0;
+                    Integer insentavization = 0;
+                    double sub_parameter_weighted_average = 0.00;
+
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(totalScore);
+
+                }
+
+            }else if (type.equalsIgnoreCase("1_MonthBack")) {
+                String query_assessment = new MISQuery().QueryFor_Registration_1_MonthBack(month_date,zone_code);
+                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+                while (rsGst14aa.next()) {
+                    double total_score = rsGst14aa.getDouble("total_score");
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    Integer Zonal_rank = rsGst14aa.getInt("z_rank");
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    String ra ="Registration";
+                    String commName = "ALL";
+                    String gst = "ALL";
+                    String absval = "null";
+                    Integer way_to_grade = 0;
+                    Integer insentavization = 0;
+                    double sub_parameter_weighted_average = 0.00;
+
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(totalScore);
+                }
+            }else if (type.equalsIgnoreCase("2_MonthBack")) {
+                String query_assessment = new MISQuery().QueryFor_Registration_2_MonthBack(month_date,zone_code);
+                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+                while (rsGst14aa.next()) {
+                    double total_score = rsGst14aa.getDouble("total_score");
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    Integer Zonal_rank = rsGst14aa.getInt("z_rank");
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    String ra ="Registration";
+                    String commName = "ALL";
+                    String gst = "ALL";
+                    String absval = "null";
+                    Integer way_to_grade = 0;
+                    Integer insentavization = 0;
+                    double sub_parameter_weighted_average = 0.00;
+
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(totalScore);
+                }
+            }else if (type.equalsIgnoreCase("3_MonthBack")) {
+                String query_assessment = new MISQuery().QueryFor_Registration_3_MonthBack(month_date,zone_code);
+                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+                while (rsGst14aa.next()) {
+                    double total_score = rsGst14aa.getDouble("total_score");
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    Integer Zonal_rank = rsGst14aa.getInt("z_rank");
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    String ra ="Registration";
+                    String commName = "ALL";
+                    String gst = "ALL";
+                    String absval = "null";
+                    Integer way_to_grade = 0;
+                    Integer insentavization = 0;
+                    double sub_parameter_weighted_average = 0.00;
+
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(totalScore);
+                }
+            }else if (type.equalsIgnoreCase("4_MonthBack")) {
+                String query_assessment = new MISQuery().QueryFor_Registration_4_MonthBack(month_date,zone_code);
+                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+                while (rsGst14aa.next()) {
+                    double total_score = rsGst14aa.getDouble("total_score");
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    Integer Zonal_rank = rsGst14aa.getInt("z_rank");
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    String ra ="Registration";
+                    String commName = "ALL";
+                    String gst = "ALL";
+                    String absval = "null";
+                    Integer way_to_grade = 0;
+                    Integer insentavization = 0;
+                    double sub_parameter_weighted_average = 0.00;
+
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(totalScore);
+                }
+            }else if (type.equalsIgnoreCase("5_MonthBack")) {
+                String query_assessment = new MISQuery().QueryFor_Registration_5_MonthBack(month_date,zone_code);
+                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+                while (rsGst14aa.next()) {
+                    double total_score = rsGst14aa.getDouble("total_score");
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    Integer Zonal_rank = rsGst14aa.getInt("z_rank");
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    String ra ="Registration";
+                    String commName = "ALL";
+                    String gst = "ALL";
+                    String absval = "null";
+                    Integer way_to_grade = 0;
+                    Integer insentavization = 0;
+                    double sub_parameter_weighted_average = 0.00;
+
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(totalScore);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rsGst14aa != null) rsGst14aa.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return allGstaList.stream()
+                .sorted(Comparator.comparing(TotalScore::getSub_parameter_weighted_average).reversed())
+                .collect(Collectors.toList());
+    }
+
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=returnFiling__2__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 
     @ResponseBody
     @RequestMapping(value = "/returnFiling") //2
@@ -89,7 +245,7 @@ public class MISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_SReturnFiling_1_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_ReturnFiling_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -219,7 +375,7 @@ public class MISController {
                 .collect(Collectors.toList());
     }
 
-    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=scrutiny/assessment__3__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 
     @ResponseBody
     @RequestMapping(value = "/scrutiny/assessment") //3
@@ -531,7 +687,7 @@ public class MISController {
                 .collect(Collectors.toList());
     }
 
-    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Investigation__4__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 
     @ResponseBody
     @RequestMapping(value = "/Investigation") //4
@@ -551,7 +707,7 @@ public class MISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_CurrentMonth(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Investigation_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -576,7 +732,7 @@ public class MISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_SReturnFiling_1_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Investigation_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -599,7 +755,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_2_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Investigation_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -622,7 +778,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_3_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Investigation_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -645,7 +801,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_4_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Investigation_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -668,7 +824,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_5_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Investigation_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -706,7 +862,7 @@ public class MISController {
                 .collect(Collectors.toList());
     }
 
-    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=adjudication__5__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 
     @ResponseBody
     @RequestMapping(value = "/adjudication") //5
@@ -993,7 +1149,7 @@ public class MISController {
                 .collect(Collectors.toList());
     }
 
-    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=adjudication(legacy cases__6__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 
     @ResponseBody
     @RequestMapping(value = "/adjudication(legacy cases)") //6
@@ -1013,7 +1169,7 @@ public class MISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_CurrentMonth(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Adjudication_Legacy_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1038,7 +1194,7 @@ public class MISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_SReturnFiling_1_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Adjudication_Legacy_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1061,7 +1217,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_2_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Adjudication_Legacy_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1084,7 +1240,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_3_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Adjudication_Legacy_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1107,7 +1263,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_4_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Adjudication_Legacy_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1130,7 +1286,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_5_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_Adjudication_Legacy_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1168,7 +1324,7 @@ public class MISController {
                 .collect(Collectors.toList());
     }
 
-    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=refunds__7__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 
     @ResponseBody
     @RequestMapping(value = "/refunds") //7
@@ -1342,7 +1498,7 @@ public class MISController {
                 .collect(Collectors.toList());
     }
 
-    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=recovery of arrears__8__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 
     @ResponseBody
     @RequestMapping(value = "/recovery of arrears") //8
@@ -1362,7 +1518,7 @@ public class MISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_CurrentMonth(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_RecoveryOfArrears_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1387,7 +1543,7 @@ public class MISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_SReturnFiling_1_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_RecoveryOfArrears_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1410,7 +1566,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_2_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_RecoveryOfArrears_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1433,7 +1589,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_3_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_RecoveryOfArrears_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1456,7 +1612,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_4_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_RecoveryOfArrears_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1479,7 +1635,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_5_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_RecoveryOfArrears_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1517,7 +1673,7 @@ public class MISController {
                 .collect(Collectors.toList());
     }
 
-    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=arrest and prosecution__9__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 
     @ResponseBody
     @RequestMapping(value = "/arrest and prosecution") //9
@@ -1537,7 +1693,7 @@ public class MISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_CurrentMonth(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_arrestsAndProsecution_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1562,7 +1718,7 @@ public class MISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_SReturnFiling_1_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_arrestsAndProsecution_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1585,7 +1741,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_2_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_arrestsAndProsecution_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1608,7 +1764,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_3_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_arrestsAndProsecution_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1631,7 +1787,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_4_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_arrestsAndProsecution_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1654,7 +1810,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_5_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_arrestsAndProsecution_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1692,7 +1848,7 @@ public class MISController {
                 .collect(Collectors.toList());
     }
 
-    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=audit__10__*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 
     @ResponseBody
     @RequestMapping(value = "/audit") //10
@@ -1712,7 +1868,7 @@ public class MISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_CurrentMonth(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_audit_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1737,7 +1893,7 @@ public class MISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_SReturnFiling_1_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_audit_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1760,7 +1916,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_2_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_audit_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1783,7 +1939,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_3_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_audit_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1806,7 +1962,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_4_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_audit_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1829,7 +1985,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_5_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_audit_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1867,7 +2023,7 @@ public class MISController {
                 .collect(Collectors.toList());
     }
 
-    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=appeals__11__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 
     @ResponseBody
     @RequestMapping(value = "/appeals") //11
@@ -1887,7 +2043,7 @@ public class MISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_CurrentMonth(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_appeals_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1912,7 +2068,7 @@ public class MISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_SReturnFiling_1_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_appeals_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1935,7 +2091,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_2_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_appeals_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1958,7 +2114,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_3_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_appeals_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1981,7 +2137,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_4_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_appeals_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -2004,7 +2160,7 @@ public class MISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new MISQuery().QueryFor_ReturnFiling_5_MonthBack(month_date,zone_code);
+                String query_assessment = new MISQuery().QueryFor_appeals_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -2042,6 +2198,6 @@ public class MISController {
                 .collect(Collectors.toList());
     }
 
-    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=END=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 
 }

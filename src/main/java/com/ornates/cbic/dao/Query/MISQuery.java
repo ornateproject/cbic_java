@@ -3,7 +3,8 @@ package com.ornates.cbic.dao.Query;
 import com.ornates.cbic.service.DateCalculate;
 
 public class MISQuery {
-    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Registration=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Registration__1__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
 
     public String QueryFor_Registration_CurrentMonth(String month_date, String zone_code){
 // '" + month_date + "'	'" + zone_code + "' '" + MonthBack_1 + "' '" + next_month_new + "'  //  this query for current month
@@ -53,7 +54,7 @@ public class MISQuery {
         return queryGstParameter1;
     }
 
-    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=ReturnFiling=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=ReturnFiling__2__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
 
     public String QueryFor_ReturnFiling_CurrentMonth(String month_date, String zone_code){
         // '" + month_date + "'	'" + zone_code + "' '" + MonthBack_1 + "' '" + next_month_new + "'  //  this query for current month
@@ -73,7 +74,7 @@ public class MISQuery {
                 "ORDER BY total_score ASC;";
         return queryGstParameter2;
     }
-    public String QueryFor_SReturnFiling_1_MonthBack(String month_date, String zone_code){
+    public String QueryFor_ReturnFiling_1_MonthBack(String month_date, String zone_code){
         // '" + MonthBack_1 + "' '" + zone_code + "' '" + MonthBack_2 + "' 	'" + next_month_new + "'  //  This query for 1 month back
         String MonthBack_1 = DateCalculate.get_1_MonthBack(month_date); // that is current month_date
         String MonthBack_2 = DateCalculate.get_2_MonthBack(month_date); // thas is previous month
@@ -169,7 +170,7 @@ public class MISQuery {
         return queryGstParameter2;
     }
 
-    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Scrutiny=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Scrutiny__3__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
 
     public String QueryFor_Scrutiny_CurrentMonth(String month_date, String zone_code){
         // '" + month_date + "'	'" + zone_code + "' '" + MonthBack_1 + "' '" + next_month_new + "'  //  this query for current month
@@ -1392,7 +1393,7 @@ public class MISQuery {
         return queryGstParameter7;
     }
 
-    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=RecoveryOfArrears=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=RecoveryOfArrears__8__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
     public String QueryFor_RecoveryOfArrears_CurrentMonth(String month_date, String zone_code){
 // '" + month_date + "'	'" + zone_code + "' '" + MonthBack_1 + "' '" + next_month_new + "'  //  this query for current month
         String MonthBack_1 = DateCalculate.get_1_MonthBack(month_date);
@@ -1441,6 +1442,156 @@ public class MISQuery {
         return queryGstParameter8;
     }
 
-    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Arrests & prosecution__9__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+
+    public String QueryFor_arrestsAndProsecution_CurrentMonth(String month_date, String zone_code){
+     // '" + month_date + "'	'" + zone_code + "' '" + MonthBack_1 + "' '" + next_month_new + "'  //  this query for current month
+        String MonthBack_1 = DateCalculate.get_1_MonthBack(month_date);
+        //  in this query normal month date is current month and MonthBack_1 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+    public String QueryFor_arrestsAndProsecution_1_MonthBack(String month_date, String zone_code){
+     // '" + MonthBack_1 + "' '" + zone_code + "' '" + MonthBack_2 + "' 	'" + next_month_new + "'  //  This query for 1 month back
+        String MonthBack_1 = DateCalculate.get_1_MonthBack(month_date); // that is current month_date
+        String MonthBack_2 = DateCalculate.get_2_MonthBack(month_date); // thas is previous month
+        // in this query MonthBack_1 is a current month and MonthBack_2 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+    public String QueryFor_arrestsAndProsecution_2_MonthBack(String month_date, String zone_code){
+        //           '" + MonthBack_2 + "'	'" + zone_code + "'		'" + MonthBack_3 + "' 	'" + next_month_new + "'
+        String MonthBack_2 = DateCalculate.get_2_MonthBack(month_date); // that is current month_date
+        String MonthBack_3 = DateCalculate.get_3_MonthBack(month_date); // thas is previous month
+        // in this query MonthBack_2 is a current month and MonthBack_3 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+    public String QueryFor_arrestsAndProsecution_3_MonthBack(String month_date, String zone_code){
+        //             	 '" + MonthBack_3 + "'	'" + zone_code + "'		'" + MonthBack_4 + "' 	'" + next_month_new + "'
+        String MonthBack_3 = DateCalculate.get_3_MonthBack(month_date); // that is current month_date
+        String MonthBack_4 = DateCalculate.get_4_MonthBack(month_date); // thas is previous month
+        // in this query MonthBack_3 is a current month and MonthBack_4 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+    public String QueryFor_arrestsAndProsecution_4_MonthBack(String month_date, String zone_code){
+        //             	 '" + MonthBack_4 + "'	'" + zone_code + "'		'" + MonthBack_5 + "' 	'" + next_month_new + "'
+        String MonthBack_4 = DateCalculate.get_4_MonthBack(month_date); // that is current month_date
+        String MonthBack_5 = DateCalculate.get_5_MonthBack(month_date); // thas is previous month
+        // in this query MonthBack_4 is a current month and MonthBack_5 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+    public String QueryFor_arrestsAndProsecution_5_MonthBack(String month_date, String zone_code){
+        //               '" + MonthBack_5 + "'	'" + zone_code + "'		'" + MonthBack_6 + "' 	'" + next_month_new + "'
+        String MonthBack_5 = DateCalculate.get_5_MonthBack(month_date); // that is current month_date
+        String MonthBack_6 = DateCalculate.get_6_MonthBack(month_date); // thas is previous month
+        // in this query MonthBack_5 is a current month and MonthBack_6 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Audit__10__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+
+    public String QueryFor_audit_CurrentMonth(String month_date, String zone_code){
+// '" + month_date + "'	'" + zone_code + "' '" + MonthBack_1 + "' '" + next_month_new + "'  //  this query for current month
+        String MonthBack_1 = DateCalculate.get_1_MonthBack(month_date);
+        //  in this query normal month date is current month and MonthBack_1 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+    public String QueryFor_audit_1_MonthBack(String month_date, String zone_code){
+// '" + MonthBack_1 + "' '" + zone_code + "' '" + MonthBack_2 + "' 	'" + next_month_new + "'  //  This query for 1 month back
+        String MonthBack_1 = DateCalculate.get_1_MonthBack(month_date); // that is current month_date
+        String MonthBack_2 = DateCalculate.get_2_MonthBack(month_date); // thas is previous month
+        // in this query MonthBack_1 is a current month and MonthBack_2 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+    public String QueryFor_audit_2_MonthBack(String month_date, String zone_code){
+        //           '" + MonthBack_2 + "'	'" + zone_code + "'		'" + MonthBack_3 + "' 	'" + next_month_new + "'
+        String MonthBack_2 = DateCalculate.get_2_MonthBack(month_date); // that is current month_date
+        String MonthBack_3 = DateCalculate.get_3_MonthBack(month_date); // thas is previous month
+        // in this query MonthBack_2 is a current month and MonthBack_3 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+    public String QueryFor_audit_3_MonthBack(String month_date, String zone_code){
+        //             	 '" + MonthBack_3 + "'	'" + zone_code + "'		'" + MonthBack_4 + "' 	'" + next_month_new + "'
+        String MonthBack_3 = DateCalculate.get_3_MonthBack(month_date); // that is current month_date
+        String MonthBack_4 = DateCalculate.get_4_MonthBack(month_date); // thas is previous month
+        // in this query MonthBack_3 is a current month and MonthBack_4 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+    public String QueryFor_audit_4_MonthBack(String month_date, String zone_code){
+        //             	 '" + MonthBack_4 + "'	'" + zone_code + "'		'" + MonthBack_5 + "' 	'" + next_month_new + "'
+        String MonthBack_4 = DateCalculate.get_4_MonthBack(month_date); // that is current month_date
+        String MonthBack_5 = DateCalculate.get_5_MonthBack(month_date); // thas is previous month
+        // in this query MonthBack_4 is a current month and MonthBack_5 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+    public String QueryFor_audit_5_MonthBack(String month_date, String zone_code){
+        //               '" + MonthBack_5 + "'	'" + zone_code + "'		'" + MonthBack_6 + "' 	'" + next_month_new + "'
+        String MonthBack_5 = DateCalculate.get_5_MonthBack(month_date); // that is current month_date
+        String MonthBack_6 = DateCalculate.get_6_MonthBack(month_date); // thas is previous month
+        // in this query MonthBack_5 is a current month and MonthBack_6 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Appeals=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+
+    public String QueryFor_appeals_CurrentMonth(String month_date, String zone_code){
+// '" + month_date + "'	'" + zone_code + "' '" + MonthBack_1 + "' '" + next_month_new + "'  //  this query for current month
+        String MonthBack_1 = DateCalculate.get_1_MonthBack(month_date);
+        //  in this query normal month date is current month and MonthBack_1 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+    public String QueryFor_appeals_1_MonthBack(String month_date, String zone_code){
+// '" + MonthBack_1 + "' '" + zone_code + "' '" + MonthBack_2 + "' 	'" + next_month_new + "'  //  This query for 1 month back
+        String MonthBack_1 = DateCalculate.get_1_MonthBack(month_date); // that is current month_date
+        String MonthBack_2 = DateCalculate.get_2_MonthBack(month_date); // thas is previous month
+        // in this query MonthBack_1 is a current month and MonthBack_2 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+    public String QueryFor_appeals_2_MonthBack(String month_date, String zone_code){
+        //           '" + MonthBack_2 + "'	'" + zone_code + "'		'" + MonthBack_3 + "' 	'" + next_month_new + "'
+        String MonthBack_2 = DateCalculate.get_2_MonthBack(month_date); // that is current month_date
+        String MonthBack_3 = DateCalculate.get_3_MonthBack(month_date); // thas is previous month
+        // in this query MonthBack_2 is a current month and MonthBack_3 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+    public String QueryFor_appeals_3_MonthBack(String month_date, String zone_code){
+        //             	 '" + MonthBack_3 + "'	'" + zone_code + "'		'" + MonthBack_4 + "' 	'" + next_month_new + "'
+        String MonthBack_3 = DateCalculate.get_3_MonthBack(month_date); // that is current month_date
+        String MonthBack_4 = DateCalculate.get_4_MonthBack(month_date); // thas is previous month
+        // in this query MonthBack_3 is a current month and MonthBack_4 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+    public String QueryFor_appeals_4_MonthBack(String month_date, String zone_code){
+        //             	 '" + MonthBack_4 + "'	'" + zone_code + "'		'" + MonthBack_5 + "' 	'" + next_month_new + "'
+        String MonthBack_4 = DateCalculate.get_4_MonthBack(month_date); // that is current month_date
+        String MonthBack_5 = DateCalculate.get_5_MonthBack(month_date); // thas is previous month
+        // in this query MonthBack_4 is a current month and MonthBack_5 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+    public String QueryFor_appeals_5_MonthBack(String month_date, String zone_code){
+        //               '" + MonthBack_5 + "'	'" + zone_code + "'		'" + MonthBack_6 + "' 	'" + next_month_new + "'
+        String MonthBack_5 = DateCalculate.get_5_MonthBack(month_date); // that is current month_date
+        String MonthBack_6 = DateCalculate.get_6_MonthBack(month_date); // thas is previous month
+        // in this query MonthBack_5 is a current month and MonthBack_6 is a previous month
+        String queryGstParameter8 ="";
+        return queryGstParameter8;
+    }
+
+    // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=END=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
 
 }
