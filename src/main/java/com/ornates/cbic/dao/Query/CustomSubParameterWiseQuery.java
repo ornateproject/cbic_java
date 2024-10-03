@@ -160,48 +160,87 @@ public class CustomSubParameterWiseQuery {
     public String QueryFor_cus4d_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom4d="SELECT zc.ZONE_NAME, cc.ZONE_CODE, " +
-                "SUM(14c.PENDING_YEAR_1TO2_NO) AS col6, " +
-                "SUM(14c.PENDING_MORE_2YEAR_NO) AS col8, " +
-                "sum(14c.PENDING_MONTHS_0TO6_NO) AS col2, " +
-                "sum(14c.PENDING_MONTHS_6TO12_NO) AS col4 " +
-                "FROM MIS_DGI_CUS_5B AS 14c RIGHT JOIN mis_gst_commcode AS cc " +
-                "ON 14c.COMM_CODE = cc.COMM_CODE " +
-                "LEFT JOIN mis_gst_zonecode AS zc " +
-                "ON zc.ZONE_CODE = cc.ZONE_CODE " +
-                "WHERE 14c.MM_YYYY = '" + month_date + "' " +
-                "GROUP BY cc.ZONE_CODE;";
+        String queryCustom4d="SELECT \n"
+                + "    zc.ZONE_NAME, \n"
+                + "    cc.ZONE_CODE, \n"
+                + "    SUM(14c.PENDING_YEAR_1TO2_NO) AS col6, \n"
+                + "    SUM(14c.PENDING_MORE_2YEAR_NO) AS col8, \n"
+                + "    SUM(14c.PENDING_MONTHS_0TO6_NO) AS col2, \n"
+                + "    SUM(14c.PENDING_MONTHS_6TO12_NO) AS col4 \n"
+                + "FROM \n"
+                + "    MIS_DGI_CUS_5B AS 14c \n"
+                + "RIGHT JOIN \n"
+                + "    mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n"
+                + "LEFT JOIN \n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "WHERE \n"
+                + "    14c.MM_YYYY = '" + month_date + "' \n"
+                + "GROUP BY \n"
+                + "    zc.ZONE_NAME, \n"
+                + "    cc.ZONE_CODE;\n"
+                + "";
         return queryCustom4d;
     }
     public String QueryFor_cus4d_CommissonaryWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom4d="SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, "
-                + "(14c.PENDING_YEAR_1TO2_NO) AS col6, "
-                + "(14c.PENDING_MORE_2YEAR_NO) AS col8, "
-                + "(14c.PENDING_MONTHS_0TO6_NO) AS col2, "
-                + "(14c.PENDING_MONTHS_6TO12_NO) AS col4 "
-                + "FROM MIS_DGI_CUS_5B AS 14c RIGHT JOIN mis_gst_commcode AS cc "
-                + "ON 14c.COMM_CODE = cc.COMM_CODE "
-                + "LEFT JOIN mis_gst_zonecode AS zc "
-                + "ON zc.ZONE_CODE = cc.ZONE_CODE "
-                + "WHERE 14c.MM_YYYY = '" + month_date + "' AND cc.ZONE_CODE = '" +
-                zone_code + "';";
+        String queryCustom4d="SELECT \n"
+                + "    zc.ZONE_NAME, \n"
+                + "    cc.ZONE_CODE, \n"
+                + "    cc.COMM_NAME,   -- Added COMM_NAME here\n"
+                + "    14c.PENDING_YEAR_1TO2_NO AS col6, \n"
+                + "    14c.PENDING_MORE_2YEAR_NO AS col8, \n"
+                + "    14c.PENDING_MONTHS_0TO6_NO AS col2, \n"
+                + "    14c.PENDING_MONTHS_6TO12_NO AS col4 \n"
+                + "FROM \n"
+                + "    MIS_DGI_CUS_5B AS 14c \n"
+                + "RIGHT JOIN \n"
+                + "    mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n"
+                + "LEFT JOIN \n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "WHERE \n"
+                + "    14c.MM_YYYY = '" + month_date + "' \n"
+                + "    AND cc.ZONE_CODE ='"+zone_code+"' -- Added condition for ZONE_CODE = 70\n"
+                + "GROUP BY \n"
+                + "    zc.ZONE_NAME, \n"
+                + "    cc.ZONE_CODE, \n"
+                + "    cc.COMM_NAME,  -- Added COMM_NAME to GROUP BY\n"
+                + "    14c.PENDING_YEAR_1TO2_NO, \n"
+                + "    14c.PENDING_MORE_2YEAR_NO, \n"
+                + "    14c.PENDING_MONTHS_0TO6_NO, \n"
+                + "    14c.PENDING_MONTHS_6TO12_NO;\n"
+                + "";
         return queryCustom4d;
     }
     public String QueryFor_cus4d_AllCommissonaryWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom4d="SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, "
-                + "(14c.PENDING_YEAR_1TO2_NO) AS col6, "
-                + "(14c.PENDING_MORE_2YEAR_NO) AS col8, "
-                + "(14c.PENDING_MONTHS_0TO6_NO) AS col2, "
-                + "(14c.PENDING_MONTHS_6TO12_NO) AS col4 "
-                + "FROM MIS_DGI_CUS_5B AS 14c RIGHT JOIN mis_gst_commcode AS cc "
-                + "ON 14c.COMM_CODE = cc.COMM_CODE "
-                + "LEFT JOIN mis_gst_zonecode AS zc "
-                + "ON zc.ZONE_CODE = cc.ZONE_CODE "
-                + "WHERE 14c.MM_YYYY = '" + month_date + "' ;";
+        String queryCustom4d="SELECT \n"
+                + "    zc.ZONE_NAME, \n"
+                + "    cc.ZONE_CODE, \n"
+                + "    cc.COMM_NAME,   -- Added COMM_NAME here\n"
+                + "    14c.PENDING_YEAR_1TO2_NO AS col6, \n"
+                + "    14c.PENDING_MORE_2YEAR_NO AS col8, \n"
+                + "    14c.PENDING_MONTHS_0TO6_NO AS col2, \n"
+                + "    14c.PENDING_MONTHS_6TO12_NO AS col4 \n"
+                + "FROM \n"
+                + "    MIS_DGI_CUS_5B AS 14c \n"
+                + "RIGHT JOIN \n"
+                + "    mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n"
+                + "LEFT JOIN \n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "WHERE \n"
+                + "    14c.MM_YYYY = '" + month_date + "' \n"
+                + "   \n"
+                + "GROUP BY \n"
+                + "    zc.ZONE_NAME, \n"
+                + "    cc.ZONE_CODE, \n"
+                + "    cc.COMM_NAME,  -- Added COMM_NAME to GROUP BY\n"
+                + "    14c.PENDING_YEAR_1TO2_NO, \n"
+                + "    14c.PENDING_MORE_2YEAR_NO, \n"
+                + "    14c.PENDING_MONTHS_0TO6_NO, \n"
+                + "    14c.PENDING_MONTHS_6TO12_NO;\n"
+                + "";
         return queryCustom4d;
     }
     // ********************************************************************************************************************************
