@@ -299,7 +299,7 @@ public class MISQuery {
                 "       m3a.ZONE_NAME, m3a.ZONE_CODE, m3a.score_of_subpara3a, m3a.numerator_3a, m3a.median_numerator_3a,f3b.score_of_parameter3b, f3b.numerator_3b, md3b.median_numerator_3b\n" +
                 "FROM median_3a AS m3a\n" +
                 "JOIN final_data_3b AS f3b ON m3a.ZONE_CODE = f3b.ZONE_CODE\n" +
-                "CROSS JOIN median_data_3b AS md3b WHERE m3a.ZONE_CODE = 57;\n";
+                "CROSS JOIN median_data_3b AS md3b WHERE m3a.ZONE_CODE = '" + zone_code + "';\n";
         return queryGstParameter3;
     }
     public String QueryFor_Scrutiny_3_MonthBack(String month_date, String zone_code){
