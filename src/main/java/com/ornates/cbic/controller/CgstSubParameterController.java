@@ -3910,7 +3910,7 @@ public class CgstSubParameterController {
     @RequestMapping(value = "/gst11a")
     //  http://localhost:8080/cbicApi/cbic/gst11a?month_date=2024-04-01&type=zone
     //  http://localhost:8080/cbicApi/cbic/gst11a?month_date=2024-04-01&zone_code=70&type=commissary
-    //	  http://localhost:8080/cbicApi/cbic/gst11a?month_date=2024-04-01&type=all_commissary
+    //	http://localhost:8080/cbicApi/cbic/gst11a?month_date=2024-04-01&type=all_commissary
     public Object getGst11A(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code) {
         List<GST4A> allGstaList = new ArrayList<>();
         GST4A gsta = null;
@@ -3920,8 +3920,6 @@ public class CgstSubParameterController {
         try {
 
             if (type.equalsIgnoreCase("zone")) {
-                String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-
                 String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gs11a_ZoneWise(month_date);
 
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
@@ -3973,13 +3971,13 @@ public class CgstSubParameterController {
                     double median = rsGst14aa.getDouble("median_11a");
                     int col_10=rsGst14aa.getInt("col10");
                     int col_4=rsGst14aa.getInt("col4");
-                    Double numerator_6a = rsGst14aa.getDouble("col10");
+                    Double numerator_11a = rsGst14aa.getDouble("col10");
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.marks11a(totalScore, totalScore);
-                    int insentavization = score.marks11a(totalScore, totalScore);
+                    int way_to_grade = score.marks11a(totalScore, numerator_11a);
+                    int insentavization = score.marks11a(totalScore, numerator_11a);
 
-                    if (numerator_6a > median && way_to_grade < 10) {
+                    if (numerator_11a > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
                     int Zonal_rank = 0;
@@ -4010,13 +4008,13 @@ public class CgstSubParameterController {
                     double median = rsGst14aa.getDouble("median_11a");
                     int col_10=rsGst14aa.getInt("col10");
                     int col_4=rsGst14aa.getInt("col4");
-                    Double numerator_6a = rsGst14aa.getDouble("col10");
+                    Double numerator_11a = rsGst14aa.getDouble("col10");
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.marks11a(totalScore, totalScore);
-                    int insentavization = score.marks11a(totalScore, totalScore);
+                    int way_to_grade = score.marks11a(totalScore, numerator_11a);
+                    int insentavization = score.marks11a(totalScore, numerator_11a);
 
-                    if (numerator_6a > median && way_to_grade < 10) {
+                    if (numerator_11a > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
                     int Zonal_rank = 0;
@@ -4214,11 +4212,8 @@ public class CgstSubParameterController {
 
         try {
             if (type.equalsIgnoreCase("zone")) {
-                String prev_month_new = DateCalculate.getPreviousMonth(month_date);
                 // Query string
                 String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst11c_ZoneWise(month_date);
-
-
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
                 while(rsGst14aa.next()) {
@@ -4273,13 +4268,13 @@ public class CgstSubParameterController {
                     double median = rsGst14aa.getDouble("median_11c");
                     int col_10=rsGst14aa.getInt("col10");
                     int col_4=rsGst14aa.getInt("col4");
-                    Double numerator_6a = rsGst14aa.getDouble("col10");
+                    Double numerator_11c = rsGst14aa.getDouble("col10");
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.marks11c(totalScore, totalScore);
-                    int insentavization = score.marks11c(totalScore, totalScore);
+                    int way_to_grade = score.marks11c(totalScore, numerator_11c);
+                    int insentavization = score.marks11c(totalScore, numerator_11c);
 
-                    if (numerator_6a > median && way_to_grade < 10) {
+                    if (numerator_11c > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
                     int Zonal_rank = 0;
@@ -4312,13 +4307,13 @@ public class CgstSubParameterController {
                     double median = rsGst14aa.getDouble("median_11c");
                     int col_10=rsGst14aa.getInt("col10");
                     int col_4=rsGst14aa.getInt("col4");
-                    Double numerator_6a = rsGst14aa.getDouble("col10");
+                    Double numerator_11c = rsGst14aa.getDouble("col10");
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.marks11c(totalScore, totalScore);
-                    int insentavization = score.marks11c(totalScore, totalScore);
+                    int way_to_grade = score.marks11c(totalScore, numerator_11c);
+                    int insentavization = score.marks11c(totalScore, numerator_11c);
 
-                    if (numerator_6a > median && way_to_grade < 10) {
+                    if (numerator_11c > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
                     int Zonal_rank = 0;
