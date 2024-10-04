@@ -3277,7 +3277,7 @@ public class CgstParameterController {
 
 					Integer Zonal_rank = null;
 					String commName = "null";
-					String ra = "Adjudication(legacy cases)";
+					String ra = "Appeals";
 
 					Double sub_parameter_weighted_average = insentavization * 0.25;
 					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
@@ -3343,21 +3343,51 @@ public class CgstParameterController {
 
 				while (rsGst14aa.next()) {
 					zone_code = rsGst14aa.getString("ZONE_CODE");
-					Integer way_to_grade = 0;
-					Integer insentavization = 0;
-					double sub_parameter_weighted_average = 0.00;
-					String commName = rsGst14aa.getString("COMM_NAME");
 					String zoneName = rsGst14aa.getString("ZONE_NAME");
-					double tScore = rsGst14aa.getDouble("parameter") * 100;
-					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
-					String gst ="null";
+					String commName = rsGst14aa.getString("COMM_NAME");
+					double total_score_11a = rsGst14aa.getDouble("total_score_11a");
+					double total_score_11b = rsGst14aa.getDouble("total_score_11b");
+					double total_score_11c = rsGst14aa.getDouble("total_score_11c");
+					double total_score_11d = rsGst14aa.getDouble("total_score_11d");
+
+					double numerator_11a = rsGst14aa.getDouble("numerator11a");
+					double median_11a = rsGst14aa.getDouble("median_11a");
+					double numerator_11c = rsGst14aa.getDouble("numerator11c");
+					double median_11c = rsGst14aa.getDouble("median_11c");
+
+					Integer Zonal_rank = 0;
+					String gst = "ALL";
 					String absval = "null";
-					String ra ="null";
+					String ra ="Appeals";
 
+					double total_score = 0.00;
+					int way_to_grade = 0;
+					int insentavization = 0;
 
-					String formattedTotal = String.format("%.2f", tScore);
-					double total_score = Double.parseDouble(formattedTotal);
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+					Integer way_to_grade_11a = score.marks6a(total_score_11a);
+					Integer way_to_grade_11b = score.marks6b(total_score_11b);
+					Integer way_to_grade_11c = score.marks6c(total_score_11c);
+					Integer way_to_grade_11d = score.marks6d(total_score_11d);
+
+					int insentavization_11a = way_to_grade_11a;
+					int insentavization_11b = way_to_grade_11b;
+					int insentavization_11c = way_to_grade_11c;
+					int insentavization_11d = way_to_grade_11d;
+
+					if (numerator_11a > median_11a && way_to_grade_11a < 10) {
+						insentavization_11a += 1;
+					}
+					if (numerator_11c > median_11c && way_to_grade_11c < 10) {
+						insentavization_11c += 1;
+					}
+					double sub_parameter_weighted_average_11a = insentavization_11a * 0.25;
+					double sub_parameter_weighted_average_11b = insentavization_11b * 0.25;
+					double sub_parameter_weighted_average_11c = insentavization_11c * 0.25;
+					double sub_parameter_weighted_average_11d = insentavization_11d * 0.25;
+
+					double total_parameter_weight_average = sub_parameter_weighted_average_11a + sub_parameter_weighted_average_11b + sub_parameter_weighted_average_11c + sub_parameter_weighted_average_11d ;
+					double roundedTotalParameterWeightAverage = Math.round(total_parameter_weight_average * 100.0) / 100.0;
+					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,roundedTotalParameterWeightAverage);
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
