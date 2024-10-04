@@ -247,47 +247,138 @@ public class CustomSubParameterWiseQuery {
     public String QueryFor_cus5a_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom5a="SELECT "
-                + "zc.ZONE_NAME, "
-                + "cc.ZONE_CODE, "
-                + "sum(14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO) as col5a, "
-                + "sum(14c.COMM_OPENING_NO + 14c.JC_OPENING_NO + 14c.AC_OPENING_NO) as col3a "
-                + "FROM Mis_DGI_CUS_1A AS 14c "
-                + "RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE "
-                + "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE "
-                + "WHERE 14c.MM_YYYY = '" + month_date + "' "
-                + "GROUP BY cc.ZONE_CODE;";
+        String queryCustom5a="WITH cte AS (\n"
+                + "    SELECT \n"
+                + "        zc.ZONE_NAME, \n"
+                + "        cc.ZONE_CODE, \n"
+                + "        SUM(14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO) AS col5a, \n"
+                + "        SUM(14c.COMM_OPENING_NO + 14c.JC_OPENING_NO + 14c.AC_OPENING_NO) AS col3a \n"
+                + "    FROM \n"
+                + "        Mis_DGI_CUS_1A AS 14c \n"
+                + "    RIGHT JOIN \n"
+                + "        mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n"
+                + "    LEFT JOIN \n"
+                + "        mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "    WHERE \n"
+                + "        14c.MM_YYYY = '" + month_date + "' \n"
+                + "    GROUP BY \n"
+                + "        zc.ZONE_NAME, cc.ZONE_CODE\n"
+                + "),\n"
+                + "median_cte AS (\n"
+                + "    SELECT \n"
+                + "        AVG(col5a) AS cus5a_median\n"
+                + "    FROM (\n"
+                + "        SELECT col5a, \n"
+                + "               ROW_NUMBER() OVER (ORDER BY col5a) AS rn,\n"
+                + "               COUNT(*) OVER () AS cnt\n"
+                + "        FROM cte\n"
+                + "    ) AS temp\n"
+                + "    WHERE rn IN (FLOOR((cnt + 1) / 2), CEIL((cnt + 1) / 2))\n"
+                + ")\n"
+                + "SELECT \n"
+                + "    cte.ZONE_NAME, \n"
+                + "    cte.ZONE_CODE, \n"
+                + "    cte.col5a, \n"
+                + "    cte.col3a,\n"
+                + "    median_cte.cus5a_median\n"
+                + "FROM \n"
+                + "    cte\n"
+                + "CROSS JOIN \n"
+                + "    median_cte;\n"
+                + "";
         return queryCustom5a;
     }
     public String QueryFor_cus5a_CommissonaryWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom5a="SELECT " +
-                "zc.ZONE_NAME, " +
-                "cc.ZONE_CODE, " +
-                "cc.COMM_NAME, " +
-                "(14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO) as col5a, " +
-                "(14c.COMM_OPENING_NO + 14c.JC_OPENING_NO + 14c.AC_OPENING_NO) as col3a " +
-                "FROM mis_dgi_cus_1A AS 14c " +
-                "RIGHT JOIN mis_gst_commcode AS cc " +
-                "ON 14c.COMM_CODE = cc.COMM_CODE " +
-                "LEFT JOIN mis_gst_zonecode AS zc " +
-                "ON zc.ZONE_CODE = cc.ZONE_CODE " +
-                "WHERE 14c.MM_YYYY = '" + month_date + "' AND cc.ZONE_CODE = '" + zone_code + "';";
+        String queryCustom5a="WITH cte AS (\n"
+                + "    SELECT \n"
+                + "        zc.ZONE_NAME, \n"
+                + "        cc.ZONE_CODE, \n"
+                + "        cc.COMM_NAME, \n"
+                + "        (c.COMM_DISPOSAL_NO + c.JC_DISPOSAL_NO + c.AC_DISPOSAL_NO) AS col5a, \n"
+                + "        (c.COMM_OPENING_NO + c.JC_OPENING_NO + c.AC_OPENING_NO) AS col3a \n"
+                + "    FROM \n"
+                + "        Mis_DGI_CUS_1A AS c \n"
+                + "    RIGHT JOIN \n"
+                + "        mis_gst_commcode AS cc ON c.COMM_CODE = cc.COMM_CODE \n"
+                + "    LEFT JOIN \n"
+                + "        mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "    WHERE \n"
+                + "        c.MM_YYYY = '" + month_date + "'\n"
+                + "),\n"
+                + "median_cte AS (\n"
+                + "    SELECT \n"
+                + "        AVG(col5a) AS cus5a_median\n"
+                + "    FROM (\n"
+                + "        SELECT col5a, \n"
+                + "               ROW_NUMBER() OVER (ORDER BY col5a) AS rn,\n"
+                + "               COUNT(*) OVER () AS cnt\n"
+                + "        FROM cte\n"
+                + "    ) AS temp\n"
+                + "    WHERE rn IN (FLOOR((cnt + 1) / 2), CEIL((cnt + 1) / 2))\n"
+                + ")\n"
+                + "SELECT \n"
+                + "    cte.ZONE_NAME, \n"
+                + "    cte.ZONE_CODE, \n"
+                + "    cte.COMM_NAME, \n"
+                + "    cte.col5a, \n"
+                + "    cte.col3a,\n"
+                + "    median_cte.cus5a_median\n"
+                + "FROM \n"
+                + "    cte\n"
+                + "CROSS JOIN \n"
+                + "    median_cte\n"
+                + "WHERE \n"
+                + "    cte.ZONE_CODE = '"+zone_code+"';\n"
+                + "";
         return queryCustom5a;
     }
     public String QueryFor_cus5a_AllCommissonaryWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom5a="SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, \n" +
-                "(14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO) as col5a, \n" +
-                "(14c.COMM_OPENING_NO + 14c.JC_OPENING_NO + 14c.AC_OPENING_NO) as col3a \n" +
-                "FROM Mis_DGI_CUS_1A AS 14c \n" +
-                "RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
-                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "WHERE 14c.MM_YYYY = '" + month_date + "';";
+        String queryCustom5a="WITH cte AS (\n"
+                + "    SELECT \n"
+                + "        zc.ZONE_NAME, \n"
+                + "        cc.ZONE_CODE, \n"
+                + "        cc.COMM_NAME, \n"
+                + "        (c.COMM_DISPOSAL_NO + c.JC_DISPOSAL_NO + c.AC_DISPOSAL_NO) AS col5a, \n"
+                + "        (c.COMM_OPENING_NO + c.JC_OPENING_NO + c.AC_OPENING_NO) AS col3a \n"
+                + "    FROM \n"
+                + "        Mis_DGI_CUS_1A AS c \n"
+                + "    RIGHT JOIN \n"
+                + "        mis_gst_commcode AS cc ON c.COMM_CODE = cc.COMM_CODE \n"
+                + "    LEFT JOIN \n"
+                + "        mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "    WHERE \n"
+                + "        c.MM_YYYY =  '" + month_date + "'\n"
+                + "),\n"
+                + "median_cte AS (\n"
+                + "    SELECT \n"
+                + "        AVG(col5a) AS cus5a_median\n"
+                + "    FROM (\n"
+                + "        SELECT col5a, \n"
+                + "               ROW_NUMBER() OVER (ORDER BY col5a) AS rn,\n"
+                + "               COUNT(*) OVER () AS cnt\n"
+                + "        FROM cte\n"
+                + "    ) AS temp\n"
+                + "    WHERE rn IN (FLOOR((cnt + 1) / 2), CEIL((cnt + 1) / 2))\n"
+                + ")\n"
+                + "SELECT \n"
+                + "    cte.ZONE_NAME, \n"
+                + "    cte.ZONE_CODE, \n"
+                + "    cte.COMM_NAME, \n"
+                + "    cte.col5a, \n"
+                + "    cte.col3a,\n"
+                + "    median_cte.cus5a_median\n"
+                + "FROM \n"
+                + "    cte\n"
+                + "CROSS JOIN \n"
+                + "    median_cte;\n"
+                + "";
         return queryCustom5a;
     }
+
     // ********************************************************************************************************************************
     public String QueryFor_cus5b_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
