@@ -4,7 +4,6 @@ package com.ornates.cbic.controller;
 import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.AllParameterTotalScore;
-import com.ornates.cbic.model.response.TotalScore;
 import com.ornates.cbic.service.DateCalculate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +19,7 @@ import java.util.List;
 //@CrossOrigin
 @RequestMapping("/cbic/allParameter")
 @Controller
-public class AllParameterController {
+public class AllParameterCGSTController {
     @ResponseBody
     @RequestMapping(value = "/")
     public String home() {

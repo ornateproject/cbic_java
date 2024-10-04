@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 //@CrossOrigin
 @RequestMapping("/cbic/t_score")
 @Controller
-public class TotalScoreController {
+public class CgstParameterController {
 	GradeScore score=new GradeScore();
 	@ResponseBody
 	@RequestMapping(value = "/")

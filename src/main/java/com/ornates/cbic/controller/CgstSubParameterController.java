@@ -26,7 +26,7 @@ import com.ornates.cbic.service.RelevantAspect;
 //@CrossOrigin
 @RequestMapping("/cbic") //....
 @Controller
-public class RetriveCbicDetailsController {
+public class CgstSubParameterController {
     GradeScore score=new GradeScore();
     @ResponseBody
     @RequestMapping(value = "/")
