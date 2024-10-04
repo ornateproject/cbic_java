@@ -774,98 +774,97 @@ public class CustomSubParameterController {
     //  http://localhost:8080/cbicApi/cbic/custom/cus6a?month_date=2015-03-01&zone_code=69&type=commissary
     public Object getCus6a(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code) {
 
-//        List<GST4A> allGstaList = new ArrayList<>();
-//        GST4A gsta = null;
-//        int rank = 0;
-//        double total = 0.00;
-//
-//
-//        try {
-//            if (type.equalsIgnoreCase("zone")) {
-//                // Query string
-//                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
-//                        "    SUM(14c.IMPORT_GOLD_DISPOSAL_NOC + 14c.IMPORT_NARCO_DISPOSAL_NOC + 14c.IMPORT_FICN_DISPOSAL_NOC + 14c.IMPORT_WILD_DISPOSAL_NOC + 14c.IMPORT_ODS_DISPOSAL_NOC + 14c.IMPORT_IPR_DISPOSAL_NOC + 14c.IMPORT_OTHERS_DISPOSAL_NOC + 14c.EXPORT_GOLD_DISPOSAL_NOC + 14c.EXPORT_NARCO_DISPOSAL_NOC + 14c.EXPORT_FICN_DISPOSAL_NOC + 14c.EXPORT_WILD_DISPOSAL_NOC + 14c.EXPORT_ODS_DISPOSAL_NOC + 14c.EXPORT_IPR_DISPOSAL_NOC + 14c.EXPORT_OTHERS_DISPOSAL_NOC) AS col9_3a,\n" +
-//                        "    SUM(15c.IMPORT_VALUE_DISPOSAL_NOC + 15c.IMPORT_MIS_DISPOSAL_NOC + 15c.IMPORT_DEEC_DISPOSAL_NOC + 15c.IMPORT_DEPB_DISPOSAL_NOC + 15c.IMPORT_EPCG_DISPOSAL_NOC + 15c.IMPORT_EOU_DISPOSAL_NOC + 15c.IMPORT_END_DISPOSAL_NOC + 15c.IMPORT_OTHERS_DISPOSAL_NOC + 15c.EXPORT_DEEC_DISPOSAL_NOC + 15c.EXPORT_DEPB_DISPOSAL_NOC + 15c.EXPORT_EPCG_DISPOSAL_NOC + 15c.EXPORT_EOU_DISPOSAL_NOC + 15c.EXPORT_DBK_DISPOSAL_NOC + 15c.EXPORT_OTHERS_DISPOSAL_NOC) AS col9_3b,\n" +
-//                        "    SUM(14c.IMPORT_NARCO_CLOSING_NOC + 14c.IMPORT_FICN_CLOSING_NOC + 14c.IMPORT_WILD_CLOSING_NOC + 14c.IMPORT_ODS_CLOSING_NOC + 14c.IMPORT_IPR_CLOSING_NOC + 14c.IMPORT_OTHERS_CLOSING_NOC + 14c.EXPORT_GOLD_CLOSING_NOC + 14c.EXPORT_NARCO_CLOSING_NOC + 14c.EXPORT_FICN_CLOSING_NOC + 14c.EXPORT_WILD_CLOSING_NOC + 14c.EXPORT_ODS_CLOSING_NOC + 14c.EXPORT_IPR_CLOSING_NOC + 14c.EXPORT_OTHERS_CLOSING_NOC) AS col3_3a,\n" +
-//                        "    SUM(15c.IMPORT_VALUE_CLOSING_NOC + 15c.IMPORT_MIS_CLOSING_NOC + 15c.IMPORT_DEEC_CLOSING_NOC + 15c.IMPORT_DEPB_CLOSING_NOC + 15c.IMPORT_EPCG_CLOSING_NOC + 15c.IMPORT_EOU_CLOSING_NOC + 15c.IMPORT_END_CLOSING_NOC + 15c.IMPORT_OTHERS_CLOSING_NOC + 15c.EXPORT_DEEC_CLOSING_NOC + 15c.EXPORT_DEPB_CLOSING_NOC + 15c.EXPORT_EPCG_CLOSING_NOC + 15c.EXPORT_EOU_CLOSING_NOC + 15c.EXPORT_DBK_CLOSING_NOC + 15c.EXPORT_OTHERS_CLOSING_NOC) AS col3_3b\n" +
-//                        "FROM mis_dri_cus_3a AS 14c\n" +
-//                        "RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE\n" +
-//                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
-//                        "LEFT JOIN mis_dri_cus_3b AS 15c ON 14c.COMM_CODE = 15c.COMM_CODE\n" +
-//                        "WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
-//                        "GROUP BY cc.ZONE_CODE;";
-//                //Result Set
-//                ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
-//                while (rsGst14aa.next()) {
-//                    String ra = CustomRelaventAspect.cus6a_RA;
-//                    String commname = "ALL";
-//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
-//                    int col9_3a = rsGst14aa.getInt("col9_3a");
-//                    int col9_3b = rsGst14aa.getInt("col9_3b");
-//                    int col3_3a = rsGst14aa.getInt("col3_3a");
-//                    int col3_3b = rsGst14aa.getInt("col3_3b");
-//                    int Zonal_rank = 0;
-//                    String gst = "no";
-//                    int way_to_grade = 0;
-//                    int insentavization = 0;
-//                    int sub_parameter_weighted_average = 0;
-//                    String absval=String.valueOf(col9_3a + col9_3b)+"/"+String.valueOf(col3_3a + col3_3b);
-//
-//                    if((col3_3a + col3_3b) != 0) {
-//                        total = ((double) (col9_3a + col9_3b) / (col3_3a + col3_3b));
-//                    }else {
-//                        total = 0.00;
-//                    }
-//
-//                    rank = score.c_marks6a(total);
-//                    String formattedTotal = String.format("%.2f", total);
-//                    double totalScore = Double.parseDouble(formattedTotal);
-//                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
-//                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-//                    allGstaList.add(gsta);
-//                }
-//            }else if (type.equalsIgnoreCase("commissary")) { // cus 1
-//
-//                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, (14c.CLOSING_NO) as col10,\r\n"
-//                        + "(14c.MONTHS_3_NO) as col12 \r\n"
-//                        + "FROM  mis_dgi_cus_4 as 14c right join  mis_gst_commcode as cc on 14c.COMM_CODE=cc.COMM_CODE\r\n"
-//                        + "left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE \r\n"
-//                        + "where  14c.MM_YYYY='" + month_date + "'  and cc.ZONE_CODE = '" + zone_code + "';";
-//
-//
-//                ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
-//                while (rsGst14aa.next()) {
-//                    String ra = CustomRelaventAspect.cus1_RA;
-//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
-//                    String commname = rsGst14aa.getString("COMM_NAME");
-//                    int col10 = rsGst14aa.getInt("col10");
-//                    int col12 = rsGst14aa.getInt("col12");
-//                    int Zonal_rank = 0;
-//                    String gst = "no";
-//                    int way_to_grade = 0;
-//                    int insentavization = 0;
-//                    int sub_parameter_weighted_average = 0;
-//                    String absval = String.valueOf(col10-col12) + "/" + String.valueOf(col10);
-//
-//                    if(col10 != 0) {
-//                        total = ((double) (col10-col12) / col10);
-//                    }else {
-//                        total = 0.00;
-//                    }
-//                    String formattedTotal = String.format("%.2f", total);
-//                    double totalScore = Double.parseDouble(formattedTotal);
-//                    rank = score.c_marks1(total);
-//                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
-//                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-//                    allGstaList.add(gsta);
-//                }
-//            }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return allGstaList;
-        return null;
+        List<GST4A> allGstaList = new ArrayList<>();
+        GST4A gsta = null;
+        int rank = 0;
+        double total = 0.00;
+
+
+        try {
+            if (type.equalsIgnoreCase("zone")) {
+                // Query string
+                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
+                        "    SUM(14c.IMPORT_GOLD_DISPOSAL_NOC + 14c.IMPORT_NARCO_DISPOSAL_NOC + 14c.IMPORT_FICN_DISPOSAL_NOC + 14c.IMPORT_WILD_DISPOSAL_NOC + 14c.IMPORT_ODS_DISPOSAL_NOC + 14c.IMPORT_IPR_DISPOSAL_NOC + 14c.IMPORT_OTHERS_DISPOSAL_NOC + 14c.EXPORT_GOLD_DISPOSAL_NOC + 14c.EXPORT_NARCO_DISPOSAL_NOC + 14c.EXPORT_FICN_DISPOSAL_NOC + 14c.EXPORT_WILD_DISPOSAL_NOC + 14c.EXPORT_ODS_DISPOSAL_NOC + 14c.EXPORT_IPR_DISPOSAL_NOC + 14c.EXPORT_OTHERS_DISPOSAL_NOC) AS col9_3a,\n" +
+                        "    SUM(15c.IMPORT_VALUE_DISPOSAL_NOC + 15c.IMPORT_MIS_DISPOSAL_NOC + 15c.IMPORT_DEEC_DISPOSAL_NOC + 15c.IMPORT_DEPB_DISPOSAL_NOC + 15c.IMPORT_EPCG_DISPOSAL_NOC + 15c.IMPORT_EOU_DISPOSAL_NOC + 15c.IMPORT_END_DISPOSAL_NOC + 15c.IMPORT_OTHERS_DISPOSAL_NOC + 15c.EXPORT_DEEC_DISPOSAL_NOC + 15c.EXPORT_DEPB_DISPOSAL_NOC + 15c.EXPORT_EPCG_DISPOSAL_NOC + 15c.EXPORT_EOU_DISPOSAL_NOC + 15c.EXPORT_DBK_DISPOSAL_NOC + 15c.EXPORT_OTHERS_DISPOSAL_NOC) AS col9_3b,\n" +
+                        "    SUM(14c.IMPORT_NARCO_CLOSING_NOC + 14c.IMPORT_FICN_CLOSING_NOC + 14c.IMPORT_WILD_CLOSING_NOC + 14c.IMPORT_ODS_CLOSING_NOC + 14c.IMPORT_IPR_CLOSING_NOC + 14c.IMPORT_OTHERS_CLOSING_NOC + 14c.EXPORT_GOLD_CLOSING_NOC + 14c.EXPORT_NARCO_CLOSING_NOC + 14c.EXPORT_FICN_CLOSING_NOC + 14c.EXPORT_WILD_CLOSING_NOC + 14c.EXPORT_ODS_CLOSING_NOC + 14c.EXPORT_IPR_CLOSING_NOC + 14c.EXPORT_OTHERS_CLOSING_NOC) AS col3_3a,\n" +
+                        "    SUM(15c.IMPORT_VALUE_CLOSING_NOC + 15c.IMPORT_MIS_CLOSING_NOC + 15c.IMPORT_DEEC_CLOSING_NOC + 15c.IMPORT_DEPB_CLOSING_NOC + 15c.IMPORT_EPCG_CLOSING_NOC + 15c.IMPORT_EOU_CLOSING_NOC + 15c.IMPORT_END_CLOSING_NOC + 15c.IMPORT_OTHERS_CLOSING_NOC + 15c.EXPORT_DEEC_CLOSING_NOC + 15c.EXPORT_DEPB_CLOSING_NOC + 15c.EXPORT_EPCG_CLOSING_NOC + 15c.EXPORT_EOU_CLOSING_NOC + 15c.EXPORT_DBK_CLOSING_NOC + 15c.EXPORT_OTHERS_CLOSING_NOC) AS col3_3b\n" +
+                        "FROM mis_dri_cus_3a AS 14c\n" +
+                        "RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE\n" +
+                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                        "LEFT JOIN mis_dri_cus_3b AS 15c ON 14c.COMM_CODE = 15c.COMM_CODE\n" +
+                        "WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+                        "GROUP BY cc.ZONE_CODE;";
+                //Result Set
+                ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
+                while (rsGst14aa.next()) {
+                    String ra = CustomRelaventAspect.cus6a_RA;
+                    String commname = "ALL";
+                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    int col9_3a = rsGst14aa.getInt("col9_3a");
+                    int col9_3b = rsGst14aa.getInt("col9_3b");
+                    int col3_3a = rsGst14aa.getInt("col3_3a");
+                    int col3_3b = rsGst14aa.getInt("col3_3b");
+                    int Zonal_rank = 0;
+                    String gst = "no";
+                    int way_to_grade = 0;
+                    int insentavization = 0;
+                    int sub_parameter_weighted_average = 0;
+                    String absval=String.valueOf(col9_3a + col9_3b)+"/"+String.valueOf(col3_3a + col3_3b);
+
+                    if((col3_3a + col3_3b) != 0) {
+                        total = ((double) (col9_3a + col9_3b) / (col3_3a + col3_3b));
+                    }else {
+                        total = 0.00;
+                    }
+
+                    rank = score.c_marks6a(total);
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(gsta);
+                }
+            }else if (type.equalsIgnoreCase("commissary")) { // cus 1
+
+                String queryGst14aa = "SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, (14c.CLOSING_NO) as col10,\r\n"
+                        + "(14c.MONTHS_3_NO) as col12 \r\n"
+                        + "FROM  mis_dgi_cus_4 as 14c right join  mis_gst_commcode as cc on 14c.COMM_CODE=cc.COMM_CODE\r\n"
+                        + "left join mis_gst_zonecode as zc on zc.ZONE_CODE=cc.ZONE_CODE \r\n"
+                        + "where  14c.MM_YYYY='" + month_date + "'  and cc.ZONE_CODE = '" + zone_code + "';";
+
+
+                ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
+                while (rsGst14aa.next()) {
+                    String ra = CustomRelaventAspect.cus1_RA;
+                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    String commname = rsGst14aa.getString("COMM_NAME");
+                    int col10 = rsGst14aa.getInt("col10");
+                    int col12 = rsGst14aa.getInt("col12");
+                    int Zonal_rank = 0;
+                    String gst = "no";
+                    int way_to_grade = 0;
+                    int insentavization = 0;
+                    int sub_parameter_weighted_average = 0;
+                    String absval = String.valueOf(col10-col12) + "/" + String.valueOf(col10);
+
+                    if(col10 != 0) {
+                        total = ((double) (col10-col12) / col10);
+                    }else {
+                        total = 0.00;
+                    }
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    rank = score.c_marks1(total);
+                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
+                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(gsta);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allGstaList;
     }
     @ResponseBody
     @RequestMapping(value = "/cus9a")
