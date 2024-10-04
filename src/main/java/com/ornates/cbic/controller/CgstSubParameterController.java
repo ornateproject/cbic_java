@@ -3936,13 +3936,13 @@ public class CgstSubParameterController {
                     double median = rsGst14aa.getDouble("median_11a");
                     int col_10=rsGst14aa.getInt("col10");
                     int col_4=rsGst14aa.getInt("col4");
-                    Double numerator_6a = rsGst14aa.getDouble("col10");
+                    Double numerator_11a = rsGst14aa.getDouble("col10");
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.marks11a(totalScore, totalScore);
-                    int insentavization = score.marks11a(totalScore, totalScore);
+                    int way_to_grade = score.marks11a(totalScore, numerator_11a);
+                    int insentavization = score.marks11a(totalScore, numerator_11a);
 
-                    if (numerator_6a > median && way_to_grade < 10) {
+                    if (numerator_11a > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
                     int Zonal_rank = 0;
@@ -4234,13 +4234,13 @@ public class CgstSubParameterController {
                     double median = rsGst14aa.getDouble("median_11c");
                     int col_10=rsGst14aa.getInt("col10");
                     int col_4=rsGst14aa.getInt("col4");
-                    Double numerator_6a = rsGst14aa.getDouble("col10");
+                    Double numerator_11c = rsGst14aa.getDouble("col10");
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.marks11c(totalScore, totalScore);
-                    int insentavization = score.marks11c(totalScore, totalScore);
+                    int way_to_grade = score.marks11c(totalScore, numerator_11c);
+                    int insentavization = score.marks11c(totalScore, numerator_11c);
 
-                    if (numerator_6a > median && way_to_grade < 10) {
+                    if (numerator_11c > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
                     int Zonal_rank = 0;
@@ -4337,7 +4337,6 @@ public class CgstSubParameterController {
         }
         return allGstaList;
     }
-
 
     /*
      * Date: May 23, 2024

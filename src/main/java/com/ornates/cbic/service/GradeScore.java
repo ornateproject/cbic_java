@@ -401,13 +401,13 @@ public class GradeScore {
 	}
 
 	// grade score for GST 11A
-	public int marks11a ( double total, double dis){
+	public int marks11a ( double total, double numerator){
 		int rank = 0;
-		if ((total >= 40) || (dis > 75)) {
+		if ((total >= 40) || (numerator > 75)) {
 			rank = 10;
-		} else if ((total >= 35 && total < 40) || (dis > 70 && dis <= 75)) {
+		} else if ((total >= 35 && total < 40) || (numerator > 70 && numerator <= 75)) {
 			rank = 7;
-		} else if ((total >= 30 && total < 35) || (dis > 65 && dis <= 70)) {
+		} else if ((total >= 30 && total < 35) || (numerator > 65 && numerator <= 70)) {
 			rank = 4;
 		} else {
 			rank = 2;
@@ -431,13 +431,13 @@ public class GradeScore {
 	}
 
 	// grade score for GST 11c
-	public int marks11c ( double total, double dis){
+	public int marks11c ( double total, double numerator){
 		int rank = 0;
-		if ((total >= 40) || (dis > 75)) {
+		if ((total >= 40) || (numerator > 75)) {
 			rank = 10;
-		} else if ((total >= 35 && total < 40) || (dis > 70 && dis <= 75)) {
+		} else if ((total >= 35 && total < 40) || (numerator > 70 && numerator <= 75)) {
 			rank = 7;
-		} else if ((total >= 30 && total < 35) || (dis > 65 && dis <= 70)) {
+		} else if ((total >= 30 && total < 35) || (numerator > 65 && numerator <= 70)) {
 			rank = 4;
 		} else {
 			rank = 2;
