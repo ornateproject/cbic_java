@@ -61,7 +61,7 @@ public class GradeScore {
 		return rank;
 	}
 
-	//grade score for Gst1E
+	// grade score for Gst 1E
 	public int marks1e(double total) {
 		int rank=0;
 		if(total<=30) {
@@ -91,7 +91,6 @@ public class GradeScore {
 		return rank;
 	}
 
-
 	// grade score for GST 2
 	public int marks2(double total) {
 		int rank=0;
@@ -106,6 +105,7 @@ public class GradeScore {
 		}
 		return rank;
 	}
+
 	// grade score for GST 3A
 	public int marks3a(double total) {
 		int rank=0;
@@ -181,7 +181,7 @@ public class GradeScore {
 		return rank;
 	}
 
-	//Grade score for Gst4D
+	// Grade score for Gst 4D
 	public int marks4d(double total) {
 		int rank = 0;
 		if (total >= 30) {
@@ -198,7 +198,7 @@ public class GradeScore {
 
 
 
-	//Grade score for Gst5A
+	// Grade score for Gst 5A
 	public int marks5a(double total) {
 		int rank=0;
 		if(total>=30) {
@@ -212,7 +212,7 @@ public class GradeScore {
 		}
 		return rank;
 	}
-	//Grsde score for Gst5B
+	// grade score for GST 5B
 	public int marks5b(double total) {
 		int rank=0;
 		if(total<=20) {
@@ -226,7 +226,7 @@ public class GradeScore {
 		}
 		return rank;
 	}
-	//Grade Score for Gst6A
+	// grade score for GST 6A
 	public int marks6a(double total) {
 		int rank=0;
 		if(total>=40) {
@@ -240,7 +240,7 @@ public class GradeScore {
 		}
 		return rank;
 	}
-	// Grade Score for Gst6B
+	// grade score for GST 6B
 	public int marks6b(double total) {
 		int rank=0;
 		if(total<=10) {
@@ -254,7 +254,7 @@ public class GradeScore {
 		}
 		return rank;
 	}
-	// Grade Score for Gst6C
+	// grade score for GST 6C
 	public int marks6c(double total) {
 		int rank=0;
 		if(total>=40) {
@@ -269,7 +269,7 @@ public class GradeScore {
 		return rank;
 	}
 
-	//Grade Score for Gst6D
+	// grade score for GST 6D
 	public int marks6d(double total) {
 		int rank=0;
 		if(total<=10) {
@@ -283,7 +283,7 @@ public class GradeScore {
 		}
 		return rank;
 	}
-	//Grade Score for Gst7
+	// grade score for GST 7
 	public int marks7(double total) {
 		int rank=0;
 		if(total<=0) {
@@ -297,7 +297,7 @@ public class GradeScore {
 		}
 		return rank;
 	}
-	// Api Gst8A
+	// grade score for GST 8A
 	public int marks8a(double total) {
 		int rank=0;
 		if(total>=80) {
@@ -312,7 +312,7 @@ public class GradeScore {
 		return rank;
 	}
 
-	//Grade sScore for Gst8B
+	// Grade sScore for Gst 8B
 	public int marks8b(double total) {
 		int rank=0;
 		if(total<=10) {
@@ -327,7 +327,7 @@ public class GradeScore {
 		return rank;
 	}
 
-	// Api Gst9A
+	// grade score for GST 9A
 	public int marks9a(double total) {
 		int rank=0;
 		if(total<=0) {
@@ -341,7 +341,7 @@ public class GradeScore {
 		}
 		return rank;
 	}
-	// Api Gst9B
+	// grade score for GST 9B
 	public int marks9b(double total) {
 		int rank=0;
 		if(total >= 40) {
