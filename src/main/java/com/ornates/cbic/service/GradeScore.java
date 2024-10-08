@@ -66,9 +66,9 @@ public class GradeScore {
 		int rank=0;
 		if(total<=30) {
 			rank=10;
-		}else if(total >= 31 && total <= 40) {
+		}else if(total >= 30 && total <= 40) {
 			rank=7;
-		}else if(total >= 41 && total <= 50) {
+		}else if(total >= 40 && total <= 50) {
 			rank=4;
 		}else {
 			rank=02;
@@ -92,7 +92,7 @@ public class GradeScore {
 	}
 
 
-	// grade score for GST 2 
+	// grade score for GST 2
 	public int marks2(double total) {
 		int rank=0;
 		if(total<=5) {
@@ -106,7 +106,7 @@ public class GradeScore {
 		}
 		return rank;
 	}
-	// grade score for GST 3A 
+	// grade score for GST 3A
 	public int marks3a(double total) {
 		int rank=0;
 		if(total>=90) {
@@ -136,7 +136,7 @@ public class GradeScore {
 		return rank;
 	}
 
-	// grade score for GST 4A 
+	// grade score for GST 4A
 	public int marks4a(double total) {
 		int rank=0;
 		if(total>=30) {
@@ -166,35 +166,36 @@ public class GradeScore {
 		return rank;
 	}
 
-	// grade score for GST 4C 
+	// grade score for GST 4C
 	public int marks4c(double total) {
-		int rank=0;
-		if(total>=20) {
-			rank=10;
-		}else if(total >= 19 && total <= 15) {
-			rank=7;
-		}else if(total >= 14 && total <= 10) {
-			rank=4;
-		}else {
-			rank=2;
+		int rank = 0;
+		if (total >= 20) {
+			rank = 10;
+		} else if (total >= 15) { // Change the condition to start from 15
+			rank = 7;
+		} else if (total >= 10) { // Change the condition to start from 10
+			rank = 4;
+		} else {
+			rank = 2;
 		}
 		return rank;
 	}
 
 	//Grade score for Gst4D
 	public int marks4d(double total) {
-		int rank=0;
-		if(total>=30) {
-			rank=10;
-		}else if(total >= 29 && total <= 20) {
-			rank=7;
-		}else if(total >= 19 && total <= 10) {
-			rank=4;
-		}else {
-			rank=2;
+		int rank = 0;
+		if (total >= 30) {
+			rank = 10;
+		} else if (total >= 20) { // Change condition to start from 20
+			rank = 7;
+		} else if (total >= 10) { // Change condition to start from 10
+			rank = 4;
+		} else {
+			rank = 2; // For total less than 10
 		}
 		return rank;
 	}
+
 
 
 	//Grade score for Gst5A
@@ -268,7 +269,7 @@ public class GradeScore {
 		return rank;
 	}
 
-	//Grade Score for Gst6D	
+	//Grade Score for Gst6D
 	public int marks6d(double total) {
 		int rank=0;
 		if(total<=10) {
@@ -401,13 +402,13 @@ public class GradeScore {
 	}
 
 	// grade score for GST 11A
-	public int marks11a ( double total, double numerator){
+	public int marks11a ( double total, double dis){
 		int rank = 0;
-		if ((total >= 40) || (numerator > 75)) {
+		if ((total >= 40) || (dis > 75)) {
 			rank = 10;
-		} else if ((total >= 35 && total < 40) || (numerator > 70 && numerator <= 75)) {
+		} else if ((total >= 35 && total < 40) || (dis > 70 && dis <= 75)) {
 			rank = 7;
-		} else if ((total >= 30 && total < 35) || (numerator > 65 && numerator <= 70)) {
+		} else if ((total >= 30 && total < 35) || (dis > 65 && dis <= 70)) {
 			rank = 4;
 		} else {
 			rank = 2;
@@ -420,9 +421,9 @@ public class GradeScore {
 		int rank = 0;
 		if (total <= 10) {
 			rank = 10;
-		} else if (total >= 11 && total <= 20) {
+		} else if (total >= 10 && total <= 20) {
 			rank = 7;
-		} else if (total >= 21 && total <= 30) {
+		} else if (total >= 20 && total <= 30) {
 			rank = 4;
 		} else {
 			rank = 2;
@@ -431,13 +432,13 @@ public class GradeScore {
 	}
 
 	// grade score for GST 11c
-	public int marks11c ( double total, double numerator){
+	public int marks11c ( double total, double dis){
 		int rank = 0;
-		if ((total >= 40) || (numerator > 75)) {
+		if ((total >= 40) || (dis > 75)) {
 			rank = 10;
-		} else if ((total >= 35 && total < 40) || (numerator > 70 && numerator <= 75)) {
+		} else if ((total >= 35 && total < 40) || (dis > 70 && dis <= 75)) {
 			rank = 7;
-		} else if ((total >= 30 && total < 35) || (numerator > 65 && numerator <= 70)) {
+		} else if ((total >= 30 && total < 35) || (dis > 65 && dis <= 70)) {
 			rank = 4;
 		} else {
 			rank = 2;
@@ -459,8 +460,4 @@ public class GradeScore {
 		}
 		return rank;
 	}
-
-
-
-
 }
