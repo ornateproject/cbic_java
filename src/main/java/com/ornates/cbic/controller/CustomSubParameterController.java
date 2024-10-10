@@ -6,7 +6,6 @@ import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.GST4A;
 import com.ornates.cbic.service.CustomGreadeScore;
 import com.ornates.cbic.service.CustomRelaventAspect;
-import com.ornates.cbic.service.DateCalculate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,7 +15,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 /*
  * @Author: @RKS & @Nishant
  */
@@ -45,7 +46,7 @@ public class CustomSubParameterController {
         System.out.println("Connection :"+con);
         return "its working api";
     }
-    // conpleted codes are - 1, 2a, 4d, 5a, 5b,5c, 6a(only zone )---------no one is running properly
+    // conpleted codes are - 1, 2a, 4d, 5a, 5b,5c, 6a(only zone ), 9a ---------no one is running properly
     @ResponseBody
     @RequestMapping(value = "/cus1")
     //  http://localhost:8080/cbicApi/cbic/custom/cus1?month_date=2024-04-01&type=zone
@@ -552,7 +553,8 @@ public class CustomSubParameterController {
 
             e.printStackTrace();
         }
-        return allGstaList;
+        return allGstaList.stream()
+                .sorted(Comparator.comparing(GST4A::getTotal_score).reversed()).collect(Collectors.toList());
     }
 
     @ResponseBody
@@ -669,7 +671,8 @@ public class CustomSubParameterController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return allGstaList;
+        return allGstaList.stream()
+                .sorted(Comparator.comparing(GST4A::getTotal_score)).collect(Collectors.toList());
     }
 
     @ResponseBody
@@ -765,7 +768,8 @@ public class CustomSubParameterController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return allGstaList;
+        return allGstaList.stream()
+                .sorted(Comparator.comparing(GST4A::getTotal_score)).collect(Collectors.toList());
     }
 
     @ResponseBody
@@ -1009,7 +1013,7 @@ public class CustomSubParameterController {
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
-                }System.out.println("cus 9a median commissionary rate wise :- "+median);
+                }System.out.println("cus 9a median commissionary rate wise :- " +median);
             }
         } catch (SQLException e) {
             e.printStackTrace();
