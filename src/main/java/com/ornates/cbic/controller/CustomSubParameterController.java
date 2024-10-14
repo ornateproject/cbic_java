@@ -878,6 +878,7 @@ public class CustomSubParameterController {
         }
         return allGstaList;
     }
+
     @ResponseBody
     @RequestMapping(value = "/cus9a")
     //  http://localhost:8080/cbicApi/cbic/custom/cus9a?month_date=2024-04-01&type=zone
@@ -1030,6 +1031,7 @@ public class CustomSubParameterController {
         }
         return allGstaList;
     }
+
     @ResponseBody
     @RequestMapping(value = "/cus9b")
     //  http://localhost:8080/cbicApi/cbic/custom/cus9b?month_date=2024-04-01&type=zone
