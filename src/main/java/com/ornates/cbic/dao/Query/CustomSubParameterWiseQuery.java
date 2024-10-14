@@ -799,19 +799,129 @@ public class CustomSubParameterWiseQuery {
     public String QueryFor_cus9b_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom9b="";
+        String queryCustom9b="WITH RipeDisposalCTE AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(14c.RIPE_DISPOSAL) AS s5col13\n" +
+                "    FROM MIS_DOL_CUS_3 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' GROUP BY cc.ZONE_CODE\n" +
+                "),\n" +
+                "RipeClosingCTE AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(14c.RIPE_CLOSING) AS s5col11\n" +
+                "    FROM MIS_DOL_CUS_3 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' GROUP BY cc.ZONE_CODE\n" +
+                "),\n" +
+                "RankedDisposalCTE AS (\n" +
+                "    SELECT ZONE_NAME, ZONE_CODE, s5col13,\n" +
+                "           ROW_NUMBER() OVER (ORDER BY s5col13) AS RowAsc,ROW_NUMBER() OVER (ORDER BY s5col13 DESC) AS RowDesc\n" +
+                "    FROM RipeDisposalCTE\n" +
+                "),\n" +
+                "MedianCTE AS (\n" +
+                "    SELECT AVG(s5col13) AS MedianValue\n" +
+                "    FROM RankedDisposalCTE\n" +
+                "    WHERE RowAsc = RowDesc OR RowAsc + 1 = RowDesc\n" +
+                ")\n" +
+                "SELECT rd.ZONE_NAME, rd.ZONE_CODE, rd.s5col13, rc.s5col11, COALESCE(m.MedianValue, 0) AS Median,COALESCE(rd.s5col13 / rc.s5col11, 0) AS total_score\n" +
+                "FROM RipeDisposalCTE rd\n" +
+                "LEFT JOIN RipeClosingCTE rc ON rd.ZONE_CODE = rc.ZONE_CODE\n" +
+                "CROSS JOIN MedianCTE m;\n";
         return queryCustom9b;
     }
     public String QueryFor_cus9b_CommissonaryWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom9b="";
+        String queryCustom9b="WITH CTE_Ripe_Disposal AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, SUM(14c.RIPE_DISPOSAL) AS s5col13\n" +
+                "    FROM MIS_DOL_CUS_3 AS 14c\n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME\n" +
+                "),\n" +
+                "CTE_Ripe_Closing AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, SUM(14c.RIPE_CLOSING) AS s5col11\n" +
+                "    FROM MIS_DOL_CUS_3 AS 14c\n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' \n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME\n" +
+                "),\n" +
+                "CTE_Median AS (\n" +
+                "    SELECT AVG(s5col13) AS median_value\n" +
+                "    FROM (\n" +
+                "        SELECT \n" +
+                "            s5col13, @row_num := @row_num + 1 AS row_num, @total_rows := @total_rows + 1 AS total_rows\n" +
+                "        FROM CTE_Ripe_Disposal, (SELECT @row_num := 0, @total_rows := 0) AS vars\n" +
+                "        ORDER BY s5col13\n" +
+                "    ) AS sorted\n" +
+                "    WHERE row_num IN ((total_rows + 1) / 2, (total_rows + 2) / 2)  -- For odd/even number of rows\n" +
+                ")\n" +
+                "SELECT r.ZONE_NAME, r.ZONE_CODE, r.COMM_NAME, r.s5col13, c.s5col11, m.median_value,\n" +
+                "       COALESCE(r.s5col13 / c.s5col11, 0) AS total_score\n" +
+                "FROM CTE_Ripe_Disposal AS r\n" +
+                "LEFT JOIN CTE_Ripe_Closing AS c ON r.ZONE_NAME = c.ZONE_NAME \n" +
+                "                                  AND r.ZONE_CODE = c.ZONE_CODE \n" +
+                "                                  AND r.COMM_NAME = c.COMM_NAME\n" +
+                "CROSS JOIN CTE_Median AS m  \n" +
+                "WHERE r.ZONE_CODE = '" + zone_code + "'  -- Adding the condition here\n" +
+                "\n" +
+                "UNION ALL\n" +
+                "\n" +
+                "SELECT r.ZONE_NAME, r.ZONE_CODE, r.COMM_NAME, r.s5col13, c.s5col11, m.median_value,\n" +
+                "       COALESCE(r.s5col13 / c.s5col11, 0) AS total_score\n" +
+                "FROM CTE_Ripe_Disposal AS r\n" +
+                "RIGHT JOIN CTE_Ripe_Closing AS c ON r.ZONE_NAME = c.ZONE_NAME \n" +
+                "                                   AND r.ZONE_CODE = c.ZONE_CODE \n" +
+                "                                   AND r.COMM_NAME = c.COMM_NAME\n" +
+                "CROSS JOIN CTE_Median AS m  \n" +
+                "WHERE r.ZONE_NAME IS NULL\n" +
+                "  AND c.ZONE_CODE = '" + zone_code + "';  -- Adding the condition here\n";
         return queryCustom9b;
     }
     public String QueryFor_cus9b_AllCommissonaryWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom9b="";
+        String queryCustom9b="-- cus 9b all c0mmi with median \n" +
+                "WITH CTE_Ripe_Disposal AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, SUM(14c.RIPE_DISPOSAL) AS s5col13\n" +
+                "    FROM MIS_DOL_CUS_3 AS 14c\n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME\n" +
+                "),\n" +
+                "CTE_Ripe_Closing AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,SUM(14c.RIPE_CLOSING) AS s5col11\n" +
+                "    FROM MIS_DOL_CUS_3 AS 14c\n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' \n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME\n" +
+                "),\n" +
+                "CTE_Median AS (\n" +
+                "    SELECT AVG(s5col13) AS median_value\n" +
+                "    FROM (\n" +
+                "        SELECT \n" +
+                "            s5col13,@row_num := @row_num + 1 AS row_num,@total_rows := @total_rows + 1 AS total_rows\n" +
+                "        FROM CTE_Ripe_Disposal, (SELECT @row_num := 0, @total_rows := 0) AS vars\n" +
+                "        ORDER BY s5col13\n" +
+                "    ) AS sorted\n" +
+                "    WHERE row_num IN ((total_rows + 1) / 2, (total_rows + 2) / 2)  -- For odd/even number of rows\n" +
+                ")\n" +
+                "SELECT r.ZONE_NAME, r.ZONE_CODE, r.COMM_NAME, r.s5col13, c.s5col11,m.median_value,COALESCE(r.s5col13 / c.s5col11, 0) AS total_score\n" +
+                "FROM CTE_Ripe_Disposal AS r\n" +
+                "LEFT JOIN CTE_Ripe_Closing AS c ON r.ZONE_NAME = c.ZONE_NAME AND r.ZONE_CODE = c.ZONE_CODE AND r.COMM_NAME = c.COMM_NAME\n" +
+                "CROSS JOIN CTE_Median AS m  \n" +
+                "\n" +
+                "UNION ALL\n" +
+                "\n" +
+                "SELECT r.ZONE_NAME, r.ZONE_CODE, r.COMM_NAME, r.s5col13, c.s5col11,m.median_value,COALESCE(r.s5col13 / c.s5col11, 0) AS total_score\n" +
+                "FROM CTE_Ripe_Disposal AS r\n" +
+                "RIGHT JOIN CTE_Ripe_Closing AS c ON r.ZONE_NAME = c.ZONE_NAME AND r.ZONE_CODE = c.ZONE_CODE AND r.COMM_NAME = c.COMM_NAME\n" +
+                "CROSS JOIN CTE_Median AS m  \n" +
+                "WHERE r.ZONE_NAME IS NULL;\n";
         return queryCustom9b;
     }
     // ********************************************************************************************************************************
