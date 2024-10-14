@@ -47,6 +47,8 @@ public class CustomSubParameterController {
         return "its working api";
     }
     // conpleted codes are - 1, 2a, 4d, 5a, 5b,5c, 6a(only zone ), 9a ---------no one is running properly
+
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus1*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
     @ResponseBody
     @RequestMapping(value = "/cus1")
     //  http://localhost:8080/cbicApi/cbic/custom/cus1?month_date=2024-04-01&type=zone
@@ -144,6 +146,8 @@ public class CustomSubParameterController {
         }
         return allGstaList;
     }
+
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus2A*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
     @ResponseBody
     @RequestMapping(value = "/cus2a")
     //  http://localhost:8080/cbicApi/cbic/custom/cus2a?month_date=2015-03-01&type=zone
@@ -265,7 +269,7 @@ public class CustomSubParameterController {
         return allGstaList;
     }
 
-
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus4D*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
     @ResponseBody
     @RequestMapping(value = "/cus4d")
     //  http://localhost:8080/cbicApi/cbic/custom/cus4d?month_date=2024-04-01&type=zone
@@ -425,6 +429,7 @@ public class CustomSubParameterController {
 
     }
 
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus5A*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
     @ResponseBody
     @RequestMapping(value = "/cus5a")
     //  http://localhost:8080/cbicApi/cbic/custom/cus5a?month_date=2024-04-01&type=zone
@@ -560,6 +565,7 @@ public class CustomSubParameterController {
                 .sorted(Comparator.comparing(GST4A::getTotal_score).reversed()).collect(Collectors.toList());
     }
 
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus5B*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
     @ResponseBody
     @RequestMapping(value = "/cus5b")
     //  http://localhost:8080/cbicApi/cbic/custom/cus5b?month_date=2022-02-01&type=zone
@@ -680,6 +686,7 @@ public class CustomSubParameterController {
                 .sorted(Comparator.comparing(GST4A::getTotal_score)).collect(Collectors.toList());
     }
 
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus5c*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
     @ResponseBody
     @RequestMapping(value = "/cus5c")
     //  http://localhost:8080/cbicApi/cbic/custom/cus5c?month_date=2024-04-01&type=zone
@@ -780,6 +787,7 @@ public class CustomSubParameterController {
                 .sorted(Comparator.comparing(GST4A::getTotal_score)).collect(Collectors.toList());
     }
 
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus6A*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
     @ResponseBody
     @RequestMapping(value = "/cus6a")
     //  http://localhost:8080/cbicApi/cbic/custom/cus6a?month_date=2015-03-01&type=zone
@@ -879,6 +887,7 @@ public class CustomSubParameterController {
         return allGstaList;
     }
 
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus9A*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
     @ResponseBody
     @RequestMapping(value = "/cus9a")
     //  http://localhost:8080/cbicApi/cbic/custom/cus9a?month_date=2024-04-01&type=zone
@@ -1032,6 +1041,7 @@ public class CustomSubParameterController {
         return allGstaList;
     }
 
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus9B*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
     @ResponseBody
     @RequestMapping(value = "/cus9b")
     //  http://localhost:8080/cbicApi/cbic/custom/cus9b?month_date=2024-04-01&type=zone
@@ -1052,7 +1062,148 @@ public class CustomSubParameterController {
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
 
                 while(rsGst14aa.next()) {
-                    String ra= CustomRelaventAspect.cus9b_RA;
+//                    String ra= CustomRelaventAspect.cus9b_RA;
+//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+//                    String zoneName =rsGst14aa.getString("ZONE_NAME");
+//                    String commname= "ALL";
+//                    double s5col13 =rsGst14aa.getDouble("s5col13");
+//                    double s5col11 =rsGst14aa.getDouble("s5col11");
+//                    median =rsGst14aa.getDouble("Median");
+//                    total=rsGst14aa.getDouble("total_score") * 100;
+//                    Double numerator_9b = rsGst14aa.getDouble("s5col13");
+//                    String absval = String.format("%.2f", s5col13) + "/" + String.format("%.2f", s5col11);
+//
+//
+//                    // rank=score.c_marks9b(total);
+//                    String formattedTotal = String.format("%.2f", total);
+//                    double totalScore = Double.parseDouble(formattedTotal);
+//                    int way_to_grade = score.c_marks9b(totalScore);
+//                    int insentavization = score.c_marks9b(totalScore);
+//                    // System.out.println("insentavization3b :-" + insentavization);
+//
+//                    if (numerator_9b > median && way_to_grade < 10) {
+//                        insentavization += 1;
+//                    }
+//                    //System.out.println("insentavization9b after :-" + insentavization);
+//                    int Zonal_rank = 0;
+//                    String gst = "CUS9B";
+//
+//                    // 2 floating point
+//                    double sub_parameter_weighted_average = insentavization * 0.5 ;
+//                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
+//                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
+//                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+//                    allGstaList.add(gsta);
+                }
+                System.out.println("cus 9b median zone wise :- "+median);
+
+            } else if (type.equalsIgnoreCase("commissary")) {  // cus9b
+                //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+                String queryGst14aa=new CustomSubParameterWiseQuery().QueryFor_cus9b_CommissonaryWise(month_date,zone_code);
+
+                ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
+                while(rsGst14aa.next()) {
+//                    String ra= CustomRelaventAspect.cus9b_RA;
+//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+//                    String zoneName =rsGst14aa.getString("ZONE_NAME");
+//                    String commname= rsGst14aa.getString("COMM_NAME");
+//                    double s5col13 =rsGst14aa.getDouble("s5col13");
+//                    double s5col11 =rsGst14aa.getDouble("s5col11");
+//                    median =rsGst14aa.getDouble("median_value");
+//                    Double numerator_9b = rsGst14aa.getDouble("s5col13");
+//                    total=rsGst14aa.getDouble("total_score") * 100;
+//                    int Zonal_rank = 0;
+//                    String gst = "no";
+//                    //String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col3 + s6col3);
+//                    String absval = String.format("%.2f", s5col13) + "/" + String.format("%.2f", s5col11);
+//
+//                    // rank=score.c_marks9b(total);
+//                    String formattedTotal = String.format("%.2f", total);
+//                    double totalScore = Double.parseDouble(formattedTotal);
+//                    int way_to_grade = score.c_marks9b(totalScore);
+//                    int insentavization = score.c_marks9b(totalScore);
+//                    // System.out.println("insentavization3b :-" + insentavization);
+//
+//                    if (numerator_9b > median && way_to_grade < 10) {
+//                        insentavization += 1;
+//                    }
+//                    // 2 floating point
+//                    double sub_parameter_weighted_average = insentavization * 0.5 ;
+//                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
+//                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
+//                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+//                    allGstaList.add(gsta);
+                }System.out.println("cus 9b median commissionary rate wise :- "+ median);
+            }else if (type.equalsIgnoreCase("all_commissary")) {  // cus9b
+                //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+                String queryGst14aa=new CustomSubParameterWiseQuery().QueryFor_cus9b_AllCommissonaryWise(month_date);
+                ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
+                while(rsGst14aa.next()) {
+//                    String ra= CustomRelaventAspect.cus9b_RA;
+//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+//                    String zoneName =rsGst14aa.getString("ZONE_NAME");
+//                    String commname= rsGst14aa.getString("COMM_NAME");
+//                    double s5col13 =rsGst14aa.getDouble("s5col13");
+//                    double s5col11 =rsGst14aa.getDouble("s5col11");
+//                    median =rsGst14aa.getDouble("median_value");
+//                    Double numerator_9b = rsGst14aa.getDouble("s5col13");
+//                    total=rsGst14aa.getDouble("total_score") * 100;
+//                    int Zonal_rank = 0;
+//                    String gst = "no";
+//                    //String absval=String.valueOf(s3col9 + s3col12 + s6col9 + s6col12)+"/"+String.valueOf(s3col3 + s6col3);
+//                    String absval = String.format("%.2f", s5col13) + "/" + String.format("%.2f", s5col11);
+//
+//                    // rank=score.c_marks9b(total);
+//                    String formattedTotal = String.format("%.2f", total);
+//                    double totalScore = Double.parseDouble(formattedTotal);
+//                    int way_to_grade = score.c_marks9b(totalScore);
+//                    int insentavization = score.c_marks9b(totalScore);
+//                    // System.out.println("insentavization3b :-" + insentavization);
+//
+//                    if (numerator_9b > median && way_to_grade < 10) {
+//                        insentavization += 1;
+//                    }
+//                    // 2 floating point
+//                    double sub_parameter_weighted_average = insentavization * 0.5 ;
+//                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
+//                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
+//                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+//                    allGstaList.add(gsta);
+                }System.out.println("cus 9b median commissionary rate wise :- " + median);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allGstaList.stream()
+                .sorted(Comparator.comparing(GST4A::getTotal_score).reversed()).collect(Collectors.toList());
+    }
+
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus10A*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus10B*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus11A*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus11B*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus12A*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    @ResponseBody
+    @RequestMapping(value = "/cus12a")
+    //  http://localhost:8080/cbicApi/cbic/custom/cus12a?month_date=2024-04-01&type=zone
+    //  http://localhost:8080/cbicApi/cbic/custom/cus12a?month_date=2024-04-01&zone_code=58&type=commissary
+    //  http://localhost:8080/cbicApi/cbic/custom/cus12a?month_date=2024-04-01&type=all_commissary
+    public Object CustomGst12a(@RequestParam String month_date,@RequestParam String type, @RequestParam(required = false) String zone_code){
+        List<GST4A> allGstaList = new ArrayList<>();
+        GST4A gsta = null;
+        int rank = 0;
+        double total = 0.00;
+        Double median = 0.00;
+
+        try {
+            // Query string
+            if (type.equalsIgnoreCase("zone")) {
+                //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+                String queryGst14aa = new CustomSubParameterWiseQuery().QueryFor_cus12a_ZoneWise(month_date);
+                ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
+
+                while(rsGst14aa.next()) {
+                    String ra= CustomRelaventAspect.cus12a_RA;
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
                     String zoneName =rsGst14aa.getString("ZONE_NAME");
                     String commname= "ALL";
@@ -1060,18 +1211,17 @@ public class CustomSubParameterController {
                     double s5col11 =rsGst14aa.getDouble("s5col11");
                     median =rsGst14aa.getDouble("Median");
                     total=rsGst14aa.getDouble("total_score") * 100;
-                    Double numerator_9b = rsGst14aa.getDouble("s5col13");
+                    Double numerator_12a = rsGst14aa.getDouble("s5col13");
                     String absval = String.format("%.2f", s5col13) + "/" + String.format("%.2f", s5col11);
-
 
                     // rank=score.c_marks9b(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.c_marks9b(totalScore);
-                    int insentavization = score.c_marks9b(totalScore);
+                    int way_to_grade = score.c_marks12a(totalScore,numerator_12a);
+                    int insentavization = score.c_marks12a(totalScore,numerator_12a);
                     // System.out.println("insentavization3b :-" + insentavization);
 
-                    if (numerator_9b > median && way_to_grade < 10) {
+                    if (numerator_12a > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
                     //System.out.println("insentavization9b after :-" + insentavization);
@@ -1085,22 +1235,22 @@ public class CustomSubParameterController {
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
-                System.out.println("cus 9b median zone wise :- "+median);
+                System.out.println("cus 11a median zone wise :- "+median);
 
-            } else if (type.equalsIgnoreCase("commissary")) {  // cus9b
+            } else if (type.equalsIgnoreCase("commissary")) {  // cus11a
                 //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
-                String queryGst14aa=new CustomSubParameterWiseQuery().QueryFor_cus9b_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa=new CustomSubParameterWiseQuery().QueryFor_cus12a_CommissonaryWise(month_date,zone_code);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
-                    String ra= CustomRelaventAspect.cus9b_RA;
+                    String ra= CustomRelaventAspect.cus12a_RA;
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
                     String zoneName =rsGst14aa.getString("ZONE_NAME");
                     String commname= rsGst14aa.getString("COMM_NAME");
                     double s5col13 =rsGst14aa.getDouble("s5col13");
                     double s5col11 =rsGst14aa.getDouble("s5col11");
                     median =rsGst14aa.getDouble("median_value");
-                    Double numerator_9b = rsGst14aa.getDouble("s5col13");
+                    Double numerator_12a = rsGst14aa.getDouble("s5col13");
                     total=rsGst14aa.getDouble("total_score") * 100;
                     int Zonal_rank = 0;
                     String gst = "no";
@@ -1110,11 +1260,11 @@ public class CustomSubParameterController {
                     // rank=score.c_marks9b(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.c_marks9b(totalScore);
-                    int insentavization = score.c_marks9b(totalScore);
+                    int way_to_grade = score.c_marks12a(totalScore,numerator_12a);
+                    int insentavization = score.c_marks12a(totalScore,numerator_12a);
                     // System.out.println("insentavization3b :-" + insentavization);
 
-                    if (numerator_9b > median && way_to_grade < 10) {
+                    if (numerator_12a > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
                     // 2 floating point
@@ -1123,20 +1273,20 @@ public class CustomSubParameterController {
                     gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
-                }System.out.println("cus 9b median commissionary rate wise :- "+ median);
-            }else if (type.equalsIgnoreCase("all_commissary")) {  // cus9b
+                }System.out.println("cus 11a median commissionary rate wise :- "+ median);
+            }else if (type.equalsIgnoreCase("all_commissary")) {  // cus11a
                 //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
-                String queryGst14aa=new CustomSubParameterWiseQuery().QueryFor_cus9b_AllCommissonaryWise(month_date);
+                String queryGst14aa=new CustomSubParameterWiseQuery().QueryFor_cus12a_AllCommissonaryWise(month_date);
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
-                    String ra= CustomRelaventAspect.cus9b_RA;
+                    String ra= CustomRelaventAspect.cus12a_RA;
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
                     String zoneName =rsGst14aa.getString("ZONE_NAME");
                     String commname= rsGst14aa.getString("COMM_NAME");
                     double s5col13 =rsGst14aa.getDouble("s5col13");
                     double s5col11 =rsGst14aa.getDouble("s5col11");
                     median =rsGst14aa.getDouble("median_value");
-                    Double numerator_9b = rsGst14aa.getDouble("s5col13");
+                    Double numerator_12a = rsGst14aa.getDouble("s5col13");
                     total=rsGst14aa.getDouble("total_score") * 100;
                     int Zonal_rank = 0;
                     String gst = "no";
@@ -1146,11 +1296,11 @@ public class CustomSubParameterController {
                     // rank=score.c_marks9b(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.c_marks9b(totalScore);
-                    int insentavization = score.c_marks9b(totalScore);
+                    int way_to_grade = score.c_marks12a(totalScore,numerator_12a);
+                    int insentavization = score.c_marks12a(totalScore,numerator_12a);
                     // System.out.println("insentavization3b :-" + insentavization);
 
-                    if (numerator_9b > median && way_to_grade < 10) {
+                    if (numerator_12a > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
                     // 2 floating point
@@ -1159,7 +1309,7 @@ public class CustomSubParameterController {
                     gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
-                }System.out.println("cus 9b median commissionary rate wise :- " + median);
+                }System.out.println("cus 11a median commissionary rate wise :- " + median);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1167,4 +1317,11 @@ public class CustomSubParameterController {
         return allGstaList.stream()
                 .sorted(Comparator.comparing(GST4A::getTotal_score).reversed()).collect(Collectors.toList());
     }
+
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus12B*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus13A*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus13B*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus13C*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus13D*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
+    // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=cus13E*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*
 }

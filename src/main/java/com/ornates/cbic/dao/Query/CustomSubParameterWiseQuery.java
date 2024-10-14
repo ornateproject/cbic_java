@@ -967,4 +967,198 @@ public class CustomSubParameterWiseQuery {
         return queryCustom10a;
     }
     // ********************************************************************************************************************************
+    public String QueryFor_cus10b_ZoneWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus10b_CommissonaryWise(String month_date, String zone_code){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus10b_AllCommissonaryWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    // ********************************************************************************************************************************
+    public String QueryFor_cus11a_ZoneWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus11a_CommissonaryWise(String month_date, String zone_code){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus11a_AllCommissonaryWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    // ********************************************************************************************************************************
+    public String QueryFor_cus11b_ZoneWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus11b_CommissonaryWise(String month_date, String zone_code){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus11b_AllCommissonaryWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    // ********************************************************************************************************************************
+    public String QueryFor_cus12a_ZoneWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus12a_CommissonaryWise(String month_date, String zone_code){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus12a_AllCommissonaryWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    // ********************************************************************************************************************************
+    public String QueryFor_cus12b_ZoneWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus12b_CommissonaryWise(String month_date, String zone_code){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus12b_AllCommissonaryWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    // ********************************************************************************************************************************
+    public String QueryFor_cus13a_ZoneWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus13a_CommissonaryWise(String month_date, String zone_code){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus13a_AllCommissonaryWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    // ********************************************************************************************************************************
+    public String QueryFor_cus13b_ZoneWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus13b_CommissonaryWise(String month_date, String zone_code){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus13b_AllCommissonaryWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    // ********************************************************************************************************************************
+
+    public String QueryFor_cus13c_ZoneWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus13c_CommissonaryWise(String month_date, String zone_code){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus13c_AllCommissonaryWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    // ********************************************************************************************************************************
+
+    public String QueryFor_cus13d_ZoneWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus13d_CommissonaryWise(String month_date, String zone_code){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus13d_AllCommissonaryWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    // ********************************************************************************************************************************
+
+    public String QueryFor_cus13e_ZoneWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus13e_CommissonaryWise(String month_date, String zone_code){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    public String QueryFor_cus13e_AllCommissonaryWise(String month_date){
+        //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+        String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+        String queryCustom10a="";
+        return queryCustom10a;
+    }
+    // ********************************************************************************************************************************
+
 }

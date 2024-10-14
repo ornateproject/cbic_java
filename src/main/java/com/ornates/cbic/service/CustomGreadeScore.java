@@ -313,4 +313,34 @@ public class CustomGreadeScore {
         }
         return rank;
     }
+
+    // Custom grade score for custom 9B
+    public int c_marks12a(double total, double numerator) {
+        int rank=0;
+        if((total >=40 ) || (numerator > 75)) {
+            rank=10;
+        }else if((total >= 30 && total < 40) || (numerator > 70 && numerator <= 75)) {
+            rank=7;
+        }else if((total >= 20 && total <30) || (numerator > 65 && numerator <=70)) {
+            rank=4;
+        }else {
+            rank=2;
+        }
+        return rank;
+    }
+
+    // Custom grade score for custom 9B
+    public int c_marks12b(double total) {
+        int rank=0;
+        if(total >=30 ) {
+            rank=10;
+        }else if(total >= 20 && total < 30) {
+            rank=7;
+        }else if(total >= 10 && total <20) {
+            rank=4;
+        }else {
+            rank=2;
+        }
+        return rank;
+    }
 }
