@@ -1027,20 +1027,86 @@ public class CustomSubParameterWiseQuery {
     public String QueryFor_cus12a_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom10a="";
-        return queryCustom10a;
+        String queryCustom12a="WITH CTE1 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.DISPOSAL_NO) AS s5col13_T1,SUM(14c.DISPOSAL_TRANSFER_NO) AS s5col17_T1\n" +
+                "    FROM MIS_DLA_CUS_1 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '2024-04-01' AND FORUM_CODE = 5 \n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),\n" +
+                "CTE2 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.CLOSING_NO) AS s5col3_T1\n" +
+                "    FROM MIS_DLA_CUS_1 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '2024-03-01' AND FORUM_CODE = 5 \n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),\n" +
+                "CTE3 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.DISPOSAL_NO) AS s5col9_T2\n" +
+                "    FROM MIS_DLA_CUS_2 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '2024-04-01' AND FORUM_CODE = 5 \n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),\n" +
+                "CTE4 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.CLOSING_NO) AS s5col3_T2\n" +
+                "    FROM MIS_DLA_CUS_2 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '2024-03-01' AND FORUM_CODE = 5 \n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),\n" +
+                "FinalData AS (\n" +
+                "    SELECT \n" +
+                "        COALESCE(A.ZONE_NAME, B.ZONE_NAME, C.ZONE_NAME, D.ZONE_NAME) AS ZONE_NAME,\n" +
+                "        COALESCE(A.ZONE_CODE, B.ZONE_CODE, C.ZONE_CODE, D.ZONE_CODE) AS ZONE_CODE,\n" +
+                "        A.s5col13_T1,A.s5col17_T1,B.s5col3_T1,C.s5col9_T2,D.s5col3_T2,\n" +
+                "        CONCAT((A.s5col13_T1 + A.s5col17_T1 + C.s5col9_T2), '/', (B.s5col3_T1 + D.s5col3_T2)) AS absvl,\n" +
+                "        (A.s5col13_T1 + A.s5col17_T1 + C.s5col9_T2) AS numerator12A,\n" +
+                "        COALESCE(((A.s5col13_T1 + A.s5col17_T1 + C.s5col9_T2) / (B.s5col3_T1 + D.s5col3_T2)), 0) AS Total_score\n" +
+                "    FROM CTE1 AS A\n" +
+                "    LEFT JOIN CTE2 AS B ON A.ZONE_CODE = B.ZONE_CODE\n" +
+                "    LEFT JOIN CTE3 AS C ON A.ZONE_CODE = C.ZONE_CODE\n" +
+                "    LEFT JOIN CTE4 AS D ON A.ZONE_CODE = D.ZONE_CODE\n" +
+                "\n" +
+                "    UNION ALL\n" +
+                "\n" +
+                "    SELECT \n" +
+                "        COALESCE(A.ZONE_NAME, B.ZONE_NAME, C.ZONE_NAME, D.ZONE_NAME) AS ZONE_NAME,\n" +
+                "        COALESCE(A.ZONE_CODE, B.ZONE_CODE, C.ZONE_CODE, D.ZONE_CODE) AS ZONE_CODE,\n" +
+                "        A.s5col13_T1,A.s5col17_T1,B.s5col3_T1,C.s5col9_T2,D.s5col3_T2,\n" +
+                "        CONCAT((A.s5col13_T1 + A.s5col17_T1 + C.s5col9_T2), '/', (B.s5col3_T1 + D.s5col3_T2)) AS absvl,\n" +
+                "        (A.s5col13_T1 + A.s5col17_T1 + C.s5col9_T2) AS numerator12A,\n" +
+                "        COALESCE(((A.s5col13_T1 + A.s5col17_T1 + C.s5col9_T2) / (B.s5col3_T1 + D.s5col3_T2)), 0) AS Total_score\n" +
+                "    FROM CTE1 AS A\n" +
+                "    RIGHT JOIN CTE2 AS B ON A.ZONE_CODE = B.ZONE_CODE\n" +
+                "    RIGHT JOIN CTE3 AS C ON A.ZONE_CODE = C.ZONE_CODE\n" +
+                "    RIGHT JOIN CTE4 AS D ON A.ZONE_CODE = D.ZONE_CODE\n" +
+                "    WHERE A.ZONE_CODE IS NULL\n" +
+                ")\n" +
+                "SELECT *,\n" +
+                "       (SELECT AVG(numerator12A) AS median12A \n" +
+                "        FROM (SELECT numerator12A,ROW_NUMBER() OVER (ORDER BY numerator12A) AS rn,COUNT(*) OVER () AS total_count\n" +
+                "            FROM FinalData\n" +
+                "        ) AS subquery\n" +
+                "        WHERE rn IN ((total_count + 1) / 2, (total_count + 2) / 2)\n" +
+                "       ) AS median12A FROM FinalData;\n";
+        return queryCustom12a;
     }
     public String QueryFor_cus12a_CommissonaryWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom10a="";
-        return queryCustom10a;
+        String queryCustom12a ="";
+        return queryCustom12a;
     }
     public String QueryFor_cus12a_AllCommissonaryWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom10a="";
-        return queryCustom10a;
+        String queryCustom12a ="";
+        return queryCustom12a;
     }
     // ********************************************************************************************************************************
     public String QueryFor_cus12b_ZoneWise(String month_date){
