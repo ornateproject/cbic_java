@@ -1046,7 +1046,7 @@ public class CgstParameterController {
 			}
 		}
 		return allGstaList.stream()
-				.sorted(Comparator.comparing(TotalScore::getSub_parameter_weighted_average).reversed())
+				.sorted(Comparator.comparing(TotalScore::getTotalScore).reversed())
 				.collect(Collectors.toList());
     }
 
