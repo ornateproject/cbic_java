@@ -746,7 +746,6 @@ public class CgstParameterController {
 		return allGstaList;
 	}
 
-
 	@ResponseBody
 	@RequestMapping(value = "/scrutiny/assessment") //3  
 	//  http://localhost:8080/cbicApi/cbic/t_score/scrutiny/assessment?month_date=2024-04-01&type=parameter							// for scrutiny/assessment button
@@ -762,13 +761,10 @@ public class CgstParameterController {
 		//double median =0.00;
 
 		try {
-
 			if (type.equalsIgnoreCase("parameter")) { // scrutiny/assessment all zone name 1
 //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
 				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-
 				String query_assessment = new CGSTParameterWiseQuery().QueryForScrutinyAssessmentZoneWise(month_date);
-
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -804,15 +800,15 @@ public class CgstParameterController {
 					double sub_parameter_weighted_average3a = insentavization3a * 0.5;
 					double sub_parameter_weighted_average3b = insentavization3b * 0.5;
 
+					double total_score = sub_parameter_weighted_average3a + sub_parameter_weighted_average3b;
 					double total_weighted_average = sub_parameter_weighted_average3a + sub_parameter_weighted_average3b;
-					double sub_parameter_weighted_average = 0.00;
 					Integer Zonal_rank = rsGst14aa.getInt("z_rank");
 					String commName = "ALL";
 					String gst = "ALL";
 					String absval = "null";
 					String ra = "SCRUTINY & ASSESSMENT";
 
-					totalScore = new TotalScore(zoneName, commName, zone_code, total_weighted_average, absval, Zonal_rank, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+					totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst, ra, way_to_grade, insentavization, total_weighted_average);
 					allGstaList.add(totalScore);
 
 
@@ -1046,8 +1042,7 @@ public class CgstParameterController {
 			}
 		}
 		return allGstaList.stream()
-				.sorted(Comparator.comparing(TotalScore::getTotalScore).reversed())
-				.collect(Collectors.toList());
+				.sorted(Comparator.comparing(TotalScore::getSub_parameter_weighted_average).reversed()).collect(Collectors.toList());
     }
 
 	/*
