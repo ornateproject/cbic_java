@@ -231,9 +231,9 @@ public class GradeScore {
 		int rank=0;
 		if(total>=40) {
 			rank=10;
-		}else if(total >= 30 && total <= 39) {
+		}else if(total >= 30 && total < 40) {
 			rank=7;
-		}else if(total >= 20 && total <= 29) {
+		}else if(total >= 20 && total < 30) {
 			rank=4;
 		}else {
 			rank=2;
