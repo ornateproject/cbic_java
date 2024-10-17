@@ -615,13 +615,88 @@ public class CustomSubParameterWiseQuery {
     public String QueryFor_cus6f_CommissonaryWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom6f="";
+        String queryCustom6f="WITH closing_noc AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+                "           (14c.IMPORT_VALUE_CLOSING_NOC + 14c.IMPORT_MIS_CLOSING_NOC + 14c.IMPORT_DEEC_CLOSING_NOC + 14c.IMPORT_DEPB_CLOSING_NOC + \n" +
+                "            14c.IMPORT_EPCG_CLOSING_NOC + 14c.IMPORT_EOU_CLOSING_NOC + 14c.IMPORT_END_CLOSING_NOC + 14c.IMPORT_OTHERS_CLOSING_NOC + \n" +
+                "            14c.EXPORT_DEEC_CLOSING_NOC + 14c.EXPORT_DEPB_CLOSING_NOC + 14c.EXPORT_EPCG_CLOSING_NOC + 14c.EXPORT_EOU_CLOSING_NOC + \n" +
+                "            14c.EXPORT_DBK_CLOSING_NOC + 14c.EXPORT_OTHERS_CLOSING_NOC) AS col3\n" +
+                "    FROM MIS_DRI_CUS_3B AS 14c\n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
+                "),\n" +
+                "disposal_noc AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+                "           (14c.IMPORT_VALUE_DISPOSAL_NOC + 14c.IMPORT_MIS_DISPOSAL_NOC + 14c.IMPORT_DEEC_DISPOSAL_NOC + 14c.IMPORT_DEPB_DISPOSAL_NOC + \n" +
+                "            14c.IMPORT_EPCG_DISPOSAL_NOC + 14c.IMPORT_EOU_DISPOSAL_NOC + 14c.IMPORT_END_DISPOSAL_NOC + 14c.IMPORT_OTHERS_DISPOSAL_NOC + \n" +
+                "            14c.EXPORT_DEEC_DISPOSAL_NOC + 14c.EXPORT_DEPB_DISPOSAL_NOC + 14c.EXPORT_EPCG_DISPOSAL_NOC + 14c.EXPORT_EOU_DISPOSAL_NOC + \n" +
+                "            14c.EXPORT_DBK_DISPOSAL_NOC + 14c.EXPORT_OTHERS_DISPOSAL_NOC) AS col9\n" +
+                "    FROM MIS_DRI_CUS_3B AS 14c\n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+                "),\n" +
+                "median_calculation AS (\n" +
+                "    SELECT col9,\n" +
+                "           ROW_NUMBER() OVER (ORDER BY col9) AS row_num,\n" +
+                "           COUNT(*) OVER () AS total_rows\n" +
+                "    FROM disposal_noc\n" +
+                "),\n" +
+                "median_value AS (\n" +
+                "    SELECT AVG(col9) AS median6f\n" +
+                "    FROM median_calculation\n" +
+                "    WHERE row_num IN (FLOOR((total_rows + 1) / 2), CEIL((total_rows + 1) / 2))\n" +
+                ")\n" +
+                "SELECT cn.ZONE_NAME, cn.ZONE_CODE, cn.COMM_NAME, cn.col3, dn.col9, \n" +
+                "       CONCAT(dn.col9, '/', cn.col3) AS absvl, COALESCE((dn.col9 / cn.col3), 0) AS total_score,\n" +
+                "       (SELECT median6f FROM median_value) AS median6f\n" +
+                "FROM closing_noc cn\n" +
+                "JOIN disposal_noc dn ON cn.ZONE_CODE = dn.ZONE_CODE AND cn.COMM_NAME = dn.COMM_NAME\n" +
+                "WHERE cn.ZONE_CODE = '" + zone_code + "';";
         return queryCustom6f;
     }
     public String QueryFor_cus6f_AllCommissonaryWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom6f="";
+        String queryCustom6f="WITH closing_noc AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+                "           (14c.IMPORT_VALUE_CLOSING_NOC + 14c.IMPORT_MIS_CLOSING_NOC + 14c.IMPORT_DEEC_CLOSING_NOC + 14c.IMPORT_DEPB_CLOSING_NOC + \n" +
+                "            14c.IMPORT_EPCG_CLOSING_NOC + 14c.IMPORT_EOU_CLOSING_NOC + 14c.IMPORT_END_CLOSING_NOC + 14c.IMPORT_OTHERS_CLOSING_NOC + \n" +
+                "            14c.EXPORT_DEEC_CLOSING_NOC + 14c.EXPORT_DEPB_CLOSING_NOC + 14c.EXPORT_EPCG_CLOSING_NOC + 14c.EXPORT_EOU_CLOSING_NOC + \n" +
+                "            14c.EXPORT_DBK_CLOSING_NOC + 14c.EXPORT_OTHERS_CLOSING_NOC) AS col3\n" +
+                "    FROM MIS_DRI_CUS_3B AS 14c\n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '2024-03-01'\n" +
+                "),\n" +
+                "disposal_noc AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+                "           (14c.IMPORT_VALUE_DISPOSAL_NOC + 14c.IMPORT_MIS_DISPOSAL_NOC + 14c.IMPORT_DEEC_DISPOSAL_NOC + 14c.IMPORT_DEPB_DISPOSAL_NOC + \n" +
+                "            14c.IMPORT_EPCG_DISPOSAL_NOC + 14c.IMPORT_EOU_DISPOSAL_NOC + 14c.IMPORT_END_DISPOSAL_NOC + 14c.IMPORT_OTHERS_DISPOSAL_NOC + \n" +
+                "            14c.EXPORT_DEEC_DISPOSAL_NOC + 14c.EXPORT_DEPB_DISPOSAL_NOC + 14c.EXPORT_EPCG_DISPOSAL_NOC + 14c.EXPORT_EOU_DISPOSAL_NOC + \n" +
+                "            14c.EXPORT_DBK_DISPOSAL_NOC + 14c.EXPORT_OTHERS_DISPOSAL_NOC) AS col9\n" +
+                "    FROM MIS_DRI_CUS_3B AS 14c\n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '2024-04-01'\n" +
+                "),\n" +
+                "median_calculation AS (\n" +
+                "    SELECT col9,\n" +
+                "           ROW_NUMBER() OVER (ORDER BY col9) AS row_num,\n" +
+                "           COUNT(*) OVER () AS total_rows\n" +
+                "    FROM disposal_noc\n" +
+                "),\n" +
+                "median_value AS (\n" +
+                "    SELECT AVG(col9) AS median6f\n" +
+                "    FROM median_calculation\n" +
+                "    WHERE row_num IN (FLOOR((total_rows + 1) / 2), CEIL((total_rows + 1) / 2))\n" +
+                ")\n" +
+                "SELECT cn.ZONE_NAME, cn.ZONE_CODE, cn.COMM_NAME, cn.col3, dn.col9, \n" +
+                "       CONCAT(dn.col9, '/', cn.col3) AS absvl,COALESCE((dn.col9 / cn.col3), 0) AS total_score,\n" +
+                "       (SELECT median6f FROM median_value) AS median6f\n" +
+                "FROM closing_noc cn\n" +
+                "JOIN disposal_noc dn ON cn.ZONE_CODE = dn.ZONE_CODE AND cn.COMM_NAME = dn.COMM_NAME;\n";
         return queryCustom6f;
     }
     // ********************************************************************************************************************************
