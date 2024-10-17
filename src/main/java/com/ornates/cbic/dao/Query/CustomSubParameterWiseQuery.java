@@ -1131,7 +1131,7 @@ public class CustomSubParameterWiseQuery {
                 "\n" +
                 "SELECT c1.ZONE_NAME, c1.ZONE_CODE, c1.s5col29_T1, c1.s5col31_T1, c2.s5col23_T2, c2.s5col25_T2,\n" +
                 "concat(((c1.s5col29_T1 - c1.s5col31_T1) + (c2.s5col23_T2 - c2.s5col25_T2)),'/',(c1.s5col29_T1 + c2.s5col23_T2)) AS absvl,\n" +
-                "concat(((c1.s5col29_T1 - c1.s5col31_T1) + (c2.s5col23_T2 - c2.s5col25_T2)) / (c1.s5col29_T1 + c2.s5col23_T2)) AS total_score\n" +
+                "COALESCE((((c1.s5col29_T1 - c1.s5col31_T1) + (c2.s5col23_T2 - c2.s5col25_T2)) * 100 / (c1.s5col29_T1 + c2.s5col23_T2)),0) AS total_score\n" +
                 "FROM cte_1 AS c1\n" +
                 "JOIN cte_2 AS c2 ON c1.ZONE_CODE = c2.ZONE_CODE;\n";
         return queryCustom12b;
@@ -1155,7 +1155,7 @@ public class CustomSubParameterWiseQuery {
                 ")\n" +
                 "SELECT q1.ZONE_NAME, q1.ZONE_CODE, q1.COMM_NAME, q1.s5col29_T1, q1.s5col31_T1,q2.s5col23_T2, q2.s5col25_T2,\n" +
                 "concat(((q1.s5col29_T1 - q1.s5col31_T1) + (q2.s5col23_T2 - q2.s5col25_T2)),'/',(q1.s5col29_T1 + q2.s5col23_T2)) AS absvl,\n" +
-                "(((q1.s5col29_T1 - q1.s5col31_T1) + (q2.s5col23_T2 - q2.s5col25_T2)) / (q1.s5col29_T1 + q2.s5col23_T2)) AS total_score\n" +
+                "COALESCE((((q1.s5col29_T1 - q1.s5col31_T1) + (q2.s5col23_T2 - q2.s5col25_T2)) / (q1.s5col29_T1 + q2.s5col23_T2)),0) AS total_score\n" +
                 "FROM Query1 q1\n" +
                 "JOIN Query2 q2 ON q1.ZONE_CODE = q2.ZONE_CODE AND q1.COMM_NAME = q2.COMM_NAME;";
         return queryCustom12b;
@@ -1179,7 +1179,7 @@ public class CustomSubParameterWiseQuery {
                 ")\n" +
                 "SELECT q1.ZONE_NAME, q1.ZONE_CODE, q1.COMM_NAME, q1.s5col29_T1, q1.s5col31_T1,q2.s5col23_T2, q2.s5col25_T2,\n" +
                 "concat(((q1.s5col29_T1 - q1.s5col31_T1) + (q2.s5col23_T2 - q2.s5col25_T2)),'/',(q1.s5col29_T1 + q2.s5col23_T2)) AS absvl,\n" +
-                "(((q1.s5col29_T1 - q1.s5col31_T1) + (q2.s5col23_T2 - q2.s5col25_T2)) / (q1.s5col29_T1 + q2.s5col23_T2)) AS total_score\n" +
+                "COALESCE((((q1.s5col29_T1 - q1.s5col31_T1) + (q2.s5col23_T2 - q2.s5col25_T2)) / (q1.s5col29_T1 + q2.s5col23_T2)),0) AS total_score\n" +
                 "FROM Query1 q1\n" +
                 "JOIN Query2 q2 ON q1.ZONE_CODE = q2.ZONE_CODE AND q1.COMM_NAME = q2.COMM_NAME;";
         return queryCustom12b;
