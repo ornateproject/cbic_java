@@ -573,7 +573,43 @@ public class CustomSubParameterWiseQuery {
     public String QueryFor_cus6f_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom6f="";
+        String queryCustom6f="WITH cte_1 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
+                "           sum(14c.IMPORT_VALUE_CLOSING_NOC + 14c.IMPORT_MIS_CLOSING_NOC + 14c.IMPORT_DEEC_CLOSING_NOC + 14c.IMPORT_DEPB_CLOSING_NOC + 14c.IMPORT_EPCG_CLOSING_NOC + \n" +
+                "           14c.IMPORT_EOU_CLOSING_NOC + 14c.IMPORT_END_CLOSING_NOC + 14c.IMPORT_OTHERS_CLOSING_NOC + 14c.EXPORT_DEEC_CLOSING_NOC + 14c.EXPORT_DEPB_CLOSING_NOC + \n" +
+                "           14c.EXPORT_EPCG_CLOSING_NOC + 14c.EXPORT_EOU_CLOSING_NOC + 14c.EXPORT_DBK_CLOSING_NOC + 14c.EXPORT_OTHERS_CLOSING_NOC) AS col3\n" +
+                "    FROM MIS_DRI_CUS_3B AS 14c\n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' GROUP BY cc.ZONE_CODE\n" +
+                "),\n" +
+                "cte_2 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
+                "           sum(14c.IMPORT_VALUE_DISPOSAL_NOC + 14c.IMPORT_MIS_DISPOSAL_NOC + 14c.IMPORT_DEEC_DISPOSAL_NOC + 14c.IMPORT_DEPB_DISPOSAL_NOC + 14c.IMPORT_EPCG_DISPOSAL_NOC + \n" +
+                "           14c.IMPORT_EOU_DISPOSAL_NOC + 14c.IMPORT_END_DISPOSAL_NOC + 14c.IMPORT_OTHERS_DISPOSAL_NOC + 14c.EXPORT_DEEC_DISPOSAL_NOC + 14c.EXPORT_DEPB_DISPOSAL_NOC + \n" +
+                "           14c.EXPORT_EPCG_DISPOSAL_NOC + 14c.EXPORT_EOU_DISPOSAL_NOC + 14c.EXPORT_DBK_DISPOSAL_NOC + 14c.EXPORT_OTHERS_DISPOSAL_NOC) AS col9\n" +
+                "    FROM MIS_DRI_CUS_3B AS 14c\n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' GROUP BY cc.ZONE_CODE\n" +
+                "),\n" +
+                "ordered_cte AS (\n" +
+                "    SELECT col9, \n" +
+                "           ROW_NUMBER() OVER (ORDER BY col9) AS rn,\n" +
+                "           COUNT(*) OVER () AS total_count\n" +
+                "    FROM cte_2\n" +
+                "),\n" +
+                "median_cte AS (\n" +
+                "    SELECT AVG(col9) AS median6f\n" +
+                "    FROM ordered_cte\n" +
+                "    WHERE rn IN (FLOOR((total_count + 1) / 2), FLOOR((total_count + 2) / 2))\n" +
+                ")\n" +
+                "SELECT c1.ZONE_NAME, c1.ZONE_CODE, c1.col3, c2.col9, \n" +
+                "       CONCAT(c2.col9, '/', c1.col3) AS absvl,\n" +
+                "       COALESCE((c2.col9 / c1.col3), 0) AS total_score, m.median6f\n" +
+                "FROM cte_1 AS c1\n" +
+                "JOIN cte_2 AS c2 ON c1.ZONE_CODE = c2.ZONE_CODE\n" +
+                "CROSS JOIN median_cte AS m;";
         return queryCustom6f;
     }
     public String QueryFor_cus6f_CommissonaryWise(String month_date, String zone_code){
