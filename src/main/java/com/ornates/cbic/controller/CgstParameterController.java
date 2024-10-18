@@ -3198,9 +3198,9 @@ public class CgstParameterController {
 					int way_to_grade = 0;
 					int insentavization = 0;
 
-					Integer way_to_grade_11a = score.marks11a(total_score_11a, total_score_11a);
+					Integer way_to_grade_11a = score.marks11a(total_score_11a, numerator_11a);
 					Integer way_to_grade_11b = score.marks11b(total_score_11b);
-					Integer way_to_grade_11c = score.marks11c(total_score_11c,total_score_11c);
+					Integer way_to_grade_11c = score.marks11c(total_score_11c,numerator_11c);
 					Integer way_to_grade_11d = score.marks11d(total_score_11d);
 
 					int insentavization_11a = way_to_grade_11a;
@@ -3252,9 +3252,9 @@ public class CgstParameterController {
 					int way_to_grade = 0;
 					int insentavization = 0;
 
-					Integer way_to_grade_11a = score.marks11a(total_score_11a, total_score_11a);
+					Integer way_to_grade_11a = score.marks11a(total_score_11a, numerator_11a);
 					Integer way_to_grade_11b = score.marks11b(total_score_11b);
-					Integer way_to_grade_11c = score.marks11c(total_score_11c,total_score_11c);
+					Integer way_to_grade_11c = score.marks11c(total_score_11c,numerator_11c);
 					Integer way_to_grade_11d = score.marks11d(total_score_11d);
 
 					int insentavization_11a = way_to_grade_11a;
@@ -3299,8 +3299,8 @@ public class CgstParameterController {
 
 					// Logic based on parameter type
 					if ("GST11A".equalsIgnoreCase(gst)) {
-						way_to_grade = score.marks11a(total_score,total_score);
-						insentavization = score.marks11a(total_score,total_score);
+						way_to_grade = score.marks11a(total_score,numerator);
+						insentavization = score.marks11a(total_score,numerator);
 
 						if (numerator > median && way_to_grade < 10) {
 							insentavization += 1;
@@ -3309,8 +3309,8 @@ public class CgstParameterController {
 						way_to_grade = score.marks11b(total_score);
 						insentavization = way_to_grade;
 					}else if ("GST11C".equalsIgnoreCase(gst)) {
-						way_to_grade = score.marks11c(total_score,total_score);
-						insentavization = score.marks11c(total_score,total_score);
+						way_to_grade = score.marks11c(total_score,numerator);
+						insentavization = score.marks11c(total_score,numerator);
 
 						if (numerator > median && way_to_grade < 10) {
 							insentavization += 1;
@@ -3364,9 +3364,9 @@ public class CgstParameterController {
 					int way_to_grade = 0;
 					int insentavization = 0;
 
-					Integer way_to_grade_11a = score.marks11a(total_score_11a, total_score_11a);
+					Integer way_to_grade_11a = score.marks11a(total_score_11a, numerator_11a);
 					Integer way_to_grade_11b = score.marks11b(total_score_11b);
-					Integer way_to_grade_11c = score.marks11c(total_score_11c,total_score_11c);
+					Integer way_to_grade_11c = score.marks11c(total_score_11c,numerator_11c);
 					Integer way_to_grade_11d = score.marks11d(total_score_11d);
 
 					int insentavization_11a = way_to_grade_11a;
