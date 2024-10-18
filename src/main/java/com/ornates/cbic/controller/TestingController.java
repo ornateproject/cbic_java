@@ -3,7 +3,7 @@ package com.ornates.cbic.controller;
 import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.TotalScore;
-import com.ornates.cbic.service.GradeScore;
+import com.ornates.cbic.service.CgstGradeScore;
 import com.ornates.cbic.service.RelevantAspect;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Controller
 public class TestingController {
 
-    GradeScore score = new GradeScore();
+    CgstGradeScore score = new CgstGradeScore();
 
     @ResponseBody
     @RequestMapping(value = "/")

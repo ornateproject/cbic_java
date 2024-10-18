@@ -5,7 +5,7 @@ import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.TotalScore;
 import com.ornates.cbic.service.DateCalculate;
-import com.ornates.cbic.service.GradeScore;
+import com.ornates.cbic.service.CgstGradeScore;
 
 import com.ornates.cbic.service.RelevantAspect;
 import org.springframework.stereotype.Controller;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/cbic/t_score")
 @Controller
 public class CgstParameterController {
-	GradeScore score=new GradeScore();
+	CgstGradeScore score=new CgstGradeScore();
 	@ResponseBody
 	@RequestMapping(value = "/")
 	public String home() {

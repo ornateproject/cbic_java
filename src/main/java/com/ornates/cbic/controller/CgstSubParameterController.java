@@ -18,7 +18,7 @@ import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.GST4A;
 import com.ornates.cbic.service.DateCalculate;
-import com.ornates.cbic.service.GradeScore;
+import com.ornates.cbic.service.CgstGradeScore;
 import com.ornates.cbic.service.RelevantAspect;
 /*
  * @Author: @Kinshuk_Maity
@@ -27,7 +27,7 @@ import com.ornates.cbic.service.RelevantAspect;
 @RequestMapping("/cbic") //....
 @Controller
 public class CgstSubParameterController {
-    GradeScore score=new GradeScore();
+    CgstGradeScore score=new CgstGradeScore();
     @ResponseBody
     @RequestMapping(value = "/")
     public String home() {

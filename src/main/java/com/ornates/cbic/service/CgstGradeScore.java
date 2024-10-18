@@ -1,6 +1,6 @@
 package com.ornates.cbic.service;
 
-public class GradeScore {
+public class CgstGradeScore {
 
 	// grade score for GST 1A 
 	public int marks1a(double total) {
@@ -22,9 +22,9 @@ public class GradeScore {
 		int rank=0;
 		if(total>10) {
 			rank=0;
-		}else if(total >= 6 && total <= 10) {
+		}else if(total >= 6 && total < 10) {
 			rank=4;
-		}else if(total >= 1 && total <= 5) {
+		}else if(total >= 1 && total < 6) {
 			rank=7;
 		}else {
 			rank=10;
@@ -51,9 +51,9 @@ public class GradeScore {
 		int rank=0;
 		if(total<=20) {
 			rank=10;
-		}else if(total >= 21 && total <= 30) {
+		}else if(total > 20 && total <= 30) {
 			rank=7;
-		}else if(total >= 31 && total <= 40) {
+		}else if(total > 30 && total <= 40) {
 			rank=4;
 		}else {
 			rank=02;
@@ -66,9 +66,9 @@ public class GradeScore {
 		int rank=0;
 		if(total<=30) {
 			rank=10;
-		}else if(total >= 30 && total <= 40) {
+		}else if(total > 30 && total <= 40) {
 			rank=7;
-		}else if(total >= 40 && total <= 50) {
+		}else if(total > 40 && total <= 50) {
 			rank=4;
 		}else {
 			rank=02;
@@ -81,9 +81,9 @@ public class GradeScore {
 		int rank =0;
 		if(total<=30) {
 			rank=10;
-		}else if(total >= 31 && total <= 40) {
+		}else if(total > 30 && total <= 40) {
 			rank=7;
-		}else if(total >= 41 && total <= 50) {
+		}else if(total > 40 && total <= 50) {
 			rank=4;
 		}else {
 			rank=02;
@@ -126,9 +126,9 @@ public class GradeScore {
 		int rank=0;
 		if(total>=50) {
 			rank=10;
-		}else if(total >= 40 && total <= 49) {
+		}else if(total >= 40 && total < 50) {
 			rank=7;
-		}else if(total >= 30 && total <= 39) {
+		}else if(total >= 30 && total < 40) {
 			rank=4;
 		}else {
 			rank=2;
@@ -141,9 +141,9 @@ public class GradeScore {
 		int rank=0;
 		if(total>=30) {
 			rank=10;
-		}else if(total >= 25 && total <= 29) {
+		}else if(total >= 25 && total < 30) {
 			rank=7;
-		}else if(total >= 20 && total <= 24) {
+		}else if(total >= 20 && total < 25) {
 			rank=4;
 		}else {
 			rank=2;
@@ -156,9 +156,9 @@ public class GradeScore {
 		int rank=0;
 		if(total<=20) {
 			rank=10;
-		}else if(total >= 21 && total <= 30) {
+		}else if(total > 20 && total <= 30) {
 			rank=7;
-		}else if(total >= 31 && total <= 40) {
+		}else if(total > 30 && total <= 40) {
 			rank=4;
 		}else {
 			rank=2;
@@ -171,9 +171,9 @@ public class GradeScore {
 		int rank = 0;
 		if (total >= 20) {
 			rank = 10;
-		} else if (total >= 15) { // Change the condition to start from 15
+		} else if (total >= 15 && total < 20) {
 			rank = 7;
-		} else if (total >= 10) { // Change the condition to start from 10
+		} else if (total >= 10 && total < 15) {
 			rank = 4;
 		} else {
 			rank = 2;
@@ -186,12 +186,12 @@ public class GradeScore {
 		int rank = 0;
 		if (total >= 30) {
 			rank = 10;
-		} else if (total >= 20) { // Change condition to start from 20
+		} else if (total >= 20 && total < 30) {
 			rank = 7;
-		} else if (total >= 10) { // Change condition to start from 10
+		} else if (total >= 10 && total < 20) {
 			rank = 4;
 		} else {
-			rank = 2; // For total less than 10
+			rank = 2;
 		}
 		return rank;
 	}
@@ -245,9 +245,9 @@ public class GradeScore {
 		int rank=0;
 		if(total<=10) {
 			rank=10;
-		}else if(total >= 11 && total <= 20) {
+		}else if(total > 10 && total <= 20) {
 			rank=7;
-		}else if(total >= 21 && total <= 30) {
+		}else if(total > 20 && total <= 30) {
 			rank=4;
 		}else {
 			rank=2;
@@ -259,9 +259,9 @@ public class GradeScore {
 		int rank=0;
 		if(total>=40) {
 			rank=10;
-		}else if(total >= 30 && total <= 39) {
+		}else if(total >= 30 && total < 40) {
 			rank=7;
-		}else if(total >= 20 && total <= 29) {
+		}else if(total >= 20 && total < 30) {
 			rank=4;
 		}else {
 			rank=2;
@@ -302,9 +302,9 @@ public class GradeScore {
 		int rank=0;
 		if(total>=80) {
 			rank=10;
-		}else if(total >= 70 && total <= 79) {
+		}else if(total >= 70 && total < 80) {
 			rank=7;
-		}else if(total >= 60 && total <= 69) {
+		}else if(total >= 60 && total < 70) {
 			rank=4;
 		}else {
 			rank=2;
@@ -317,9 +317,9 @@ public class GradeScore {
 		int rank=0;
 		if(total<=10) {
 			rank=10;
-		}else if(total >= 11 && total <= 20) {
+		}else if(total > 10 && total <= 20) {
 			rank=7;
-		}else if(total >= 21 && total <= 30) {
+		}else if(total > 20 && total <= 30) {
 			rank=4;
 		}else {
 			rank=2;
@@ -332,9 +332,9 @@ public class GradeScore {
 		int rank=0;
 		if(total<=0) {
 			rank=10;
-		}else if(total >= 1 && total <= 5) {
+		}else if(total > 0 && total <= 5) {
 			rank=7;
-		}else if(total >= 6 && total <= 10) {
+		}else if(total > 5 && total <= 10) {
 			rank=4;
 		}else {
 			rank=2;
@@ -346,9 +346,9 @@ public class GradeScore {
 		int rank=0;
 		if(total >= 40) {
 			rank=10;
-		}else if(total >= 30 && total <= 39) {
+		}else if(total >= 30 && total < 40) {
 			rank=7;
-		}else if(total >= 20 && total <= 29) {
+		}else if(total >= 20 && total < 30) {
 			rank=4;
 		}else {
 			rank=2;
@@ -421,9 +421,9 @@ public class GradeScore {
 		int rank = 0;
 		if (total <= 10) {
 			rank = 10;
-		} else if (total >= 10 && total <= 20) {
+		} else if (total > 10 && total <= 20) {
 			rank = 7;
-		} else if (total >= 20 && total <= 30) {
+		} else if (total > 20 && total <= 30) {
 			rank = 4;
 		} else {
 			rank = 2;
@@ -451,9 +451,9 @@ public class GradeScore {
 		int rank = 0;
 		if (total <= 10) {
 			rank = 10;
-		} else if (total >= 11 && total <= 20) {
+		} else if (total > 10 && total <= 20) {
 			rank = 7;
-		} else if (total >= 21 && total <= 30) {
+		} else if (total > 20 && total <= 30) {
 			rank = 4;
 		} else {
 			rank = 2;
