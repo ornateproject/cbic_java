@@ -3223,7 +3223,15 @@ public class CgstParameterController {
 					double total_parameter_weight_average = sub_parameter_weighted_average_11a + sub_parameter_weighted_average_11b + sub_parameter_weighted_average_11c + sub_parameter_weighted_average_11d ;
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_parameter_weight_average);
 					allGstaList.add(totalScore);
+
+
+					System.out.println("gst11 parameter zone name:- " + zoneName);
+					System.out.println("total Score for 11A:- " + total_score_11a);
+					System.out.println("total Score for 11A:- " + total_score_11b);
+					System.out.println("total Score for 11A:- " + total_score_11c);
+					System.out.println("total Score for 11A:- " + total_score_11d);
 				}
+
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
 				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Appeals_11_ParticularZoneWise(month_date,zone_code);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
