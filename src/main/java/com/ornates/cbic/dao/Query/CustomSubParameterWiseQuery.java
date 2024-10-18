@@ -668,7 +668,7 @@ public class CustomSubParameterWiseQuery {
                 "    FROM MIS_DRI_CUS_3B AS 14c\n" +
                 "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '2024-03-01'\n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
                 "),\n" +
                 "disposal_noc AS (\n" +
                 "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
@@ -679,7 +679,7 @@ public class CustomSubParameterWiseQuery {
                 "    FROM MIS_DRI_CUS_3B AS 14c\n" +
                 "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '2024-04-01'\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
                 "),\n" +
                 "median_calculation AS (\n" +
                 "    SELECT col9,\n" +
@@ -1143,7 +1143,7 @@ public class CustomSubParameterWiseQuery {
                 "    FROM MIS_DLA_CUS_1 AS 14c  \n" +
                 "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '2024-04-01' AND FORUM_CODE = 5 \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND FORUM_CODE = 5 \n" +
                 "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
                 "),\n" +
                 "CTE2 AS (\n" +
@@ -1151,7 +1151,7 @@ public class CustomSubParameterWiseQuery {
                 "    FROM MIS_DLA_CUS_1 AS 14c  \n" +
                 "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '2024-03-01' AND FORUM_CODE = 5 \n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND FORUM_CODE = 5 \n" +
                 "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
                 "),\n" +
                 "CTE3 AS (\n" +
@@ -1159,7 +1159,7 @@ public class CustomSubParameterWiseQuery {
                 "    FROM MIS_DLA_CUS_2 AS 14c  \n" +
                 "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '2024-04-01' AND FORUM_CODE = 5 \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND FORUM_CODE = 5 \n" +
                 "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
                 "),\n" +
                 "CTE4 AS (\n" +
@@ -1167,7 +1167,7 @@ public class CustomSubParameterWiseQuery {
                 "    FROM MIS_DLA_CUS_2 AS 14c  \n" +
                 "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '2024-03-01' AND FORUM_CODE = 5 \n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND FORUM_CODE = 5 \n" +
                 "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
                 "),\n" +
                 "FinalData AS (\n" +
@@ -1210,13 +1210,97 @@ public class CustomSubParameterWiseQuery {
     public String QueryFor_cus12a_CommissonaryWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom12a ="";
+        String queryCustom12a ="WITH cte_1 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, COALESCE(14c.DISPOSAL_NO, 0) AS s5col13_T1, COALESCE(14c.DISPOSAL_TRANSFER_NO, 0) AS s5col17_T1\n" +
+                "    FROM MIS_DLA_CUS_1 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND 14c.FORUM_CODE = 5\n" +
+                "),\n" +
+                "cte_2 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, COALESCE(14c.CLOSING_NO, 0) AS s5col3_T1\n" +
+                "    FROM MIS_DLA_CUS_1 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND 14c.FORUM_CODE = 5\n" +
+                "),\n" +
+                "cte_3 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, COALESCE(14c.DISPOSAL_NO, 0) AS s5col9_T2\n" +
+                "    FROM MIS_DLA_CUS_2 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND 14c.FORUM_CODE = 5\n" +
+                "),\n" +
+                "cte_4 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, COALESCE(14c.CLOSING_NO, 0) AS s5col3_T2\n" +
+                "    FROM MIS_DLA_CUS_2 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND 14c.FORUM_CODE = 5\n" +
+                "),\n" +
+                "cte_main AS (\n" +
+                "    SELECT cte_1.ZONE_NAME, cte_1.ZONE_CODE, cte_1.COMM_NAME, \n" +
+                "           (cte_1.s5col13_T1 + cte_1.s5col17_T1 + cte_3.s5col9_T2) AS numerator12A,\n" +
+                "           CONCAT((cte_1.s5col13_T1 + cte_1.s5col17_T1 + cte_3.s5col9_T2), '/', (cte_2.s5col3_T1 + cte_4.s5col3_T2)) AS absvl,\n" +
+                "           COALESCE(((cte_1.s5col13_T1 + cte_1.s5col17_T1 + cte_3.s5col9_T2) / (cte_2.s5col3_T1 + cte_4.s5col3_T2)), 0) AS total_score\n" +
+                "    FROM cte_1\n" +
+                "    LEFT JOIN cte_2 ON cte_1.ZONE_CODE = cte_2.ZONE_CODE AND cte_1.COMM_NAME = cte_2.COMM_NAME\n" +
+                "    LEFT JOIN cte_3 ON cte_1.ZONE_CODE = cte_3.ZONE_CODE AND cte_1.COMM_NAME = cte_3.COMM_NAME\n" +
+                "    LEFT JOIN cte_4 ON cte_1.ZONE_CODE = cte_4.ZONE_CODE AND cte_1.COMM_NAME = cte_4.COMM_NAME\n" +
+                ")\n" +
+                "SELECT cte_main.ZONE_NAME, cte_main.ZONE_CODE, cte_main.COMM_NAME, \n" +
+                "       cte_main.numerator12A, cte_main.absvl, cte_main.total_score,\n" +
+                "       (SELECT AVG(subquery.numerator12A) AS median12A\n" +
+                "        FROM (\n" +
+                "            SELECT numerator12A, \n" +
+                "                   ROW_NUMBER() OVER (ORDER BY numerator12A) AS row_num, COUNT(*) OVER () AS total_rows\n" +
+                "            FROM cte_main\n" +
+                "        ) AS subquery\n" +
+                "        WHERE subquery.row_num IN (FLOOR((total_rows + 1) / 2), CEIL((total_rows + 1) / 2))\n" +
+                "       ) AS median12A\n" +
+                "FROM cte_main\n" +
+                "WHERE cte_main.ZONE_CODE = '" + zone_code + "';\n";
         return queryCustom12a;
     }
     public String QueryFor_cus12a_AllCommissonaryWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom12a ="";
+        String queryCustom12a ="WITH cte_1 AS (SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, COALESCE(14c.DISPOSAL_NO,0) AS s5col13_T1, COALESCE(14c.DISPOSAL_TRANSFER_NO,0) AS s5col17_T1\n" +
+                "    FROM MIS_DLA_CUS_1 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND 14c.FORUM_CODE = 5),\n" +
+                "cte_2 AS (SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, COALESCE(14c.CLOSING_NO,0) AS s5col3_T1\n" +
+                "    FROM MIS_DLA_CUS_1 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND 14c.FORUM_CODE = 5),\n" +
+                "cte_3 AS (SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, COALESCE(14c.DISPOSAL_NO,0) AS s5col9_T2\n" +
+                "    FROM MIS_DLA_CUS_2 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND 14c.FORUM_CODE = 5),\n" +
+                "cte_4 AS (SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, COALESCE(14c.CLOSING_NO,0) AS s5col3_T2\n" +
+                "    FROM MIS_DLA_CUS_2 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND 14c.FORUM_CODE = 5),\n" +
+                "cte_main AS (\n" +
+                "    SELECT cte_1.ZONE_NAME, cte_1.ZONE_CODE, cte_1.COMM_NAME, (cte_1.s5col13_T1 + cte_1.s5col17_T1 + cte_3.s5col9_T2) AS numerator12A,\n" +
+                "           CONCAT((cte_1.s5col13_T1 + cte_1.s5col17_T1 + cte_3.s5col9_T2), '/', (cte_2.s5col3_T1 + cte_4.s5col3_T2)) AS absvl,\n" +
+                "           COALESCE(((cte_1.s5col13_T1 + cte_1.s5col17_T1 + cte_3.s5col9_T2) / (cte_2.s5col3_T1 + cte_4.s5col3_T2)), 0) AS total_score\n" +
+                "    FROM cte_1\n" +
+                "    LEFT JOIN cte_2 ON cte_1.ZONE_CODE = cte_2.ZONE_CODE AND cte_1.COMM_NAME = cte_2.COMM_NAME\n" +
+                "    LEFT JOIN cte_3 ON cte_1.ZONE_CODE = cte_3.ZONE_CODE AND cte_1.COMM_NAME = cte_3.COMM_NAME\n" +
+                "    LEFT JOIN cte_4 ON cte_1.ZONE_CODE = cte_4.ZONE_CODE AND cte_1.COMM_NAME = cte_4.COMM_NAME)\n" +
+                "SELECT cte_main.ZONE_NAME, cte_main.ZONE_CODE, cte_main.COMM_NAME, \n" +
+                "       cte_main.numerator12A, cte_main.absvl, cte_main.total_score,\n" +
+                "       (SELECT AVG(subquery.numerator12A) AS median12A\n" +
+                "        FROM (\n" +
+                "            SELECT numerator12A, \n" +
+                "                   ROW_NUMBER() OVER (ORDER BY numerator12A) AS row_num, COUNT(*) OVER () AS total_rows\n" +
+                "            FROM cte_main) AS subquery\n" +
+                "        WHERE subquery.row_num IN (FLOOR((total_rows + 1) / 2), CEIL((total_rows + 1) / 2))) AS median12A FROM cte_main;";
         return queryCustom12a;
     }
     // ********************************************************************************************************************************
