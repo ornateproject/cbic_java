@@ -222,8 +222,10 @@ public class CustomGreadeScore {
             rank=7;
         }else if(total >= 31 && total <= 40) {
             rank=4;
+        }else if(total>40) {
+            rank=2;
         }else {
-            rank=0;
+            rank = 0;
         }
         return rank;
     }
@@ -236,7 +238,9 @@ public class CustomGreadeScore {
             rank=7;
         }else if(total >= 10 && total <= 14) {
             rank=4;
-        }else {
+        }else if(total<10){
+            rank=2;
+        }else{
             rank=0;
         }
         return rank;
@@ -250,6 +254,8 @@ public class CustomGreadeScore {
             rank=7;
         }else if(total >= 20 && total <= 29) {
             rank=4;
+        }else if(total<20) {
+            rank=2;
         }else {
             rank=0;
         }
@@ -264,7 +270,9 @@ public class CustomGreadeScore {
             rank=7;
         }else if(total >= 20 && total <= 24) {
             rank=4;
-        }else {
+        }else if(total<15) {
+            rank=2;
+        }else{
             rank=0;
         }
         return rank;
@@ -278,7 +286,9 @@ public class CustomGreadeScore {
             rank=7;
         }else if(total >= 20 && total <= 24) {
             rank=4;
-        }else {
+        }else if(total<20) {
+            rank=2;
+        }else{
             rank=0;
         }
         return rank;
@@ -293,8 +303,10 @@ public class CustomGreadeScore {
             rank=7;
         }else if(total >= 30 && total <40) {
             rank=4;
-        }else {
+        }else if (total<20) {
             rank=2;
+        }else{
+            rank=0;
         }
         return rank;
     }
@@ -308,8 +320,10 @@ public class CustomGreadeScore {
             rank=7;
         }else if(total >= 10 && total <20) {
             rank=4;
-        }else {
+        }else if(total<10){
             rank=2;
+        }else{
+            rank=0;
         }
         return rank;
     }
