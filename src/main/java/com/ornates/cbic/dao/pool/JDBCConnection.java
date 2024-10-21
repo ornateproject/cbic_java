@@ -30,7 +30,7 @@ public class JDBCConnection {
 
 
 		String userName="root";
-		String password="Anand@062";
+		String password="Rakesh@500";
    
 
 //    	String userName="cbic_user";
