@@ -2054,7 +2054,7 @@ public class CustomSubParameterController {
                     if (numerator_12a > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
-                    // 2 floating point
+                    // 2 floating  point
                     double sub_parameter_weighted_average = insentavization * 0.5 ;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
                     gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
