@@ -1438,7 +1438,7 @@ public class CustomSubParameterController {
 //                    allGstaList.add(gsta);
 //                    allGstaList.sort((a, b) -> Double.compare(b.getTotal_score(), a.getTotal_score()));
                 }
-            }else if (type.equalsIgnoreCase("commissary")) { // cus 1
+            }else if (type.equalsIgnoreCase("commissary")) { // cus 6e
 
                 String queryCustom6e = new CustomSubParameterWiseQuery().QueryFor_cus6e_CommissonaryWise(month_date,zone_code);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryCustom6e);
@@ -1479,7 +1479,7 @@ public class CustomSubParameterController {
 //                    allGstaList.add(gsta);
 //                    allGstaList.sort((a, b) -> Double.compare(b.getTotal_score(), a.getTotal_score()));
                 }
-            }else if (type.equalsIgnoreCase("all_commissary")) {
+            }else if (type.equalsIgnoreCase("all_commissary")) { // cus6e
                 String queryCustom6e = new CustomSubParameterWiseQuery().QueryFor_cus6e_AllCommissonaryWise(month_date);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryCustom6e);
 
