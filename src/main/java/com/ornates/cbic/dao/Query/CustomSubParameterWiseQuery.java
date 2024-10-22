@@ -2642,7 +2642,7 @@ public class CustomSubParameterWiseQuery {
                 "\n" +
                 "SELECT c1.ZONE_NAME, c1.ZONE_CODE, c1.s5col29_T1, c1.s5col31_T1, c2.s5col23_T2, c2.s5col25_T2,\n" +
                 "concat(((c1.s5col29_T1 - c1.s5col31_T1) + (c2.s5col23_T2 - c2.s5col25_T2)),'/',(c1.s5col29_T1 + c2.s5col23_T2)) AS absvl,\n" +
-                "COALESCE((((c1.s5col29_T1 - c1.s5col31_T1) + (c2.s5col23_T2 - c2.s5col25_T2)) * 100 / (c1.s5col29_T1 + c2.s5col23_T2)),0) AS total_score\n" +
+                "COALESCE((((c1.s5col29_T1 - c1.s5col31_T1) + (c2.s5col23_T2 - c2.s5col25_T2))  / (c1.s5col29_T1 + c2.s5col23_T2)),0) AS total_score\n" +
                 "FROM cte_1 AS c1\n" +
                 "JOIN cte_2 AS c2 ON c1.ZONE_CODE = c2.ZONE_CODE;\n";
         return queryCustom12b;
