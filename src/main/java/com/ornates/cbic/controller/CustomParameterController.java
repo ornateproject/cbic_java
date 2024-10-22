@@ -3,7 +3,6 @@ package com.ornates.cbic.controller;
 import com.ornates.cbic.dao.Query.CustomParameterWiseQuery;
 import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
-import com.ornates.cbic.model.response.GST4A;
 import com.ornates.cbic.model.response.TotalScore;
 import com.ornates.cbic.service.CustomGreadeScore;
 import com.ornates.cbic.service.DateCalculate;
@@ -389,27 +388,45 @@ public class CustomParameterController {
             } else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
                 //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-                String query_assessment = "";
-
+                String query_assessment = new CustomParameterWiseQuery().QueryFor_CommissionerAppeals_12_AllCommissary(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-                    zone_code = rsGst14aa.getString("ZONE_CODE");
-                    Integer way_to_grade = 0;
-                    Integer insentavization = 0;
-                    double sub_parameter_weighted_average = 0.00;
-                    String commName = rsGst14aa.getString("COMM_NAME");
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    double tScore = rsGst14aa.getDouble("total_score") * 100;
-                    Zonal_rank = rsGst14aa.getInt("z_rank");
-                    String gst = "null";
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    String commName = rsGst14aa.getString("COMM_NAME");
+                    int numerator_12a = rsGst14aa.getInt("numerator12A");
+                    double median12A = rsGst14aa.getDouble("median12A");
+                    double total_score12A = rsGst14aa.getDouble("total_score12A");
+                    double total_score12B = rsGst14aa.getDouble("total_score12B");
+                    //double tScore = rsGst14aa.getDouble("total_score") * 100;
+                     Zonal_rank = 0;
+                    int way_to_grade12a = score.c_marks12a(total_score12A,numerator_12a);
+                    int way_to_grade12b = score.c_marks12b(total_score12B);
+
+                    int insentavization12a = way_to_grade12a;
+                    int insentavization12b = way_to_grade12b;
+
+                    if (numerator_12a > median12A && way_to_grade12a < 10) {
+                        insentavization12a += 1;
+                    }
+                    Integer way_to_grade = way_to_grade12a + way_to_grade12b;
+                    Integer insentavization = insentavization12a + insentavization12b;
+
+                    double sub_parameter_weighted_average12a = insentavization12a * 0.5;
+                    double sub_parameter_weighted_average12b = insentavization12b * 0.5;
+
+                    double total_weighted_average = sub_parameter_weighted_average12a + sub_parameter_weighted_average12b;
+
+
+                    double total_score = 0.00;
+                    String gst = "ALL";
                     String absval = "null";
-                    String ra ="null";
+                    String ra ="Commissioner (Appeals)";
 
-
-                    String formattedTotal = String.format("%.2f", tScore);
-                    double total_score = Double.parseDouble(formattedTotal);
-                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+//					String formattedTotal = String.format("%.2f", tScore);
+//					double total_score = Double.parseDouble(formattedTotal);
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst, ra, way_to_grade, insentavization, total_weighted_average);
                     allGstaList.add(totalScore);
                 }
             } else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
