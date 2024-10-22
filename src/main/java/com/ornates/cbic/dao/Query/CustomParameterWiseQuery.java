@@ -6,35 +6,142 @@ public class CustomParameterWiseQuery {
     // this query will show all zone || 1no url
     public String QueryFor_TimelyPaymentOfRefunds_1_ZoneWise(String month_date){
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String query_assessment_cus1 = "";
+        String query_assessment_cus1 = "SELECT \n"
+                + "    zc.ZONE_NAME, \n"
+                + "    cc.ZONE_CODE, \n"
+                + "    SUM(c14.CLOSING_NO) AS col10, \n"
+                + "    SUM(c14.MONTHS_3_NO) AS col12, \n"
+                + "    (SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) AS col_difference,\n"
+                + "    ((SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) / SUM(c14.CLOSING_NO)) * 100 AS total_score \n"
+                + "FROM \n"
+                + "    mis_gst_commcode AS cc \n"
+                + "RIGHT JOIN \n"
+                + "    mis_dgi_cus_4 AS c14 ON c14.COMM_CODE = cc.COMM_CODE \n"
+                + "LEFT JOIN \n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "WHERE  \n"
+                + "    c14.MM_YYYY = '" + month_date + "'  \n"
+                + "GROUP BY \n"
+                + "    zc.ZONE_CODE, zc.ZONE_NAME, cc.ZONE_CODE \n"
+                + "ORDER BY \n"
+                + "    total_score ASC \n"
+                + "LIMIT 0, 1000;\n"
+                + "";
         return query_assessment_cus1;
     }
     // for 2no url , all india rank will show in this query
     public String QueryFor_TimelyPaymentOfRefunds_1_ParticularZoneWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String query_assessment_cus1 = "";
+        String query_assessment_cus1 = "SELECT \n"
+                + "    zc.ZONE_NAME, \n"
+                + "    cc.ZONE_CODE, \n"
+                + "    cc.COMM_NAME,  -- Added COMM_NAME here\n"
+                + "    c14.CLOSING_NO AS col10, \n"
+                + "    c14.MONTHS_3_NO AS col12, \n"
+                + "    (c14.CLOSING_NO - c14.MONTHS_3_NO) AS col_difference,\n"
+                + "    ((c14.CLOSING_NO - c14.MONTHS_3_NO) / c14.CLOSING_NO) * 100 AS total_score \n"
+                + "FROM \n"
+                + "    mis_gst_commcode AS cc \n"
+                + "RIGHT JOIN \n"
+                + "    mis_dgi_cus_4 AS c14 ON c14.COMM_CODE = cc.COMM_CODE \n"
+                + "LEFT JOIN \n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "WHERE  \n"
+                + "    c14.MM_YYYY = '" + month_date + "'  \n"
+                + "    AND cc.ZONE_CODE =  '"+zone_code+"'\n"
+                + "ORDER BY \n"
+                + "    total_score ASC \n"
+                + "LIMIT 0, 1000;\n"
+                + "";
         return query_assessment_cus1;
     }
     //  for perticular subparameter wise ||  3 no url
     public String QueryFor_TimelyPaymentOfRefunds_1_ParticularSubparameterWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String query_assessment_cus1 = "";
+        String query_assessment_cus1 = "SELECT\n"
+                + "    zc.ZONE_NAME,\n"
+                + "    cc.ZONE_CODE,\n"
+                + "    SUM(c14.CLOSING_NO) AS col10,\n"
+                + "    SUM(c14.MONTHS_3_NO) AS col12,\n"
+                + "    (SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) AS col_difference,\n"
+                + "    ((SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) / SUM(c14.CLOSING_NO)) * 100 AS total_score,\n"
+                + "    'Cus1' AS Cus1 -- Adding the static value 'Cus1'\n"
+                + "FROM\n"
+                + "    mis_gst_commcode AS cc\n"
+                + "RIGHT JOIN\n"
+                + "    mis_dgi_cus_4 AS c14 ON c14.COMM_CODE = cc.COMM_CODE\n"
+                + "LEFT JOIN\n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n"
+                + "WHERE\n"
+                + "    c14.MM_YYYY = '" + month_date + "' -- Replace '2024-04-01' with your desired date\n"
+                + "    AND cc.ZONE_CODE ='"+zone_code+"' -- Replace 'your_zone_code' with actual zone code\n"
+                + "GROUP BY\n"
+                + "    zc.ZONE_CODE, zc.ZONE_NAME -- Removed COMM_NAME from GROUP BY\n"
+                + "ORDER BY\n"
+                + "    total_score ASC\n"
+                + "LIMIT 0, 1000;\n"
+                + "";
         return query_assessment_cus1;
     }
     //  for all commissary wise || for 4no url
     public String QueryFor_TimelyPaymentOfRefunds_1_AllCommissary(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String query_assessment_cus1 = "";
+        String query_assessment_cus1 = "SELECT \n"
+                + "    zc.ZONE_NAME, \n"
+                + "    cc.ZONE_CODE, \n"
+                + "    cc.COMM_NAME,  -- Added COMM_NAME here\n"
+                + "    c14.CLOSING_NO AS col10, \n"
+                + "    c14.MONTHS_3_NO AS col12, \n"
+                + "    (c14.CLOSING_NO - c14.MONTHS_3_NO) AS col_difference,\n"
+                + "    ((c14.CLOSING_NO - c14.MONTHS_3_NO) / c14.CLOSING_NO) * 100 AS total_score \n"
+                + "FROM \n"
+                + "    mis_gst_commcode AS cc \n"
+                + "RIGHT JOIN \n"
+                + "    mis_dgi_cus_4 AS c14 ON c14.COMM_CODE = cc.COMM_CODE \n"
+                + "LEFT JOIN \n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "WHERE  \n"
+                + "    c14.MM_YYYY = '" + month_date + "'  \n"
+                + "   \n"
+                + "ORDER BY \n"
+                + "    total_score ASC \n"
+                + "LIMIT 0, 1000;\n"
+                + "";
         return query_assessment_cus1;
     }
     //  for perticular commissonary in subparameter || for 5no url
     public String QueryFor_TimelyPaymentOfRefunds_1_ParticularCommissonaryInSubparameter(String month_date, String zone_code,String come_name){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String query_assessment_cus1 = "";
+        String query_assessment_cus1 = "SELECT\n"
+                + "    zc.ZONE_NAME,\n"
+                + "    cc.ZONE_CODE,\n"
+                + "    cc.COMM_NAME,  -- Adding COMM_NAME to SELECT\n"
+                + "    c14.CLOSING_NO AS col10,\n"
+                + "    c14.MONTHS_3_NO AS col12,\n"
+                + "    (c14.CLOSING_NO - c14.MONTHS_3_NO) AS col_difference,\n"
+                + "    ((c14.CLOSING_NO - c14.MONTHS_3_NO) / c14.CLOSING_NO) * 100 AS total_score,\n"
+                + "    -- Removed 'ra' as it is undefined\n"
+                + "    'Cus1' AS description\n"
+                + "FROM\n"
+                + "    mis_gst_commcode AS cc\n"
+                + "RIGHT JOIN\n"
+                + "    mis_dgi_cus_4 AS c14 ON c14.COMM_CODE = cc.COMM_CODE\n"
+                + "LEFT JOIN\n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n"
+                + "WHERE\n"
+                + "    c14.MM_YYYY = '" + month_date + "'  -- Replace '2024-04-01' with your desired date\n"
+                + "    AND cc.ZONE_CODE = '"+zone_code+"'\n"
+                + "    AND cc.COMM_NAME = '" + come_name + "'  -- Replace with your desired COMM_NAME filter\n"
+                + "GROUP BY\n"
+                + "    zc.ZONE_CODE, zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, c14.CLOSING_NO, c14.MONTHS_3_NO\n"
+                + "ORDER BY\n"
+                + "    total_score ASC\n"
+                + "LIMIT 0, 1000;\n"
+                + "";
         return query_assessment_cus1;
     }
 
