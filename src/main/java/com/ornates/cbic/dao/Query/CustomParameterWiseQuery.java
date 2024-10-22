@@ -418,42 +418,42 @@ public class CustomParameterWiseQuery {
                 "    FROM MIS_DLA_CUS_1 AS 14c  \n" +
                 "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '2024-04-01' AND FORUM_CODE = 5 GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND FORUM_CODE = 5 GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
                 "),\n" +
                 "CTE2 AS (\n" +
                 "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.CLOSING_NO) AS s5col3_T1\n" +
                 "    FROM MIS_DLA_CUS_1 AS 14c  \n" +
                 "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '2024-03-01' AND FORUM_CODE = 5 GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND FORUM_CODE = 5 GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
                 "),\n" +
                 "CTE3 AS (\n" +
                 "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.DISPOSAL_NO) AS s5col9_T2\n" +
                 "    FROM MIS_DLA_CUS_2 AS 14c  \n" +
                 "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '2024-04-01' AND FORUM_CODE = 5 GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND FORUM_CODE = 5 GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
                 "),\n" +
                 "CTE4 AS (\n" +
                 "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.CLOSING_NO) AS s5col3_T2\n" +
                 "    FROM MIS_DLA_CUS_2 AS 14c  \n" +
                 "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '2024-03-01' AND FORUM_CODE = 5 GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND FORUM_CODE = 5 GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
                 "),\n" +
                 "CTE5 AS (\n" +
                 "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.CLOSING_NO) AS s5col29_T1, SUM(14c.AGEWISE_1) AS s5col31_T1\n" +
                 "    FROM MIS_DLA_CUS_1 AS 14c  \n" +
                 "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '2024-04-01' AND FORUM_CODE = 5 GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND FORUM_CODE = 5 GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
                 "),\n" +
                 "CTE6 AS (\n" +
                 "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.CLOSING_NO) AS s5col23_T2,SUM(14c.AGEWISE_1) AS s5col25_T2\n" +
                 "    FROM MIS_DLA_CUS_2 AS 14c  \n" +
                 "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '2024-04-01' AND FORUM_CODE = 5 GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND FORUM_CODE = 5 GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
                 "),\n" +
                 "FinalData AS (\n" +
                 "    SELECT \n" +
@@ -504,7 +504,103 @@ public class CustomParameterWiseQuery {
     public String QueryFor_CommissionerAppeals_12_ParticularSubparameterWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String query_assessment_cus12 = "";
+        String query_assessment_cus12 = "WITH CTE1 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.DISPOSAL_NO) AS s5col13_T1,SUM(14c.DISPOSAL_TRANSFER_NO) AS s5col17_T1\n" +
+                "    FROM MIS_DLA_CUS_1 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND FORUM_CODE = 5 \n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),\n" +
+                "CTE2 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.CLOSING_NO) AS s5col3_T1\n" +
+                "    FROM MIS_DLA_CUS_1 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND FORUM_CODE = 5 \n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),\n" +
+                "CTE3 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.DISPOSAL_NO) AS s5col9_T2\n" +
+                "    FROM MIS_DLA_CUS_2 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND FORUM_CODE = 5 \n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),\n" +
+                "CTE4 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.CLOSING_NO) AS s5col3_T2\n" +
+                "    FROM MIS_DLA_CUS_2 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "' AND FORUM_CODE = 5 \n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),\n" +
+                "FinalData AS (\n" +
+                "    SELECT \n" +
+                "        COALESCE(A.ZONE_NAME, B.ZONE_NAME, C.ZONE_NAME, D.ZONE_NAME) AS ZONE_NAME,\n" +
+                "        COALESCE(A.ZONE_CODE, B.ZONE_CODE, C.ZONE_CODE, D.ZONE_CODE) AS ZONE_CODE,\n" +
+                "        (A.s5col13_T1 + A.s5col17_T1 + C.s5col9_T2) AS numerator,\n" +
+                "        concat((A.s5col13_T1 + A.s5col17_T1 + C.s5col9_T2),'/',(B.s5col3_T1 + D.s5col3_T2)) as absvl,\n" +
+                "        COALESCE(((A.s5col13_T1 + A.s5col17_T1 + C.s5col9_T2) / (B.s5col3_T1 + D.s5col3_T2)), 0) AS total_score, \"GST12A\" AS GST\n" +
+                "    FROM CTE1 AS A\n" +
+                "    LEFT JOIN CTE2 AS B ON A.ZONE_CODE = B.ZONE_CODE\n" +
+                "    LEFT JOIN CTE3 AS C ON A.ZONE_CODE = C.ZONE_CODE\n" +
+                "    LEFT JOIN CTE4 AS D ON A.ZONE_CODE = D.ZONE_CODE\n" +
+                "\n" +
+                "    UNION ALL\n" +
+                "\n" +
+                "    SELECT \n" +
+                "        COALESCE(A.ZONE_NAME, B.ZONE_NAME, C.ZONE_NAME, D.ZONE_NAME) AS ZONE_NAME,\n" +
+                "        COALESCE(A.ZONE_CODE, B.ZONE_CODE, C.ZONE_CODE, D.ZONE_CODE) AS ZONE_CODE,\n" +
+                "        (A.s5col13_T1 + A.s5col17_T1 + C.s5col9_T2) AS numerator,\n" +
+                "        concat((A.s5col13_T1 + A.s5col17_T1 + C.s5col9_T2),'/',(B.s5col3_T1 + D.s5col3_T2)) as absvl,\n" +
+                "        COALESCE(((A.s5col13_T1 + A.s5col17_T1 + C.s5col9_T2) / (B.s5col3_T1 + D.s5col3_T2)), 0) AS total_score, \"GST12A\" AS GST\n" +
+                "    FROM CTE1 AS A\n" +
+                "    RIGHT JOIN CTE2 AS B ON A.ZONE_CODE = B.ZONE_CODE\n" +
+                "    RIGHT JOIN CTE3 AS C ON A.ZONE_CODE = C.ZONE_CODE\n" +
+                "    RIGHT JOIN CTE4 AS D ON A.ZONE_CODE = D.ZONE_CODE\n" +
+                "    WHERE A.ZONE_CODE IS NULL\n" +
+                "),\n" +
+                "CTE5 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.CLOSING_NO) AS s5col29_T1, SUM(14c.AGEWISE_1) AS s5col31_T1\n" +
+                "    FROM MIS_DLA_CUS_1 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND FORUM_CODE = 5\n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),\n" +
+                "CTE6 AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,SUM(14c.CLOSING_NO) AS s5col23_T2,SUM(14c.AGEWISE_1) AS s5col25_T2\n" +
+                "    FROM MIS_DLA_CUS_2 AS 14c  \n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' AND FORUM_CODE = 5\n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                ")\n" +
+                "\n" +
+                "SELECT ZONE_NAME, ZONE_CODE, numerator, total_score, GST, median ,absvl\n" +
+                "FROM (\n" +
+                "    SELECT \n" +
+                "        ZONE_NAME, ZONE_CODE, numerator,absvl, total_score, GST,\n" +
+                "        (SELECT AVG(numerator) AS median \n" +
+                "         FROM (SELECT numerator,ROW_NUMBER() OVER (ORDER BY numerator) AS rn,COUNT(*) OVER () AS total_count\n" +
+                "               FROM FinalData\n" +
+                "              ) AS subquery\n" +
+                "         WHERE rn IN ((total_count + 1) / 2, (total_count + 2) / 2)\n" +
+                "        ) AS median \n" +
+                "    FROM FinalData\n" +
+                "\n" +
+                "    UNION ALL\n" +
+                "\n" +
+                "    SELECT \n" +
+                "        c1.ZONE_NAME, c1.ZONE_CODE, 0 AS numerator,\n" +
+                "        concat(((c1.s5col29_T1 - c1.s5col31_T1)+(c2.s5col23_T2 - c2.s5col25_T2)),'/',(c1.s5col29_T1 + c2.s5col23_T2)) as absvl,\n" +
+                "        COALESCE((((c1.s5col29_T1 - c1.s5col31_T1) + (c2.s5col23_T2 - c2.s5col25_T2)) / (c1.s5col29_T1 + c2.s5col23_T2)),0) AS total_score, \n" +
+                "        \"GST12B\" AS GST, 0 AS median\n" +
+                "    FROM CTE5 AS c1\n" +
+                "    JOIN CTE6 AS c2 ON c1.ZONE_CODE = c2.ZONE_CODE\n" +
+                ") AS merged_result where ZONE_CODE = '" + zone_code + "';";
         return query_assessment_cus12;
     }
     //  for all commissary wise || for 4no url
