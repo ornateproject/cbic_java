@@ -548,7 +548,7 @@ public class CustomParameterWiseQuery {
                 "        WHERE subquery.row_num IN (FLOOR((total_rows + 1) / 2), CEIL((total_rows + 1) / 2))\n" +
                 "       ) AS median12A \n" +
                 "FROM cte_main\n" +
-                "WHERE cte_main.ZONE_CODE = 62;";
+                "WHERE cte_main.ZONE_CODE = 76;";
         return query_assessment_cus12;
     }
     //  for perticular subparameter wise ||  3 no url
