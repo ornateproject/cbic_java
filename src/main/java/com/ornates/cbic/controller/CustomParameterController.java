@@ -3,6 +3,7 @@ package com.ornates.cbic.controller;
 import com.ornates.cbic.dao.Query.CustomParameterWiseQuery;
 import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
+import com.ornates.cbic.model.response.GST4A;
 import com.ornates.cbic.model.response.TotalScore;
 import com.ornates.cbic.service.CustomGreadeScore;
 import com.ornates.cbic.service.DateCalculate;
@@ -15,7 +16,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 /*
  * @Author: @RKS & @Nishant
  */
@@ -447,6 +450,7 @@ public class CustomParameterController {
                 e.printStackTrace();
             }
         }
-        return allGstaList;
+        return allGstaList.stream()
+                .sorted(Comparator.comparing(TotalScore::getSub_parameter_weighted_average).reversed()).collect(Collectors.toList());
     }
 }
