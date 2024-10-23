@@ -1,12 +1,10 @@
 package com.ornates.cbic.controller;
 
-import com.ornates.cbic.dao.Query.CGSTParameterWiseQuery;
 import com.ornates.cbic.dao.Query.CustomParameterWiseQuery;
 import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.TotalScore;
 import com.ornates.cbic.service.CustomGreadeScore;
-import com.ornates.cbic.service.CustomRelaventAspect;
 import com.ornates.cbic.service.DateCalculate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -408,6 +406,127 @@ public class CustomParameterController {
         return allGstaList;
     }
 
+
+    // ***********************************CUS 9 parameter wise(Disposal Of Confiscated Gold and NDPS) *****************************************************************
+    @ResponseBody
+    @RequestMapping(value = "/DisposalOfConfiscatedGoldAndNDPS") // custom 9
+    //  http://localhost:8080/cbicApi/cbic/custom/parameter/DisposalOfConfiscatedGoldAndNDPS?month_date=2024-04-01&type=parameter                   // for return filing button
+    //  http://localhost:8080/cbicApi/cbic/custom/parameter/DisposalOfConfiscatedGoldAndNDPS?month_date=2024-04-01&type=zone&zone_code=76           // for all button
+    //	http://localhost:8080/cbicApi/cbic/custom/parameter/DisposalOfConfiscatedGoldAndNDPS?month_date=2024-04-01&type=commissary&zone_code=58     // for show button, zone wise
+    //  http://localhost:8080/cbicApi/cbic/custom/parameter/DisposalOfConfiscatedGoldAndNDPS?month_date=2024-04-01&type=all_commissary              // for all commissary
+    //  http://localhost:8080/cbicApi/cbic/custom/parameter/DisposalOfConfiscatedGoldAndNDPS?month_date=2024-04-01&type=come_name&zone_code=76&come_name=Kolkata(Port)     // for particular commissary wise, show button
+    public Object DisposalOfConfiscatedGoldAndNDPS(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code, @RequestParam(required = false) String come_name) {
+        List<TotalScore> allGstaList = new ArrayList<>();
+        TotalScore totalScore = null;
+        Connection con = null;
+        ResultSet rsGst14aa = null;
+        Integer Zonal_rank = 0;
+        try {
+
+            if (type.equalsIgnoreCase("parameter")) { // adjudication all zone name 1
+                //		'" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
+                //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+                String query_assessment = new CustomParameterWiseQuery().QueryFor_DisposalOfConfiscatedGoldAndNDPS_9_ZoneWise(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+                while (rsGst14aa.next()) {
+
+                }
+            } else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
+                //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+                String query_assessment = new CustomParameterWiseQuery().QueryFor_DisposalOfConfiscatedGoldAndNDPS_9_ParticularZoneWise(month_date,zone_code);
+                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+                while (rsGst14aa.next()) {
+
+
+                }
+            } else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
+                String query_assessment = new CustomParameterWiseQuery().QueryFor_DisposalOfConfiscatedGoldAndNDPS_9_ParticularSubparameterWise(month_date,zone_code);
+                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+                while (rsGst14aa.next()) {
+
+                }
+            } else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
+                //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+
+                String query_assessment = new CustomParameterWiseQuery().QueryFor_DisposalOfConfiscatedGoldAndNDPS_9_AllCommissary(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+                while (rsGst14aa.next()) {
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    String commName = rsGst14aa.getString("COMM_NAME");
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+
+                    double tScore_9a = rsGst14aa.getDouble("total_score9a") * 100;
+                    double tScore_9b = rsGst14aa.getDouble("total_score9b") * 100;
+
+                    Double median_9a = rsGst14aa.getDouble("numerator_9a");
+                    Double numerator_9a = rsGst14aa.getDouble("numerator_9a");
+
+                    Double median_9b = rsGst14aa.getDouble("median9b");
+                    Double numerator_9b = rsGst14aa.getDouble("numerator9b");
+                    String gst ="null";
+                    String absval = "null";
+                    String ra ="Disposal Of Confiscated Gold and NDPS";
+
+                    int way_to_grade9a = score.c_marks9a(tScore_9a);
+                    int way_to_grade9b = score.c_marks9b(tScore_9b);
+
+                    int insentavization9a = way_to_grade9a;
+                    int insentavization9b = way_to_grade9b;
+
+                    // Logic to adjust insentavization3a and insentavization3b based on the median and numerator values
+                    if (numerator_9a > median_9a && way_to_grade9a < 10) {
+                        insentavization9a += 1;
+                    }
+                    if (numerator_9b > median_9b && way_to_grade9b < 10) {
+                        insentavization9b += 1;
+                    }
+
+                    Integer way_to_grade = way_to_grade9a + way_to_grade9b;
+                    Integer insentavization = insentavization9a + insentavization9b;
+
+                    double sub_parameter_weighted_average9a = insentavization9a * 0.5;
+                    double sub_parameter_weighted_average9b = insentavization9b * 0.5;
+
+                    double total_weighted_average = sub_parameter_weighted_average9a + sub_parameter_weighted_average9b;
+                    double sub_parameter_weighted_average = 0.00;
+
+                    double total_score = 0;
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_weighted_average);
+                    allGstaList.add(totalScore);
+
+
+//                    System.out.println("zoneName :-" + zoneName);
+//                    System.out.println("commName :-" + commName);
+//                    System.out.println("tScore_9a :-" + tScore_9a);
+//                    System.out.println("tScore_9b :-" + tScore_9b);
+//                    System.out.println("**********************************************************");
+                }
+            } else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
+                //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+                String query_assessment = new CustomParameterWiseQuery().QueryFor_DisposalOfConfiscatedGoldAndNDPS_9_ParticularCommissonaryInSubparameter(month_date,zone_code,come_name);
+                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+
+                while (rsGst14aa.next()) {
+
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rsGst14aa != null) rsGst14aa.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return allGstaList.stream()
+                .sorted(Comparator.comparing(TotalScore::getSub_parameter_weighted_average).reversed()).collect(Collectors.toList());
+    }
 
     // ***********************************CUS 12 parameter wise(Commissioner (Appeals)) *****************************************************************
     @ResponseBody
