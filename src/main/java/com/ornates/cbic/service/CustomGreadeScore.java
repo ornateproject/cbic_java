@@ -346,11 +346,11 @@ public class CustomGreadeScore {
     // Custom grade score for custom 9B
     public int c_marks12b(double total) {
         int rank=0;
-        if(total >=30 ) {
+        if(total <= 10 ) {
             rank=10;
-        }else if(total >= 20 && total < 30) {
+        }else if(total >10 && total <= 20) {
             rank=7;
-        }else if(total >= 10 && total <20) {
+        }else if(total > 20 && total <=30) {
             rank=4;
         }else {
             rank=2;
