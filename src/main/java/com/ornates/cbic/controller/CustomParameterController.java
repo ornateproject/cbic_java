@@ -552,7 +552,54 @@ public class CustomParameterController {
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    String commName = rsGst14aa.getString("COMM_NAME");
+                    Integer way_to_grade = 0;
+                    Integer insentavization = 0;
+                    double tScore = rsGst14aa.getDouble("total_score") * 100;
+                    String gst =rsGst14aa.getString("gst");
+                    String absval = rsGst14aa.getString("absvl");
+                    Double median = rsGst14aa.getDouble("median");
+                    Double numerator = rsGst14aa.getDouble("numerator");
+                    // Double numerator_3b = rsGst14aa.getDouble("numerator_3b");
+                    String ra ="SCRUTINY & ASSESSMENT";
+                    Zonal_rank = null;
 
+
+                    String formattedTotal = String.format("%.2f", tScore);
+                    double total_score = Double.parseDouble(formattedTotal);
+
+                    // Logic based on parameter type
+                    if ("GST9A".equalsIgnoreCase(gst)) {
+                        way_to_grade = score.c_marks9a(total_score);
+                        insentavization = score.c_marks9a(total_score);
+
+                        if (numerator > median && way_to_grade < 10) {
+                            insentavization += 1;
+                        }
+                    } else if ("GST9B".equalsIgnoreCase(gst)) {
+                        way_to_grade = score.c_marks9b(total_score);
+                        insentavization = score.c_marks9b(total_score);
+
+                        if (numerator > median && way_to_grade < 10) {
+                            insentavization += 1;
+                        }
+                    } else {
+                        // Default handling if parameter type is neither 3a nor 3b
+                        way_to_grade = 0;
+                        insentavization = 0;
+                    }
+                    Double sub_parameter_weighted_average = insentavization * 0.5;
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(totalScore);
+
+
+//                    System.out.println("zoneName :-" + zoneName);
+//                    System.out.println("commName :-" + commName);
+//                    System.out.println("tScore :-" + tScore);
+//                   // System.out.println("tScore_9b :-" + tScore_9b);
+//                    System.out.println("**********************************************************");
                 }
             }
         } catch (SQLException e) {
