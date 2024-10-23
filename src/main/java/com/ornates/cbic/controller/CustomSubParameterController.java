@@ -471,7 +471,7 @@ public class CustomSubParameterController {
                         insentavization += 1;
                     }
                     // 2 floating point
-                    double sub_parameter_weighted_average = way_to_grade * 0.3;
+                    double sub_parameter_weighted_average = insentavization * 0.3;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
                     gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -510,7 +510,7 @@ public class CustomSubParameterController {
                     }
 
                     // 2 floating point
-                    double sub_parameter_weighted_average = way_to_grade * 0.3;
+                    double sub_parameter_weighted_average = insentavization * 0.3;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
                     gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -550,11 +550,15 @@ public class CustomSubParameterController {
                         insentavization += 1;
                     }
                     // 2 floating point
-                    double sub_parameter_weighted_average = way_to_grade * 0.3;
-                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
+                    double sub_parameter_weighted_average = insentavization * 0.3;
+                    //sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
                     gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
+
+
+                    System.out.println("commname :-" + commname);
+                    System.out.println("totalScore :-" + totalScore);
                 }
             }
         } catch (SQLException e) {
