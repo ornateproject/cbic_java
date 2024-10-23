@@ -438,7 +438,48 @@ public class CustomParameterController {
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    String commName = rsGst14aa.getString("COMM_NAME");
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
 
+                    double tScore_9a = rsGst14aa.getDouble("total_score9a") * 100;
+                    double tScore_9b = rsGst14aa.getDouble("total_score9b") * 100;
+
+                    Double median_9a = rsGst14aa.getDouble("numerator_9a");
+                    Double numerator_9a = rsGst14aa.getDouble("numerator_9a");
+
+                    Double median_9b = rsGst14aa.getDouble("median9b");
+                    Double numerator_9b = rsGst14aa.getDouble("numerator9b");
+                    String gst ="null";
+                    String absval = "null";
+                    String ra ="Disposal Of Confiscated Gold and NDPS";
+
+                    int way_to_grade9a = score.c_marks9a(tScore_9a);
+                    int way_to_grade9b = score.c_marks9b(tScore_9b);
+
+                    int insentavization9a = way_to_grade9a;
+                    int insentavization9b = way_to_grade9b;
+
+                    // Logic to adjust insentavization3a and insentavization3b based on the median and numerator values
+                    if (numerator_9a > median_9a && way_to_grade9a < 10) {
+                        insentavization9a += 1;
+                    }
+                    if (numerator_9b > median_9b && way_to_grade9b < 10) {
+                        insentavization9b += 1;
+                    }
+
+                    Integer way_to_grade = way_to_grade9a + way_to_grade9b;
+                    Integer insentavization = insentavization9a + insentavization9b;
+
+                    double sub_parameter_weighted_average9a = insentavization9a * 0.5;
+                    double sub_parameter_weighted_average9b = insentavization9b * 0.5;
+
+                    double total_weighted_average = sub_parameter_weighted_average9a + sub_parameter_weighted_average9b;
+                    double sub_parameter_weighted_average = 0.00;
+
+                    double total_score = 0;
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_weighted_average);
+                    allGstaList.add(totalScore);
 
                 }
             } else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3

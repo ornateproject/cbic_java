@@ -416,7 +416,82 @@ public class CustomParameterWiseQuery {
     public String QueryFor_DisposalOfConfiscatedGoldAndNDPS_9_ParticularZoneWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String query_assessment_cus9 = "";
+        String query_assessment_cus9 = "WITH RankedData AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, \n" +
+                "           SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) AS s3col9, \n" +
+                "           SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END) AS s3col12, \n" +
+                "           SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + prev_month_new + "' THEN c.CB_QUAN ELSE 0 END) AS s3col3,\n" +
+                "           SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) AS s6col9, \n" +
+                "           SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END) AS s6col12, \n" +
+                "           SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + prev_month_new + "' THEN c.CB_QUAN ELSE 0 END) AS s6col3,\n" +
+                "           -- numerator_9a as the sum of relevant columns\n" +
+                "           (\n" +
+                "             SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) + \n" +
+                "             SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END) + \n" +
+                "             SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) + \n" +
+                "             SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END)\n" +
+                "           ) AS numerator_9a,\n" +
+                "           -- total_score calculation\n" +
+                "           COALESCE((\n" +
+                "             (SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) + \n" +
+                "              SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END) + \n" +
+                "              SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) + \n" +
+                "              SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END)) \n" +
+                "             / \n" +
+                "             (SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + prev_month_new + "' THEN c.CB_QUAN ELSE 0 END) + \n" +
+                "              SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + prev_month_new + "' THEN c.CB_QUAN ELSE 0 END))),0\n" +
+                "           ) AS total_score9a\n" +
+                "    FROM mis_gst_commcode AS cc \n" +
+                "    RIGHT JOIN mis_dol_cus_1 AS c ON cc.COMM_CODE = c.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE c.MM_YYYY IN ('" + month_date + "', '" + prev_month_new + "') \n" +
+                "      AND c.COMMODITY_CODE IN (3, 6)\n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME\n" +
+                "),\n" +
+                "OrderedData AS (\n" +
+                "    SELECT *,\n" +
+                "           ROW_NUMBER() OVER (ORDER BY numerator_9a) AS row_num,\n" +
+                "           COUNT(*) OVER() AS total_rows FROM RankedData\n" +
+                "),\n" +
+                "MedianValue AS (\n" +
+                "    SELECT AVG(numerator_9a) AS median_9a\n" +
+                "    FROM OrderedData WHERE row_num IN (FLOOR((total_rows + 1) / 2), CEIL((total_rows + 1) / 2))\n" +
+                "),\n" +
+                "CTE_Ripe_Disposal AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, SUM(14c.RIPE_DISPOSAL) AS numerator9b\n" +
+                "    FROM MIS_DOL_CUS_3 AS 14c\n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME\n" +
+                "),\n" +
+                "CTE_Ripe_Closing AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, SUM(14c.RIPE_CLOSING) AS s5col11\n" +
+                "    FROM MIS_DOL_CUS_3 AS 14c\n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE 14c.MM_YYYY = '" + prev_month_new + "'\n" +
+                "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME\n" +
+                "),\n" +
+                "CTE_Median AS (\n" +
+                "    SELECT AVG(numerator9b) AS median9b\n" +
+                "    FROM (\n" +
+                "        SELECT numerator9b, @row_num := @row_num + 1 AS row_num, @total_rows := @total_rows + 1 AS total_rows\n" +
+                "        FROM CTE_Ripe_Disposal, (SELECT @row_num := 0, @total_rows := 0) AS vars\n" +
+                "        ORDER BY numerator9b\n" +
+                "    ) AS sorted\n" +
+                "    WHERE row_num IN ((total_rows + 1) / 2, (total_rows + 2) / 2)\n" +
+                ")\n" +
+                "SELECT \n" +
+                "    r.ZONE_NAME, r.ZONE_CODE, r.COMM_NAME, r.numerator9b, m.median9b, COALESCE((r.numerator9b / c.s5col11), 0) AS total_score9b, \n" +
+                "    rd.numerator_9a, mv.median_9a, rd.total_score9a\n" +
+                "FROM CTE_Ripe_Disposal AS r\n" +
+                "LEFT JOIN CTE_Ripe_Closing AS c ON r.ZONE_NAME = c.ZONE_NAME AND r.ZONE_CODE = c.ZONE_CODE AND r.COMM_NAME = c.COMM_NAME\n" +
+                "CROSS JOIN CTE_Median AS m\n" +
+                "LEFT JOIN OrderedData AS rd ON r.ZONE_NAME = rd.ZONE_NAME AND r.ZONE_CODE = rd.ZONE_CODE AND r.COMM_NAME = rd.COMM_NAME\n" +
+                "CROSS JOIN MedianValue AS mv\n" +
+                "WHERE r.ZONE_CODE = '" + zone_code + "' \n" +
+                "ORDER BY total_score9b DESC;\n";
         return query_assessment_cus9;
     }
     //  for perticular subparameter wise ||  3 no url
