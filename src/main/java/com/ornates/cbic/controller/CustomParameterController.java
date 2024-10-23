@@ -426,10 +426,71 @@ public class CustomParameterController {
             if (type.equalsIgnoreCase("parameter")) { // adjudication all zone name 1
                 //		'" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
                 //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-                String query_assessment = new CustomParameterWiseQuery().QueryFor_DisposalOfConfiscatedGoldAndNDPS_9_ZoneWise(month_date);
-                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+                String query_assessment_cus9 = new CustomParameterWiseQuery().QueryFor_DisposalOfConfiscatedGoldAndNDPS_9_ZoneWise(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query_assessment_cus9);
 
                 while (rsGst14aa.next()) {
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+
+                    double total9a = rsGst14aa.getDouble("main_total_score");
+                    double total9b = rsGst14aa.getDouble("total_score");
+
+                    double median9a = rsGst14aa.getDouble("median_9a");
+                    double median9b = rsGst14aa.getDouble("Median");
+
+                    Double numerator_9a = rsGst14aa.getDouble("numerator_9a");
+                    Double numerator_9b = rsGst14aa.getDouble("s5col13");
+
+                    int way_to_grade9a = score.c_marks9a(total9a);
+                    int way_to_grade9b = score.c_marks9b(total9b);
+
+                    int insentavization9a = way_to_grade9a;
+                    int insentavization9b = way_to_grade9b;
+
+                    // Logic to adjust insentavization9a and insentavization9b based on the median and numerator values
+                    if (numerator_9a > median9a && way_to_grade9a < 10) {
+                        insentavization9a += 1;
+                    }
+                    if (numerator_9b > median9b && way_to_grade9b < 10) {
+                        insentavization9b += 1;
+                    }
+
+                    Integer way_to_grade = way_to_grade9a + way_to_grade9b;
+                    Integer insentavization = insentavization9a + insentavization9b;
+
+                    double sub_parameter_weighted_average9a = insentavization9a * 0.5;
+                    double sub_parameter_weighted_average9b = insentavization9b * 0.5;
+
+                    double total_score = sub_parameter_weighted_average9a + sub_parameter_weighted_average9b;
+                    double total_weighted_average = sub_parameter_weighted_average9a + sub_parameter_weighted_average9b;
+                   // Integer Zonal_rank = null;
+                    String commName = "ALL";
+                    String gst = "ALL";
+                    String absval = "null";
+                    String ra = "Disposal of confiscated Gold and NDPS";
+
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst, ra, way_to_grade, insentavization, total_weighted_average);
+                    allGstaList.add(totalScore);
+
+
+
+//					System.out.println(zoneName);
+//					System.out.println("total3a: " + total3a);
+//					System.out.println("numerator_3a : " + numerator_3a);
+//					System.out.println("median3a : " + median3a);
+//					System.out.println("way_to_grade3a: " + way_to_grade3a);
+//					System.out.println("insentavization3a : " + insentavization3a);
+//					System.out.println("sub_parameter_weighted_average3a : " + sub_parameter_weighted_average3a);
+//
+//					System.out.println("total3b: " + total3b);
+//					System.out.println("numerator_3b : " + numerator_3b);
+//					System.out.println("median3b : " + median3b);
+//					System.out.println("way_to_grade3b: " + way_to_grade3b);
+//					System.out.println("insentavization3b : " + insentavization3b);
+//					System.out.println("sub_parameter_weighted_average3b : " + sub_parameter_weighted_average3b);
+//					System.out.println("total_score : " + total_weighted_average);
+//					System.out.println("********************************************************************************************");
 
                 }
             } else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -483,10 +544,52 @@ public class CustomParameterController {
 
                 }
             } else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
-                String query_assessment = new CustomParameterWiseQuery().QueryFor_DisposalOfConfiscatedGoldAndNDPS_9_ParticularSubparameterWise(month_date,zone_code);
-                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+                String query_assessment_cus9 = new CustomParameterWiseQuery().QueryFor_DisposalOfConfiscatedGoldAndNDPS_9_ParticularSubparameterWise(month_date,zone_code);
+                rsGst14aa = GetExecutionSQL.getResult(query_assessment_cus9);
 
                 while (rsGst14aa.next()) {
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    String gst = rsGst14aa.getString("custom");
+                    String absval = rsGst14aa.getString("absolute_value");
+                    Double t_score = rsGst14aa.getDouble("total_score");
+                    Double median = rsGst14aa.getDouble("Median");
+                    Double numerator = rsGst14aa.getDouble("numerator");
+
+                    String formattedTotal = String.format("%.2f", t_score);
+                    double total_score = Double.parseDouble(formattedTotal);
+
+                    int way_to_grade;
+                    int insentavization;
+
+                    // Logic based on parameter type
+                    if ("CUS9A".equalsIgnoreCase(gst)) {
+                        way_to_grade = score.c_marks9a(total_score);
+                        insentavization = score.c_marks9a(total_score);
+
+                        if (numerator > median && way_to_grade < 10) {
+                            insentavization += 1;
+                        }
+                    } else if ("CUS9B".equalsIgnoreCase(gst)) {
+                        way_to_grade = score.c_marks9b(total_score);
+                        insentavization = score.c_marks9b(total_score);
+
+                        if (numerator > median && way_to_grade < 10) {
+                            insentavization += 1;
+                        }
+                    } else {
+                        // Default handling if parameter type is neither 9a nor 9b
+                        way_to_grade = 0;
+                        insentavization = 0;
+                    }
+
+                   // Integer Zonal_rank1 = null;
+                    String commName = "null";
+                    String ra = "Disposal of confiscated Gold and NDPS";
+
+                    Double sub_parameter_weighted_average = insentavization * 0.5;
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    allGstaList.add(totalScore);
 
                 }
             } else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
