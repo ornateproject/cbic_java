@@ -366,72 +366,100 @@ public class CustomParameterController {
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-//                    zone_code = rsGst14aa.getString("ZONE_CODE");
-//                    String commName = rsGst14aa.getString("COMM_NAME");
-//                    String zoneName = rsGst14aa.getString("ZONE_NAME");
-//
-//                    double numerator5a = rsGst14aa.getDouble("numerator5a");
-//                    double median5a = rsGst14aa.getDouble("median5a");
-//                    double toal_score5a = rsGst14aa.getDouble("total_score5a") * 100;
-//                    double toal_score5b = rsGst14aa.getDouble("total_score5b") * 100;
-//                    double toal_score5c = rsGst14aa.getDouble("total_score5c") * 100;
-//
-//                    double sub_parameter_weighted_average = 0.00;
-//                    String gst = "null";
-//                    String absval = "null";
-//                    String ra ="null";
-//                    double total_score = 0.00;
-//
-//                    int way_to_grade5a = score.c_marks5a(toal_score5a);
-//                    int way_to_grade5b = score.c_marks5b(toal_score5b);
-//                    int way_to_grade5c = score.c_marks5b(toal_score5c);
-//
-//                    int insentavization5a = way_to_grade5a;
-//                    int insentavization5b = way_to_grade5b;
-//                    int insentavization5c = way_to_grade5c;
-//
-//                    if (numerator5a > median5a && way_to_grade5a < 10) {
-//                        insentavization5a += 1;
-//                    }
-//
-//                    Integer way_to_grade = way_to_grade5a + way_to_grade5b + way_to_grade5c;
-//                    Integer insentavization = insentavization5a + insentavization5b + insentavization5c;
-//
-//                    double sub_parameter_weighted_average5a = insentavization5a * 0.3;
-//                    double sub_parameter_weighted_average5b = insentavization5b * 0.4;
-//                    double sub_parameter_weighted_average5c = insentavization5c * 0.3;
-//
-//                    double total_weighted_average = sub_parameter_weighted_average5a + sub_parameter_weighted_average5b + sub_parameter_weighted_average5c;
-//                    total_weighted_average = Double.parseDouble(String.format("%.2f", total_weighted_average));
-//
-//                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_weighted_average);
-//                    allGstaList.add(totalScore);
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    String commName = rsGst14aa.getString("COMM_NAME");
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+
+                    double numerator5a = rsGst14aa.getDouble("numerator5a");
+                    double median5a = rsGst14aa.getDouble("median5a");
+                    double toal_score5a = rsGst14aa.getDouble("total_score5a") * 100;
+                    double toal_score5b = rsGst14aa.getDouble("total_score5b") * 100;
+                    double toal_score5c = rsGst14aa.getDouble("total_score5c") * 100;
+
+                    double sub_parameter_weighted_average = 0.00;
+                    String gst = "null";
+                    String absval = "null";
+                    String ra ="null";
+                    double total_score = 0.00;
+
+                    int way_to_grade5a = score.c_marks5a(toal_score5a);
+                    int way_to_grade5b = score.c_marks5b(toal_score5b);
+                    int way_to_grade5c = score.c_marks5b(toal_score5c);
+
+                    int insentavization5a = way_to_grade5a;
+                    int insentavization5b = way_to_grade5b;
+                    int insentavization5c = way_to_grade5c;
+
+                    if (numerator5a > median5a && way_to_grade5a < 10) {
+                        insentavization5a += 1;
+                    }
+
+                    Integer way_to_grade = way_to_grade5a + way_to_grade5b + way_to_grade5c;
+                    Integer insentavization = insentavization5a + insentavization5b + insentavization5c;
+
+                    double sub_parameter_weighted_average5a = insentavization5a * 0.3;
+                    double sub_parameter_weighted_average5b = insentavization5b * 0.4;
+                    double sub_parameter_weighted_average5c = insentavization5c * 0.3;
+
+                    double total_weighted_average = sub_parameter_weighted_average5a + sub_parameter_weighted_average5b + sub_parameter_weighted_average5c;
+                    total_weighted_average = Double.parseDouble(String.format("%.2f", total_weighted_average));
+
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_weighted_average);
+                    allGstaList.add(totalScore);
                 }
             } else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
-                //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-
-                String query_assessment = "";
-
+                String query_assessment = new CustomParameterWiseQuery().QueryFor_Adjudication_5_ParticularCommissonaryInSubparameter(month_date,zone_code,come_name);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
-
 
                 while (rsGst14aa.next()) {
                     zone_code = rsGst14aa.getString("ZONE_CODE");
-                    Integer way_to_grade = 0;
-                    Integer insentavization = 0;
-                    double sub_parameter_weighted_average = 0.00;
                     String commName = rsGst14aa.getString("COMM_NAME");
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    double tScore = rsGst14aa.getDouble("score_of_subParameter") * 100;
-                    Zonal_rank = null;
+                    double numerator = rsGst14aa.getDouble("numerator");
+                    double median = rsGst14aa.getDouble("median");
+                    String absval = rsGst14aa.getString("absvl");
+                    double tScore = rsGst14aa.getDouble("total_score") * 100;
                     String gst = rsGst14aa.getString("gst");
-                    String absval = rsGst14aa.getString("absolute_value");
-                    String ra =rsGst14aa.getString("ra");
 
+                    Integer way_to_grade = 0;
+                    Integer insentavization = 0;
+                    double insentive = 0.00;
+                    double sub_parameter_weighted_average = 0.00;
+
+//                    if(zone_code != null){
+//
+//                    }
+
+                    if ("GST5A".equalsIgnoreCase(gst)) {
+                        way_to_grade = score.c_marks5a(tScore);
+                        insentavization = score.c_marks5a(tScore);
+
+                        if (numerator > median && way_to_grade < 10) {
+                           double i = insentavization += 1;
+                            insentive = i * 0.3;
+                        }
+                    } else if ("GST5B".equalsIgnoreCase(gst)) {
+                        way_to_grade = score.c_marks5b(tScore);
+                        insentavization = way_to_grade;
+                        insentive = insentavization * 0.4;
+                    } else if ("GST5C".equalsIgnoreCase(gst)) {
+                        way_to_grade = score.c_marks5c(tScore);
+                        insentavization = way_to_grade;
+                        insentive = insentavization * 0.3;
+                    } else {
+                        // Default handling if parameter type is neither 5a nor 5b
+                        way_to_grade = 0;
+                        insentavization = 0;
+                    }
+
+                    double total_sub_parameter_weighted_average = insentive;
+
+                    Zonal_rank = null;
+                    String ra ="Adjudication";
 
                     String formattedTotal = String.format("%.2f", tScore);
                     double total_score = Double.parseDouble(formattedTotal);
-                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_sub_parameter_weighted_average);
                     allGstaList.add(totalScore);
                 }
             }

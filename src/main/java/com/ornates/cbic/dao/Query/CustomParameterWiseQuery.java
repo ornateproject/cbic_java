@@ -450,7 +450,63 @@ public class CustomParameterWiseQuery {
     public String QueryFor_Adjudication_5_ParticularCommissonaryInSubparameter(String month_date, String zone_code,String come_name){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String query_assessment_cus5 = "";
+        String query_assessment_cus5 = "WITH cte AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, \n" +
+                "           (c.COMM_DISPOSAL_NO + c.JC_DISPOSAL_NO + c.AC_DISPOSAL_NO) AS col5a,\n" +
+                "           (c_prev.COMM_CLOSING_NO + c_prev.JC_CLOSING_NO + c_prev.AC_CLOSING_NO) AS col3a\n" +
+                "    FROM Mis_DGI_CUS_1A AS c\n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON c.COMM_CODE = cc.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    LEFT JOIN Mis_DGI_CUS_1A AS c_prev ON c_prev.COMM_CODE = cc.COMM_CODE AND c_prev.MM_YYYY = '" + prev_month_new + "'  \n" +
+                "    WHERE c.MM_YYYY = '" + month_date + "'\n" +
+                "),\n" +
+                "median_cte AS (\n" +
+                "    SELECT AVG(col5a) AS median\n" +
+                "    FROM (\n" +
+                "        SELECT col5a, ROW_NUMBER() OVER (ORDER BY col5a) AS rn, COUNT(*) OVER () AS cnt\n" +
+                "        FROM cte\n" +
+                "    ) AS temp\n" +
+                "    WHERE rn IN (FLOOR((cnt + 1) / 2), CEIL((cnt + 1) / 2))\n" +
+                ")\n" +
+                "SELECT cte.ZONE_NAME, cte.ZONE_CODE, cte.COMM_NAME, \n" +
+                "       cte.col5a AS numerator, \n" +
+                "       median_cte.median, \n" +
+                "       CONCAT(cte.col5a, '/', cte.col3a) AS absvl, \n" +
+                "       COALESCE(cte.col5a / cte.col3a, 0) AS total_score, \n" +
+                "       \"GST5A\" AS gst\n" +
+                "FROM cte\n" +
+                "CROSS JOIN median_cte\n" +
+                "WHERE cte.ZONE_CODE = '" + zone_code + "'  AND cte.COMM_NAME = '" + come_name + "'\n" +
+                "\n" +
+                "UNION ALL\n" +
+                "\n" +
+                "SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, \n" +
+                "       0 AS numerator, \n" +
+                "       0 AS median, \n" +
+                "       CONCAT((14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT), '/', \n" +
+                "              (14c.AC_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.COMM_CLOSING_NO)) AS absvl, \n" +
+                "       COALESCE(((14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT) / \n" +
+                "                 (14c.AC_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.COMM_CLOSING_NO)), 0) AS total_score, \n" +
+                "       \"GST5B\" AS gst\n" +
+                "FROM mis_dgi_cus_1A AS 14c  \n" +
+                "RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE\n" +
+                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
+                "  AND cc.ZONE_CODE = '" + zone_code + "'  AND cc.COMM_NAME = '" + come_name + "'\n" +
+                "\n" +
+                "UNION ALL\n" +
+                "\n" +
+                "SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, \n" +
+                "       0 AS numerator, \n" +
+                "       0 AS median, \n" +
+                "       CONCAT(((14c.CLOSING_NO) - (14c.YEAR_1)), '/', (14c.CLOSING_NO)) AS absval, \n" +
+                "       COALESCE((((14c.CLOSING_NO) - (14c.YEAR_1)) / (14c.CLOSING_NO)), 0) AS total_score, \n" +
+                "       \"GST5C\" AS gst\n" +
+                "FROM mis_gst_commcode AS cc \n" +
+                "RIGHT JOIN mis_dgi_cus_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
+                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
+                "  AND cc.ZONE_CODE = '" + zone_code + "'  AND cc.COMM_NAME = '" + come_name + "';\n";
         return query_assessment_cus5;
     }
 
