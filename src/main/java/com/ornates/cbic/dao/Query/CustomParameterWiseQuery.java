@@ -268,7 +268,89 @@ public class CustomParameterWiseQuery {
     public String QueryFor_Adjudication_5_ParticularZoneWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String query_assessment_cus5 = "";
+        String query_assessment_cus5 = "WITH cte_5a AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, \n" +
+                "           COALESCE((c.COMM_DISPOSAL_NO + c.JC_DISPOSAL_NO + c.AC_DISPOSAL_NO), 0) AS col5a, \n" +
+                "           COALESCE((c_prev.COMM_CLOSING_NO + c_prev.JC_CLOSING_NO + c_prev.AC_CLOSING_NO), 0) AS col3a\n" +
+                "    FROM Mis_DGI_CUS_1A AS c\n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON c.COMM_CODE = cc.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    LEFT JOIN Mis_DGI_CUS_1A AS c_prev ON c_prev.COMM_CODE = cc.COMM_CODE AND c_prev.MM_YYYY = '" + prev_month_new + "'  \n" +
+                "    WHERE c.MM_YYYY ='" + month_date + "'\n" +
+                "),\n" +
+                "median_cte AS (\n" +
+                "    SELECT AVG(col5a) AS median5a\n" +
+                "    FROM (\n" +
+                "        SELECT col5a, ROW_NUMBER() OVER (ORDER BY col5a) AS rn, COUNT(*) OVER () AS cnt\n" +
+                "        FROM cte_5a\n" +
+                "    ) AS temp\n" +
+                "    WHERE rn IN (FLOOR((cnt + 1) / 2), CEIL((cnt + 1) / 2))\n" +
+                "),\n" +
+                "cte_5b AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+                "           COALESCE(((c.COMM_MORE_YEAR_AMT + c.JC_MORE_YEAR_AMT + c.AC_MORE_YEAR_AMT) / \n" +
+                "           (c.AC_CLOSING_NO + c.JC_CLOSING_NO + c.COMM_CLOSING_NO)), 0) AS total_score5b\n" +
+                "    FROM mis_dgi_cus_1A AS c\n" +
+                "    RIGHT JOIN mis_gst_commcode AS cc ON c.COMM_CODE = cc.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE c.MM_YYYY = '" + month_date + "'\n" +
+                "),\n" +
+                "cte_5c AS (\n" +
+                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME,\n" +
+                "           COALESCE((((c.CLOSING_NO) - (c.YEAR_1)) / (c.CLOSING_NO)), 0) AS total_score5c\n" +
+                "    FROM mis_gst_commcode AS cc \n" +
+                "    RIGHT JOIN mis_dgi_cus_2 AS c ON cc.COMM_CODE = c.COMM_CODE \n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "    WHERE c.MM_YYYY = '" + month_date + "'\n" +
+                ")\n" +
+                "SELECT \n" +
+                "    COALESCE(cte_5a.ZONE_NAME, cte_5b.ZONE_NAME, cte_5c.ZONE_NAME) AS ZONE_NAME,\n" +
+                "    COALESCE(cte_5a.ZONE_CODE, cte_5b.ZONE_CODE, cte_5c.ZONE_CODE) AS ZONE_CODE,\n" +
+                "    COALESCE(cte_5a.COMM_NAME, cte_5b.COMM_NAME, cte_5c.COMM_NAME) AS COMM_NAME,\n" +
+                "    COALESCE(cte_5a.col5a, 0) AS numerator5a,\n" +
+                "    COALESCE(median_cte.median5a, 0) AS median5a,\n" +
+                "    COALESCE(cte_5a.col5a / NULLIF(cte_5a.col3a, 0), 0) AS total_score5a,\n" +
+                "    COALESCE(cte_5b.total_score5b, 0) AS total_score5b,\n" +
+                "    COALESCE(cte_5c.total_score5c, 0) AS total_score5c\n" +
+                "FROM cte_5a\n" +
+                "LEFT JOIN cte_5b ON cte_5a.COMM_NAME = cte_5b.COMM_NAME\n" +
+                "LEFT JOIN cte_5c ON cte_5a.COMM_NAME = cte_5c.COMM_NAME\n" +
+                "LEFT JOIN median_cte ON 1 = 1\n" +
+                "WHERE COALESCE(cte_5a.ZONE_CODE, cte_5b.ZONE_CODE, cte_5c.ZONE_CODE) = '" + zone_code + "'\n" +
+                "\n" +
+                "UNION\n" +
+                "\n" +
+                "SELECT \n" +
+                "    COALESCE(cte_5b.ZONE_NAME, cte_5a.ZONE_NAME, cte_5c.ZONE_NAME) AS ZONE_NAME,\n" +
+                "    COALESCE(cte_5b.ZONE_CODE, cte_5a.ZONE_CODE, cte_5c.ZONE_CODE) AS ZONE_CODE,\n" +
+                "    COALESCE(cte_5b.COMM_NAME, cte_5a.COMM_NAME, cte_5c.COMM_NAME) AS COMM_NAME,\n" +
+                "    COALESCE(cte_5a.col5a, 0) AS numerator5a,\n" +
+                "    COALESCE(median_cte.median5a, 0) AS median5a,\n" +
+                "    COALESCE(cte_5a.col5a / NULLIF(cte_5a.col3a, 0), 0) AS total_score5a,\n" +
+                "    COALESCE(cte_5b.total_score5b, 0) AS total_score5b,\n" +
+                "    COALESCE(cte_5c.total_score5c, 0) AS total_score5c\n" +
+                "FROM cte_5b\n" +
+                "LEFT JOIN cte_5a ON cte_5b.COMM_NAME = cte_5a.COMM_NAME\n" +
+                "LEFT JOIN cte_5c ON cte_5b.COMM_NAME = cte_5c.COMM_NAME\n" +
+                "LEFT JOIN median_cte ON 1 = 1\n" +
+                "WHERE COALESCE(cte_5b.ZONE_CODE, cte_5a.ZONE_CODE, cte_5c.ZONE_CODE) = '" + zone_code + "'\n" +
+                "\n" +
+                "UNION\n" +
+                "\n" +
+                "SELECT \n" +
+                "    COALESCE(cte_5c.ZONE_NAME, cte_5a.ZONE_NAME, cte_5b.ZONE_NAME) AS ZONE_NAME,\n" +
+                "    COALESCE(cte_5c.ZONE_CODE, cte_5a.ZONE_CODE, cte_5b.ZONE_CODE) AS ZONE_CODE,\n" +
+                "    COALESCE(cte_5c.COMM_NAME, cte_5a.COMM_NAME, cte_5b.COMM_NAME) AS COMM_NAME,\n" +
+                "    COALESCE(cte_5a.col5a, 0) AS numerator5a,\n" +
+                "    COALESCE(median_cte.median5a, 0) AS median5a,\n" +
+                "    COALESCE(cte_5a.col5a / NULLIF(cte_5a.col3a, 0), 0) AS total_score5a,\n" +
+                "    COALESCE(cte_5b.total_score5b, 0) AS total_score5b,\n" +
+                "    COALESCE(cte_5c.total_score5c, 0) AS total_score5c\n" +
+                "FROM cte_5c\n" +
+                "LEFT JOIN cte_5a ON cte_5c.COMM_NAME = cte_5a.COMM_NAME\n" +
+                "LEFT JOIN cte_5b ON cte_5c.COMM_NAME = cte_5b.COMM_NAME\n" +
+                "LEFT JOIN median_cte ON 1 = 1\n" +
+                "WHERE COALESCE(cte_5c.ZONE_CODE, cte_5a.ZONE_CODE, cte_5b.ZONE_CODE) = '" + zone_code + "';\n";
         return query_assessment_cus5;
     }
     //  for perticular subparameter wise ||  3 no url
