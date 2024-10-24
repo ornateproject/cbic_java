@@ -799,6 +799,7 @@ public class CustomSubParameterController {
         GST4A gsta = null;
         int rank = 0;
         double total = 0.00;
+        double median = 0.00;
         try {
             if (type.equalsIgnoreCase("zone")) {
                 // Query string
@@ -813,7 +814,7 @@ public class CustomSubParameterController {
                     int col9_3b = rsGst14aa.getInt("col9_3b");
                     int col3_3a = rsGst14aa.getInt("col3_3a");
                     int col3_3b = rsGst14aa.getInt("col3_3b");
-                    double median = rsGst14aa.getDouble("median_6a");
+                     median = rsGst14aa.getDouble("median_6a");
                     Double numerator_6c = rsGst14aa.getDouble("numerator_9");
                     int Zonal_rank = 0;
                     String gst = "no";
@@ -838,7 +839,7 @@ public class CustomSubParameterController {
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                     allGstaList.sort((a, b) -> Double.compare(b.getTotal_score(), a.getTotal_score()));
-                }
+                }System.out.println("median 6a zone wise :-" + median);
             }else if (type.equalsIgnoreCase("commissary")) { // cus 1
 
                 String queryCustom5b = new CustomSubParameterWiseQuery().QueryFor_cus6a_CommissonaryWise(month_date,zone_code);
@@ -853,7 +854,7 @@ public class CustomSubParameterController {
                     int col9_3b = rsGst14aa.getInt("col9_3b");
                     int col3_3a = rsGst14aa.getInt("col3_3a");
                     int col3_3b = rsGst14aa.getInt("col3_3b");
-                    double median = rsGst14aa.getDouble("median_total_9");
+                     median = rsGst14aa.getDouble("median_total_9");
                     Double numerator_6c = rsGst14aa.getDouble("total_9");
                     //col3a is giving null for any date column, that reason total_score is o
                     int Zonal_rank = 0;
@@ -881,7 +882,7 @@ public class CustomSubParameterController {
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                     allGstaList.sort((a, b) -> Double.compare(b.getTotal_score(), a.getTotal_score()));
-                }
+                }System.out.println("median 6a commi wise :-" + median);
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 String queryCustom5b = new CustomSubParameterWiseQuery().QueryFor_cus6a_AllCommissonaryWise(month_date);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryCustom5b);
@@ -896,7 +897,7 @@ public class CustomSubParameterController {
                     int col9_3b = rsGst14aa.getInt("col9_3b");
                     int col3_3a = rsGst14aa.getInt("col3_3a");
                     int col3_3b = rsGst14aa.getInt("col3_3b");
-                    double median = rsGst14aa.getDouble("median_total_9");
+                     median = rsGst14aa.getDouble("median_total_9");
                     Double numerator_6c = rsGst14aa.getDouble("total_9");
                     //col3a is giving null for any date column, that reason total_score is o
                     int Zonal_rank = 0;
@@ -924,7 +925,10 @@ public class CustomSubParameterController {
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                     allGstaList.sort((a, b) -> Double.compare(b.getTotal_score(), a.getTotal_score()));
-                }
+
+
+                }System.out.println("median 6a commi wise :-" + median);
+
 
             }
 
