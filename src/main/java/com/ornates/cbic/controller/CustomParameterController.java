@@ -218,75 +218,80 @@ public class CustomParameterController {
                 //		'" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
                 //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-                String query_assessment = "WITH CTE_5a AS (\n" +
-                        "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
-                        "           (SUM(14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO) * 100) / \n" +
-                        "           SUM(14c.COMM_OPENING_NO + 14c.JC_OPENING_NO + 14c.AC_OPENING_NO) AS total_score5a\n" +
-                        "    FROM Mis_DGI_CUS_1A AS 14c \n" +
-                        "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
-                        "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
-                        "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
-                        "),\n" +
-                        "CTE_5b AS (\n" +
-                        "    SELECT zc.ZONE_NAME, cc.ZONE_CODE,\n" +
-                        "           (SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT) * 100) / \n" +
-                        "           SUM(14c.AC_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.COMM_CLOSING_NO) AS total_score5b\n" +
-                        "    FROM mis_dgi_cus_1A AS 14c  \n" +
-                        "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
-                        "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "    WHERE 14c.MM_YYYY = '" + month_date + "' \n" +
-                        "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
-                        "),\n" +
-                        "CTE_5c AS (\n" +
-                        "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
-                        "           (((SUM(14c.CLOSING_NO) - SUM(14c.YEAR_1)) * 100) / SUM(14c.CLOSING_NO)) AS total_score5c\n" +
-                        "    FROM mis_gst_commcode AS cc \n" +
-                        "    RIGHT JOIN mis_dgi_cus_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                        "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                        "    WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
-                        "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
-                        "),\n" +
-                        "ALL_ZONES AS (\n" +
-                        "    SELECT ZONE_NAME, ZONE_CODE FROM CTE_5a\n" +
-                        "    UNION\n" +
-                        "    SELECT ZONE_NAME, ZONE_CODE FROM CTE_5b\n" +
-                        "    UNION\n" +
-                        "    SELECT ZONE_NAME, ZONE_CODE FROM CTE_5c\n" +
-                        ")\n" +
-                        "SELECT \n" +
-                        "    az.ZONE_NAME, az.ZONE_CODE,\n" +
-                        "    COALESCE(a.total_score5a, 0) AS total_score5a,\n" +
-                        "    COALESCE(b.total_score5b, 0) AS total_score5b,\n" +
-                        "    COALESCE(c.total_score5c, 0) AS total_score5c,\n" +
-                        "    ((COALESCE(a.total_score5a, 0) + COALESCE(b.total_score5b, 0) + COALESCE(c.total_score5c, 0)) * 0.3333) as parameter,\n" +
-                        "    ROW_NUMBER() OVER (ORDER BY ((COALESCE(a.total_score5a, 0) + COALESCE(b.total_score5b, 0) + COALESCE(c.total_score5c, 0)) * 0.3333) ) AS z_rank\n" +
-                        "FROM ALL_ZONES az\n" +
-                        "LEFT JOIN CTE_5a a ON az.ZONE_CODE = a.ZONE_CODE\n" +
-                        "LEFT JOIN CTE_5b b ON az.ZONE_CODE = b.ZONE_CODE\n" +
-                        "LEFT JOIN CTE_5c c ON az.ZONE_CODE = c.ZONE_CODE\n" +
-                        "ORDER BY parameter ;\n";
-
-                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
+                String query_assessment_cus5 = new CustomParameterWiseQuery().QueryFor_Adjudication_5_ZoneWise(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query_assessment_cus5);
+                // rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-                    zone_code = rsGst14aa.getString("ZONE_CODE");
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    Integer way_to_grade = 0;
-                    Integer insentavization = 0;
-                    double sub_parameter_weighted_average = 0.00;
-                    Zonal_rank = rsGst14aa.getInt("z_rank");
-                    double  total = rsGst14aa.getDouble("parameter");
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+
+                    double total5a = rsGst14aa.getDouble("total_score5a");
+                    double total5b = rsGst14aa.getDouble("total_score5b");
+                    double total5c = rsGst14aa.getDouble("total_score5c");
+
+                    double median5a = rsGst14aa.getDouble("cus5a_median");
+                    //double median5b = rsGst14aa.getDouble("median_numerator_3b");
+
+                    Double numerator_5a = rsGst14aa.getDouble("col5a");
+                    //Double numerator_5b = rsGst14aa.getDouble("numerator_3b");
+
+                    int way_to_grade5a = score.c_marks5a(total5a);
+                    int way_to_grade5b = score.c_marks5b(total5b);
+                    int way_to_grade5c = score.c_marks5c(total5c);
+
+                    int insentavization5a = way_to_grade5a;
+                    int insentavization5b = way_to_grade5b;
+                    int insentavization5c = way_to_grade5c;
+
+                    if (numerator_5a > median5a && way_to_grade5a < 10) {
+                        insentavization5a += 1;
+                    }
+                    Integer way_to_grade = way_to_grade5a + way_to_grade5b+way_to_grade5c;
+                    Integer insentavization = insentavization5a + insentavization5b +insentavization5c;
+
+                    double sub_parameter_weighted_average5a = insentavization5a * 0.3;
+                    double sub_parameter_weighted_average5b = insentavization5b * 0.4;
+                    double sub_parameter_weighted_average5c = insentavization5c * 0.3;
+
+                    // Calculate sub_parameter_weighted_average
+                    double sub_parameter_weighted_average = sub_parameter_weighted_average5a + sub_parameter_weighted_average5b + sub_parameter_weighted_average5c;
+
+                    // Round to two decimal places
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
+
+                    double total_weighted_average = sub_parameter_weighted_average;
+
+                    String formattedSubParameterWeightedAverage = String.format("%.2f", sub_parameter_weighted_average);
+
+
+
                     String commName = "ALL";
                     String gst = "ALL";
-                    String absval = null;
-                    String ra ="null";
+                    String absval = "null";
+                    String ra ="Adjudication";
 
-                    // Object total = ((double) col21*100 / col3);
-                    String formattedTotal = String.format("%.2f", total);
-                    double total_score = Double.parseDouble(formattedTotal);
-                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+//
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_weighted_average, absval, Zonal_rank, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
                     allGstaList.add(totalScore);
+
+
+//					System.out.println(zoneName);
+//					System.out.println("total5a: " + total5a);
+//					System.out.println("numerator_5a : " + numerator_5a);
+//					System.out.println("median5a : " + median5a);
+//					System.out.println("way_to_grade5a: " + way_to_grade5a);
+//					System.out.println("insentavization5a : " + insentavization5a);
+//					System.out.println("sub_parameter_weighted_average5a : " + sub_parameter_weighted_average5a);
+//
+//					System.out.println("total5b: " + total5b);
+//					//System.out.println("numerator_5b : " + numerator_5b);
+//					//System.out.println("median5b : " + median5b);
+//					System.out.println("way_to_grade5b: " + way_to_grade5b);
+//					System.out.println("insentavization5b : " + insentavization5b);
+//					System.out.println("sub_parameter_weighted_average5b : " + sub_parameter_weighted_average5b);
+//					System.out.println("total_score : " + total_weighted_average);
+//					System.out.println("********************************************************************************************");
                 }
             } else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
                 String query_assessment = new CustomParameterWiseQuery().QueryFor_Adjudication_5_ParticularZoneWise(month_date,zone_code);
@@ -337,27 +342,71 @@ public class CustomParameterController {
                 }
             } else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
                 String prev_month_new = DateCalculate.getPreviousMonth(month_date);
+                String query_assessment_cus5 = new CustomParameterWiseQuery().QueryFor_Adjudication_5_ParticularSubparameterWise(month_date,zone_code);
+                rsGst14aa = GetExecutionSQL.getResult(query_assessment_cus5);
 
-                String query_assessment = "";
-
-                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
-                    zone_code = rsGst14aa.getString("ZONE_CODE");
-                    Integer way_to_grade = 0;
-                    Integer insentavization = 0;
-                    double sub_parameter_weighted_average = 0.00;
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    String gst = rsGst14aa.getString("gst");
-                    String absval = rsGst14aa.getString("absolute_value");
-                    double tScore = rsGst14aa.getDouble("score_of_subParameter") * 100;
-                    String ra =rsGst14aa.getString("ra");
-                    Zonal_rank = null;
-                    String commName = "null";
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    String gst = rsGst14aa.getString("custom");
+                    String absval = rsGst14aa.getString("absolutevalue");
+                    Double t_score = rsGst14aa.getDouble("total_score");
+                    Double median = rsGst14aa.getDouble("cus5a_median");
+                    Double numerator = rsGst14aa.getDouble("col5a");
 
-                    String formattedTotal = String.format("%.2f", tScore);
+                    String formattedTotal = String.format("%.2f", t_score);
                     double total_score = Double.parseDouble(formattedTotal);
-                    totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,sub_parameter_weighted_average);
+
+                    int way_to_grade5a = 0;
+                    int way_to_grade5b = 0;
+                    int way_to_grade5c = 0;
+                    int way_to_grade=way_to_grade5a+way_to_grade5b+way_to_grade5c;
+                    int insentavization_5a = 0;
+                    int insentavization_5b=0;
+                    int insentavization_5c=0;
+                    int insentavization=insentavization_5a+insentavization_5b+insentavization_5c;
+
+                    // Logic based on parameter type
+                    if ("CUS5A".equalsIgnoreCase(gst)) {
+                        way_to_grade5a = score.c_marks5a(total_score);
+                        insentavization_5a = score.c_marks5a(total_score);
+
+                        if (numerator > median && way_to_grade5a < 10) {
+                            insentavization_5a += 1;
+                        }
+                    } else if ("CUS5B".equalsIgnoreCase(gst)) {
+                        way_to_grade5b = score.c_marks5b(total_score);
+                        insentavization_5b = way_to_grade5b;
+
+                    }  else if ("CUS5C".equalsIgnoreCase(gst)) {
+                        way_to_grade5c = score.c_marks5c(total_score);
+                        insentavization_5c = way_to_grade5c;
+                    }
+                    else {
+                        // Default handling if parameter type is neither 5a nor 5b
+                        way_to_grade5a = 0;
+                        way_to_grade5b = 0;
+                        way_to_grade5c = 0;
+                        insentavization_5a = 0;
+                        insentavization_5b = 0;
+                        insentavization_5c = 0;
+                    }
+
+
+                    String commName = "null";
+                    String ra = "Adjudication";
+
+                    Double sub_parameter_weighted_average = insentavization_5a * 0.3+insentavization_5b*0.4+insentavization_5c*0.3;
+                    // Round to two decimal places
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
+
+                    double total_weighted_average = sub_parameter_weighted_average;
+
+                    String formattedSubParameterWeightedAverage = String.format("%.2f", sub_parameter_weighted_average);
+
+
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, Zonal_rank, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
                     allGstaList.add(totalScore);
                 }
             } else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
