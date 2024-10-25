@@ -706,6 +706,9 @@ public class CustomSubParameterController {
                 while(rsGst14aa.next()) {
                     String zonename = rsGst14aa.getString("ZONE_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    if (zoneCode == null) {
+                        continue;
+                    }
                     String ra= CustomRelaventAspect.cus5c_RA;
                     String commname= "ALL";
                     String absval= rsGst14aa.getString("absval");
@@ -733,6 +736,9 @@ public class CustomSubParameterController {
                 while(rsGst14aa.next()) {
                     String zonename = rsGst14aa.getString("ZONE_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    if (zoneCode == null) {
+                        continue;
+                    }
                     String ra= CustomRelaventAspect.cus5c_RA;
                     String commname= rsGst14aa.getString("COMM_NAME");
                     String absval= rsGst14aa.getString("absval");
@@ -759,6 +765,9 @@ public class CustomSubParameterController {
                 while(rsGst14aa.next()) {
                     String zonename = rsGst14aa.getString("ZONE_NAME");
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    if (zoneCode == null) {
+                        continue;
+                    }
                     String ra= CustomRelaventAspect.cus5c_RA;
                     String commname= rsGst14aa.getString("COMM_NAME");
                     String absval= rsGst14aa.getString("absval");
