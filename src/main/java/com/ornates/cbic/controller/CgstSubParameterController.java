@@ -3215,12 +3215,7 @@ public class CgstSubParameterController {
         }
         return allGstaList;
     }
-    /*
-     * Date: May 04, 2024
-     * created:
-     * updated: Nishant, may 23, 2024
-     * Purpose: This methods have core function in Return Filing .
-     */
+
     /*
      * Date: May 04, 2024
      * created:
