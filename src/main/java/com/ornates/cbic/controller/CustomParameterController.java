@@ -48,7 +48,7 @@ public class CustomParameterController {
     }
 
 
-    // ***********************************CUS 5 parameter wise(Adjudication) *****************************************************************
+    // ***********************************CUS 1 parameter wise(Timely Payment Of Refunds) *****************************************************************
     @ResponseBody
     @RequestMapping(value = "/timelypaymentofrefunds") // custom 1a
     //  http://localhost:8080/cbicApi/cbic/custom/parameter/timelypaymentofrefunds?month_date=2024-04-01&type=parameter                   // for return filing button
