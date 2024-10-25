@@ -953,7 +953,7 @@ public class CustomSubParameterController {
     @RequestMapping(value = "/cus6b")
     //  http://localhost:8080/cbicApi/cbic/custom/cus6b?month_date=2015-03-01&type=zone
     //  http://localhost:8080/cbicApi/cbic/custom/cus6b?month_date=2015-03-01&zone_code=69&type=commissary
-//	http://localhost:8080/cbicApi/cbic/custom/cus6b?month_date=2024-04-01&type=all_commissary
+    //	http://localhost:8080/cbicApi/cbic/custom/cus6b?month_date=2024-04-01&type=all_commissary
     public Object getCus6b(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code) {
 
         List<GST4A> allGstaList = new ArrayList<>();
@@ -967,35 +967,35 @@ public class CustomSubParameterController {
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryCustom6b);
                 while (rsGst14aa.next()) {
-//                    String ra = CustomRelaventAspect.cus6b_RA;
-//                    String commname = "ALL";
-//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
-//                    int col18_3a = rsGst14aa.getInt("col18_3a");
-//                    int col18_3b = rsGst14aa.getInt("col18_3b");
-//                    int col12_3a = rsGst14aa.getInt("col12_3a");
-//                    int col12_3b = rsGst14aa.getInt("col12_3b");
-//
-//                    int Zonal_rank = 0;
-//                    String gst = "no";
-//                    int insentavization = 0;
-//                    String absval=String.valueOf(col18_3a+col18_3b)+"/"+String.valueOf(col12_3a+col12_3b);
-//                    if((col12_3a+col12_3b) != 0) {
-//                        total = ((double) (col18_3a+col18_3b) * 100 / (col12_3a+col12_3b));
-//                    }else {
-//                        total = 0.00;
-//                    }
-//                    String formattedTotal = String.format("%.2f", total);
-//                    double totalScore = Double.parseDouble(formattedTotal);
-//                    int way_to_grade = score.c_marks6b(totalScore);
-//                    rank=score.c_marks6b(total);
-//
-//                    // 2 floating point
-//                    double sub_parameter_weighted_average = way_to_grade * 0.2;
-//                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-//                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
-//                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-//                    allGstaList.add(gsta);
-//                    allGstaList.sort((a, b) -> Double.compare(a.getTotal_score(), b.getTotal_score()));
+                    String ra = CustomRelaventAspect.cus6b_RA;
+                    String commname = "ALL";
+                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    int col18_3a = rsGst14aa.getInt("col18_3a");
+                    int col18_3b = rsGst14aa.getInt("col18_3b");
+                    int col12_3a = rsGst14aa.getInt("col12_3a");
+                    int col12_3b = rsGst14aa.getInt("col12_3b");
+
+                    int Zonal_rank = 0;
+                    String gst = "no";
+                    int insentavization = 0;
+                    String absval=String.valueOf(col18_3a+col18_3b)+"/"+String.valueOf(col12_3a+col12_3b);
+                    if((col12_3a+col12_3b) != 0) {
+                        total = ((double) (col18_3a+col18_3b) * 100 / (col12_3a+col12_3b));
+                    }else {
+                        total = 0.00;
+                    }
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.c_marks6b(totalScore);
+                    rank=score.c_marks6b(total);
+
+                    // 2 floating point
+                    double sub_parameter_weighted_average = way_to_grade * 0.2;
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
+                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(gsta);
+                    allGstaList.sort((a, b) -> Double.compare(a.getTotal_score(), b.getTotal_score()));
 
 
                 }
@@ -1005,81 +1005,78 @@ public class CustomSubParameterController {
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryCustom5b);
 
                 while (rsGst14aa.next()) {
-//                    String ra = CustomRelaventAspect.cus6b_RA;
-//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
-//                    String commname = rsGst14aa.getString("COMM_NAME");
-//                    //String zoneName = rsGst14aa.getString("ZONE_NAME");
-//                    int col9_3a = rsGst14aa.getInt("col18_3a");
-//                    int col9_3b = rsGst14aa.getInt("col18_3b");
-//                    int col3_3a = rsGst14aa.getInt("col12_3a");
-//                    int col3_3b = rsGst14aa.getInt("col12_3b");
-////                    double median = rsGst14aa.getDouble("median_total_9");
-////                    Double numerator_6c = rsGst14aa.getDouble("total_9");
-//                    //col3a is giving null for any date column, that reason total_score is o
-//                    int Zonal_rank = 0;
-//                    String gst = "no";
-//
-//                    int insentavization = 0;
-//                    String absval=String.valueOf(col9_3a+col9_3b)+"/"+String.valueOf(col3_3a+col3_3b);
-//                    if((col3_3a+col3_3b) != 0) {
-//                        total = ((double) (col9_3a+col9_3b) * 100 / (col3_3a+col3_3b));
-//                    }else {
-//                        total = 0.00;
-//                    }
-//
-//                    String formattedTotal = String.format("%.2f", total);
-//                    double totalScore = Double.parseDouble(formattedTotal);
-//
-//                    int way_to_grade = score.c_marks6b(totalScore);
-//
-////
-//                    // 2 floating point
-//                    double sub_parameter_weighted_average = way_to_grade * 0.2;
-//                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-//                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
-//                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-//                    allGstaList.add(gsta);
-//                    allGstaList.sort((a, b) -> Double.compare(a.getTotal_score(), b.getTotal_score()));
+                    String ra = CustomRelaventAspect.cus6b_RA;
+                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    String commname = rsGst14aa.getString("COMM_NAME");
+                    //String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    int col9_3a = rsGst14aa.getInt("col18_3a");
+                    int col9_3b = rsGst14aa.getInt("col18_3b");
+                    int col3_3a = rsGst14aa.getInt("col12_3a");
+                    int col3_3b = rsGst14aa.getInt("col12_3b");
+//                    double median = rsGst14aa.getDouble("median_total_9");
+//                    Double numerator_6c = rsGst14aa.getDouble("total_9");
+                    //col3a is giving null for any date column, that reason total_score is o
+                    int Zonal_rank = 0;
+                    String gst = "no";
+
+                    int insentavization = 0;
+                    String absval=String.valueOf(col9_3a+col9_3b)+"/"+String.valueOf(col3_3a+col3_3b);
+                    if((col3_3a+col3_3b) != 0) {
+                        total = ((double) (col9_3a+col9_3b) * 100 / (col3_3a+col3_3b));
+                    }else {
+                        total = 0.00;
+                    }
+
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+
+                    int way_to_grade = score.c_marks6b(totalScore);
+
+                    // 2 floating point
+                    double sub_parameter_weighted_average = way_to_grade * 0.2;
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
+                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
+                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(gsta);
+                    allGstaList.sort((a, b) -> Double.compare(a.getTotal_score(), b.getTotal_score()));
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 String queryCustom5b = new CustomSubParameterWiseQuery().QueryFor_cus6b_AllCommissonaryWise(month_date);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryCustom5b);
 
                 while (rsGst14aa.next()) {
-//                    String ra = CustomRelaventAspect.cus6b_RA;
-//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
-//                    String commname = rsGst14aa.getString("COMM_NAME");
-//                    // String zoneName = rsGst14aa.getString("ZONE_NAME");
-//                    //String zoneName = rsGst14aa.getString("ZONE_NAME");
-//                    int col9_3a = rsGst14aa.getInt("col18_3a");
-//                    int col9_3b = rsGst14aa.getInt("col18_3b");
-//                    int col3_3a = rsGst14aa.getInt("col12_3a");
-//                    int col3_3b = rsGst14aa.getInt("col12_3b");
-////                        double median = rsGst14aa.getDouble("median_total_9");
-////                        Double numerator_6c = rsGst14aa.getDouble("total_9");
-//                    //col3a is giving null for any date column, that reason total_score is o
-//                    int Zonal_rank = 0;
-//                    String gst = "no";
-//
-//                    int insentavization = 0;
-//                    String absval=String.valueOf(col9_3a+col9_3b)+"/"+String.valueOf(col3_3a+col3_3b);
-//                    if((col3_3a+col3_3b) != 0) {
-//                        total = ((double) (col9_3a+col9_3b) * 100 / (col3_3a+col3_3b));
-//                    }else {
-//                        total = 0.00;
-//                    }
-//
-//                    String formattedTotal = String.format("%.2f", total);
-//                    double totalScore = Double.parseDouble(formattedTotal);
-//                    int way_to_grade = score.c_marks6b(totalScore);
-//
-//                    // 2 floating point
-//                    double sub_parameter_weighted_average = way_to_grade * 0.2;
-//                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-//                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
-//                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-//                    allGstaList.add(gsta);
-//                    allGstaList.sort((a, b) -> Double.compare(a.getTotal_score(), b.getTotal_score()));
+                    String ra = CustomRelaventAspect.cus6b_RA;
+                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    String commname = rsGst14aa.getString("COMM_NAME");
+                    int col9_3a = rsGst14aa.getInt("col18_3a");
+                    int col9_3b = rsGst14aa.getInt("col18_3b");
+                    int col3_3a = rsGst14aa.getInt("col12_3a");
+                    int col3_3b = rsGst14aa.getInt("col12_3b");
+//                        double median = rsGst14aa.getDouble("median_total_9");
+//                        Double numerator_6c = rsGst14aa.getDouble("total_9");
+                    //col3a is giving null for any date column, that reason total_score is o
+                    int Zonal_rank = 0;
+                    String gst = "no";
+
+                    int insentavization = 0;
+                    String absval=String.valueOf(col9_3a+col9_3b)+"/"+String.valueOf(col3_3a+col3_3b);
+                    if((col3_3a+col3_3b) != 0) {
+                        total = ((double) (col9_3a+col9_3b) * 100 / (col3_3a+col3_3b));
+                    }else {
+                        total = 0.00;
+                    }
+
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.c_marks6b(totalScore);
+
+                    // 2 floating point
+                    double sub_parameter_weighted_average = way_to_grade * 0.2;
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
+                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
+                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(gsta);
+                    allGstaList.sort((a, b) -> Double.compare(a.getTotal_score(), b.getTotal_score()));
                 }
 
             }
@@ -1090,7 +1087,6 @@ public class CustomSubParameterController {
         return allGstaList;
 
     }
-
 
     @ResponseBody
     @RequestMapping(value = "/cus6c")
