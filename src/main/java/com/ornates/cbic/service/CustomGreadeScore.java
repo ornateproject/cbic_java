@@ -8,9 +8,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total == 0) {
             rank=10;
-        }else if(total >= 1 && total <= 5) {
+        }else if(total > 0 && total <= 5) {
             rank=7;
-        }else if(total >= 6 && total <= 10) {
+        }else if(total > 5 && total <= 10) {
             rank=4;
         }else {
             rank=0;
