@@ -81,7 +81,7 @@ public class CustomSubParameterController {
                     int insentavization = 0;
                     int way_to_grade = score.c_marks1(totalScore);
                     String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
-                    double sub_parameter_weighted_average_bfore = way_to_grade * 1 ;
+                    double sub_parameter_weighted_average_bfore = way_to_grade * .5 ;
                     String formattedSubParameterWeightedAverage = String.format("%.2f", sub_parameter_weighted_average_bfore);
                     double sub_parameter_weighted_average = Double.parseDouble(formattedSubParameterWeightedAverage);
 
@@ -108,7 +108,7 @@ public class CustomSubParameterController {
                     int insentavization = 0;
                     int way_to_grade = score.c_marks1(totalScore);
                     String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
-                    double sub_parameter_weighted_average_bfore = way_to_grade * 1 ;
+                    double sub_parameter_weighted_average_bfore = way_to_grade * .5 ;
                     String formattedSubParameterWeightedAverage = String.format("%.2f", sub_parameter_weighted_average_bfore);
                     double sub_parameter_weighted_average = Double.parseDouble(formattedSubParameterWeightedAverage);
                     gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
@@ -134,7 +134,7 @@ public class CustomSubParameterController {
                     int insentavization = 0;
                    int way_to_grade = score.c_marks1(totalScore);
                     String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
-                    double sub_parameter_weighted_average_bfore = way_to_grade * 1 ;
+                    double sub_parameter_weighted_average_bfore = way_to_grade * .5 ;
                     String formattedSubParameterWeightedAverage = String.format("%.2f", sub_parameter_weighted_average_bfore);
                     double sub_parameter_weighted_average = Double.parseDouble(formattedSubParameterWeightedAverage);
                     gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
