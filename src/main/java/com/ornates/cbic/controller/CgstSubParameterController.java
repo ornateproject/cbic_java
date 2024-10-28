@@ -1434,8 +1434,6 @@ public class CgstSubParameterController {
 
                 // Query string
                 String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst3b_AllCommissonaryWise(month_date);
-
-
                 //Prepared Statement
                 PreparedStatement psGst14aa=con.prepareStatement(queryGst14aa);
                 //Result Set
@@ -1468,6 +1466,7 @@ public class CgstSubParameterController {
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
+                System.out.println("median 3b commi wise :-" + median);
             }
         } catch (SQLException e) {
             e.printStackTrace();
