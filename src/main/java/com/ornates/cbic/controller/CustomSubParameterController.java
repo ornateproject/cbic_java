@@ -1044,7 +1044,7 @@ public class CustomSubParameterController {
                     if (numerator_6c > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
-                    double sub_parameter_weighted_average = way_to_grade * 0.2;
+                    double sub_parameter_weighted_average = insentavization * 0.2;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
                     gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -1080,7 +1080,7 @@ public class CustomSubParameterController {
                     if (numerator_6c > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
-                    double sub_parameter_weighted_average = way_to_grade * 0.2;
+                    double sub_parameter_weighted_average = insentavization * 0.2;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
                     gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -1116,7 +1116,7 @@ public class CustomSubParameterController {
                     if (numerator_6c > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
-                    double sub_parameter_weighted_average = way_to_grade * 0.2;
+                    double sub_parameter_weighted_average = insentavization * 0.2;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
                     gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -1176,7 +1176,7 @@ public class CustomSubParameterController {
 //                        insentavization += 1;
 //                    }
 //                    // 2 floating point
-//                    double sub_parameter_weighted_average = way_to_grade * 0.1;
+//                    double sub_parameter_weighted_average = insentavization * 0.1;
 //                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
 //                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
 //                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -1222,7 +1222,7 @@ public class CustomSubParameterController {
 //                        insentavization += 1;
 //                    }
 //                    // 2 floating point
-//                    double sub_parameter_weighted_average = way_to_grade * 0.1;
+//                    double sub_parameter_weighted_average = insentavization * 0.1;
 //                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
 //                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
 //                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -1269,7 +1269,7 @@ public class CustomSubParameterController {
 //                        insentavization += 1;
 //                    }
 //                    // 2 floating point
-//                    double sub_parameter_weighted_average = way_to_grade * 0.1;
+//                    double sub_parameter_weighted_average = insentavization * 0.1;
 //                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
 //                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
 //                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -1329,7 +1329,7 @@ public class CustomSubParameterController {
 //                        insentavization += 1;
 //                    }
 //                    // 2 floating point
-//                    double sub_parameter_weighted_average = way_to_grade * 0.1;
+//                    double sub_parameter_weighted_average = insentavization * 0.1;
 //                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
 //                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
 //                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -1370,7 +1370,7 @@ public class CustomSubParameterController {
 //                        insentavization += 1;
 //                    }
 //                    // 2 floating point
-//                    double sub_parameter_weighted_average = way_to_grade * 0.1;
+//                    double sub_parameter_weighted_average = insentavization * 0.1;
 //                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
 //                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
 //                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
@@ -1409,7 +1409,7 @@ public class CustomSubParameterController {
 //                        insentavization += 1;
 //                    }
 //                    // 2 floating point
-//                    double sub_parameter_weighted_average = way_to_grade * 0.1;
+//                    double sub_parameter_weighted_average = insentavization * 0.1;
 //                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
 //                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
 //                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
