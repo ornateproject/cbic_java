@@ -22,9 +22,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total >=80) {
             rank=10;
-        }else if(total >= 70 && total <= 79) {
+        }else if(total >= 70 && total < 80) {
             rank=7;
-        }else if(total >= 60 && total <= 69) {
+        }else if(total >= 60 && total < 70) {
             rank=4;
         }else {
             rank=2;
@@ -36,9 +36,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total <=10) {
             rank=10;
-        }else if(total >= 11 && total <= 20) {
+        }else if(total > 10 && total <= 20) {
             rank=7;
-        }else if(total >= 21 && total <= 30) {
+        }else if(total > 20 && total <= 30) {
             rank=4;
         }else {
             rank=2;
@@ -50,9 +50,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total >=30) {
             rank=10;
-        }else if(total >= 20 && total <= 29) {
+        }else if(total >= 20 && total < 30) {
             rank=7;
-        }else if(total >= 10 && total <= 19) {
+        }else if(total >= 10 && total < 20) {
             rank=4;
         }else {
             rank=2;
@@ -64,9 +64,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total >=80) {
             rank=10;
-        }else if(total >= 70 && total <= 79) {
+        }else if(total >= 70 && total < 80) {
             rank=7;
-        }else if(total >= 60 && total <= 69) {
+        }else if(total >= 60 && total < 70) {
             rank=4;
         }else {
             rank=2;
@@ -78,9 +78,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total <=10) {
             rank=10;
-        }else if(total >= 10 && total <= 20) {
+        }else if(total > 10 && total <= 20) {
             rank=7;
-        }else if(total >= 21 && total <= 30) {
+        }else if(total > 20 && total <= 30) {
             rank=4;
         }else {
             rank=2;
@@ -92,9 +92,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total >=30) {
             rank=10;
-        }else if(total >= 20 && total <= 29) {
+        }else if(total >= 20 && total < 30) {
             rank=7;
-        }else if(total >= 10 && total <= 19) {
+        }else if(total >= 10 && total < 20) {
             rank=4;
         }else {
             rank=2;
@@ -106,9 +106,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total <=10) {
             rank=10;
-        }else if(total >= 11 && total <= 15) {
+        }else if(total > 10 && total <= 15) {
             rank=7;
-        }else if(total >= 16 && total <= 20) {
+        }else if(total > 15 && total <= 20) {
             rank=4;
         }else {
             rank=2;
@@ -120,9 +120,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total <=10) {
             rank=10;
-        }else if(total >= 11 && total <= 15) {
+        }else if(total > 10 && total <= 15) {
             rank=7;
-        }else if(total >= 16 && total <= 20) {
+        }else if(total > 15 && total <= 20) {
             rank=4;
         }else {
             rank=2;
@@ -134,9 +134,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total >=30) {
             rank=10;
-        }else if(total >= 20 && total <= 29) {
+        }else if(total >= 20 && total < 30) {
             rank=7;
-        }else if(total >= 10 && total <= 19) {
+        }else if(total >= 10 && total < 20) {
             rank=4;
         }else {
             rank=2;
@@ -148,9 +148,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total >=30) {
             rank=10;
-        }else if(total >= 20 && total <= 29) {
+        }else if(total >= 20 && total < 30) {
             rank=7;
-        }else if(total >= 10 && total <= 19) {
+        }else if(total >= 10 && total < 20) {
             rank=4;
         }else {
             rank=2;
@@ -162,9 +162,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total >=30) {
             rank=10;
-        }else if(total >= 20 && total < 29) {
+        }else if(total >= 20 && total < 30) {
             rank=7;
-        }else if(total >= 10 && total < 19) {
+        }else if(total >= 10 && total < 20) {
             rank=4;
         }else if(total<10){
             rank=2;
@@ -242,9 +242,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total >=20 ) {
             rank=10;
-        }else if(total >= 15 && total <= 19) {
+        }else if(total >= 15 && total < 20) {
             rank=7;
-        }else if(total >= 10 && total <= 14) {
+        }else if(total >= 10 && total < 15) {
             rank=4;
         }else if(total<10){
             rank=2;
@@ -258,9 +258,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total >=40 ) {
             rank=10;
-        }else if(total >= 30 && total <= 39) {
+        }else if(total >= 30 && total < 40) {
             rank=7;
-        }else if(total >= 20 && total <= 29) {
+        }else if(total >= 20 && total < 30) {
             rank=4;
         }else if(total<20) {
             rank=2;
@@ -274,9 +274,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total >=30 ) {
             rank=10;
-        }else if(total >= 25 && total <= 29) {
+        }else if(total >= 25 && total < 30) {
             rank=7;
-        }else if(total >= 20 && total <= 24) {
+        }else if(total >= 20 && total < 25) {
             rank=4;
         }else if(total<15) {
             rank=2;
@@ -290,9 +290,9 @@ public class CustomGreadeScore {
         int rank=0;
         if(total >=30 ) {
             rank=10;
-        }else if(total >= 25 && total <= 29) {
+        }else if(total >= 25 && total < 30) {
             rank=7;
-        }else if(total >= 20 && total <= 24) {
+        }else if(total >= 20 && total < 25) {
             rank=4;
         }else if(total<20) {
             rank=2;
