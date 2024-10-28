@@ -319,6 +319,74 @@ public class CustomGreadeScore {
         return rank;
     }
 
+    // Custom grade score for custom 7A
+    public int c_marks7A(double total) {
+        int rank = 0;
+        if(total <= 20 ) {
+            rank = 10;
+        }else if(total <= 30 && total > 20) {
+            rank = 7;
+        }else if(total <= 40 && total > 30) {
+            rank = 4;
+        }else if(total > 40){
+            rank = 2;
+        }else{
+            rank = 0;
+        }
+        return rank;
+    }
+
+    // Custom grade score for custom 7B
+    public int c_marks7B(double total) {
+        int rank=0;
+        if(total >= 40 ) {
+            rank=10;
+        }else if(total >= 30 && total < 40) {
+            rank=7;
+        }else if(total >= 20 && total < 30) {
+            rank=4;
+        }else if(total< 20){
+            rank=2;
+        }else{
+            rank=0;
+        }
+        return rank;
+    }
+
+    // Custom grade score for custom 8A
+    public int c_marks8A(double total) {
+        int rank=0;
+        if(total >= 30 ) {
+            rank=10;
+        }else if(total >= 20 && total < 30) {
+            rank=7;
+        }else if(total >= 10 && total < 20) {
+            rank=4;
+        }else if(total< 10){
+            rank=2;
+        }else{
+            rank=0;
+        }
+        return rank;
+    }
+
+    // Custom grade score for custom 8B
+    public int c_marks8B(double total) {
+        int rank=0;
+        if(total <= 20 ) {
+            rank=10;
+        }else if(total <= 30 && total > 20) {
+            rank=7;
+        }else if(total <= 40 && total > 30) {
+            rank=4;
+        }else if(total > 40){
+            rank=2;
+        }else{
+            rank=0;
+        }
+        return rank;
+    }
+
     // Custom grade score for custom 9B
     public int c_marks9b(double total) {
         int rank=0;
