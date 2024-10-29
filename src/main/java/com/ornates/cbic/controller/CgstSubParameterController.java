@@ -691,7 +691,7 @@ public class CgstSubParameterController {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace() ;
         }
         return allGstaList;
     }
