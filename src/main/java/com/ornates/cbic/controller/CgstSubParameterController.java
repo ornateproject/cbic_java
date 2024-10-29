@@ -1172,7 +1172,7 @@ public class CgstSubParameterController {
                     gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
-                }
+                }System.out.println("median gst3a all commi : "+ median);
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 // Query string
                 String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst3a_AllCommissonaryWise(month_date);
@@ -1207,6 +1207,7 @@ public class CgstSubParameterController {
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
+                System.out.println("median gst3a all commi : "+ median);
             }
         } catch (SQLException e) {
             e.printStackTrace();

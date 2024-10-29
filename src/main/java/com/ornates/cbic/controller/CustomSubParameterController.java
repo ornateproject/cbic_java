@@ -1216,8 +1216,8 @@ public class CustomSubParameterController {
 
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.c_marks6c(totalScore);
-                    int insentavization = score.c_marks6c(totalScore);
+                    int way_to_grade = score.c_marks6d(totalScore);
+                    int insentavization = score.c_marks6d(totalScore);
                     if (numerator_6c > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
