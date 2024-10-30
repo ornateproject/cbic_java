@@ -288,13 +288,13 @@ public class CustomGreadeScore {
     // Custom grade score for custom 6F
     public int c_marks6f(double total) {
         int rank=0;
-        if(total >=30 ) {
+        if(total >= 30 ) {
             rank=10;
         }else if(total >= 25 && total < 30) {
             rank=7;
         }else if(total >= 20 && total < 25) {
             rank=4;
-        }else if(total<20) {
+        }else if(total < 20) {
             rank=2;
         }else{
             rank=0;
