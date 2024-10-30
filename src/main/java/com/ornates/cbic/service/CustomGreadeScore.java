@@ -278,7 +278,7 @@ public class CustomGreadeScore {
             rank=7;
         }else if(total >= 20 && total < 25) {
             rank=4;
-        }else if(total<15) {
+        }else if(total < 20) {
             rank=2;
         }else{
             rank=0;
