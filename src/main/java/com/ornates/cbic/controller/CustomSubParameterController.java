@@ -1302,39 +1302,39 @@ public class CustomSubParameterController {
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryCustom6e);
                 while (rsGst14aa.next()) {
-//                    String ra = CustomRelaventAspect.cus6e_RA;
-//                    String commname = "ALL";
-//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
-//                    int col9_3a = rsGst14aa.getInt("col9_3a");
-//                    int col3_3a = rsGst14aa.getInt("col3_3a");
-//                    double median = rsGst14aa.getDouble("median_6e");
-//                    Double numerator_6c = rsGst14aa.getDouble("col9_3a");
-//                    //String absval = rsGst14aa.getString("absolute_value");
-//                    //total = rsGst14aa.getDouble("total_score");
-//
-//                    int Zonal_rank = 0;
-//                    String gst = "no";
-//                    // int insentavization = 0;
-//                    String absval=String.valueOf(col9_3a)+"/"+String.valueOf(col3_3a);
-//                    if((col3_3a) != 0) {
-//                        total = ((double) (col9_3a) * 100 / (col3_3a));
-//                    }else {
-//                        total = 0.00;
-//                    }
-//                    String formattedTotal = String.format("%.2f", total);
-//                    double totalScore = Double.parseDouble(formattedTotal);
-//                    int way_to_grade = score.c_marks6e(totalScore);
-//                    int insentavization = score.c_marks6e(totalScore);
-//                    if (numerator_6c > median && way_to_grade < 10) {
-//                        insentavization += 1;
-//                    }
-//                    // 2 floating point
-//                    double sub_parameter_weighted_average = insentavization * 0.1;
-//                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-//                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
-//                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-//                    allGstaList.add(gsta);
-//                    allGstaList.sort((a, b) -> Double.compare(b.getTotal_score(), a.getTotal_score()));
+                    String ra = CustomRelaventAspect.cus6e_RA;
+                    String commname = "ALL";
+                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    int col9_3a = rsGst14aa.getInt("col9_3a");
+                    int col3_3a = rsGst14aa.getInt("col3_3a");
+                    double median = rsGst14aa.getDouble("median_6e");
+                    Double numerator_6c = rsGst14aa.getDouble("col9_3a");
+                    //String absval = rsGst14aa.getString("absolute_value");
+                    //total = rsGst14aa.getDouble("total_score");
+
+                    int Zonal_rank = 0;
+                    String gst = "no";
+                    // int insentavization = 0;
+                    String absval=String.valueOf(col9_3a)+"/"+String.valueOf(col3_3a);
+                    if((col3_3a) != 0) {
+                        total = ((double) (col9_3a) * 100 / (col3_3a));
+                    }else {
+                        total = 0.00;
+                    }
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.c_marks6e(totalScore);
+                    int insentavization = score.c_marks6e(totalScore);
+                    if (numerator_6c > median && way_to_grade < 10) {
+                        insentavization += 1;
+                    }
+                    // 2 floating point
+                    double sub_parameter_weighted_average = insentavization * 0.1;
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
+                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(gsta);
+                    allGstaList.sort((a, b) -> Double.compare(b.getTotal_score(), a.getTotal_score()));
                 }
             }else if (type.equalsIgnoreCase("commissary")) { // cus 6e
 
@@ -1382,39 +1382,39 @@ public class CustomSubParameterController {
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryCustom6e);
 
                 while (rsGst14aa.next()) {
-//                    String ra = CustomRelaventAspect.cus6e_RA;
-//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
-//                    String commname = rsGst14aa.getString("COMM_NAME");
-//                    int col9_3a = rsGst14aa.getInt("col9_3a");
-//                    int col3_3a = rsGst14aa.getInt("col3_3a");
-//                    double median = rsGst14aa.getDouble("median_6e");
-//                    Double numerator_6c = rsGst14aa.getDouble("col9_3a");
-//                    //String absval = rsGst14aa.getString("absolute_value");
-//                    //total = rsGst14aa.getDouble("total_score");
-//
-//                    int Zonal_rank = 0;
-//                    String gst = "no";
-//                    // int insentavization = 0;
-//                    String absval=String.valueOf(col9_3a)+"/"+String.valueOf(col3_3a);
-//                    if((col3_3a) != 0) {
-//                        total = ((double) (col9_3a) * 100 / (col3_3a));
-//                    }else {
-//                        total = 0.00;
-//                    }
-//                    String formattedTotal = String.format("%.2f", total);
-//                    double totalScore = Double.parseDouble(formattedTotal);
-//                    int way_to_grade = score.c_marks6e(totalScore);
-//                    int insentavization = score.c_marks6e(totalScore);
-//                    if (numerator_6c > median && way_to_grade < 10) {
-//                        insentavization += 1;
-//                    }
-//                    // 2 floating point
-//                    double sub_parameter_weighted_average = insentavization * 0.1;
-//                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-//                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
-//                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-//                    allGstaList.add(gsta);
-//                    allGstaList.sort((a, b) -> Double.compare(b.getTotal_score(), a.getTotal_score()));
+                    String ra = CustomRelaventAspect.cus6e_RA;
+                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    String commname = rsGst14aa.getString("COMM_NAME");
+                    int col9_3a = rsGst14aa.getInt("col9_3a");
+                    int col3_3a = rsGst14aa.getInt("col3_3a");
+                    double median = rsGst14aa.getDouble("median_6e");
+                    Double numerator_6c = rsGst14aa.getDouble("col9_3a");
+                    //String absval = rsGst14aa.getString("absolute_value");
+                    //total = rsGst14aa.getDouble("total_score");
+
+                    int Zonal_rank = 0;
+                    String gst = "no";
+                    // int insentavization = 0;
+                    String absval=String.valueOf(col9_3a)+"/"+String.valueOf(col3_3a);
+                    if((col3_3a) != 0) {
+                        total = ((double) (col9_3a) * 100 / (col3_3a));
+                    }else {
+                        total = 0.00;
+                    }
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.c_marks6e(totalScore);
+                    int insentavization = score.c_marks6e(totalScore);
+                    if (numerator_6c > median && way_to_grade < 10) {
+                        insentavization += 1;
+                    }
+                    // 2 floating point
+                    double sub_parameter_weighted_average = insentavization * 0.1;
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
+                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(gsta);
+                    allGstaList.sort((a, b) -> Double.compare(b.getTotal_score(), a.getTotal_score()));
                 }
 
             }
@@ -1446,32 +1446,32 @@ public class CustomSubParameterController {
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
 
                 while(rsGst14aa.next()) {
-//                    String ra= CustomRelaventAspect.cus6f_RA;
-//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
-//                    String zoneName =rsGst14aa.getString("ZONE_NAME");
-//                    String absval = rsGst14aa.getString("absvl");
-//                    total=rsGst14aa.getDouble("total_score") * 100;
-//                    String commname= "ALL";
-//                    Double numerator_6f = rsGst14aa.getDouble("col9");
-//                    median = rsGst14aa.getDouble("median6f");
-//
-//                    String formattedTotal = String.format("%.2f", total);
-//                    double totalScore = Double.parseDouble(formattedTotal);
-//                    int way_to_grade = score.c_marks6f(totalScore);
-//                    int insentavization = score.c_marks6f(totalScore);
-//
-//                    if (numerator_6f > median && way_to_grade < 10) {
-//                        insentavization += 1;
-//                    }
-//                    int Zonal_rank = 0;
-//                    String gst = "CUS6F";
-//
-//                    // 2 floating point
-//                    double sub_parameter_weighted_average = insentavization * 0.2 ;
-//                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-//                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
-//                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-//                    allGstaList.add(gsta);
+                    String ra= CustomRelaventAspect.cus6f_RA;
+                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    String zoneName =rsGst14aa.getString("ZONE_NAME");
+                    String absval = rsGst14aa.getString("absvl");
+                    total=rsGst14aa.getDouble("total_score") * 100;
+                    String commname= "ALL";
+                    Double numerator_6f = rsGst14aa.getDouble("col9");
+                    median = rsGst14aa.getDouble("median6f");
+
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.c_marks6f(totalScore);
+                    int insentavization = score.c_marks6f(totalScore);
+
+                    if (numerator_6f > median && way_to_grade < 10) {
+                        insentavization += 1;
+                    }
+                    int Zonal_rank = 0;
+                    String gst = "CUS6F";
+
+                    // 2 floating point
+                    double sub_parameter_weighted_average = insentavization * 0.2 ;
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
+                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
+                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(gsta);
                 }
                 System.out.println("CUS 6F median zone wise :- "+median);
 
@@ -1514,32 +1514,32 @@ public class CustomSubParameterController {
                 String queryGst14aa=new CustomSubParameterWiseQuery().QueryFor_cus6f_AllCommissonaryWise(month_date);
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
-//                    String ra= CustomRelaventAspect.cus6f_RA;
-//                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
-//                    String zoneName =rsGst14aa.getString("ZONE_NAME");
-//                    String absval = rsGst14aa.getString("absvl");
-//                    total=rsGst14aa.getDouble("total_score") * 100;
-//                    String commname= rsGst14aa.getString("COMM_NAME");
-//                    Double numerator_6f = rsGst14aa.getDouble("col9");
-//                    median = rsGst14aa.getDouble("median6f");
-//
-//                    String formattedTotal = String.format("%.2f", total);
-//                    double totalScore = Double.parseDouble(formattedTotal);
-//                    int way_to_grade = score.c_marks6f(totalScore);
-//                    int insentavization = score.c_marks6f(totalScore);
-//
-//                    if (numerator_6f > median && way_to_grade < 10) {
-//                        insentavization += 1;
-//                    }
-//                    int Zonal_rank = 0;
-//                    String gst = "CUS6F";
-//
-//                    // 2 floating point
-//                    double sub_parameter_weighted_average = insentavization * 0.2 ;
-//                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-//                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
-//                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-//                    allGstaList.add(gsta);
+                    String ra= CustomRelaventAspect.cus6f_RA;
+                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
+                    String zoneName =rsGst14aa.getString("ZONE_NAME");
+                    String absval = rsGst14aa.getString("absvl");
+                    total=rsGst14aa.getDouble("total_score") * 100;
+                    String commname= rsGst14aa.getString("COMM_NAME");
+                    Double numerator_6f = rsGst14aa.getDouble("col9");
+                    median = rsGst14aa.getDouble("median6f");
+
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.c_marks6f(totalScore);
+                    int insentavization = score.c_marks6f(totalScore);
+
+                    if (numerator_6f > median && way_to_grade < 10) {
+                        insentavization += 1;
+                    }
+                    int Zonal_rank = 0;
+                    String gst = "CUS6F";
+
+                    // 2 floating point
+                    double sub_parameter_weighted_average = insentavization * 0.2 ;
+                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
+                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
+                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(gsta);
                 }
                 System.out.println("cus 6F median commissionary rate wise :- " + median);
             }
