@@ -5,6 +5,7 @@ import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.TotalScore;
 import com.ornates.cbic.service.CustomGreadeScore;
+import com.ornates.cbic.service.CustomRelaventAspect;
 import com.ornates.cbic.service.DateCalculate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,12 +51,12 @@ public class CustomParameterController {
 
     // ***********************************CUS 1 parameter wise(Timely Payment Of Refunds) *****************************************************************
     @ResponseBody
-    @RequestMapping(value = "/timelypaymentofrefunds") // custom 1a
-    //  http://localhost:8080/cbicApi/cbic/custom/parameter/timelypaymentofrefunds?month_date=2024-04-01&type=parameter                   // for return filing button
-    //  http://localhost:8080/cbicApi/cbic/custom/parameter/timelypaymentofrefunds?month_date=2024-04-01&type=zone&zone_code=76           // for all button
-    //	http://localhost:8080/cbicApi/cbic/custom/parameter/timelypaymentofrefunds?month_date=2024-04-01&type=commissary&zone_code=76     // for show button, zone wise
-    //  http://localhost:8080/cbicApi/cbic/custom/parameter/timelypaymentofrefunds?month_date=2024-04-01&type=all_commissary              // for all commissary
-    //  http://localhost:8080/cbicApi/cbic/custom/parameter/timelypaymentofrefunds?month_date=2024-04-01&type=come_name&zone_code=76&come_name=Kolkata(Port)     // for particular commissary wise, show button
+    @RequestMapping(value = "/timelyrefunds") // custom 1
+    //  http://localhost:8080/cbicApi/cbic/custom/parameter/timelyrefunds?month_date=2024-04-01&type=parameter                   // for return filing button
+    //  http://localhost:8080/cbicApi/cbic/custom/parameter/timelyrefunds?month_date=2024-04-01&type=zone&zone_code=76           // for all button
+    //	http://localhost:8080/cbicApi/cbic/custom/parameter/timelyrefunds?month_date=2024-04-01&type=commissary&zone_code=76     // for show button, zone wise
+    //  http://localhost:8080/cbicApi/cbic/custom/parameter/timelyrefunds?month_date=2024-04-01&type=all_commissary              // for all commissary
+    //  http://localhost:8080/cbicApi/cbic/custom/parameter/timelyrefunds?month_date=2024-04-01&type=come_name&zone_code=76&come_name=Kolkata(Port)     // for particular commissary wise, show button
     public Object timelypaymentofrefunds(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code, @RequestParam(required = false) String come_name) {
         List<TotalScore> allGstaList = new ArrayList<>();
         TotalScore totalScore = null;
@@ -70,23 +71,23 @@ public class CustomParameterController {
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment_cus1);
 
                 while (rsGst14aa.next()) {
-//                    double col_difference=rsGst14aa.getInt("col_difference");
-//                    double col10=rsGst14aa.getInt("col10");
-//                    zone_code = rsGst14aa.getString("ZONE_CODE");
-//                    Integer insentavization = 0;
-//                    String zoneName = rsGst14aa.getString("ZONE_NAME");
-//                    double  total = rsGst14aa.getDouble("total_score");
-//                    String commName = "ALL";
-//                    String gst = "ALL";
-//                    String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
-//
-//                    String ra= CustomRelaventAspect.cus1_RA;
-//                    String formattedTotal = String.format("%.2f", total);
-//                    double total_score = Double.parseDouble(formattedTotal);
-//                    Integer way_to_grade =score.c_marks1(total_score);
-//                    double sub_parameter_weighted_average = way_to_grade * 1;
-//                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
-//                    allGstaList.add(totalScore);
+                    double col_difference=rsGst14aa.getInt("col_difference");
+                    double col10=rsGst14aa.getInt("col10");
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    Integer insentavization = 0;
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    double  total = rsGst14aa.getDouble("total_score");
+                    String commName = "ALL";
+                    String gst = "ALL";
+                    String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
+
+                    String ra= CustomRelaventAspect.cus1_RA;
+                    String formattedTotal = String.format("%.2f", total);
+                    double total_score = Double.parseDouble(formattedTotal);
+                    Integer way_to_grade =score.c_marks1(total_score);
+                    double sub_parameter_weighted_average = way_to_grade * 0.5;
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    allGstaList.add(totalScore);
                 }
             } else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
                 //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
@@ -94,23 +95,23 @@ public class CustomParameterController {
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment_cus1);
 
                 while (rsGst14aa.next()) {
-//                    double col_difference=rsGst14aa.getInt("col_difference");
-//                    double col10=rsGst14aa.getInt("col10");
-//                    zone_code = rsGst14aa.getString("ZONE_CODE");
-//                    Integer insentavization = 0;
-//                    String zoneName = rsGst14aa.getString("ZONE_NAME");
-//                    String commName = rsGst14aa.getString("COMM_NAME");
-//                    double  total = rsGst14aa.getDouble("total_score");
-//                    String gst = "ALL";
-//                    String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
-//
-//                    String ra= CustomRelaventAspect.cus1_RA;
-//                    String formattedTotal = String.format("%.2f", total);
-//                    double total_score = Double.parseDouble(formattedTotal);
-//                    Integer way_to_grade =score.c_marks1(total_score);
-//                    double sub_parameter_weighted_average = way_to_grade * 1;
-//                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
-//                    allGstaList.add(totalScore);
+                    double col_difference=rsGst14aa.getInt("col_difference");
+                    double col10=rsGst14aa.getInt("col10");
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    Integer insentavization = 0;
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    String commName = rsGst14aa.getString("COMM_NAME");
+                    double  total = rsGst14aa.getDouble("total_score");
+                    String gst = "ALL";
+                    String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
+
+                    String ra= CustomRelaventAspect.cus1_RA;
+                    String formattedTotal = String.format("%.2f", total);
+                    double total_score = Double.parseDouble(formattedTotal);
+                    Integer way_to_grade =score.c_marks1(total_score);
+                    double sub_parameter_weighted_average = way_to_grade * 0.5;
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    allGstaList.add(totalScore);
                 }
             } else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
                 String prev_month_new = DateCalculate.getPreviousMonth(month_date);
@@ -118,23 +119,23 @@ public class CustomParameterController {
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment_cus1);
 
                 while (rsGst14aa.next()) {
-//                    double col_difference=rsGst14aa.getInt("col_difference");
-//                    double col10=rsGst14aa.getInt("col10");
-//                    zone_code = rsGst14aa.getString("ZONE_CODE");
-//                    Integer insentavization = 0;
-//                    String zoneName = rsGst14aa.getString("ZONE_NAME");
-//                    double  total = rsGst14aa.getDouble("total_score");
-//                    String gst = rsGst14aa.getString("Cus1");
-//                    String commName = "null";
-//                    String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
-//
-//                    String ra= CustomRelaventAspect.cus1_RA;
-//                    String formattedTotal = String.format("%.2f", total);
-//                    double total_score = Double.parseDouble(formattedTotal);
-//                    Integer way_to_grade =score.c_marks1(total_score);
-//                    double sub_parameter_weighted_average = way_to_grade * 1;
-//                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
-//                    allGstaList.add(totalScore);
+                    double col_difference=rsGst14aa.getInt("col_difference");
+                    double col10=rsGst14aa.getInt("col10");
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    Integer insentavization = 0;
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    double  total = rsGst14aa.getDouble("total_score");
+                    String gst = rsGst14aa.getString("Cus1");
+                    String commName = "null";
+                    String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
+
+                    String ra= CustomRelaventAspect.cus1_RA;
+                    String formattedTotal = String.format("%.2f", total);
+                    double total_score = Double.parseDouble(formattedTotal);
+                    Integer way_to_grade =score.c_marks1(total_score);
+                    double sub_parameter_weighted_average = way_to_grade * 0.5;
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    allGstaList.add(totalScore);
                 }
             } else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
                 //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
@@ -142,23 +143,23 @@ public class CustomParameterController {
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment_cus1);
 
                 while (rsGst14aa.next()) {
-//                    double col_difference=rsGst14aa.getInt("col_difference");
-//                    double col10=rsGst14aa.getInt("col10");
-//                    zone_code = rsGst14aa.getString("ZONE_CODE");
-//                    Integer insentavization = 0;
-//                    String zoneName = rsGst14aa.getString("ZONE_NAME");
-//                    String commName = rsGst14aa.getString("COMM_NAME");
-//                    double  total = rsGst14aa.getDouble("total_score");
-//                    String gst = "null";
-//                    String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
-//
-//                    String ra= CustomRelaventAspect.cus1_RA;
-//                    String formattedTotal = String.format("%.2f", total);
-//                    double total_score = Double.parseDouble(formattedTotal);
-//                    Integer way_to_grade =score.c_marks1(total_score);
-//                    double sub_parameter_weighted_average = way_to_grade * 1;
-//                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
-//                    allGstaList.add(totalScore);
+                    double col_difference=rsGst14aa.getInt("col_difference");
+                    double col10=rsGst14aa.getInt("col10");
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    Integer insentavization = 0;
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    String commName = rsGst14aa.getString("COMM_NAME");
+                    double  total = rsGst14aa.getDouble("total_score");
+                    String gst = "null";
+                    String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
+
+                    String ra= CustomRelaventAspect.cus1_RA;
+                    String formattedTotal = String.format("%.2f", total);
+                    double total_score = Double.parseDouble(formattedTotal);
+                    Integer way_to_grade =score.c_marks1(total_score);
+                    double sub_parameter_weighted_average = way_to_grade * 0.5;
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    allGstaList.add(totalScore);
                 }
             } else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
                 //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
@@ -166,23 +167,23 @@ public class CustomParameterController {
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment_cus1);
 
                 while (rsGst14aa.next()) {
-//                    double col_difference=rsGst14aa.getInt("col_difference");
-//                    double col10=rsGst14aa.getInt("col10");
-//                    zone_code = rsGst14aa.getString("ZONE_CODE");
-//                    Integer insentavization = 0;
-//                    String zoneName = rsGst14aa.getString("ZONE_NAME");
-//                    String commName = rsGst14aa.getString("COMM_NAME");
-//                    double  total = rsGst14aa.getDouble("total_score");
-//                    String gst = rsGst14aa.getString("description");
-//                    String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
-//
-//                    String ra= CustomRelaventAspect.cus1_RA;
-//                    String formattedTotal = String.format("%.2f", total);
-//                    double total_score = Double.parseDouble(formattedTotal);
-//                    Integer way_to_grade =score.c_marks1(total_score);
-//                    double sub_parameter_weighted_average = way_to_grade * 1;
-//                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
-//                    allGstaList.add(totalScore);
+                    double col_difference=rsGst14aa.getInt("col_difference");
+                    double col10=rsGst14aa.getInt("col10");
+                    zone_code = rsGst14aa.getString("ZONE_CODE");
+                    Integer insentavization = 0;
+                    String zoneName = rsGst14aa.getString("ZONE_NAME");
+                    String commName = rsGst14aa.getString("COMM_NAME");
+                    double  total = rsGst14aa.getDouble("total_score");
+                    String gst = rsGst14aa.getString("description");
+                    String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
+
+                    String ra= CustomRelaventAspect.cus1_RA;
+                    String formattedTotal = String.format("%.2f", total);
+                    double total_score = Double.parseDouble(formattedTotal);
+                    Integer way_to_grade =score.c_marks1(total_score);
+                    double sub_parameter_weighted_average = way_to_grade * 0.5;
+                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
+                    allGstaList.add(totalScore);
                 }
             }
         } catch (SQLException e) {
