@@ -616,7 +616,7 @@ public class CustomParameterController {
                     // FOR BACK DATA CHECK ONLY
 
 					System.out.println(zoneName);
-					System.out.println("total9a: " + total9a);
+					System.out.println("total9a: " + total9a) ;
 					System.out.println("numerator_9a : " + numerator_9a);
 					System.out.println("median9a : " + median9a);
 					System.out.println("way_to_grade9a: " + way_to_grade9a);
