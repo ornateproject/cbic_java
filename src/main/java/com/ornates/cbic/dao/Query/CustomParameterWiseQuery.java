@@ -1112,7 +1112,7 @@ public class CustomParameterWiseQuery {
                 + "    rd.ZONE_CODE, \r\n"
                 + "    rd.numerator_9b AS numerator, \r\n"
                 + "    COALESCE(m.MedianValue, 0) AS Median,\r\n"
-                + "    COALESCE(rd.numerator_9b / rc.s5col11, 0) * 100 AS total_score,\r\n"
+                + "    COALESCE(rd.numerator_9b / rc.s5col11, 0)  AS total_score,\r\n"
                 + "    CONCAT(rd.numerator_9b, '/', rc.s5col11) AS absolute_value,\r\n"
                 + "    'CUS9B' AS custom\r\n"
                 + "FROM RipeDisposalCTE rd\r\n"
