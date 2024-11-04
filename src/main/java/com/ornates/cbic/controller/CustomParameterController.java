@@ -760,7 +760,7 @@ public class CustomParameterController {
                     double tScore_9a = rsGst14aa.getDouble("total_score9a") * 100;
                     double tScore_9b = rsGst14aa.getDouble("total_score9b") * 100;
 
-                    Double median_9a = rsGst14aa.getDouble("numerator_9a");
+                    Double median_9a = rsGst14aa.getDouble("median_9a");
                     Double numerator_9a = rsGst14aa.getDouble("numerator_9a");
 
                     Double median_9b = rsGst14aa.getDouble("median9b");
@@ -822,7 +822,7 @@ public class CustomParameterController {
                     Double median = rsGst14aa.getDouble("median");
                     Double numerator = rsGst14aa.getDouble("numerator");
                     // Double numerator_3b = rsGst14aa.getDouble("numerator_3b");
-                    String ra ="SCRUTINY & ASSESSMENT";
+                    String ra ="Disposal of confiscated Gold and NDPS";
                     Zonal_rank = null;
 
 

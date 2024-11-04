@@ -2,9 +2,8 @@ package com.ornates.cbic.controller;
 
 import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
-import com.ornates.cbic.model.response.TotalScore;
+import com.ornates.cbic.model.response.GST4A;
 import com.ornates.cbic.service.CgstGradeScore;
-import com.ornates.cbic.service.RelevantAspect;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,9 +13,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequestMapping("/cbic/t_score/testing")
 @Controller
@@ -40,77 +37,58 @@ public class TestingController {
 
     @ResponseBody
     @RequestMapping(value = "/refundsTesting")
+    //  http://localhost:8080/cbicApi/cbic/t_score/testing/refundsTesting?month_date=2023-04-01&type=parameter
     public Object refunds(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code, @RequestParam(required = false) String come_name) {
-        List<TotalScore> allGstaList = new ArrayList<>();
-        TotalScore totalScore = null;
-        Connection con = null;
-        ResultSet rsGst14aa = null;
+
+        List<GST4A> allGstaList = new ArrayList<>();
+        GST4A gsta = null;
+        int rank = 0;
+        double total = 0.00;
 
         try {
             if (type.equalsIgnoreCase("parameter")) {
-                String query_assessment = "WITH CTE AS ( SELECT \n"
-                        + "        SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) AS col16, \n"
-                        + "        SUM(14c.age_breakup_above60_no) AS col22, cc.ZONE_CODE, zc.ZONE_NAME\n"
-                        + "    FROM mis_gst_commcode AS cc \n"
-                        + "    RIGHT JOIN mis_dpm_gst_4 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n"
-                        + "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
-                        + "    WHERE 14c.MM_YYYY = '" + month_date + "' \n"
-                        + "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n"
-                        + ")\n"
-                        + "SELECT ZONE_CODE, ZONE_NAME, col16, col22, (col22 * 100 / col16) AS total_score,\n"
-                        + "CONCAT(col22, '/', col16) AS absolute_value,\n"
-                        + "    ROW_NUMBER() OVER (ORDER BY (col22 / col16) ) AS z_rank\n"
-                        + "FROM CTE ORDER BY total_score ASC;";
-
-                rsGst14aa = GetExecutionSQL.getResult(query_assessment);
-
-                while (rsGst14aa.next()) {
-                    zone_code = rsGst14aa.getString("ZONE_CODE");
-                    Integer insentavization = 0;
-                    String zoneName = rsGst14aa.getString("ZONE_NAME");
-                    double tScore = rsGst14aa.getDouble("total_score");
-                    String absval = rsGst14aa.getString("absolute_value");
-                    String commName = "ALL";
-                    String gst = "ALL";
-                    String ra = RelevantAspect.Gst7_RA;
-
-                    String formattedTotal = String.format("%.2f", tScore);
-                    double total_score = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.marks7(total_score);
-                    double sub_parameter_weighted_average = way_to_grade * 0.5;
-
-                    totalScore = new TotalScore(zoneName, commName, zone_code, total_score, absval, 0, gst, ra, way_to_grade, insentavization, sub_parameter_weighted_average);
-                    allGstaList.add(totalScore);
+                String quaryGst7 = "SELECT " +
+                        "SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) AS col16, " +
+                        "SUM(14c.age_breakup_above60_no) AS col22, " +
+                        "cc.ZONE_CODE,zc.ZONE_NAME " +
+                        "FROM mis_gst_commcode AS cc " +
+                        "RIGHT JOIN mis_dpm_gst_4 AS 14c " +
+                        "ON cc.COMM_CODE = 14c.COMM_CODE " +
+                        "LEFT JOIN mis_gst_zonecode AS zc " +
+                        "ON zc.ZONE_CODE = cc.ZONE_CODE " +
+                        "WHERE 14c.MM_YYYY = '" + month_date + "' " +
+                        "GROUP BY cc.ZONE_CODE;";
+                ResultSet rsGst7 = GetExecutionSQL.getResult(quaryGst7);
+                while (rsGst7.next()) {
+                    String ra = "GST7";
+                    String zoneCode = rsGst7.getString("ZONE_CODE");
+                    String commname="ALL";
+                    Double col22 = rsGst7.getDouble("col22");
+                    Double col16 = rsGst7.getDouble("col16");
+                    int Zonal_rank = 0;
+                    String gst = "no";
+                    int insentavization = 0;
+                    // for only this sub parameter
+                    int col22ab = rsGst7.getInt("col22");
+                    int col16ab = rsGst7.getInt("col16");
+                    String absval = String.valueOf(col22ab) + "/" + String.valueOf(col16ab);
+                    if (col16 != 0) {
+                        total = ((col22 *100)/col16);
+                    }else {
+                        total = 0;
+                    }
+                    String formattedTotal = String.format("%.2f", total);
+                    double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.marks7(totalScore);
+                    int sub_parameter_weighted_average = way_to_grade;
+                    gsta = new GST4A(rsGst7.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
+                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                    allGstaList.add(gsta);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (rsGst14aa != null) rsGst14aa.close();
-                if (con != null) con.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
-
-        // Sort by sub_parameter_weighted_average in descending order
-        allGstaList = allGstaList.stream()
-                .sorted(Comparator.comparing(TotalScore::getSub_parameter_weighted_average).reversed())
-                .collect(Collectors.toList());
-
-        // Set Zonal_rank based on the sorted sub_parameter_weighted_average
-        int currentRank = 1;
-        double previousValue = Double.NaN;
-        for (int i = 0; i < allGstaList.size(); i++) {
-            TotalScore currentScore = allGstaList.get(i);
-            if (Double.compare(currentScore.getSub_parameter_weighted_average(), previousValue) != 0) {
-                currentRank = i + 1; // Update rank when the value changes
-            }
-            currentScore.setZonal_rank(currentRank);
-            previousValue = currentScore.getSub_parameter_weighted_average();
-        }
-
         return allGstaList;
     }
 
