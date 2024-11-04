@@ -6,6 +6,7 @@ import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.AllParameterTotalScore;
 import com.ornates.cbic.service.DateCalculate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;

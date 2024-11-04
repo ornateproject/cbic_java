@@ -1,5 +1,6 @@
 package com.ornates.cbic.model.response;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -9,7 +10,7 @@ import java.time.format.DateTimeParseException;
  * Rakesh
  * Purpose: This method has core functionality related to Investigation.
  */
-public class FinancialYearConverter {
+public class FinancialYearConverter implements Serializable {
 
     public static int convertMonthToFinancialMonth(String date) {
         // Parse the date string to LocalDate

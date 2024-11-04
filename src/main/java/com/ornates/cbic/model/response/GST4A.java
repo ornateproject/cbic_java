@@ -1,6 +1,8 @@
 package com.ornates.cbic.model.response;
 
-public class GST4A {
+import java.io.Serializable;
+
+public class GST4A implements Serializable {
 
 	private String zone_name;
 	private String commissionerate_name;
