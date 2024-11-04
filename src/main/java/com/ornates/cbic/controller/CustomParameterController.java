@@ -646,7 +646,7 @@ public class CustomParameterController {
                     double tScore_9a = rsGst14aa.getDouble("total_score9a") * 100;
                     double tScore_9b = rsGst14aa.getDouble("total_score9b") * 100;
 
-                    Double median_9a = rsGst14aa.getDouble("numerator_9a");
+                    Double median_9a = rsGst14aa.getDouble("median_9a");
                     Double numerator_9a = rsGst14aa.getDouble("numerator_9a");
 
                     Double median_9b = rsGst14aa.getDouble("median9b");
@@ -690,7 +690,13 @@ public class CustomParameterController {
                     System.out.println("zoneName = " + zoneName);
                     System.out.println("commName : " + commName);
                     System.out.println("tScore_9a :" + tScore_9a);
+                    System.out.println("median_9a :" + median_9a);
+                    System.out.println("way_to_grade9a :" + way_to_grade9a);
+                    System.out.println("insentavization9a :" + insentavization9a);
                     System.out.println("tScore_9b :" + tScore_9b);
+                    System.out.println("median_9b :" + median_9b);
+                    System.out.println("way_to_grade9b :" + way_to_grade9b);
+                    System.out.println("insentavization9b :" + insentavization9b);
 
                 }
             } else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3

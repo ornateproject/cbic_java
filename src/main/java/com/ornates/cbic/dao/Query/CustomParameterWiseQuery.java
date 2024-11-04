@@ -947,14 +947,12 @@ public class CustomParameterWiseQuery {
                 "           SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) AS s6col9, \n" +
                 "           SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END) AS s6col12, \n" +
                 "           SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + prev_month_new + "' THEN c.CB_QUAN ELSE 0 END) AS s6col3,\n" +
-                "           -- numerator_9a as the sum of relevant columns\n" +
                 "           (\n" +
                 "             SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) + \n" +
                 "             SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END) + \n" +
                 "             SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) + \n" +
                 "             SUM(CASE WHEN c.COMMODITY_CODE = 6 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END)\n" +
                 "           ) AS numerator_9a,\n" +
-                "           -- total_score calculation\n" +
                 "           COALESCE((\n" +
                 "             (SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.SALE_QUAN ELSE 0 END) + \n" +
                 "              SUM(CASE WHEN c.COMMODITY_CODE = 3 AND c.MM_YYYY= '" + month_date + "' THEN c.PARTY_QUAN ELSE 0 END) + \n" +
@@ -1012,8 +1010,8 @@ public class CustomParameterWiseQuery {
                 "LEFT JOIN CTE_Ripe_Closing AS c ON r.ZONE_NAME = c.ZONE_NAME AND r.ZONE_CODE = c.ZONE_CODE AND r.COMM_NAME = c.COMM_NAME\n" +
                 "CROSS JOIN CTE_Median AS m\n" +
                 "LEFT JOIN OrderedData AS rd ON r.ZONE_NAME = rd.ZONE_NAME AND r.ZONE_CODE = rd.ZONE_CODE AND r.COMM_NAME = rd.COMM_NAME\n" +
-                "CROSS JOIN MedianValue AS mv\n" +
-                "WHERE r.ZONE_CODE = '" + zone_code + "' \n" +
+                "CROSS JOIN MedianValue AS mv \n" +
+                "WHERE r.ZONE_CODE = '" + zone_code + "'\n" +
                 "ORDER BY total_score9b DESC;\n";
         return query_assessment_cus9;
     }
