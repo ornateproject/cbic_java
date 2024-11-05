@@ -1429,8 +1429,8 @@ public class CustomParameterWiseQuery {
                 "        COALESCE(A.ZONE_NAME, B.ZONE_NAME, C.ZONE_NAME, D.ZONE_NAME) AS ZONE_NAME,\n" +
                 "        COALESCE(A.ZONE_CODE, B.ZONE_CODE, C.ZONE_CODE, D.ZONE_CODE) AS ZONE_CODE,\n" +
                 "        (A.s5col13_T1 + A.s5col17_T1 + C.s5col9_T2) AS numerator12A,\n" +
-                "        COALESCE(((A.s5col13_T1 + A.s5col17_T1 + C.s5col9_T2) / (B.s5col3_T1 + D.s5col3_T2)), 0) AS Total_score12A,\n" +
-                "        COALESCE(((E.s5col29_T1 - E.s5col31_T1) + (F.s5col23_T2 - F.s5col25_T2)) / (E.s5col29_T1 + F.s5col23_T2),0) AS total_score12B\n" +
+                "        COALESCE(((A.s5col13_T1 + A.s5col17_T1 + C.s5col9_T2) / (B.s5col3_T1 + D.s5col3_T2)), 0) *100 AS Total_score12A,\n" +
+                "        COALESCE(((E.s5col29_T1 - E.s5col31_T1) + (F.s5col23_T2 - F.s5col25_T2)) / (E.s5col29_T1 + F.s5col23_T2),0) *100 AS total_score12B\n" +
                 "    FROM CTE1 AS A\n" +
                 "    LEFT JOIN CTE2 AS B ON A.ZONE_CODE = B.ZONE_CODE\n" +
                 "    LEFT JOIN CTE3 AS C ON A.ZONE_CODE = C.ZONE_CODE\n" +
