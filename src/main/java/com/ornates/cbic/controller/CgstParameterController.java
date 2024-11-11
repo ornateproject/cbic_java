@@ -3221,7 +3221,7 @@ public class CgstParameterController {
 					double sub_parameter_weighted_average_11c = insentavization_11c * 0.25;
 					double sub_parameter_weighted_average_11d = insentavization_11d * 0.25;
 
-					double total_parameter_weight_average = sub_parameter_weighted_average_11a + sub_parameter_weighted_average_11b + sub_parameter_weighted_average_11c + sub_parameter_weighted_average_11d ;
+					double total_parameter_weight_average = (sub_parameter_weighted_average_11a + sub_parameter_weighted_average_11b + sub_parameter_weighted_average_11c + sub_parameter_weighted_average_11d) ;
 					totalScore = new TotalScore(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,total_parameter_weight_average);
 					allGstaList.add(totalScore);
 

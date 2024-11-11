@@ -440,26 +440,46 @@ public class CustomSubParameterWiseQuery {
     public String QueryFor_cus5c_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom5c="SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(14c.CLOSING_NO) AS col7, \n"
-                + "        SUM(14c.YEAR_1) AS col9,((SUM(14c.CLOSING_NO) - SUM(14c.YEAR_1)) / SUM(14c.CLOSING_NO)) as total_score,\n"
-                + "        CONCAT((SUM(14c.CLOSING_NO) - SUM(14c.YEAR_1)), '/', SUM(14c.CLOSING_NO)) as absval\n"
-                + "    FROM mis_gst_commcode AS cc \n"
-                + "    RIGHT JOIN mis_dgi_cus_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n"
-                + "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
-                + "    WHERE 14c.MM_YYYY = '" + month_date + "'\n"
-                + "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE;";
+        String queryCustom5c="SELECT zc.ZONE_NAME, \n" +
+                "       cc.ZONE_CODE, \n" +
+                "       SUM(14c.CLOSING_NO) AS col7,\n" +
+                "       SUM(14c.YEAR_1) AS col9,\n" +
+                "       ((SUM(14c.CLOSING_NO) - SUM(14c.YEAR_1)) / NULLIF(SUM(14c.CLOSING_NO), 0)) AS total_score,\n" +
+                "       CONCAT(SUM(14c.CLOSING_NO) - SUM(14c.YEAR_1), '/', SUM(14c.CLOSING_NO)) AS absval\n" +
+                "FROM mis_gst_commcode AS cc\n" +
+                "RIGHT JOIN mis_dgi_cus_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+                "GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "HAVING SUM(14c.CLOSING_NO) != 0; -- Exclude cases where denominator is 0\n";
         return queryCustom5c;
     }
     public String QueryFor_cus5c_CommissonaryWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom5c="SELECT zc.ZONE_NAME, cc.ZONE_CODE, cc.COMM_NAME, (14c.CLOSING_NO) AS col7, \n" +
-                "        (14c.YEAR_1) AS col9,(((14c.CLOSING_NO) - (14c.YEAR_1)) / (14c.CLOSING_NO)) as total_score,\n" +
-                "        CONCAT(((14c.CLOSING_NO) - (14c.YEAR_1)), '/', (14c.CLOSING_NO)) as absval\n" +
-                "    FROM mis_gst_commcode AS cc \n" +
-                "    RIGHT JOIN mis_dgi_cus_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '" + month_date + "' and cc.ZONE_CODE = '"+zone_code+"';";
+        String queryCustom5c="SELECT \n" +
+                "    zc.ZONE_NAME, \n" +
+                "    cc.ZONE_CODE, \n" +
+                "    cc.COMM_NAME, \n" +
+                "    cus.CLOSING_NO AS col7, \n" +
+                "    cus.YEAR_1 AS col9,\n" +
+                "    CASE \n" +
+                "        WHEN cus.CLOSING_NO != 0 THEN ((cus.CLOSING_NO - cus.YEAR_1) / cus.CLOSING_NO) \n" +
+                "        ELSE 0 \n" +
+                "    END AS total_score,\n" +
+                "    CONCAT(cus.CLOSING_NO - cus.YEAR_1, '/', cus.CLOSING_NO) AS absval\n" +
+                "FROM \n" +
+                "    mis_gst_commcode AS cc\n" +
+                "RIGHT JOIN \n" +
+                "    mis_dgi_cus_2 AS cus \n" +
+                "    ON cc.COMM_CODE = cus.COMM_CODE\n" +
+                "LEFT JOIN \n" +
+                "    mis_gst_zonecode AS zc \n" +
+                "    ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "WHERE \n" +
+                "    cus.MM_YYYY = '" + month_date + "'\n" +
+                "    AND cc.ZONE_CODE = '"+zone_code+"'\n" +
+                "    AND cus.CLOSING_NO != 0;\n";
         return queryCustom5c;
     }
     public String QueryFor_cus5c_AllCommissonaryWise(String month_date){
@@ -471,7 +491,8 @@ public class CustomSubParameterWiseQuery {
                 "    FROM mis_gst_commcode AS cc \n" +
                 "    RIGHT JOIN mis_dgi_cus_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '" + month_date + "';";
+                "    WHERE 14c.MM_YYYY = '" + month_date + "' "+
+                "HAVING SUM(14c.CLOSING_NO) != 0; -- Exclude cases where denominator is 0\n";
         return queryCustom5c;
     }
     // ********************************************************************************************************************************
@@ -987,73 +1008,73 @@ public class CustomSubParameterWiseQuery {
     public String QueryFor_cus6c_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom6c="WITH cte AS (\n"
-                + "    SELECT \n"
-                + "        zc.ZONE_NAME,\n"
-                + "        cc.ZONE_CODE,\n"
-                + "        -- Total import/export calculations for columns from the 14c table\n"
-                + "        SUM(COALESCE(14c.GOLD_DUTY, 0) + \n"
-                + "            COALESCE(14c.FICN_DUTY, 0) + \n"
-                + "            COALESCE(14c.WILD_DUTY, 0) + \n"
-                + "            COALESCE(14c.ODS_DUTY, 0) + \n"
-                + "            COALESCE(14c.IPR_DUTY, 0) + \n"
-                + "            COALESCE(14c.OTHERS_I_DUTY, 0) + \n"
-                + "            COALESCE(14c.GOLD_DUTY_E, 0) + \n"
-                + "            COALESCE(14c.NARCOTICS_DUTY_E, 0) + \n"
-                + "            COALESCE(14c.FICN_DUTY_E, 0) + \n"
-                + "            COALESCE(14c.WILD_DUTY_E, 0) + \n"
-                + "            COALESCE(14c.ODS_DUTY_E, 0) + \n"
-                + "            COALESCE(14c.IPR_DUTY_E, 0) + \n"
-                + "            COALESCE(14c.OTHERS_I_DUTY_E, 0) + \n"
-                + "            COALESCE(14c.CFC_DUTY, 0)) AS col18_1,\n"
-                + "        -- Total import/export calculations for columns from the 15c table\n"
-                + "        SUM(COALESCE(15c.CUSTOM_DUTY_NONGST_POL, 0) + \n"
-                + "            COALESCE(15c.CUSTOM_DUTY_NONGST_NON_POL, 0) + \n"
-                + "            COALESCE(15c.CESS_CESS, 0) + \n"
-                + "            COALESCE(15c.CESS_COMP_IMPORT, 0) + \n"
-                + "            COALESCE(15c.SEZ, 0) + \n"
-                + "            COALESCE(15c.OTHER_RECEIPTS_EXPORT_DUTY, 0) + \n"
-                + "            COALESCE(15c.OTHER_RECEIPTS_MISCLLANEOUS, 0)) AS col8_ddm,\n"
-                + "        SUM(COALESCE(15c_prev.OTHER_RECEIPTS_IGST_IMPORT, 0)) AS col9_ddm\n"
-                + "    FROM mis_dri_cus_1 AS 14c\n"
-                + "    INNER JOIN mis_gst_commcode AS cc\n"
-                + "        ON 14c.COMM_CODE = cc.COMM_CODE\n"
-                + "        AND 14c.MM_YYYY = '" + month_date + "'  -- Ensuring data is from April 2024\n"
-                + "    INNER JOIN mis_gst_zonecode AS zc\n"
-                + "        ON zc.ZONE_CODE = cc.ZONE_CODE\n"
-                + "    INNER JOIN mis_ddm_cus_1a AS 15c\n"
-                + "        ON 14c.COMM_CODE = 15c.COMM_CODE\n"
-                + "        AND 15c.MM_YYYY = '" + month_date + "'\n"
-                + "    LEFT JOIN mis_ddm_cus_1a AS 15c_prev\n"
-                + "        ON 14c.COMM_CODE = 15c_prev.COMM_CODE\n"
-                + "        AND 15c_prev.MM_YYYY = '" + month_date + "'\n"
-                + "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n"
-                + "),\n"
-                + "row_numbered_cte AS (\n"
-                + "    SELECT \n"
-                + "        *,\n"
-                + "        ROW_NUMBER() OVER (ORDER BY col18_1 ASC) AS row_num,\n"
-                + "        COUNT(*) OVER () AS total_rows\n"
-                + "    FROM cte\n"
-                + "),\n"
-                + "median_cte AS (\n"
-                + "    SELECT \n"
-                + "        col18_1\n"
-                + "    FROM row_numbered_cte\n"
-                + "    WHERE row_num = FLOOR((total_rows + 1) / 2)\n"
-                + ")\n"
-                + "SELECT \n"
-                + "    ZONE_NAME,\n"
-                + "    ZONE_CODE,\n"
-                + "    col18_1,\n"
-                + "    col8_ddm,\n"
-                + "    col9_ddm,\n"
-                + "    (SELECT col18_1 FROM median_cte) AS median_6c,\n"
-                + "    -- Absolute value in p/q form\n"
-                + "    CONCAT(ABS(col18_1), '/', ABS(col8_ddm + col9_ddm)) AS abs_value_pq\n"
-                + "FROM cte\n"
-                + "ORDER BY col18_1 ASC;\n"
-                + "";
+        String queryCustom6c="WITH cte AS (\n" +
+                "    SELECT \n" +
+                "        zc.ZONE_NAME,\n" +
+                "        cc.ZONE_CODE,\n" +
+                "        -- Total import/export calculations for columns from the 14c table\n" +
+                "        SUM(COALESCE(14c.GOLD_DUTY, 0) + \n" +
+                "            COALESCE(14c.FICN_DUTY, 0) + \n" +
+                "            COALESCE(14c.WILD_DUTY, 0) + \n" +
+                "            COALESCE(14c.ODS_DUTY, 0) + \n" +
+                "            COALESCE(14c.IPR_DUTY, 0) + \n" +
+                "            COALESCE(14c.OTHERS_I_DUTY, 0) + \n" +
+                "            COALESCE(14c.GOLD_DUTY_E, 0) + \n" +
+                "            COALESCE(14c.NARCOTICS_DUTY_E, 0) + \n" +
+                "            COALESCE(14c.FICN_DUTY_E, 0) + \n" +
+                "            COALESCE(14c.WILD_DUTY_E, 0) + \n" +
+                "            COALESCE(14c.ODS_DUTY_E, 0) + \n" +
+                "            COALESCE(14c.IPR_DUTY_E, 0) + \n" +
+                "            COALESCE(14c.OTHERS_I_DUTY_E, 0) + \n" +
+                "            COALESCE(14c.CFC_DUTY, 0)) AS col18_1,\n" +
+                "        -- Total import/export calculations for columns from the 15c table\n" +
+                "        SUM(COALESCE(15c.CUSTOM_DUTY_NONGST_POL, 0) + \n" +
+                "            COALESCE(15c.CUSTOM_DUTY_NONGST_NON_POL, 0) + \n" +
+                "            COALESCE(15c.CESS_CESS, 0) + \n" +
+                "            COALESCE(15c.CESS_COMP_IMPORT, 0) + \n" +
+                "            COALESCE(15c.SEZ, 0) + \n" +
+                "            COALESCE(15c.OTHER_RECEIPTS_EXPORT_DUTY, 0) + \n" +
+                "            COALESCE(15c.OTHER_RECEIPTS_MISCLLANEOUS, 0)) AS col8_ddm,\n" +
+                "        SUM(COALESCE(15c_prev.OTHER_RECEIPTS_IGST_IMPORT, 0)) AS col9_ddm\n" +
+                "    FROM mis_dri_cus_1 AS 14c\n" +
+                "    INNER JOIN mis_gst_commcode AS cc\n" +
+                "        ON 14c.COMM_CODE = cc.COMM_CODE\n" +
+                "        AND 14c.MM_YYYY = '" + month_date + "' -- Ensuring data is from April 2024\n" +
+                "    INNER JOIN mis_gst_zonecode AS zc\n" +
+                "        ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    INNER JOIN mis_ddm_cus_1a AS 15c\n" +
+                "        ON 14c.COMM_CODE = 15c.COMM_CODE\n" +
+                "        AND 15c.MM_YYYY = '" + month_date + "'\n" +
+                "    LEFT JOIN mis_ddm_cus_1a AS 15c_prev\n" +
+                "        ON 14c.COMM_CODE = 15c_prev.COMM_CODE\n" +
+                "        AND 15c_prev.MM_YYYY = '" + month_date + "'\n" +
+                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                "),\n" +
+                "row_numbered_cte AS (\n" +
+                "    SELECT \n" +
+                "        *,\n" +
+                "        ROW_NUMBER() OVER (ORDER BY col18_1 ASC) AS row_num,\n" +
+                "        COUNT(*) OVER () AS total_rows\n" +
+                "    FROM cte\n" +
+                "),\n" +
+                "median_cte AS (\n" +
+                "    SELECT \n" +
+                "        col18_1\n" +
+                "    FROM row_numbered_cte\n" +
+                "    WHERE row_num = FLOOR((total_rows + 1) / 2)\n" +
+                ")\n" +
+                "SELECT \n" +
+                "    ZONE_NAME,\n" +
+                "    ZONE_CODE,\n" +
+                "    col18_1,\n" +
+                "    col8_ddm,\n" +
+                "    col9_ddm,\n" +
+                "    (SELECT col18_1 FROM median_cte) AS median_6c,\n" +
+                "    -- Absolute value in p/q form\n" +
+                "    CONCAT(ABS(col18_1), '/', ABS(col8_ddm + col9_ddm)) AS abs_value_pq\n" +
+                "FROM cte\n" +
+                "WHERE ABS(col18_1) > 0 OR ABS(col8_ddm + col9_ddm) > 0\n" +
+                "ORDER BY col18_1 ASC;\n";
         return queryCustom6c;
     }
     public String QueryFor_cus6c_CommissonaryWise(String month_date, String zone_code){

@@ -81,13 +81,20 @@ public class CustomSubParameterController {
 
                     int insentavization = 0;
                     int way_to_grade = score.c_marks1(totalScore);
-                    String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
+                    //String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
+                    String absval = "";
+                    if (!(col_difference == 0 && col10 == 0)) {
+                        absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
+                    }
                     double sub_parameter_weighted_average_bfore = way_to_grade * .5 ;
                     String formattedSubParameterWeightedAverage = String.format("%.2f", sub_parameter_weighted_average_bfore);
                     double sub_parameter_weighted_average = Double.parseDouble(formattedSubParameterWeightedAverage);
 
-                    gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    // Filter out entries where absval would be "0/0"
+                    if (!(col_difference == 0 && col10 == 0)) {
+                        gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
+                        allGstaList.add(gsta);
+                    }
                 }
             }else if (type.equalsIgnoreCase("commissary")) { // cus 1
                 String queryCustom1=new CustomSubParameterWiseQuery().QueryFor_cus1a_CommissonaryWise(month_date,zone_code);
@@ -108,12 +115,18 @@ public class CustomSubParameterController {
 
                     int insentavization = 0;
                     int way_to_grade = score.c_marks1(totalScore);
-                    String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
+                    // String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
+                    String absval = "";
+                    if (!(col_difference == 0 && col10 == 0)) {
+                        absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
+                    }
                     double sub_parameter_weighted_average_bfore = way_to_grade * .5 ;
                     String formattedSubParameterWeightedAverage = String.format("%.2f", sub_parameter_weighted_average_bfore);
                     double sub_parameter_weighted_average = Double.parseDouble(formattedSubParameterWeightedAverage);
-                    gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    if (!(col_difference == 0 && col10 == 0)) {
+                        gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
+                        allGstaList.add(gsta);
+                    }
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) { // cus 1
 
@@ -133,13 +146,19 @@ public class CustomSubParameterController {
                     String gst = "no";
 
                     int insentavization = 0;
-                   int way_to_grade = score.c_marks1(totalScore);
-                    String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
-                    double sub_parameter_weighted_average_bfore = way_to_grade * .5 ;
+                    int way_to_grade = score.c_marks1(totalScore);
+                    //String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
+                    String absval = "";
+                    if (!(col_difference == 0 && col10 == 0)) {
+                        absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
+                    }
+                    double sub_parameter_weighted_average_bfore = way_to_grade * 0.5 ;
                     String formattedSubParameterWeightedAverage = String.format("%.2f", sub_parameter_weighted_average_bfore);
                     double sub_parameter_weighted_average = Double.parseDouble(formattedSubParameterWeightedAverage);
-                    gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    if (!(col_difference == 0 && col10 == 0)) {
+                        gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
+                        allGstaList.add(gsta);
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -181,7 +200,11 @@ public class CustomSubParameterController {
                     int way_to_grade = 0;
                     int insentavization = 0;
                     int sub_parameter_weighted_average = 0;
-                    String absval=String.valueOf(col10-col12)+"/"+String.valueOf(col10);
+                    //String absval=String.valueOf(col10-col12)+"/"+String.valueOf(col10);
+                    String absval = "";
+                    if (!(col10-col12 == 0 && col10 == 0)) {
+                        absval = String.valueOf(col10-col12 ) + "/" + String.valueOf(col10);
+                    }
 
                     if((col10) != 0) {
                         total = ((double) (col10-col12) / (col10));
@@ -192,9 +215,10 @@ public class CustomSubParameterController {
                     rank = score.c_marks2a(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
-                    gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
-                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    if (!(col10-col12  == 0 && col10 == 0)) {
+                        gsta = new GST4A(zoneName, commname, totalScore, absval, zoneCode, ra, Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
+                        allGstaList.add(gsta);
+                    }
                 }
             }else if (type.equalsIgnoreCase("commissary")) {
 //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'
@@ -443,11 +467,15 @@ public class CustomSubParameterController {
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
                     int col5a = rsGst14aa.getInt("col5a");
                     int col3a = rsGst14aa.getInt("col3a");
-                     median = rsGst14aa.getDouble("cus5a_median");
+                    median = rsGst14aa.getDouble("cus5a_median");
                     Double numerator_6c = rsGst14aa.getDouble("col5a");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    String absval=String.valueOf(col5a)+"/"+String.valueOf(col3a);
+                    // String absval=String.valueOf(col5a)+"/"+String.valueOf(col3a);
+                    String absval = "";
+                    if (!(col5a == 0 && col3a == 0)) {
+                        absval = String.valueOf(col5a ) + "/" + String.valueOf(col3a);
+                    }
                     if((col3a) != 0) {
                         total = ((double) (col5a) * 100 / (col3a));
                     }else {
@@ -462,9 +490,12 @@ public class CustomSubParameterController {
                     }
                     double sub_parameter_weighted_average = insentavization * 0.3;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
-                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    if (!(col5a == 0 && col3a == 0)) {
+
+                        gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore, absval, zoneCode, ra,
+                                Zonal_rank, gst, way_to_grade, insentavization, sub_parameter_weighted_average);
+                        allGstaList.add(gsta);
+                    }
                 }
                 System.out.println("median 5a zone wise  :-" + median);
             }else if (type.equalsIgnoreCase("commissary")) {
@@ -477,11 +508,15 @@ public class CustomSubParameterController {
                     String commname = rsGst14aa.getString("COMM_NAME");
                     int col5a = rsGst14aa.getInt("col5a");
                     int col3a = rsGst14aa.getInt("col3a");
-                     median = rsGst14aa.getDouble("cus5a_median");
+                    median = rsGst14aa.getDouble("cus5a_median");
                     Double numerator_6c = rsGst14aa.getDouble("col5a");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    String absval=String.valueOf(col5a)+"/"+String.valueOf(col3a);
+                    // String absval=String.valueOf(col5a)+"/"+String.valueOf(col3a);
+                    String absval = "";
+                    if (!(col5a == 0 && col3a == 0)) {
+                        absval = String.valueOf(col5a ) + "/" + String.valueOf(col3a);
+                    }
                     if((col3a) != 0) {
                         total = ((double) (col5a) * 100 / (col3a));
                     }else {
@@ -496,9 +531,10 @@ public class CustomSubParameterController {
                     }
                     double sub_parameter_weighted_average = insentavization * 0.3;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
-                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    if (!(col5a == 0 && col3a == 0)){
+                        gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
+                                Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                        allGstaList.add(gsta);}
                 }System.out.println("median 5a commi  wise  :-" + median);
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 String queryGst14aa = new CustomSubParameterWiseQuery().QueryFor_cus5a_AllCommissonaryWise(month_date);
@@ -510,12 +546,16 @@ public class CustomSubParameterController {
                     String commname = rsGst14aa.getString("COMM_NAME");
                     int col5a = rsGst14aa.getInt("col5a");
                     int col3a = rsGst14aa.getInt("col3a");
-                     median = rsGst14aa.getDouble("cus5a_median");
+                    median = rsGst14aa.getDouble("cus5a_median");
                     Double numerator_6c = rsGst14aa.getDouble("col5a");
                     //col3a is giving null for any date column, that reason total_score is o
                     int Zonal_rank = 0;
                     String gst = "no";
-                    String absval=String.valueOf(col5a)+"/"+String.valueOf(col3a);
+                    //  String absval=String.valueOf(col5a)+"/"+String.valueOf(col3a);
+                    String absval = "";
+                    if (!(col5a == 0 && col3a == 0)) {
+                        absval = String.valueOf(col5a ) + "/" + String.valueOf(col3a);
+                    }
                     if((col3a) != 0) {
                         total = ((double) (col5a) * 100 / (col3a));
                     }else {
@@ -530,9 +570,10 @@ public class CustomSubParameterController {
                     }
                     double sub_parameter_weighted_average = insentavization * 0.3;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
-                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    if (!(col5a == 0 && col3a == 0)){
+                        gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
+                                Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                        allGstaList.add(gsta);}
                 }System.out.println("median 5a commi  wise  :-" + median);
             }
         } catch (SQLException e) {
@@ -571,7 +612,11 @@ public class CustomSubParameterController {
                     int Zonal_rank = 0;
                     String gst = "no";
                     int insentavization = 0;
-                    String absval=String.valueOf(col7d)+"/"+String.valueOf(col6a);
+                    // String absval=String.valueOf(col7d)+"/"+String.valueOf(col6a);
+                    String absval = "";
+                    if (!(col7d == 0 && col6a == 0)) {
+                        absval = String.valueOf(col7d ) + "/" + String.valueOf(col6a);
+                    }
 
                     if(col6a !=0){
                         total = ((double) col7d * 100 / col6a);
@@ -586,9 +631,10 @@ public class CustomSubParameterController {
                     // 2 floating point
                     double sub_parameter_weighted_average = way_to_grade * 0.4;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
-                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    if (!(col7d == 0 && col6a == 0)){
+                        gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                                Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                        allGstaList.add(gsta);}
                 }
 
             } else if (type.equalsIgnoreCase("commissary")) {  // cus5b
@@ -604,7 +650,11 @@ public class CustomSubParameterController {
                     int Zonal_rank = 0;
                     String gst = "no";
                     int insentavization = 0;
-                    String absval=String.valueOf(col7d)+"/"+String.valueOf(col6a);
+                    //String absval=String.valueOf(col7d)+"/"+String.valueOf(col6a);
+                    String absval = "";
+                    if (!(col7d == 0 && col6a == 0)) {
+                        absval = String.valueOf(col7d ) + "/" + String.valueOf(col6a);
+                    }
 
                     if(col6a !=0){
                         total = ((double) col7d * 100 / col6a);
@@ -619,9 +669,10 @@ public class CustomSubParameterController {
                     // 2 floating point
                     double sub_parameter_weighted_average = way_to_grade * 0.4;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
-                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    if (!(col7d == 0 && col6a == 0)){
+                        gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                                Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                        allGstaList.add(gsta);}
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {  // cus5b
                 String queryGst14aa=new CustomSubParameterWiseQuery().QueryFor_cus5b_AllCommissonaryWise(month_date);
@@ -636,7 +687,11 @@ public class CustomSubParameterController {
                     int Zonal_rank = 0;
                     String gst = "no";
                     int insentavization = 0;
-                    String absval=String.valueOf(col7d)+"/"+String.valueOf(col6a);
+                    //String absval=String.valueOf(col7d)+"/"+String.valueOf(col6a);
+                    String absval = "";
+                    if (!(col7d == 0 && col6a == 0)) {
+                        absval = String.valueOf(col7d ) + "/" + String.valueOf(col6a);
+                    }
 
                     if(col6a !=0){
                         total = ((double) col7d * 100 / col6a);
@@ -651,9 +706,10 @@ public class CustomSubParameterController {
                     // 2 floating point
                     double sub_parameter_weighted_average = way_to_grade * 0.4;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
-                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    if (!(col7d == 0 && col6a == 0)){
+                        gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                                Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                        allGstaList.add(gsta);}
                 }
             }
 
@@ -688,6 +744,7 @@ public class CustomSubParameterController {
                     String ra= CustomRelaventAspect.cus5c_RA;
                     String commname= "ALL";
                     String absval= rsGst14aa.getString("absval");
+
                     total = rsGst14aa.getDouble("total_score") * 100;
                     int Zonal_rank = 0;
                     String gst = "no";
@@ -786,11 +843,15 @@ public class CustomSubParameterController {
                     int col9_3b = rsGst14aa.getInt("col9_3b");
                     int col3_3a = rsGst14aa.getInt("col3_3a");
                     int col3_3b = rsGst14aa.getInt("col3_3b");
-                     median = rsGst14aa.getDouble("median_6a");
+                    median = rsGst14aa.getDouble("median_6a");
                     Double numerator_6c = rsGst14aa.getDouble("numerator_9");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    String absval=String.valueOf(col9_3a+col9_3b)+"/"+String.valueOf(col3_3a+col3_3b);
+                    //String absval=String.valueOf(col9_3a+col9_3b)+"/"+String.valueOf(col3_3a+col3_3b);
+                    String absval = "";
+                    if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)) {
+                        absval = String.valueOf(col9_3a+col9_3b ) + "/" + String.valueOf(col3_3a+col3_3b);
+                    }
                     if((col3_3a+col3_3b) != 0) {
                         total = ((double) (col9_3a+col9_3b) * 100 / (col3_3a+col3_3b));
                     }else {
@@ -805,9 +866,10 @@ public class CustomSubParameterController {
                     }
                     double sub_parameter_weighted_average = way_to_grade * 0.2;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
-                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)) {
+                        gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                                Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                        allGstaList.add(gsta);}
                     allGstaList.sort((a, b) -> Double.compare(b.getTotal_score(), a.getTotal_score()));
                 }System.out.println("median 6a zone wise :-" + median);
             }else if (type.equalsIgnoreCase("commissary")) { // cus 1
@@ -821,12 +883,16 @@ public class CustomSubParameterController {
                     int col9_3b = rsGst14aa.getInt("col9_3b");
                     int col3_3a = rsGst14aa.getInt("col3_3a");
                     int col3_3b = rsGst14aa.getInt("col3_3b");
-                     median = rsGst14aa.getDouble("median_total_9");
+                    median = rsGst14aa.getDouble("median_total_9");
                     Double numerator_6c = rsGst14aa.getDouble("total_9");
                     //col3a is giving null for any date column, that reason total_score is o
                     int Zonal_rank = 0;
                     String gst = "no";
-                    String absval=String.valueOf(col9_3a+col9_3b)+"/"+String.valueOf(col3_3a+col3_3b);
+                    // String absval=String.valueOf(col9_3a+col9_3b)+"/"+String.valueOf(col3_3a+col3_3b);
+                    String absval = "";
+                    if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)) {
+                        absval = String.valueOf(col9_3a+col9_3b ) + "/" + String.valueOf(col3_3a+col3_3b);
+                    }
                     if((col3_3a+col3_3b) != 0) {
                         total = ((double) (col9_3a+col9_3b) * 100 / (col3_3a+col3_3b));
                     }else {
@@ -841,9 +907,10 @@ public class CustomSubParameterController {
                     }
                     double sub_parameter_weighted_average = way_to_grade * 0.2;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
-                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)) {
+                        gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                                Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                        allGstaList.add(gsta);}
                     allGstaList.sort((a, b) -> Double.compare(b.getTotal_score(), a.getTotal_score()));
                 }System.out.println("median 6a commi wise :-" + median);
             }else if (type.equalsIgnoreCase("all_commissary")) {
@@ -857,11 +924,15 @@ public class CustomSubParameterController {
                     int col9_3b = rsGst14aa.getInt("col9_3b");
                     int col3_3a = rsGst14aa.getInt("col3_3a");
                     int col3_3b = rsGst14aa.getInt("col3_3b");
-                     median = rsGst14aa.getDouble("median_total_9");
+                    median = rsGst14aa.getDouble("median_total_9");
                     Double numerator_6c = rsGst14aa.getDouble("total_9");
                     int Zonal_rank = 0;
                     String gst = "no";
-                    String absval=String.valueOf(col9_3a+col9_3b)+"/"+String.valueOf(col3_3a+col3_3b);
+                    //String absval=String.valueOf(col9_3a+col9_3b)+"/"+String.valueOf(col3_3a+col3_3b);
+                    String absval = "";
+                    if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)) {
+                        absval = String.valueOf(col9_3a+col9_3b ) + "/" + String.valueOf(col3_3a+col3_3b);
+                    }
                     if((col3_3a+col3_3b) != 0) {
                         total = ((double) (col9_3a+col9_3b) * 100 / (col3_3a+col3_3b));
                     }else {
@@ -876,9 +947,10 @@ public class CustomSubParameterController {
                     }
                     double sub_parameter_weighted_average = way_to_grade * 0.2;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
-                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)) {
+                        gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                                Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                        allGstaList.add(gsta);}
                     allGstaList.sort((a, b) -> Double.compare(b.getTotal_score(), a.getTotal_score()));
                 }
                 System.out.println("median 6a commi wise :-" + median);
@@ -918,7 +990,11 @@ public class CustomSubParameterController {
                     int Zonal_rank = 0;
                     String gst = "no";
                     int insentavization = 0;
-                    String absval=String.valueOf(col18_3a+col18_3b)+"/"+String.valueOf(col12_3a+col12_3b);
+                    // String absval=String.valueOf(col18_3a+col18_3b)+"/"+String.valueOf(col12_3a+col12_3b);
+                    String absval = "";
+                    if (!(col18_3a+col18_3b == 0 && col12_3a+col12_3b== 0)) {
+                        absval = String.valueOf(col18_3a+col18_3b ) + "/" + String.valueOf(col12_3a+col12_3b);
+                    }
                     if((col12_3a+col12_3b) != 0) {
                         total = ((double) (col18_3a+col18_3b) * 100 / (col12_3a+col12_3b));
                     }else {
@@ -929,9 +1005,10 @@ public class CustomSubParameterController {
                     int way_to_grade = score.c_marks6b(totalScore);
                     double sub_parameter_weighted_average = way_to_grade * 0.2;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-                    gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
-                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    if (!(col18_3a+col18_3b == 0 && col12_3a+col12_3b== 0)){
+                        gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                                Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                        allGstaList.add(gsta);}
                     allGstaList.sort((a, b) -> Double.compare(a.getTotal_score(), b.getTotal_score()));
                 }
             }else if (type.equalsIgnoreCase("commissary")) { // cus 1
@@ -949,7 +1026,11 @@ public class CustomSubParameterController {
                     String gst = "no";
 
                     int insentavization = 0;
-                    String absval=String.valueOf(col9_3a+col9_3b)+"/"+String.valueOf(col3_3a+col3_3b);
+                    //String absval=String.valueOf(col9_3a+col9_3b)+"/"+String.valueOf(col3_3a+col3_3b);
+                    String absval = "";
+                    if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)) {
+                        absval = String.valueOf(col9_3a+col9_3b ) + "/" + String.valueOf(col3_3a+col3_3b);
+                    }
                     if((col3_3a+col3_3b) != 0) {
                         total = ((double) (col9_3a+col9_3b) * 100 / (col3_3a+col3_3b));
                     }else {
@@ -960,9 +1041,10 @@ public class CustomSubParameterController {
                     int way_to_grade = score.c_marks6b(totalScore);
                     double sub_parameter_weighted_average = way_to_grade * 0.2;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
-                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)){
+                        gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
+                                Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                        allGstaList.add(gsta);}
                     allGstaList.sort((a, b) -> Double.compare(a.getTotal_score(), b.getTotal_score()));
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
@@ -981,7 +1063,11 @@ public class CustomSubParameterController {
                     String gst = "no";
 
                     int insentavization = 0;
-                    String absval=String.valueOf(col9_3a+col9_3b)+"/"+String.valueOf(col3_3a+col3_3b);
+                    // String absval=String.valueOf(col9_3a+col9_3b)+"/"+String.valueOf(col3_3a+col3_3b);
+                    String absval = "";
+                    if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)) {
+                        absval = String.valueOf(col9_3a+col9_3b ) + "/" + String.valueOf(col3_3a+col3_3b);
+                    }
                     if((col3_3a+col3_3b) != 0) {
                         total = ((double) (col9_3a+col9_3b) * 100 / (col3_3a+col3_3b));
                     }else {
@@ -992,9 +1078,10 @@ public class CustomSubParameterController {
                     int way_to_grade = score.c_marks6b(totalScore);
                     double sub_parameter_weighted_average = way_to_grade * 0.2;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-                    gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
-                            Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-                    allGstaList.add(gsta);
+                    if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)){
+                        gsta = new GST4A(rsGst14aa.getString("ZONE_NAME"), commname, totalScore,absval,zoneCode,ra,
+                                Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
+                        allGstaList.add(gsta);}
                     allGstaList.sort((a, b) -> Double.compare(a.getTotal_score(), b.getTotal_score()));
                 }
             }
