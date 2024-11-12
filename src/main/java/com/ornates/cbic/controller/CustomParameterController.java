@@ -82,7 +82,6 @@ public class CustomParameterController {
                     String gst = "ALL";
                     String absval = String.valueOf(col_difference) + "/" + String.valueOf(col10);
 
-                    // String ra= CustomRelaventAspect.cus1_RA;
                     String formattedTotal = String.format("%.2f", total);
                     double total_score = Double.parseDouble(formattedTotal);
                     Integer way_to_grade =score.c_marks1(total_score);
@@ -92,7 +91,6 @@ public class CustomParameterController {
                     allGstaList.add(totalScore);
                 }
             } else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
-                //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
                 String query_assessment_cus1 = new CustomParameterWiseQuery().QueryFor_TimelyPaymentOfRefunds_1_ParticularZoneWise(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment_cus1);
 
@@ -140,7 +138,6 @@ public class CustomParameterController {
                     allGstaList.add(totalScore);
                 }
             } else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
-                //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
                 String query_assessment_cus1 = new CustomParameterWiseQuery().QueryFor_TimelyPaymentOfRefunds_1_AllCommissary(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment_cus1);
 
@@ -164,7 +161,6 @@ public class CustomParameterController {
                     allGstaList.add(totalScore);
                 }
             } else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
-                //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
                 String query_assessment_cus1 = new CustomParameterWiseQuery().QueryFor_TimelyPaymentOfRefunds_1_ParticularCommissonaryInSubparameter(month_date,zone_code,come_name);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment_cus1);
 
@@ -219,11 +215,8 @@ public class CustomParameterController {
 
             if (type.equalsIgnoreCase("parameter")) { // adjudication all zone name 1
                 //		'" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
-                //String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-
                 String query_assessment_cus5 = new CustomParameterWiseQuery().QueryFor_Adjudication_5_ZoneWise(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment_cus5);
-                // rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
@@ -268,7 +261,6 @@ public class CustomParameterController {
                     String formattedSubParameterWeightedAverage = String.format("%.2f", sub_parameter_weighted_average);
 
 
-
                     String commName = "ALL";
                     String gst = "ALL";
                     String absval = "null";
@@ -299,7 +291,6 @@ public class CustomParameterController {
                 }
             } else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
                 String query_assessment = new CustomParameterWiseQuery().QueryFor_Adjudication_5_ParticularZoneWise(month_date,zone_code);
-
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -603,7 +594,6 @@ public class CustomParameterController {
 
                     double total_score = sub_parameter_weighted_average9a + sub_parameter_weighted_average9b;
                     double total_weighted_average = sub_parameter_weighted_average9a + sub_parameter_weighted_average9b;
-                    // Integer Zonal_rank = null;
                     String commName = "ALL";
                     String gst = "ALL";
                     String absval = "null";
@@ -616,22 +606,22 @@ public class CustomParameterController {
 
                     // FOR BACK DATA CHECK ONLY
 
-                    System.out.println(zoneName);
-                    System.out.println("total9a: " + total9a);
-                    System.out.println("numerator_9a : " + numerator_9a);
-                    System.out.println("median9a : " + median9a);
-                    System.out.println("way_to_grade9a: " + way_to_grade9a);
-                    System.out.println("insentavization9a : " + insentavization9a);
-                    System.out.println("sub_parameter_weighted_average9a : " + sub_parameter_weighted_average9a);
-
-                    System.out.println("total9b: " + total9b);
-                    System.out.println("numerator_9b : " + numerator_9b);
-                    System.out.println("median9b : " + median9b);
-                    System.out.println("way_to_grade9b: " + way_to_grade9b);
-                    System.out.println("insentavization9b : " + insentavization9b);
-                    System.out.println("sub_parameter_weighted_average9b : " + sub_parameter_weighted_average9b);
-                    System.out.println("total_score : " + total_weighted_average);
-                    System.out.println("********************************************************************************************");
+//                    System.out.println(zoneName);
+//                    System.out.println("total9a: " + total9a);
+//                    System.out.println("numerator_9a : " + numerator_9a);
+//                    System.out.println("median9a : " + median9a);
+//                    System.out.println("way_to_grade9a: " + way_to_grade9a);
+//                    System.out.println("insentavization9a : " + insentavization9a);
+//                    System.out.println("sub_parameter_weighted_average9a : " + sub_parameter_weighted_average9a);
+//
+//                    System.out.println("total9b: " + total9b);
+//                    System.out.println("numerator_9b : " + numerator_9b);
+//                    System.out.println("median9b : " + median9b);
+//                    System.out.println("way_to_grade9b: " + way_to_grade9b);
+//                    System.out.println("insentavization9b : " + insentavization9b);
+//                    System.out.println("sub_parameter_weighted_average9b : " + sub_parameter_weighted_average9b);
+//                    System.out.println("total_score : " + total_weighted_average);
+//                    System.out.println("********************************************************************************************");
 
                 }
             } else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -687,11 +677,11 @@ public class CustomParameterController {
 
                     // FOR BACK DATA CHECK ONLY
 
-                    System.out.println("********************************************************");
-                    System.out.println("zoneName = " + zoneName);
-                    System.out.println("commName : " + commName);
-                    System.out.println("tScore_9a :" + tScore_9a);
-                    System.out.println("tScore_9b :" + tScore_9b);
+//                    System.out.println("********************************************************");
+//                    System.out.println("zoneName = " + zoneName);
+//                    System.out.println("commName : " + commName);
+//                    System.out.println("tScore_9a :" + tScore_9a);
+//                    System.out.println("tScore_9b :" + tScore_9b);
 
                 }
             } else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
@@ -734,7 +724,6 @@ public class CustomParameterController {
                         insentavization = 0;
                     }
 
-                    // Integer Zonal_rank1 = null;
                     String commName = "null";
                     String ra = "Disposal of confiscated Gold and NDPS";
 
