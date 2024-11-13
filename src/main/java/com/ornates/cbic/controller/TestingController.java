@@ -3,7 +3,7 @@ package com.ornates.cbic.controller;
 import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.GST4A;
-import com.ornates.cbic.service.CgstGradeScore;
+import com.ornates.cbic.service.GstGradeScore;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +19,7 @@ import java.util.List;
 @Controller
 public class TestingController {
 
-    CgstGradeScore score = new CgstGradeScore();
+    GstGradeScore score = new GstGradeScore();
 
     @ResponseBody
     @RequestMapping(value = "/")

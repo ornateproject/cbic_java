@@ -9,14 +9,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
-import com.ornates.cbic.dao.Query.CgstMISQuery;
-import com.ornates.cbic.dao.Query.CgstMISReportsQuery;
+import com.ornates.cbic.dao.Query.GstMISReportsQuery;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
-import com.ornates.cbic.model.response.CgstMISReports;
-import com.ornates.cbic.model.response.TotalScore;
-import com.ornates.cbic.service.CgstGradeScore;
-import com.ornates.cbic.service.CgstMISReportsService;
-import com.ornates.cbic.service.RelevantAspect;
+import com.ornates.cbic.model.response.GstMISReports;
+import com.ornates.cbic.service.GstGradeScore;
+import com.ornates.cbic.service.GstMISReportsService;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,10 +25,10 @@ import com.ornates.cbic.dao.pool.JDBCConnection;
 //@CrossOrigin
 @RequestMapping("/cbic/CgstMISReports")
 @Controller
-public class CgstMISReportsController {
+public class GstMISReportsController {
 
-    CgstGradeScore score=new CgstGradeScore();
-    CgstMISReportsService cgstMISReportsService=new CgstMISReportsService();
+    GstGradeScore score=new GstGradeScore();
+    GstMISReportsService cgstMISReportsService=new GstMISReportsService();
 
     @ResponseBody
     @RequestMapping(value = "/")
@@ -140,7 +137,7 @@ public class CgstMISReportsController {
     //  http://localhost:8080/cbicApi/cbic/CgstMISReports/returnFiling?month_date=2024-07-01&type=5_Month
     //  http://localhost:8080/cbicApi/cbic/CgstMISReports/returnFiling?month_date=2024-07-01&type=6_Month
     public Object returnFiling(@RequestParam String month_date, @RequestParam String type) {
-        List<CgstMISReports> allGstaList = new ArrayList<>();
+        List<GstMISReports> allGstaList = new ArrayList<>();
         Connection con = null;
         ResultSet rsGst14aa = null;
         String formattedDate = "";
@@ -155,32 +152,32 @@ public class CgstMISReportsController {
 
             if (type.equalsIgnoreCase("1_Month")) {
                 formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new CgstMISReportsQuery().QueryFor_ReturnFiling_CurrentMonth_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_CurrentMonth_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(cgstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
             } else if (type.equalsIgnoreCase("2_Month")) {
                 formattedDate = parsedDate.minusMonths(1).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new CgstMISReportsQuery().QueryFor_ReturnFiling_1_MonthBack_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_1_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(cgstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
             } else if (type.equalsIgnoreCase("3_Month")) {
                 formattedDate = parsedDate.minusMonths(2).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new CgstMISReportsQuery().QueryFor_ReturnFiling_2_MonthBack_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_2_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(cgstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
             } else if (type.equalsIgnoreCase("4_Month")) {
                 formattedDate = parsedDate.minusMonths(3).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new CgstMISReportsQuery().QueryFor_ReturnFiling_3_MonthBack_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_3_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(cgstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
             } else if (type.equalsIgnoreCase("5_Month")) {
                 formattedDate = parsedDate.minusMonths(4).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new CgstMISReportsQuery().QueryFor_ReturnFiling_4_MonthBack_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_4_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(cgstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
             } else if (type.equalsIgnoreCase("6_Month")) {
                 formattedDate = parsedDate.minusMonths(5).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new CgstMISReportsQuery().QueryFor_ReturnFiling_5_MonthBack_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_5_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(cgstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
             }
@@ -196,18 +193,18 @@ public class CgstMISReportsController {
         }
 
         // Ensure all expected zone codes are included in the result
-        Map<String, CgstMISReports> resultMap = allGstaList.stream()
-                .collect(Collectors.toMap(CgstMISReports::getZone_code, report -> report));
+        Map<String, GstMISReports> resultMap = allGstaList.stream()
+                .collect(Collectors.toMap(GstMISReports::getZone_code, report -> report));
 
         String finalFormattedDate = formattedDate;
         expectedZoneCodes.forEach(zoneCode -> {
             if (!resultMap.containsKey(zoneCode)) {
-                resultMap.put(zoneCode, new CgstMISReports(null, zoneCode, null, 0.00, finalFormattedDate, "ReturnFiling"));
+                resultMap.put(zoneCode, new GstMISReports(null, zoneCode, null, 0.00, finalFormattedDate, "ReturnFiling"));
             }
         });
         // Return the list sorted by zone_code
         return resultMap.values().stream()
-                .sorted(Comparator.comparing(CgstMISReports::getZone_code))
+                .sorted(Comparator.comparing(GstMISReports::getZone_code))
                 .collect(Collectors.toList());
     }
 
@@ -221,7 +218,7 @@ public class CgstMISReportsController {
     //  http://localhost:8080/cbicApi/cbic/CgstMISReports/scrutiny?month_date=2024-07-01&type=5_Month
     //  http://localhost:8080/cbicApi/cbic/CgstMISReports/scrutiny?month_date=2024-07-01&type=6_Month
     public Object scrutiny(@RequestParam String month_date, @RequestParam String type) {
-        List<CgstMISReports> allGstaList = new ArrayList<>();
+        List<GstMISReports> allGstaList = new ArrayList<>();
         Connection con = null;
         ResultSet rsGst14aa = null;
         String formattedDate = "";
@@ -236,32 +233,32 @@ public class CgstMISReportsController {
 
             if (type.equalsIgnoreCase("1_Month")) {
                 formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new CgstMISReportsQuery().QueryFor_ReturnFiling_CurrentMonth_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_CurrentMonth_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(cgstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             } else if (type.equalsIgnoreCase("2_Month")) {
                 formattedDate = parsedDate.minusMonths(1).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new CgstMISReportsQuery().QueryFor_ReturnFiling_1_MonthBack_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_1_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(cgstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             } else if (type.equalsIgnoreCase("3_Month")) {
                 formattedDate = parsedDate.minusMonths(2).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new CgstMISReportsQuery().QueryFor_ReturnFiling_2_MonthBack_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_2_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(cgstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             } else if (type.equalsIgnoreCase("4_Month")) {
                 formattedDate = parsedDate.minusMonths(3).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new CgstMISReportsQuery().QueryFor_ReturnFiling_3_MonthBack_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_3_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(cgstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             } else if (type.equalsIgnoreCase("5_Month")) {
                 formattedDate = parsedDate.minusMonths(4).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new CgstMISReportsQuery().QueryFor_ReturnFiling_4_MonthBack_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_4_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(cgstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             } else if (type.equalsIgnoreCase("6_Month")) {
                 formattedDate = parsedDate.minusMonths(5).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new CgstMISReportsQuery().QueryFor_ReturnFiling_5_MonthBack_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_5_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(cgstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             }
@@ -277,18 +274,18 @@ public class CgstMISReportsController {
         }
 
         // Ensure all expected zone codes are included in the result
-        Map<String, CgstMISReports> resultMap = allGstaList.stream()
-                .collect(Collectors.toMap(CgstMISReports::getZone_code, report -> report));
+        Map<String, GstMISReports> resultMap = allGstaList.stream()
+                .collect(Collectors.toMap(GstMISReports::getZone_code, report -> report));
 
         String finalFormattedDate = formattedDate;
         expectedZoneCodes.forEach(zoneCode -> {
             if (!resultMap.containsKey(zoneCode)) {
-                resultMap.put(zoneCode, new CgstMISReports(null, zoneCode, null, 0.00, finalFormattedDate, "ReturnFiling"));
+                resultMap.put(zoneCode, new GstMISReports(null, zoneCode, null, 0.00, finalFormattedDate, "ReturnFiling"));
             }
         });
         // Return the list sorted by zone_code
         return resultMap.values().stream()
-                .sorted(Comparator.comparing(CgstMISReports::getZone_code))
+                .sorted(Comparator.comparing(GstMISReports::getZone_code))
                 .collect(Collectors.toList());
     }
 

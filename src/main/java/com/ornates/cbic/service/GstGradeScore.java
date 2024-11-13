@@ -1,6 +1,6 @@
 package com.ornates.cbic.service;
 
-public class CgstGradeScore {
+public class GstGradeScore {
 
 	// grade score for GST 1A 
 	public int marks1a(double total) {

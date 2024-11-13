@@ -2,7 +2,7 @@ package com.ornates.cbic.dao.Query;
 
 import com.ornates.cbic.service.DateCalculate;
 
-public class CgstMISReportsQuery {
+public class GstMISReportsQuery {
     // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Registration__1__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
     public String QueryFor_Registration_CurrentMonth_CgstMISReports(String month_date){
         // '" + month_date + "'	'" + zone_code + "' '" + MonthBack_1 + "' '" + next_month_new + "'  //  this query for current month

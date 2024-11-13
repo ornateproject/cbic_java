@@ -1,15 +1,14 @@
 package com.ornates.cbic.controller;
 
-import com.ornates.cbic.dao.Query.CGSTParameterWiseQuery;
+import com.ornates.cbic.dao.Query.GstParameterWiseQuery;
 import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.TotalScore;
 import com.ornates.cbic.service.DateCalculate;
-import com.ornates.cbic.service.CgstGradeScore;
+import com.ornates.cbic.service.GstGradeScore;
 
 import com.ornates.cbic.service.RelevantAspect;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,8 +25,8 @@ import java.util.stream.Collectors;
 //@CrossOrigin
 @RequestMapping("/cbic/t_score")
 @Controller
-public class CgstParameterController {
-	CgstGradeScore score=new CgstGradeScore();
+public class GstParameterController {
+	GstGradeScore score=new GstGradeScore();
 	@ResponseBody
 	@RequestMapping(value = "/")
 	public String home() {
@@ -765,7 +764,7 @@ public class CgstParameterController {
 			if (type.equalsIgnoreCase("parameter")) { // scrutiny/assessment all zone name 1
 //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
 				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-				String query_assessment = new CGSTParameterWiseQuery().QueryForScrutinyAssessmentZoneWise(month_date);
+				String query_assessment = new GstParameterWiseQuery().QueryForScrutinyAssessmentZoneWise(month_date);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -834,7 +833,7 @@ public class CgstParameterController {
 
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
 				// my sql query
-				String query_assessment = new CGSTParameterWiseQuery().QueryForScrutinyAssessmentParticularZoneWise(month_date,zone_code);
+				String query_assessment = new GstParameterWiseQuery().QueryForScrutinyAssessmentParticularZoneWise(month_date,zone_code);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next() ) {
@@ -883,7 +882,7 @@ public class CgstParameterController {
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
 				// my sql query
-				String query_assessment = new CGSTParameterWiseQuery().QueryForScrutinyAssessment_3_ParticularSubparameterWise(month_date,zone_code);
+				String query_assessment = new GstParameterWiseQuery().QueryForScrutinyAssessment_3_ParticularSubparameterWise(month_date,zone_code);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -932,7 +931,7 @@ public class CgstParameterController {
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
 				// my sql query
-				String query_assessment = new CGSTParameterWiseQuery().QueryForScrutinyAssessment_3_AllCommissary(month_date);
+				String query_assessment = new GstParameterWiseQuery().QueryForScrutinyAssessment_3_AllCommissary(month_date);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -984,7 +983,7 @@ public class CgstParameterController {
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
 				// my sql query
-				String query_assessment = new CGSTParameterWiseQuery().QueryForScrutinyAssessment_3_ParticularCommissonaryInSubparameter(month_date,zone_code,come_name);
+				String query_assessment = new GstParameterWiseQuery().QueryForScrutinyAssessment_3_ParticularCommissonaryInSubparameter(month_date,zone_code,come_name);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -1642,7 +1641,7 @@ public class CgstParameterController {
 				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 				String next_month_new = DateCalculate.getNextMonth(month_date);
 
-				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Adjudication_5_ZoneWise(month_date);
+				String query_assessment = new GstParameterWiseQuery().QueryFor_Adjudication_5_ZoneWise(month_date);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -1708,7 +1707,7 @@ public class CgstParameterController {
 
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
-				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Adjudication_5_ParticularZoneWise(month_date,zone_code);
+				String query_assessment = new GstParameterWiseQuery().QueryFor_Adjudication_5_ParticularZoneWise(month_date,zone_code);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -1753,7 +1752,7 @@ public class CgstParameterController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
-				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Adjudication_5_ParticularSubparameterWise(month_date,zone_code);
+				String query_assessment = new GstParameterWiseQuery().QueryFor_Adjudication_5_ParticularSubparameterWise(month_date,zone_code);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -1799,7 +1798,7 @@ public class CgstParameterController {
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'		'" + next_month_new + "'
 				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Adjudication_5_AllCommissary(month_date);
+				String query_assessment = new GstParameterWiseQuery().QueryFor_Adjudication_5_AllCommissary(month_date);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -1844,7 +1843,7 @@ public class CgstParameterController {
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'		'" + next_month_new + "'
 				//String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 				String next_month_new = DateCalculate.getNextMonth(month_date);
-				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Adjudication_5_ParticularCommissonaryInSubparameter(month_date,zone_code,come_name);
+				String query_assessment = new GstParameterWiseQuery().QueryFor_Adjudication_5_ParticularCommissonaryInSubparameter(month_date,zone_code,come_name);
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -1927,7 +1926,7 @@ public class CgstParameterController {
 		try {
 
 			if (type.equalsIgnoreCase("parameter")) { // returnFiling all zone name 1
-				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Adjudication_Legacy_6_ZoneWise(month_date);
+				String query_assessment = new GstParameterWiseQuery().QueryFor_Adjudication_Legacy_6_ZoneWise(month_date);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -1985,7 +1984,7 @@ public class CgstParameterController {
 				System.out.println("gst6 parameter wise median6a");
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
-				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Adjudication_Legacy_6_ParticularZoneWise(month_date,zone_code);
+				String query_assessment = new GstParameterWiseQuery().QueryFor_Adjudication_Legacy_6_ParticularZoneWise(month_date,zone_code);
 
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
@@ -2040,7 +2039,7 @@ public class CgstParameterController {
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'
-				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Adjudication_Legacy_6_ParticularSubparameterWise(month_date,zone_code);
+				String query_assessment = new GstParameterWiseQuery().QueryFor_Adjudication_Legacy_6_ParticularSubparameterWise(month_date,zone_code);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -2095,7 +2094,7 @@ public class CgstParameterController {
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'
-				String query_assessment =new CGSTParameterWiseQuery().QueryFor_Adjudication_Legacy_6_AllCommissary(month_date);
+				String query_assessment =new GstParameterWiseQuery().QueryFor_Adjudication_Legacy_6_AllCommissary(month_date);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -3173,7 +3172,7 @@ public class CgstParameterController {
 		try {
 
 			if (type.equalsIgnoreCase("parameter")) { // appeals all zone name 1
-				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Appeals_11_ZoneWise(month_date);
+				String query_assessment = new GstParameterWiseQuery().QueryFor_Appeals_11_ZoneWise(month_date);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -3234,7 +3233,7 @@ public class CgstParameterController {
 				}
 
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
-				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Appeals_11_ParticularZoneWise(month_date,zone_code);
+				String query_assessment = new GstParameterWiseQuery().QueryFor_Appeals_11_ParticularZoneWise(month_date,zone_code);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -3288,7 +3287,7 @@ public class CgstParameterController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("commissary")) {   // for show button, zone wise 3
-				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Appeals_11_ParticularSubparameterWise(month_date,zone_code);
+				String query_assessment = new GstParameterWiseQuery().QueryFor_Appeals_11_ParticularSubparameterWise(month_date,zone_code);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) { // query is correct but result is giving wrong data , some mistake is happneing in code
@@ -3342,7 +3341,7 @@ public class CgstParameterController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("all_commissary")) { // for all commissary 4
-				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Appeals_11_AllCommissary(month_date);
+				String query_assessment = new GstParameterWiseQuery().QueryFor_Appeals_11_AllCommissary(month_date);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {
@@ -3400,7 +3399,7 @@ public class CgstParameterController {
 					allGstaList.add(totalScore);
 				}
 			}else if (type.equalsIgnoreCase("come_name")) { // for particular commissary wise, show button 5
-				String query_assessment = new CGSTParameterWiseQuery().QueryFor_Appeals_11_ParticularCommissonaryInSubparameter(month_date,zone_code,come_name);
+				String query_assessment = new GstParameterWiseQuery().QueryFor_Appeals_11_ParticularCommissonaryInSubparameter(month_date,zone_code,come_name);
 				rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
 				while (rsGst14aa.next()) {

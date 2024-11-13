@@ -1,6 +1,6 @@
 package com.ornates.cbic.model.response;
 
-public class CgstMISReports {
+public class GstMISReports {
     private String zone_name;
     private String zone_code;
     private Double weighted_average;
@@ -8,7 +8,7 @@ public class CgstMISReports {
     private String date;
     private String gstname;
 
-    public CgstMISReports(String zone_name, String zone_code, Double weighted_average, Double national_average, String date, String gstname) {
+    public GstMISReports(String zone_name, String zone_code, Double weighted_average, Double national_average, String date, String gstname) {
         this.zone_name = zone_name;
         this.zone_code = zone_code;
         this.weighted_average = weighted_average;

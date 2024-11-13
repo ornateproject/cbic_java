@@ -1,13 +1,12 @@
 package com.ornates.cbic.controller;
 
-import com.ornates.cbic.dao.Query.CgstMISQuery;
+import com.ornates.cbic.dao.Query.GstMISQuery;
 import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.TotalScore;
-import com.ornates.cbic.service.CgstGradeScore;
+import com.ornates.cbic.service.GstGradeScore;
 import com.ornates.cbic.service.RelevantAspect;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,8 +22,8 @@ import java.util.stream.Collectors;
 //@CrossOrigin
 @RequestMapping("/cbic/MIS")
 @Controller
-public class CgstMISController {
-    CgstGradeScore score=new CgstGradeScore();
+public class GstMISController {
+    GstGradeScore score=new GstGradeScore();
     @ResponseBody
     @RequestMapping(value = "/")
     public String home() {
@@ -64,7 +63,7 @@ public class CgstMISController {
 
         try {
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Registration_CurrentMonth(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Registration_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -86,7 +85,7 @@ public class CgstMISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Registration_1_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Registration_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -106,7 +105,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Registration_2_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Registration_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -126,7 +125,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Registration_3_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Registration_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -146,7 +145,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Registration_4_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Registration_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -166,7 +165,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Registration_5_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Registration_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -221,7 +220,7 @@ public class CgstMISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new CgstMISQuery().QueryFor_ReturnFiling_CurrentMonth(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_ReturnFiling_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -246,7 +245,7 @@ public class CgstMISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_ReturnFiling_1_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_ReturnFiling_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -269,7 +268,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_ReturnFiling_2_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_ReturnFiling_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -292,7 +291,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_ReturnFiling_3_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_ReturnFiling_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -315,7 +314,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_ReturnFiling_4_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_ReturnFiling_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -338,7 +337,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_ReturnFiling_5_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_ReturnFiling_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -396,7 +395,7 @@ public class CgstMISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Scrutiny_CurrentMonth(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Scrutiny_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -444,7 +443,7 @@ public class CgstMISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Scrutiny_1_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Scrutiny_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -490,7 +489,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Scrutiny_2_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Scrutiny_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -536,7 +535,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Scrutiny_3_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Scrutiny_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -582,7 +581,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Scrutiny_4_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Scrutiny_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -628,7 +627,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Scrutiny_5_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Scrutiny_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -708,7 +707,7 @@ public class CgstMISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Investigation_CurrentMonth(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Investigation_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -733,7 +732,7 @@ public class CgstMISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Investigation_1_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Investigation_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -756,7 +755,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Investigation_2_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Investigation_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -779,7 +778,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Investigation_3_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Investigation_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -802,7 +801,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Investigation_4_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Investigation_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -825,7 +824,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Investigation_5_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Investigation_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -882,7 +881,7 @@ public class CgstMISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Adjudication_CurrentMonth(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Adjudication_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -925,7 +924,7 @@ public class CgstMISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Adjudication_1_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Adjudication_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -967,7 +966,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Adjudication_2_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Adjudication_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1009,7 +1008,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Adjudication_3_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Adjudication_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1051,7 +1050,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Adjudication_4_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Adjudication_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1093,7 +1092,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Adjudication_5_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Adjudication_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1170,7 +1169,7 @@ public class CgstMISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Adjudication_Legacy_CurrentMonth(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Adjudication_Legacy_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1225,7 +1224,7 @@ public class CgstMISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Adjudication_Legacy_1_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Adjudication_Legacy_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1279,7 +1278,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Adjudication_Legacy_2_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Adjudication_Legacy_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1333,7 +1332,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Adjudication_Legacy_3_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Adjudication_Legacy_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1387,7 +1386,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Adjudication_Legacy_4_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Adjudication_Legacy_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1441,7 +1440,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Adjudication_Legacy_5_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Adjudication_Legacy_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1530,7 +1529,7 @@ public class CgstMISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Refunds_CurrentMonth(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Refunds_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1554,7 +1553,7 @@ public class CgstMISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Refunds_1_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Refunds_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1577,7 +1576,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Refunds_2_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Refunds_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1600,7 +1599,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Refunds_3_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Refunds_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1623,7 +1622,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Refunds_4_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Refunds_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1646,7 +1645,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_Refunds_5_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_Refunds_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1704,7 +1703,7 @@ public class CgstMISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new CgstMISQuery().QueryFor_RecoveryOfArrears_CurrentMonth(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_RecoveryOfArrears_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1729,7 +1728,7 @@ public class CgstMISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_RecoveryOfArrears_1_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_RecoveryOfArrears_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1752,7 +1751,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_RecoveryOfArrears_2_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_RecoveryOfArrears_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1775,7 +1774,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_RecoveryOfArrears_3_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_RecoveryOfArrears_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1798,7 +1797,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_RecoveryOfArrears_4_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_RecoveryOfArrears_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1821,7 +1820,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_RecoveryOfArrears_5_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_RecoveryOfArrears_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1879,7 +1878,7 @@ public class CgstMISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new CgstMISQuery().QueryFor_arrestsAndProsecution_CurrentMonth(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_arrestsAndProsecution_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1904,7 +1903,7 @@ public class CgstMISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_arrestsAndProsecution_1_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_arrestsAndProsecution_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1927,7 +1926,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_arrestsAndProsecution_2_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_arrestsAndProsecution_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1950,7 +1949,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_arrestsAndProsecution_3_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_arrestsAndProsecution_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1973,7 +1972,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_arrestsAndProsecution_4_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_arrestsAndProsecution_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -1996,7 +1995,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_arrestsAndProsecution_5_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_arrestsAndProsecution_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -2054,7 +2053,7 @@ public class CgstMISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new CgstMISQuery().QueryFor_audit_CurrentMonth(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_audit_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -2079,7 +2078,7 @@ public class CgstMISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_audit_1_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_audit_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -2102,7 +2101,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_audit_2_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_audit_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -2125,7 +2124,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_audit_3_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_audit_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -2148,7 +2147,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_audit_4_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_audit_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -2171,7 +2170,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_audit_5_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_audit_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -2229,7 +2228,7 @@ public class CgstMISController {
         try {
 
             if (type.equalsIgnoreCase("CurrentMonth")) {
-                String query_assessment = new CgstMISQuery().QueryFor_appeals_CurrentMonth(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_appeals_CurrentMonth(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -2283,7 +2282,7 @@ public class CgstMISController {
                 }
 
             }else if (type.equalsIgnoreCase("1_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_appeals_1_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_appeals_1_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -2336,7 +2335,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("2_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_appeals_2_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_appeals_2_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -2389,7 +2388,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("3_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_appeals_3_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_appeals_3_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -2442,7 +2441,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("4_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_appeals_4_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_appeals_4_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {
@@ -2495,7 +2494,7 @@ public class CgstMISController {
                     allGstaList.add(totalScore);
                 }
             }else if (type.equalsIgnoreCase("5_MonthBack")) {
-                String query_assessment = new CgstMISQuery().QueryFor_appeals_5_MonthBack(month_date,zone_code);
+                String query_assessment = new GstMISQuery().QueryFor_appeals_5_MonthBack(month_date,zone_code);
                 rsGst14aa = GetExecutionSQL.getResult(query_assessment);
 
                 while (rsGst14aa.next()) {

@@ -1,9 +1,8 @@
 package com.ornates.cbic.dao.Query;
 
 import com.ornates.cbic.service.DateCalculate;
-import org.springframework.web.bind.annotation.RequestParam;
 
-public class CGSTParameterWiseQuery {
+public class GstParameterWiseQuery {
     // ***********************************GST 1 parameter wise *****************************************************************
     //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
     // this query will show all zone || 1no url

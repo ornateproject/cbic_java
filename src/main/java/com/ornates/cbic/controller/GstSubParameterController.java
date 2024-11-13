@@ -8,9 +8,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ornates.cbic.dao.Query.CGSTSubParameterWiseQuery;
+import com.ornates.cbic.dao.Query.GstSubParameterWiseQuery;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,7 +18,7 @@ import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.GST4A;
 import com.ornates.cbic.service.DateCalculate;
-import com.ornates.cbic.service.CgstGradeScore;
+import com.ornates.cbic.service.GstGradeScore;
 import com.ornates.cbic.service.RelevantAspect;
 /*
  * @Author: @Kinshuk_Maity
@@ -27,8 +26,8 @@ import com.ornates.cbic.service.RelevantAspect;
 //@CrossOrigin
 @RequestMapping("/cbic") //....
 @Controller
-public class CgstSubParameterController {
-    CgstGradeScore score=new CgstGradeScore();
+public class GstSubParameterController {
+    GstGradeScore score=new GstGradeScore();
     @ResponseBody
     @RequestMapping(value = "/")
     public String home() {
@@ -69,7 +68,7 @@ public class CgstSubParameterController {
         try {
             if (type.equalsIgnoreCase("zone")) {
                 // Query string
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst1a_ZoneWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst1a_ZoneWise(month_date);
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
                 while (rsGst14aa.next()) {
@@ -100,7 +99,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("commissary")) {
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst1a_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst1a_CommissonaryWise(month_date,zone_code);
 
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
                 while (rsGst14aa.next()) {
@@ -160,7 +159,7 @@ public class CgstSubParameterController {
         try {
             if (type.equalsIgnoreCase("zone")) {
                 // Query string
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst1b_ZoneWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst1b_ZoneWise(month_date);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
                 while (rsGst14aa.next()) {
                     String ra = RelevantAspect.GST1B_RA;
@@ -188,7 +187,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("commissary")) {
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst1b_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst1b_CommissonaryWise(month_date,zone_code);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
                 while (rsGst14aa.next()) {
                     String ra = RelevantAspect.GST1B_RA;
@@ -245,7 +244,7 @@ public class CgstSubParameterController {
         try {
             if (type.equalsIgnoreCase("zone")) {
                 // Query string
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst1c_ZoneWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst1c_ZoneWise(month_date);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
 
                 while (rsGst14aa.next()) {
@@ -279,7 +278,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("commissary")) {
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst1c_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst1c_CommissonaryWise(month_date,zone_code);
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
                 while(rsGst14aa.next()) {
@@ -312,7 +311,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst1c_AllCommissonaryWise(month_date);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst1c_AllCommissonaryWise(month_date);
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
                 while(rsGst14aa.next()) {
@@ -469,7 +468,7 @@ public class CgstSubParameterController {
         try {
             if (type.equalsIgnoreCase("zone")) {
                 // Query string
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst1d_ZoneWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst1d_ZoneWise(month_date);
 
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
@@ -500,7 +499,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("commissary")) {
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst1d_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst1d_CommissonaryWise(month_date,zone_code);
 
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
@@ -532,7 +531,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst1d_AllCommissonaryWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst1d_AllCommissonaryWise(month_date);
 
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
@@ -593,7 +592,7 @@ public class CgstSubParameterController {
         double total = 0.00;
         try {
             if (type.equalsIgnoreCase("zone")) {
-                String queryGst14aa =new CGSTSubParameterWiseQuery().QueryFor_gst1e_ZoneWise(month_date);
+                String queryGst14aa =new GstSubParameterWiseQuery().QueryFor_gst1e_ZoneWise(month_date);
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
                 while (rsGst14aa.next()) {
@@ -626,7 +625,7 @@ public class CgstSubParameterController {
                 }
             }else if (type.equalsIgnoreCase("commissary")) {
                 // Query string
-                String queryGst14aa =  new CGSTSubParameterWiseQuery().QueryFor_gst1e_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa =  new GstSubParameterWiseQuery().QueryFor_gst1e_CommissonaryWise(month_date,zone_code);
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
                 while (rsGst14aa.next()) {
@@ -658,7 +657,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst1e_AllCommissonaryWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst1e_AllCommissonaryWise(month_date);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
@@ -716,7 +715,7 @@ public class CgstSubParameterController {
         double total = 0.00;
         try {
             if (type.equalsIgnoreCase("zone")) {
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst1f_ZoneWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst1f_ZoneWise(month_date);
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
                 while (rsGst14aa.next()) {
@@ -746,7 +745,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("commissary")) {//gst1f-commissary
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst1f_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst1f_CommissonaryWise(month_date,zone_code);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
 
                 while (rsGst14aa.next()) {
@@ -778,7 +777,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst1f_AllCommissonaryWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst1f_AllCommissonaryWise(month_date);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
 
                 while (rsGst14aa.next()) {
@@ -839,7 +838,7 @@ public class CgstSubParameterController {
         try {
             // Query string
             if (type.equalsIgnoreCase("zone")) {
-                String queryGst14aa =new CGSTSubParameterWiseQuery().QueryFor_gst2_ZoneWise(month_date);
+                String queryGst14aa =new GstSubParameterWiseQuery().QueryFor_gst2_ZoneWise(month_date);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
@@ -869,7 +868,7 @@ public class CgstSubParameterController {
                 }
 
             } else if (type.equalsIgnoreCase("commissary")) {
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst2_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst2_CommissonaryWise(month_date,zone_code);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
@@ -897,7 +896,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst2_AllCommissonaryWise(month_date);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst2_AllCommissonaryWise(month_date);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
@@ -1106,7 +1105,7 @@ public class CgstSubParameterController {
 //                        "    RANK() OVER (ORDER BY total_score DESC) AS z_rank FROM ranked_data;";
 
                 //Result Set
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst3a_ZoneWise(month_date);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst3a_ZoneWise(month_date);
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
 
                 while(rsGst14aa.next()) {
@@ -1140,7 +1139,7 @@ public class CgstSubParameterController {
             }else if (type.equalsIgnoreCase("commissary")) {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
                 // Query string
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst3a_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst3a_CommissonaryWise(month_date,zone_code);
 
                 //Result Set
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
@@ -1176,7 +1175,7 @@ public class CgstSubParameterController {
                 }System.out.println("median gst3a all commi : "+ median);
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 // Query string
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst3a_AllCommissonaryWise(month_date);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst3a_AllCommissonaryWise(month_date);
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String ra = RelevantAspect.Gst3A_RA;
@@ -1360,7 +1359,7 @@ public class CgstSubParameterController {
 
         try {
             if (type.equalsIgnoreCase("zone")) {
-                String queryGst14aa =new CGSTSubParameterWiseQuery().QueryFor_gst3b_ZoneWise(month_date);
+                String queryGst14aa =new GstSubParameterWiseQuery().QueryFor_gst3b_ZoneWise(month_date);
 
 
                 PreparedStatement psGst14aa = con.prepareStatement(queryGst14aa);
@@ -1400,7 +1399,7 @@ public class CgstSubParameterController {
             }else if (type.equalsIgnoreCase("commissary")) {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
                 // Query string
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst3b_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst3b_CommissonaryWise(month_date,zone_code);
                 PreparedStatement psGst14aa=con.prepareStatement(queryGst14aa);
                 ResultSet rsGst14aa= psGst14aa.executeQuery();
 
@@ -1435,7 +1434,7 @@ public class CgstSubParameterController {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
 
                 // Query string
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst3b_AllCommissonaryWise(month_date);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst3b_AllCommissonaryWise(month_date);
                 //Prepared Statement
                 PreparedStatement psGst14aa=con.prepareStatement(queryGst14aa);
                 //Result Set
@@ -1500,7 +1499,7 @@ public class CgstSubParameterController {
                 // Query string
 
                 // Query string
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst4a_ZoneWise(month_date);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst4a_ZoneWise(month_date);
 
 
                 //Result Set
@@ -1553,7 +1552,7 @@ public class CgstSubParameterController {
 
             } else if (type.equalsIgnoreCase("commissary")) {
                 // Query string
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst4a_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst4a_CommissonaryWise(month_date,zone_code);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
@@ -1600,7 +1599,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst4a_AllCommissonaryWise(month_date);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst4a_AllCommissonaryWise(month_date);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
@@ -1677,7 +1676,7 @@ public class CgstSubParameterController {
         try {
             if (type.equalsIgnoreCase("zone")) {
                 // Query string
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst4b_ZoneWise(month_date);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst4b_ZoneWise(month_date);
                 PreparedStatement psGst14aa=con.prepareStatement(queryGst14aa);
 
                 //Result Set
@@ -1712,7 +1711,7 @@ public class CgstSubParameterController {
                 }
             } else if (type.equalsIgnoreCase("commissary")) {
                 // Query string
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst4b_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst4b_CommissonaryWise(month_date,zone_code);
 
 
                 //Prepared Statement
@@ -1748,7 +1747,7 @@ public class CgstSubParameterController {
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 // Query string
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst4b_AllCommissonaryWise(month_date);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst4b_AllCommissonaryWise(month_date);
                 //Prepared Statement
                 PreparedStatement psGst14aa=con.prepareStatement(queryGst14aa);
 
@@ -1812,7 +1811,7 @@ public class CgstSubParameterController {
             if (type.equalsIgnoreCase("zone")) {
 
                 // Query string
-                String queryGst3aa= new CGSTSubParameterWiseQuery().QueryFor_gst4c_ZoneWise(month_date);
+                String queryGst3aa= new GstSubParameterWiseQuery().QueryFor_gst4c_ZoneWise(month_date);
                 //Result Set
                 ResultSet rsGst14aa=GetExecutionSQL.getResult(queryGst3aa);
                 while( rsGst14aa.next()) {
@@ -1863,7 +1862,7 @@ public class CgstSubParameterController {
             } else if (type.equalsIgnoreCase("commissary")) { //gst4c
                 //String prev_month_new =DateCalculate.getPreviousMonth(month_date);
                 // Query string
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst4c_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst4c_CommissonaryWise(month_date,zone_code);
 
                 //Result Set
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
@@ -1900,7 +1899,7 @@ public class CgstSubParameterController {
                 System.out.println("gst4c commissonary median :" + median);
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 // Query string
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst4c_AllCommissonaryWise(month_date);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst4c_AllCommissonaryWise(month_date);
                 //Result Set
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next() ) {
@@ -1961,7 +1960,7 @@ public class CgstSubParameterController {
         try {
             if (type.equalsIgnoreCase("zone")) {
                 // Query string
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst4d_ZoneWise(month_date);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst4d_ZoneWise(month_date);
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String ra=RelevantAspect.GST4D_RA;
@@ -2008,7 +2007,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             } else if (type.equalsIgnoreCase("commissary")) {
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst4d_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst4d_CommissonaryWise(month_date,zone_code);
 //                // Query string
 //                String queryGst46a="SELECT " +
 //                        "cc.ZONE_CODE, " +
@@ -2118,7 +2117,7 @@ public class CgstSubParameterController {
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 // Query string
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst4d_AllCommissonaryWise(month_date);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst4d_AllCommissonaryWise(month_date);
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
                 while(rsGst14aa.next()) {
@@ -2198,7 +2197,7 @@ public class CgstSubParameterController {
         try {
             if (type.equalsIgnoreCase("zone")) {
                 // Query string
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst5a_ZoneWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst5a_ZoneWise(month_date);
                 PreparedStatement psGst14aa = con.prepareStatement(queryGst14aa);
                 ResultSet rsGst14aa = psGst14aa.executeQuery();
                 while (rsGst14aa.next()) {
@@ -2234,7 +2233,7 @@ public class CgstSubParameterController {
                 System.out.println("gst5a median zone wise:- " + median);
             }else if (type.equalsIgnoreCase("commissary")) {
                 // Query string
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst5a_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst5a_CommissonaryWise(month_date,zone_code);
 
 
                 //Prepared Statement
@@ -2275,7 +2274,7 @@ public class CgstSubParameterController {
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 // Query string
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst5a_AllCommissonaryWise(month_date);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst5a_AllCommissonaryWise(month_date);
 
 
                 //Prepared Statement
@@ -2338,7 +2337,7 @@ public class CgstSubParameterController {
         double total = 0.00;
         try {
             if (type.equalsIgnoreCase("zone")) {
-                String queryGst14aa =  new CGSTSubParameterWiseQuery().QueryFor_gst5b_ZoneWise(month_date);
+                String queryGst14aa =  new GstSubParameterWiseQuery().QueryFor_gst5b_ZoneWise(month_date);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
                 while (rsGst14aa.next()) {
                     String ra = RelevantAspect.Gst5B_RA;
@@ -2363,7 +2362,7 @@ public class CgstSubParameterController {
                 }
             }else if (type.equalsIgnoreCase("commissary")) {
                 // Query string
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst5b_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst5b_CommissonaryWise(month_date,zone_code);
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String commname=rsGst14aa.getString("COMM_NAME");
@@ -2393,7 +2392,7 @@ public class CgstSubParameterController {
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 // Query string
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst5b_AllCommissonaryWise(month_date);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst5b_AllCommissonaryWise(month_date);
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String commname=rsGst14aa.getString("COMM_NAME");
@@ -2449,7 +2448,7 @@ public class CgstSubParameterController {
 
         try {
             if (type.equalsIgnoreCase("zone")) {
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst6a_ZoneWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst6a_ZoneWise(month_date);
                 // Query string
 //                String queryGst14aa = "SELECT zc.ZONE_NAME,cc.ZONE_CODE,sum(14c.COMM_DISPOSAL_NO+14c.JC_DISPOSAL_NO+14c.AC_DISPOSAL_NO+14c.SUP_DISPOSAL_NO) as col9 " +
 //
@@ -2500,7 +2499,7 @@ public class CgstSubParameterController {
             }else if (type.equalsIgnoreCase("commissary")) { //6a
                 // Query string
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst6a_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst6a_CommissonaryWise(month_date,zone_code);
 
                 //Result Set
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
@@ -2533,7 +2532,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }System.out.println("gst6a commmi median :- " + median);
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst6a_AllCommissonaryWise(month_date);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst6a_AllCommissonaryWise(month_date);
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String commname=rsGst14aa.getString("COMM_NAME");
@@ -2600,7 +2599,7 @@ public class CgstSubParameterController {
 //                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE " +
 //                        "WHERE 14c.MM_YYYY = '" + month_date + "' GROUP BY cc.ZONE_CODE;";
 
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst6b_ZoneWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst6b_ZoneWise(month_date);
                 PreparedStatement psGst14aa = con.prepareStatement(queryGst14aa);
                 ResultSet rsGst14aa = psGst14aa.executeQuery();
                 while (rsGst14aa.next()) {
@@ -2632,7 +2631,7 @@ public class CgstSubParameterController {
                 }
             }else if (type.equalsIgnoreCase("commissary")) {
                 // Query string
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst6b_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst6b_CommissonaryWise(month_date,zone_code);
 
 
                 //Prepared Statement
@@ -2669,7 +2668,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) { //6b
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst6b_AllCommissonaryWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst6b_AllCommissonaryWise(month_date);
 
 
 
@@ -2747,7 +2746,7 @@ public class CgstSubParameterController {
 //                        "RIGHT JOIN mis_dgi_ce_1a AS 14c ON cc.COMM_CODE = 14c.COMM_CODE " +
 //                        "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE " +
 //                        "WHERE 14c.MM_YYYY = '" + prev_month_new + "' GROUP BY cc.ZONE_CODE;";
-                String queryGst14aa =  new CGSTSubParameterWiseQuery().QueryFor_gst6c_ZoneWise(month_date);
+                String queryGst14aa =  new GstSubParameterWiseQuery().QueryFor_gst6c_ZoneWise(month_date);
                 //Result Set
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
                 while (rsGst14aa.next()) {
@@ -2783,7 +2782,7 @@ public class CgstSubParameterController {
                 System.out.println("GST6C zone wise median :" + median);
             }else if (type.equalsIgnoreCase("commissary")) { // gst 6c
                 // Query string
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst6c_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst6c_CommissonaryWise(month_date,zone_code);
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String commname = rsGst14aa.getString("COMM_NAME");
@@ -2814,7 +2813,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }System.out.println("gst6c commmi(2no url) wise median " + median);
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst6c_AllCommissonaryWise(month_date);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst6c_AllCommissonaryWise(month_date);
                 //Result Set
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
@@ -2874,7 +2873,7 @@ public class CgstSubParameterController {
         try {
             if (type.equalsIgnoreCase("zone")) {
                 // Query string
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst6d_ZoneWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst6d_ZoneWise(month_date);
                 PreparedStatement psGst14aa = con.prepareStatement(queryGst14aa);
                 ResultSet rsGst14aa = psGst14aa.executeQuery();
                 while (rsGst14aa.next()) {
@@ -2905,7 +2904,7 @@ public class CgstSubParameterController {
                 }
             } else if (type.equalsIgnoreCase("commissary")) { // gst 6d
                 // Query string
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst6d_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst6d_CommissonaryWise(month_date,zone_code);
                 PreparedStatement psGst14aa=con.prepareStatement(queryGst14aa);
                 ResultSet rsGst14aa= psGst14aa.executeQuery();
                 while(rsGst14aa.next()) {
@@ -2935,7 +2934,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst6d_AllCommissonaryWise(month_date);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst6d_AllCommissonaryWise(month_date);
 
                 //Prepared Statement
                 PreparedStatement psGst14aa=con.prepareStatement(queryGst14aa);
@@ -2993,7 +2992,7 @@ public class CgstSubParameterController {
 
         try {
             if(type.equalsIgnoreCase("zone")) {
-                String quaryGst7 = new CGSTSubParameterWiseQuery().QueryFor_gst7_ZoneWise(month_date);
+                String quaryGst7 = new GstSubParameterWiseQuery().QueryFor_gst7_ZoneWise(month_date);
                 ResultSet rsGst7 = GetExecutionSQL.getResult(quaryGst7);
                 while (rsGst7.next()) {
                     String ra = RelevantAspect.Gst7_RA;
@@ -3024,7 +3023,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("commissary")) { // gst 7
-                String quaryGst7 =  new CGSTSubParameterWiseQuery().QueryFor_gst7_CommissonaryWise(month_date,zone_code);
+                String quaryGst7 =  new GstSubParameterWiseQuery().QueryFor_gst7_CommissonaryWise(month_date,zone_code);
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(quaryGst7);
                 while(rsGst14aa.next()) {
                     String ra=RelevantAspect.Gst7_RA;
@@ -3053,7 +3052,7 @@ public class CgstSubParameterController {
 
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) { // gst 7
-                String quaryGst7 = new CGSTSubParameterWiseQuery().QueryFor_gst7_AllCommissonaryWise(month_date);
+                String quaryGst7 = new GstSubParameterWiseQuery().QueryFor_gst7_AllCommissonaryWise(month_date);
 
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(quaryGst7);
@@ -3114,7 +3113,7 @@ public class CgstSubParameterController {
             if(type.equalsIgnoreCase("zone")) {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
                 // Query string
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst8a_ZoneWise(month_date);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst8a_ZoneWise(month_date);
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String ra=RelevantAspect.GST8A_RA;
@@ -3146,7 +3145,7 @@ public class CgstSubParameterController {
             }else if (type.equalsIgnoreCase("commissary")) {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
                 // Query string
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst8a_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst8a_CommissonaryWise(month_date,zone_code);
                 //Result Set
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
@@ -3180,7 +3179,7 @@ public class CgstSubParameterController {
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
                 // Query string
-                String queryGst14aa=  new CGSTSubParameterWiseQuery().QueryFor_gst8a_AllCommissonaryWise(month_date);
+                String queryGst14aa=  new GstSubParameterWiseQuery().QueryFor_gst8a_AllCommissonaryWise(month_date);
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String commname=rsGst14aa.getString("COMM_NAME");
@@ -3237,7 +3236,7 @@ public class CgstSubParameterController {
         try {
             if(type.equalsIgnoreCase("zone")) {
                 // Query string
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst8b_ZoneWise(month_date);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst8b_ZoneWise(month_date);
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String zoneCode = rsGst14aa.getString("ZONE_CODE");
@@ -3265,7 +3264,7 @@ public class CgstSubParameterController {
                 }
             }else if (type.equalsIgnoreCase("commissary")) {
                 // Query string
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst8b_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst8b_CommissonaryWise(month_date,zone_code);
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
@@ -3292,7 +3291,7 @@ public class CgstSubParameterController {
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 // Query string
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst8b_AllCommissonaryWise(month_date);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst8b_AllCommissonaryWise(month_date);
 
                 //Result Set
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
@@ -3359,7 +3358,7 @@ public class CgstSubParameterController {
         try {
             // Query string
             if (type.equalsIgnoreCase("zone")) {
-                String queryGst14aa =new CGSTSubParameterWiseQuery().QueryFor_gst9a_ZoneWise(month_date);
+                String queryGst14aa =new GstSubParameterWiseQuery().QueryFor_gst9a_ZoneWise(month_date);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
@@ -3387,7 +3386,7 @@ public class CgstSubParameterController {
                 }
 
             } else if (type.equalsIgnoreCase("commissary")) {
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst9a_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst9a_CommissonaryWise(month_date,zone_code);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
@@ -3413,7 +3412,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst9a_AllCommissonaryWise(month_date);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst9a_AllCommissonaryWise(month_date);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
@@ -3464,7 +3463,7 @@ public class CgstSubParameterController {
         double total = 0.00;
         try {
             if (type.equalsIgnoreCase("zone")) {
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst9b_ZoneWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst9b_ZoneWise(month_date);
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String ra= RelevantAspect.GST9B_RA;
@@ -3504,7 +3503,7 @@ public class CgstSubParameterController {
             } else if (type.equalsIgnoreCase("commissary")) { // gst 9b
                 String prev_month_new =DateCalculate.getPreviousMonth(month_date);
 
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst9b_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst9b_CommissonaryWise(month_date,zone_code);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
@@ -3544,7 +3543,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) { // gst 9b
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst9b_AllCommissonaryWise(month_date);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst9b_AllCommissonaryWise(month_date);
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String ra= RelevantAspect.GST9B_RA;
@@ -3615,7 +3614,7 @@ public class CgstSubParameterController {
 
         try {
             if (type.equalsIgnoreCase("zone")) {
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst10a_ZoneWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst10a_ZoneWise(month_date);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
                 while (rsGst14aa.next()) {
                     String ra = RelevantAspect.Gst10A_RA;
@@ -3655,7 +3654,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             } else if (type.equalsIgnoreCase("commissary")) { // gst 10a
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst10a_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst10a_CommissonaryWise(month_date,zone_code);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
                 while (rsGst14aa.next()) {
                     String ra = RelevantAspect.Gst10A_RA;
@@ -3695,7 +3694,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa =  new CGSTSubParameterWiseQuery().QueryFor_gst10a_AllCommissonaryWise(month_date);
+                String queryGst14aa =  new GstSubParameterWiseQuery().QueryFor_gst10a_AllCommissonaryWise(month_date);
 
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
 
@@ -3788,7 +3787,7 @@ public class CgstSubParameterController {
         try {
             // Query string
             if (type.equalsIgnoreCase("zone")) {
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst10b_ZoneWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst10b_ZoneWise(month_date);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
@@ -3824,7 +3823,7 @@ public class CgstSubParameterController {
                 }
 
             } else if (type.equalsIgnoreCase("commissary")) { // Gst 10b
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst10b_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst10b_CommissonaryWise(month_date,zone_code);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
@@ -3857,7 +3856,7 @@ public class CgstSubParameterController {
                     allGstaList.add(gsta);
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) { // Gst 10b
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst10b_AllCommissonaryWise(month_date);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst10b_AllCommissonaryWise(month_date);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
@@ -3919,7 +3918,7 @@ public class CgstSubParameterController {
         try {
 
             if (type.equalsIgnoreCase("zone")) {
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gs11a_ZoneWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gs11a_ZoneWise(month_date);
 
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
 
@@ -3955,7 +3954,7 @@ public class CgstSubParameterController {
             }else if (type.equalsIgnoreCase("commissary")) { //gst 11a
                 String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gs11a_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gs11a_CommissonaryWise(month_date,zone_code);
 
 
 
@@ -3993,7 +3992,7 @@ public class CgstSubParameterController {
             }else if (type.equalsIgnoreCase("all_commissary")) { //gst 11a
                 String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-                String queryGst14aa =  new CGSTSubParameterWiseQuery().QueryFor_gs11a_AllCommissonaryWise(month_date);
+                String queryGst14aa =  new GstSubParameterWiseQuery().QueryFor_gs11a_AllCommissonaryWise(month_date);
 
 
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
@@ -4054,7 +4053,7 @@ public class CgstSubParameterController {
             if (type.equalsIgnoreCase("zone")) {
                 String prev_month_new = DateCalculate.getPreviousMonth(month_date);
                 // Query string
-                String queryGst49 = new CGSTSubParameterWiseQuery().QueryFor_gst11b_ZoneWise(month_date);
+                String queryGst49 = new GstSubParameterWiseQuery().QueryFor_gst11b_ZoneWise(month_date);
                 ResultSet rsGst46b =GetExecutionSQL.getResult(queryGst49);
                 while(rsGst46b.next()) {
                     String ra= RelevantAspect.Gst11B_RA;
@@ -4098,7 +4097,7 @@ public class CgstSubParameterController {
                 }
             }else if (type.equalsIgnoreCase("commissary")) { //gst 11b
                 String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-                String queryGst49 = new CGSTSubParameterWiseQuery().QueryFor_gst11b_CommissonaryWise(month_date,zone_code);
+                String queryGst49 = new GstSubParameterWiseQuery().QueryFor_gst11b_CommissonaryWise(month_date,zone_code);
                 ResultSet rsGst46b =GetExecutionSQL.getResult(queryGst49);
 
                 while(rsGst46b.next()) {
@@ -4143,7 +4142,7 @@ public class CgstSubParameterController {
             }else if (type.equalsIgnoreCase("all_commissary")) { //gst 11b
                 String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-                String queryGst49 = new CGSTSubParameterWiseQuery().QueryFor_gst11b_AllCommissonaryWise(month_date);
+                String queryGst49 = new GstSubParameterWiseQuery().QueryFor_gst11b_AllCommissonaryWise(month_date);
                 ResultSet rsGst46b =GetExecutionSQL.getResult(queryGst49);
 
                 while(rsGst46b.next()) {
@@ -4212,7 +4211,7 @@ public class CgstSubParameterController {
         try {
             if (type.equalsIgnoreCase("zone")) {
                 // Query string
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst11c_ZoneWise(month_date);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst11c_ZoneWise(month_date);
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
                 while(rsGst14aa.next()) {
@@ -4251,7 +4250,7 @@ public class CgstSubParameterController {
                 String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
                 // Query string
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst11c_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst11c_CommissonaryWise(month_date,zone_code);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
@@ -4290,7 +4289,7 @@ public class CgstSubParameterController {
                 String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
                 // Query string
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst11c_AllCommissonaryWise(month_date);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst11c_AllCommissonaryWise(month_date);
 
                 ResultSet rsGst14aa =GetExecutionSQL.getResult(queryGst14aa);
 
@@ -4352,7 +4351,7 @@ public class CgstSubParameterController {
             if (type.equalsIgnoreCase("zone")) {
                 String prev_month_new = DateCalculate.getPreviousMonth(month_date);
                 // Query string
-                String queryGst49 = new CGSTSubParameterWiseQuery().QueryFor_gst11d_ZoneWise(month_date);
+                String queryGst49 = new GstSubParameterWiseQuery().QueryFor_gst11d_ZoneWise(month_date);
 
                 ResultSet rsGst46b =GetExecutionSQL.getResult(queryGst49);
 
@@ -4399,7 +4398,7 @@ public class CgstSubParameterController {
             }else if (type.equalsIgnoreCase("commissary")) {
                 String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-                String queryGst49 = new CGSTSubParameterWiseQuery().QueryFor_gst11d_CommissonaryWise(month_date,zone_code);
+                String queryGst49 = new GstSubParameterWiseQuery().QueryFor_gst11d_CommissonaryWise(month_date,zone_code);
 
 
 
@@ -4448,7 +4447,7 @@ public class CgstSubParameterController {
             }else if (type.equalsIgnoreCase("all_commissary")) {
                 String prev_month_new = DateCalculate.getPreviousMonth(month_date);
 
-                String queryGst49 = new CGSTSubParameterWiseQuery().QueryFor_gst11d_AllCommissonaryWise(month_date);
+                String queryGst49 = new GstSubParameterWiseQuery().QueryFor_gst11d_AllCommissonaryWise(month_date);
                 ResultSet rsGst46b =GetExecutionSQL.getResult(queryGst49);
 
                 while(rsGst46b.next()) {

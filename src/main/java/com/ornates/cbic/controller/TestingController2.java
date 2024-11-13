@@ -1,11 +1,10 @@
 package com.ornates.cbic.controller;
 
-import com.ornates.cbic.dao.Query.CGSTParameterWiseQuery;
-import com.ornates.cbic.dao.Query.CGSTSubParameterWiseQuery;
+import com.ornates.cbic.dao.Query.GstSubParameterWiseQuery;
 import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.GST4A;
-import com.ornates.cbic.service.CgstGradeScore;
+import com.ornates.cbic.service.GstGradeScore;
 
 import com.ornates.cbic.service.RelevantAspect;
 import org.springframework.stereotype.Controller;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 @Controller
 public class TestingController2 {
 
-    private final CgstGradeScore score = new CgstGradeScore();
+    private final GstGradeScore score = new GstGradeScore();
 
     @ResponseBody
     @RequestMapping(value = "/")
@@ -52,7 +51,7 @@ public class TestingController2 {
         List<GST4A> allGstaList = new ArrayList<>();
         try {
             if ("zone".equalsIgnoreCase(type)) {
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst5a_ZoneWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst5a_ZoneWise(month_date);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
                 while (rsGst14aa.next()) {
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
@@ -69,7 +68,7 @@ public class TestingController2 {
                             0, "no", way_to_grade, insentavization, sub_parameter_weighted_average));
                 }
             }else if ("commissary".equalsIgnoreCase(type)) {
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst5b_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst5b_CommissonaryWise(month_date,zone_code);
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String commname=rsGst14aa.getString("COMM_NAME");
@@ -93,7 +92,7 @@ public class TestingController2 {
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average));
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst5b_AllCommissonaryWise(month_date);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst5b_AllCommissonaryWise(month_date);
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String commname=rsGst14aa.getString("COMM_NAME");
@@ -130,7 +129,7 @@ public class TestingController2 {
         List<GST4A> allGstaList = new ArrayList<>();
         try {
             if ("zone".equalsIgnoreCase(type)) {
-                String queryGst14aa = new CGSTSubParameterWiseQuery().QueryFor_gst5b_ZoneWise(month_date);
+                String queryGst14aa = new GstSubParameterWiseQuery().QueryFor_gst5b_ZoneWise(month_date);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryGst14aa);
                 while (rsGst14aa.next()) {
                     String zoneName = rsGst14aa.getString("ZONE_NAME");
@@ -143,7 +142,7 @@ public class TestingController2 {
                             0, "no", way_to_grade, 0, sub_parameter_weighted_average));
                 }
             }else if (type.equalsIgnoreCase("commissary")) {
-                String queryGst14aa=new CGSTSubParameterWiseQuery().QueryFor_gst5b_CommissonaryWise(month_date,zone_code);
+                String queryGst14aa=new GstSubParameterWiseQuery().QueryFor_gst5b_CommissonaryWise(month_date,zone_code);
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String commname=rsGst14aa.getString("COMM_NAME");
@@ -167,7 +166,7 @@ public class TestingController2 {
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average));
                 }
             }else if (type.equalsIgnoreCase("all_commissary")) {
-                String queryGst14aa= new CGSTSubParameterWiseQuery().QueryFor_gst5b_AllCommissonaryWise(month_date);
+                String queryGst14aa= new GstSubParameterWiseQuery().QueryFor_gst5b_AllCommissonaryWise(month_date);
                 ResultSet rsGst14aa= GetExecutionSQL.getResult(queryGst14aa);
                 while(rsGst14aa.next()) {
                     String commname=rsGst14aa.getString("COMM_NAME");

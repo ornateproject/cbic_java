@@ -2,7 +2,7 @@ package com.ornates.cbic.dao.Query;
 
 import com.ornates.cbic.service.DateCalculate;
 
-public class CGSTSubParameterWiseQuery {
+public class GstSubParameterWiseQuery {
     public String QueryFor_gst1a_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
