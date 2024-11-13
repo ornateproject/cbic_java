@@ -47,7 +47,7 @@ public class CustomSubParameterWiseQuery {
                 + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
                 + "WHERE  \n"
                 + "    c14.MM_YYYY = '" + month_date + "'  \n"
-                + "    AND cc.ZONE_CODE = 71\n"
+                + "    AND cc.ZONE_CODE = '" + zone_code + "'\n"
                 + "ORDER BY \n"
                 + "    total_score ASC \n"
                 + "LIMIT 0, 1000;\n"
