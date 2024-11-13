@@ -28,7 +28,7 @@ import com.ornates.cbic.dao.pool.JDBCConnection;
 public class GstMISReportsController {
 
     GstGradeScore score=new GstGradeScore();
-    GstMISReportsService cgstMISReportsService=new GstMISReportsService();
+    GstMISReportsService gstMISReportsService =new GstMISReportsService();
 
     @ResponseBody
     @RequestMapping(value = "/")
@@ -154,32 +154,32 @@ public class GstMISReportsController {
                 formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
                 String query = new GstMISReportsQuery().QueryFor_ReturnFiling_CurrentMonth_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
-                allGstaList.addAll(cgstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
+                allGstaList.addAll(gstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
             } else if (type.equalsIgnoreCase("2_Month")) {
                 formattedDate = parsedDate.minusMonths(1).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
                 String query = new GstMISReportsQuery().QueryFor_ReturnFiling_1_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
-                allGstaList.addAll(cgstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
+                allGstaList.addAll(gstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
             } else if (type.equalsIgnoreCase("3_Month")) {
                 formattedDate = parsedDate.minusMonths(2).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
                 String query = new GstMISReportsQuery().QueryFor_ReturnFiling_2_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
-                allGstaList.addAll(cgstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
+                allGstaList.addAll(gstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
             } else if (type.equalsIgnoreCase("4_Month")) {
                 formattedDate = parsedDate.minusMonths(3).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
                 String query = new GstMISReportsQuery().QueryFor_ReturnFiling_3_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
-                allGstaList.addAll(cgstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
+                allGstaList.addAll(gstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
             } else if (type.equalsIgnoreCase("5_Month")) {
                 formattedDate = parsedDate.minusMonths(4).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
                 String query = new GstMISReportsQuery().QueryFor_ReturnFiling_4_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
-                allGstaList.addAll(cgstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
+                allGstaList.addAll(gstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
             } else if (type.equalsIgnoreCase("6_Month")) {
                 formattedDate = parsedDate.minusMonths(5).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
                 String query = new GstMISReportsQuery().QueryFor_ReturnFiling_5_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
-                allGstaList.addAll(cgstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
+                allGstaList.addAll(gstMISReportsService.processResultSet_ReturnFiling(rsGst14aa, formattedDate, "Return Filing"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -235,32 +235,32 @@ public class GstMISReportsController {
                 formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
                 String query = new GstMISReportsQuery().QueryFor_ReturnFiling_CurrentMonth_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
-                allGstaList.addAll(cgstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
+                allGstaList.addAll(gstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             } else if (type.equalsIgnoreCase("2_Month")) {
                 formattedDate = parsedDate.minusMonths(1).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
                 String query = new GstMISReportsQuery().QueryFor_ReturnFiling_1_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
-                allGstaList.addAll(cgstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
+                allGstaList.addAll(gstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             } else if (type.equalsIgnoreCase("3_Month")) {
                 formattedDate = parsedDate.minusMonths(2).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
                 String query = new GstMISReportsQuery().QueryFor_ReturnFiling_2_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
-                allGstaList.addAll(cgstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
+                allGstaList.addAll(gstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             } else if (type.equalsIgnoreCase("4_Month")) {
                 formattedDate = parsedDate.minusMonths(3).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
                 String query = new GstMISReportsQuery().QueryFor_ReturnFiling_3_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
-                allGstaList.addAll(cgstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
+                allGstaList.addAll(gstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             } else if (type.equalsIgnoreCase("5_Month")) {
                 formattedDate = parsedDate.minusMonths(4).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
                 String query = new GstMISReportsQuery().QueryFor_ReturnFiling_4_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
-                allGstaList.addAll(cgstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
+                allGstaList.addAll(gstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             } else if (type.equalsIgnoreCase("6_Month")) {
                 formattedDate = parsedDate.minusMonths(5).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
                 String query = new GstMISReportsQuery().QueryFor_ReturnFiling_5_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
-                allGstaList.addAll(cgstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
+                allGstaList.addAll(gstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -301,11 +301,83 @@ public class GstMISReportsController {
 
     // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Adjudication__5__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
     @ResponseBody
-    @RequestMapping(value = "/adjudication")
-    //  http://localhost:8080/cbicApi/cbic/CgstMISReports/registration?month_date=2024-04-01
-    public Object adjudication(@RequestParam String month_date){
-        System.out.println("Hello, I am RKS");
-        return null;
+    @RequestMapping(value = "/adjudication") //5
+    //  http://localhost:8080/cbicApi/cbic/CgstMISReports/adjudication?month_date=2024-07-01&type=1_Month
+    //  http://localhost:8080/cbicApi/cbic/CgstMISReports/adjudication?month_date=2024-07-01&type=2_Month
+    //  http://localhost:8080/cbicApi/cbic/CgstMISReports/adjudication?month_date=2024-07-01&type=3_Month
+    //  http://localhost:8080/cbicApi/cbic/CgstMISReports/adjudication?month_date=2024-07-01&type=4_Month
+    //  http://localhost:8080/cbicApi/cbic/CgstMISReports/adjudication?month_date=2024-07-01&type=5_Month
+    //  http://localhost:8080/cbicApi/cbic/CgstMISReports/adjudication?month_date=2024-07-01&type=6_Month
+    public Object adjudication(@RequestParam String month_date, @RequestParam String type) {
+        List<GstMISReports> allGstaList = new ArrayList<>();
+        Connection con = null;
+        ResultSet rsGst14aa = null;
+        String formattedDate = "";
+
+        // Define the expected zone codes from 50 to 70
+        List<String> expectedZoneCodes = IntStream.rangeClosed(50, 70)
+                .mapToObj(String::valueOf)
+                .collect(Collectors.toList());
+
+        try {
+            LocalDate parsedDate = LocalDate.parse(month_date);
+
+            if (type.equalsIgnoreCase("1_Month")) {
+                formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
+                String query = new GstMISReportsQuery().QueryFor_Adjudication_CurrentMonth_CgstMISReports(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query);
+                allGstaList.addAll(gstMISReportsService.processResultSet_Adjudication(rsGst14aa, formattedDate, "Adjudication"));
+            } else if (type.equalsIgnoreCase("2_Month")) {
+                formattedDate = parsedDate.minusMonths(1).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
+                String query = new GstMISReportsQuery().QueryFor_Adjudication_1_MonthBack_CgstMISReports(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query);
+                allGstaList.addAll(gstMISReportsService.processResultSet_Adjudication(rsGst14aa, formattedDate, "Adjudication"));
+            } else if (type.equalsIgnoreCase("3_Month")) {
+                formattedDate = parsedDate.minusMonths(2).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
+                String query = new GstMISReportsQuery().QueryFor_Adjudication_2_MonthBack_CgstMISReports(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query);
+                allGstaList.addAll(gstMISReportsService.processResultSet_Adjudication(rsGst14aa, formattedDate, "Adjudication"));
+            } else if (type.equalsIgnoreCase("4_Month")) {
+                formattedDate = parsedDate.minusMonths(3).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
+                String query = new GstMISReportsQuery().QueryFor_Adjudication_3_MonthBack_CgstMISReports(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query);
+                allGstaList.addAll(gstMISReportsService.processResultSet_Adjudication(rsGst14aa, formattedDate, "Adjudication"));
+            } else if (type.equalsIgnoreCase("5_Month")) {
+                formattedDate = parsedDate.minusMonths(4).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
+                String query = new GstMISReportsQuery().QueryFor_Adjudication_4_MonthBack_CgstMISReports(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query);
+                allGstaList.addAll(gstMISReportsService.processResultSet_Adjudication(rsGst14aa, formattedDate, "Adjudication"));
+            } else if (type.equalsIgnoreCase("6_Month")) {
+                formattedDate = parsedDate.minusMonths(5).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
+                String query = new GstMISReportsQuery().QueryFor_Adjudication_5_MonthBack_CgstMISReports(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query);
+                allGstaList.addAll(gstMISReportsService.processResultSet_Adjudication(rsGst14aa, formattedDate, "Adjudication"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rsGst14aa != null) rsGst14aa.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Ensure all expected zone codes are included in the result
+        Map<String, GstMISReports> resultMap = allGstaList.stream()
+                .collect(Collectors.toMap(GstMISReports::getZone_code, report -> report));
+
+        String finalFormattedDate = formattedDate;
+        expectedZoneCodes.forEach(zoneCode -> {
+            if (!resultMap.containsKey(zoneCode)) {
+                resultMap.put(zoneCode, new GstMISReports(null, zoneCode, null, 0.00, finalFormattedDate, "Adjudication"));
+            }
+        });
+        // Return the list sorted by zone_code
+        return resultMap.values().stream()
+                .sorted(Comparator.comparing(GstMISReports::getZone_code))
+                .collect(Collectors.toList());
     }
 
     // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Adjudication_Legacy__6__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
