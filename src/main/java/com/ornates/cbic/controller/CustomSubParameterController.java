@@ -864,7 +864,7 @@ public class CustomSubParameterController {
                     if (numerator_6c > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
-                    double sub_parameter_weighted_average = way_to_grade * 0.2;
+                    double sub_parameter_weighted_average = insentavization * 0.2;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
                     if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)) {
                         gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
@@ -905,7 +905,7 @@ public class CustomSubParameterController {
                     if (numerator_6c > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
-                    double sub_parameter_weighted_average = way_to_grade * 0.2;
+                    double sub_parameter_weighted_average = insentavization * 0.2;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
                     if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)) {
                         gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
@@ -945,7 +945,7 @@ public class CustomSubParameterController {
                     if (numerator_6c > median && way_to_grade < 10) {
                         insentavization += 1;
                     }
-                    double sub_parameter_weighted_average = way_to_grade * 0.2;
+                    double sub_parameter_weighted_average = insentavization * 0.2;
                     sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
                     if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)) {
                         gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
