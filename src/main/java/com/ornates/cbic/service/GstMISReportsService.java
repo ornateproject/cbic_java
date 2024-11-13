@@ -24,7 +24,7 @@ public class GstMISReportsService {
             String formattedTotal = String.format("%.2f", total);
             double total_score = Double.parseDouble(formattedTotal);
             Integer way_to_grade = score.marks2(total_score);
-            double weighted_average = way_to_grade * 0.5;
+            double weighted_average = way_to_grade;
 
             GstMISReports cgstMISReports = new GstMISReports(zoneName, zone_code, weighted_average, 0.00, formattedDate, gstname);
             reportsList.add(cgstMISReports);
