@@ -491,8 +491,7 @@ public class CustomSubParameterWiseQuery {
                 "    FROM mis_gst_commcode AS cc \n" +
                 "    RIGHT JOIN mis_dgi_cus_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
                 "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '" + month_date + "' "+
-                "HAVING SUM(14c.CLOSING_NO) != 0; -- Exclude cases where denominator is 0\n";
+                "    WHERE 14c.MM_YYYY = '" + month_date + "';";
         return queryCustom5c;
     }
     // ********************************************************************************************************************************

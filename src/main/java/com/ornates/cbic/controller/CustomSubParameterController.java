@@ -810,6 +810,7 @@ public class CustomSubParameterController {
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
                 }
+               // System.out.println("CUS 5C");
             }
         } catch (SQLException e) {
             e.printStackTrace();
