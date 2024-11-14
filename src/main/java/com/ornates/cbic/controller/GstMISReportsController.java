@@ -233,32 +233,32 @@ public class GstMISReportsController {
 
             if (type.equalsIgnoreCase("1_Month")) {
                 formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_CurrentMonth_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_Scrutiny_CurrentMonth_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(gstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             } else if (type.equalsIgnoreCase("2_Month")) {
                 formattedDate = parsedDate.minusMonths(1).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_1_MonthBack_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_Scrutiny_1_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(gstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             } else if (type.equalsIgnoreCase("3_Month")) {
                 formattedDate = parsedDate.minusMonths(2).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_2_MonthBack_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_Scrutiny_2_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(gstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             } else if (type.equalsIgnoreCase("4_Month")) {
                 formattedDate = parsedDate.minusMonths(3).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_3_MonthBack_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_Scrutiny_3_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(gstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             } else if (type.equalsIgnoreCase("5_Month")) {
                 formattedDate = parsedDate.minusMonths(4).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_4_MonthBack_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_Scrutiny_4_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(gstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             } else if (type.equalsIgnoreCase("6_Month")) {
                 formattedDate = parsedDate.minusMonths(5).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_5_MonthBack_CgstMISReports(month_date);
+                String query = new GstMISReportsQuery().QueryFor_Scrutiny_5_MonthBack_CgstMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(gstMISReportsService.processResultSet_Scrutiny(rsGst14aa, formattedDate, "Scrutiny"));
             }
@@ -280,7 +280,7 @@ public class GstMISReportsController {
         String finalFormattedDate = formattedDate;
         expectedZoneCodes.forEach(zoneCode -> {
             if (!resultMap.containsKey(zoneCode)) {
-                resultMap.put(zoneCode, new GstMISReports(null, zoneCode, null, 0.00, finalFormattedDate, "ReturnFiling"));
+                resultMap.put(zoneCode, new GstMISReports(null, zoneCode, null, 0.00, finalFormattedDate, "Scrutiny"));
             }
         });
         // Return the list sorted by zone_code
