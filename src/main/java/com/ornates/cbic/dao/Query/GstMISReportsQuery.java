@@ -1375,7 +1375,19 @@ public class GstMISReportsQuery {
        // '" + month_date + "'	'" + zone_code + "' '" + MonthBack_1 + "' '" + next_month_new + "'  //  this query for current month
        String MonthBack_1 = DateCalculate.get_1_MonthBack(month_date);
        //  in this query normal month date is current month and MonthBack_1 is a previous month
-       String queryGstParameter7 ="";
+       String queryGstParameter7 ="WITH CTE AS ( SELECT \n"
+               + "        SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) AS col16, \n"
+               + "        SUM(14c.age_breakup_above60_no) AS col22, cc.ZONE_CODE,zc.ZONE_NAME\n"
+               + "    FROM mis_gst_commcode AS cc \n"
+               + "    RIGHT JOIN mis_dpm_gst_4 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n"
+               + "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+               + "    WHERE 14c.MM_YYYY = '" + month_date + "' \n"
+               + "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n"
+               + ")\n"
+               + "SELECT ZONE_CODE, ZONE_NAME, col16, col22, (col22 * 100 / col16) AS total_score,\n"
+               + "CONCAT(col22, '/', col16) AS absolute_value,\n"
+               + "    ROW_NUMBER() OVER (ORDER BY (col22 / col16) ) AS z_rank\n"
+               + "FROM CTE ORDER BY total_score ASC;";
        return queryGstParameter7;
    }
     public String QueryFor_Refunds_1_MonthBack_CgstMISReports(String month_date){
@@ -1383,7 +1395,19 @@ public class GstMISReportsQuery {
         String MonthBack_1 = DateCalculate.get_1_MonthBack(month_date); // that is current month_date
         String MonthBack_2 = DateCalculate.get_2_MonthBack(month_date); // thas is previous month
         // in this query MonthBack_1 is a current month and MonthBack_2 is a previous month
-        String queryGstParameter7 ="";
+        String queryGstParameter7 ="WITH CTE AS ( SELECT \n"
+                + "        SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) AS col16, \n"
+                + "        SUM(14c.age_breakup_above60_no) AS col22, cc.ZONE_CODE,zc.ZONE_NAME\n"
+                + "    FROM mis_gst_commcode AS cc \n"
+                + "    RIGHT JOIN mis_dpm_gst_4 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n"
+                + "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "    WHERE 14c.MM_YYYY = '" + MonthBack_1 + "' \n"
+                + "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n"
+                + ")\n"
+                + "SELECT ZONE_CODE, ZONE_NAME, col16, col22, (col22 * 100 / col16) AS total_score,\n"
+                + "CONCAT(col22, '/', col16) AS absolute_value,\n"
+                + "    ROW_NUMBER() OVER (ORDER BY (col22 / col16) ) AS z_rank\n"
+                + "FROM CTE ORDER BY total_score ASC;";
         return queryGstParameter7;
     }
     public String QueryFor_Refunds_2_MonthBack_CgstMISReports(String month_date){
@@ -1391,7 +1415,19 @@ public class GstMISReportsQuery {
         String MonthBack_2 = DateCalculate.get_2_MonthBack(month_date); // that is current month_date
         String MonthBack_3 = DateCalculate.get_3_MonthBack(month_date); // thas is previous month
         // in this query MonthBack_2 is a current month and MonthBack_3 is a previous month
-        String queryGstParameter7 ="";
+        String queryGstParameter7 ="WITH CTE AS ( SELECT \n"
+                + "        SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) AS col16, \n"
+                + "        SUM(14c.age_breakup_above60_no) AS col22, cc.ZONE_CODE,zc.ZONE_NAME\n"
+                + "    FROM mis_gst_commcode AS cc \n"
+                + "    RIGHT JOIN mis_dpm_gst_4 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n"
+                + "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "    WHERE 14c.MM_YYYY = '" + MonthBack_2 + "' \n"
+                + "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n"
+                + ")\n"
+                + "SELECT ZONE_CODE, ZONE_NAME, col16, col22, (col22 * 100 / col16) AS total_score,\n"
+                + "CONCAT(col22, '/', col16) AS absolute_value,\n"
+                + "    ROW_NUMBER() OVER (ORDER BY (col22 / col16) ) AS z_rank\n"
+                + "FROM CTE ORDER BY total_score ASC;";
         return queryGstParameter7;
     }
     public String QueryFor_Refunds_3_MonthBack_CgstMISReports(String month_date){
@@ -1399,7 +1435,19 @@ public class GstMISReportsQuery {
         String MonthBack_3 = DateCalculate.get_3_MonthBack(month_date); // that is current month_date
         String MonthBack_4 = DateCalculate.get_4_MonthBack(month_date); // thas is previous month
         // in this query MonthBack_3 is a current month and MonthBack_4 is a previous month
-        String queryGstParameter7 ="";
+        String queryGstParameter7 ="WITH CTE AS ( SELECT \n"
+                + "        SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) AS col16, \n"
+                + "        SUM(14c.age_breakup_above60_no) AS col22, cc.ZONE_CODE,zc.ZONE_NAME\n"
+                + "    FROM mis_gst_commcode AS cc \n"
+                + "    RIGHT JOIN mis_dpm_gst_4 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n"
+                + "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "    WHERE 14c.MM_YYYY = '" + MonthBack_3 + "' \n"
+                + "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n"
+                + ")\n"
+                + "SELECT ZONE_CODE, ZONE_NAME, col16, col22, (col22 * 100 / col16) AS total_score,\n"
+                + "CONCAT(col22, '/', col16) AS absolute_value,\n"
+                + "    ROW_NUMBER() OVER (ORDER BY (col22 / col16) ) AS z_rank\n"
+                + "FROM CTE ORDER BY total_score ASC;";
         return queryGstParameter7;
     }
     public String QueryFor_Refunds_4_MonthBack_CgstMISReports(String month_date){
@@ -1407,7 +1455,19 @@ public class GstMISReportsQuery {
         String MonthBack_4 = DateCalculate.get_4_MonthBack(month_date); // that is current month_date
         String MonthBack_5 = DateCalculate.get_5_MonthBack(month_date); // thas is previous month
         // in this query MonthBack_4 is a current month and MonthBack_5 is a previous month
-        String queryGstParameter7 ="";
+        String queryGstParameter7 ="WITH CTE AS ( SELECT \n"
+                + "        SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) AS col16, \n"
+                + "        SUM(14c.age_breakup_above60_no) AS col22, cc.ZONE_CODE,zc.ZONE_NAME\n"
+                + "    FROM mis_gst_commcode AS cc \n"
+                + "    RIGHT JOIN mis_dpm_gst_4 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n"
+                + "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "    WHERE 14c.MM_YYYY = '" + MonthBack_4 + "' \n"
+                + "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n"
+                + ")\n"
+                + "SELECT ZONE_CODE, ZONE_NAME, col16, col22, (col22 * 100 / col16) AS total_score,\n"
+                + "CONCAT(col22, '/', col16) AS absolute_value,\n"
+                + "    ROW_NUMBER() OVER (ORDER BY (col22 / col16) ) AS z_rank\n"
+                + "FROM CTE ORDER BY total_score ASC;";
         return queryGstParameter7;
     }
     public String QueryFor_Refunds_5_MonthBack_CgstMISReports(String month_date){
@@ -1415,7 +1475,19 @@ public class GstMISReportsQuery {
         String MonthBack_5 = DateCalculate.get_5_MonthBack(month_date); // that is current month_date
         String MonthBack_6 = DateCalculate.get_6_MonthBack(month_date); // thas is previous month
         // in this query MonthBack_5 is a current month and MonthBack_6 is a previous month
-        String queryGstParameter7 ="";
+        String queryGstParameter7 ="WITH CTE AS ( SELECT \n"
+                + "        SUM(14c.opening_balance_no + 14c.RFD_01_NO - 14c.RFD_03_NO - 14c.RFD_06_SANCTIONED_NO - 14c.RFD_06_REJECTED_NO) AS col16, \n"
+                + "        SUM(14c.age_breakup_above60_no) AS col22, cc.ZONE_CODE,zc.ZONE_NAME\n"
+                + "    FROM mis_gst_commcode AS cc \n"
+                + "    RIGHT JOIN mis_dpm_gst_4 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n"
+                + "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "    WHERE 14c.MM_YYYY = '" + MonthBack_5 + "' \n"
+                + "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n"
+                + ")\n"
+                + "SELECT ZONE_CODE, ZONE_NAME, col16, col22, (col22 * 100 / col16) AS total_score,\n"
+                + "CONCAT(col22, '/', col16) AS absolute_value,\n"
+                + "    ROW_NUMBER() OVER (ORDER BY (col22 / col16) ) AS z_rank\n"
+                + "FROM CTE ORDER BY total_score ASC;";
         return queryGstParameter7;
     }
 

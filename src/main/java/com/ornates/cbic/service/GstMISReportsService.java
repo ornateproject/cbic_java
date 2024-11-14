@@ -131,4 +131,116 @@ public class GstMISReportsService {
         }
         return reportsList;
     }
+
+// =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Adjudication_Legacy__6__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+public List<GstMISReports> processResultSet_AdjudicationLegacy(ResultSet rs, String formattedDate, String gstname) throws SQLException {
+    List<GstMISReports> reportsList = new ArrayList<>();
+    while (rs.next()) {
+//            String zone_code = rs.getString("ZONE_CODE");
+//            String zoneName = rs.getString("ZONE_NAME");
+//            double total = rs.getDouble("total_score");
+//            String formattedTotal = String.format("%.2f", total);
+//            double total_score = Double.parseDouble(formattedTotal);
+//            Integer way_to_grade = score.marks2(total_score);
+//            double weighted_average = way_to_grade * 0.5;
+//
+//            CgstMISReports cgstMISReports = new CgstMISReports(zoneName, zone_code, weighted_average, 0.00, formattedDate, gstname);
+//            reportsList.add(cgstMISReports);
+    }
+    return reportsList;
 }
+// =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Refunds__7__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+public List<GstMISReports> processResultSet_Refunds(ResultSet rs, String formattedDate, String gstname) throws SQLException {
+    List<GstMISReports> reportsList = new ArrayList<>();
+    while (rs.next()) {
+        String zone_code = rs.getString("ZONE_CODE");
+        Integer insentavization = 0;
+        String zoneName = rs.getString("ZONE_NAME");
+        // Int Zonal_rank = rs.getInt("z_rank");
+        double tScore = rs.getDouble("total_score"); // 100 is multiply in query
+
+        String formattedTotal = String.format("%.2f", tScore);
+        double total_score = Double.parseDouble(formattedTotal);
+        int way_to_grade = score.marks7(total_score);
+        double weighted_average = way_to_grade * 0.5;
+
+        GstMISReports cgstMISReports = new GstMISReports(zoneName, zone_code, weighted_average, 0.00, formattedDate, gstname);
+            reportsList.add(cgstMISReports);
+    }
+    return reportsList;
+}
+
+// =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=RecoveryOfArrears__8__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+public List<GstMISReports> processResultSet_RecoveryOfArrears(ResultSet rs, String formattedDate, String gstname) throws SQLException {
+    List<GstMISReports> reportsList = new ArrayList<>();
+    while (rs.next()) {
+//            String zone_code = rs.getString("ZONE_CODE");
+//            String zoneName = rs.getString("ZONE_NAME");
+//            double total = rs.getDouble("total_score");
+//            String formattedTotal = String.format("%.2f", total);
+//            double total_score = Double.parseDouble(formattedTotal);
+//            Integer way_to_grade = score.marks2(total_score);
+//            double weighted_average = way_to_grade * 0.5;
+//
+//            GstMISReports cgstMISReports = new GstMISReports(zoneName, zone_code, weighted_average, 0.00, formattedDate, gstname);
+//            reportsList.add(cgstMISReports);
+    }
+    return reportsList;
+}
+
+// =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Arrests & prosecution__9__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+public List<GstMISReports> processResultSet_ArrestsAndProsecution(ResultSet rs, String formattedDate, String gstname) throws SQLException {
+    List<GstMISReports> reportsList = new ArrayList<>();
+    while (rs.next()) {
+//            String zone_code = rs.getString("ZONE_CODE");
+//            String zoneName = rs.getString("ZONE_NAME");
+//            double total = rs.getDouble("total_score");
+//            String formattedTotal = String.format("%.2f", total);
+//            double total_score = Double.parseDouble(formattedTotal);
+//            Integer way_to_grade = score.marks2(total_score);
+//            double weighted_average = way_to_grade * 0.5;
+//
+//            GstMISReports cgstMISReports = new GstMISReports(zoneName, zone_code, weighted_average, 0.00, formattedDate, gstname);
+//            reportsList.add(cgstMISReports);
+    }
+    return reportsList;
+}
+
+// =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Audit__10__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+public List<GstMISReports> processResultSet_Audit(ResultSet rs, String formattedDate, String gstname) throws SQLException {
+    List<GstMISReports> reportsList = new ArrayList<>();
+    while (rs.next()) {
+//            String zone_code = rs.getString("ZONE_CODE");
+//            String zoneName = rs.getString("ZONE_NAME");
+//            double total = rs.getDouble("total_score");
+//            String formattedTotal = String.format("%.2f", total);
+//            double total_score = Double.parseDouble(formattedTotal);
+//            Integer way_to_grade = score.marks2(total_score);
+//            double weighted_average = way_to_grade * 0.5;
+//
+//            GstMISReports cgstMISReports = new GstMISReports(zoneName, zone_code, weighted_average, 0.00, formattedDate, gstname);
+//            reportsList.add(cgstMISReports);
+    }
+    return reportsList;
+}
+
+// =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Appeals__11__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+public List<GstMISReports> processResultSet_Appeals(ResultSet rs, String formattedDate, String gstname) throws SQLException {
+    List<GstMISReports> reportsList = new ArrayList<>();
+    while (rs.next()) {
+//            String zone_code = rs.getString("ZONE_CODE");
+//            String zoneName = rs.getString("ZONE_NAME");
+//            double total = rs.getDouble("total_score");
+//            String formattedTotal = String.format("%.2f", total);
+//            double total_score = Double.parseDouble(formattedTotal);
+//            Integer way_to_grade = score.marks2(total_score);
+//            double weighted_average = way_to_grade * 0.5;
+//
+//            GstMISReports cgstMISReports = new GstMISReports(zoneName, zone_code, weighted_average, 0.00, formattedDate, gstname);
+//            reportsList.add(cgstMISReports);
+    }
+    return reportsList;
+}
+
+}
+
