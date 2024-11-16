@@ -4,8 +4,6 @@ import com.ornates.cbic.dao.Query.GstMISReportsQuery;
 import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.CustomMISReports;
-import com.ornates.cbic.model.response.GstMISReports;
-import com.ornates.cbic.service.CustomGreadeScore;
 import com.ornates.cbic.service.CustomMISReportsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
