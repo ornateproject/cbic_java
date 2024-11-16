@@ -228,16 +228,45 @@ public List<GstMISReports> processResultSet_Audit(ResultSet rs, String formatted
 public List<GstMISReports> processResultSet_Appeals(ResultSet rs, String formattedDate, String gstname) throws SQLException {
     List<GstMISReports> reportsList = new ArrayList<>();
     while (rs.next()) {
-//            String zone_code = rs.getString("ZONE_CODE");
-//            String zoneName = rs.getString("ZONE_NAME");
-//            double total = rs.getDouble("total_score");
-//            String formattedTotal = String.format("%.2f", total);
-//            double total_score = Double.parseDouble(formattedTotal);
-//            Integer way_to_grade = score.marks2(total_score);
-//            double weighted_average = way_to_grade * 0.5;
-//
-//            GstMISReports cgstMISReports = new GstMISReports(zoneName, zone_code, weighted_average, 0.00, formattedDate, gstname);
-//            reportsList.add(cgstMISReports);
+        String zone_code = rs.getString("ZONE_CODE");
+        String zoneName = rs.getString("ZONE_NAME");
+        double total_score_11a = rs.getDouble("total_score_11a") * 100;
+        double total_score_11b = rs.getDouble("total_score_11b") * 100;
+        double total_score_11c = rs.getDouble("total_score_11c") * 100;
+        double total_score_11d = rs.getDouble("total_score_11d") * 100;
+
+        double numerator_11a = rs.getDouble("numerator_11a");
+        double median_11a = rs.getDouble("median_11a");
+        double numerator_11c = rs.getDouble("numerator_11c");
+        double median_11c = rs.getDouble("median_11c");
+
+        Integer way_to_grade_11a = score.marks11a(total_score_11a, numerator_11a);
+        Integer way_to_grade_11b = score.marks11b(total_score_11b);
+        Integer way_to_grade_11c = score.marks11c(total_score_11c,numerator_11c);
+        Integer way_to_grade_11d = score.marks11d(total_score_11d);
+
+        int insentavization_11a = way_to_grade_11a;
+        int insentavization_11b = way_to_grade_11b;
+        int insentavization_11c = way_to_grade_11c;
+        int insentavization_11d = way_to_grade_11d;
+
+        if (numerator_11a > median_11a && way_to_grade_11a < 10) {
+            insentavization_11a += 1;
+        }
+        if (numerator_11c > median_11c && way_to_grade_11c < 10) {
+            insentavization_11c += 1;
+        }
+
+        double sub_parameter_weighted_average_11a = insentavization_11a * 0.25;
+        double sub_parameter_weighted_average_11b = insentavization_11b * 0.25;
+        double sub_parameter_weighted_average_11c = insentavization_11c * 0.25;
+        double sub_parameter_weighted_average_11d = insentavization_11d * 0.25;
+
+        double weighted_average = (sub_parameter_weighted_average_11a + sub_parameter_weighted_average_11b + sub_parameter_weighted_average_11c + sub_parameter_weighted_average_11d) ;
+
+
+        GstMISReports cgstMISReports = new GstMISReports(zoneName, zone_code, weighted_average, 0.00, formattedDate, gstname);
+            reportsList.add(cgstMISReports);
     }
     return reportsList;
 }
