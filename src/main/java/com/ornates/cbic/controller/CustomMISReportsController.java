@@ -1,6 +1,6 @@
 package com.ornates.cbic.controller;
 
-import com.ornates.cbic.dao.Query.GstMISReportsQuery;
+import com.ornates.cbic.dao.Query.CustomMISReportsQuery;
 import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.CustomMISReports;
@@ -48,6 +48,12 @@ public class CustomMISReportsController {
     // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Timely payment of  Refunds__1__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
     @ResponseBody
     @RequestMapping(value = "/TimelyPaymentOfRefunds")
+    //  http://localhost:8080/cbicApi/cbic/CustomMISReports/TimelyPaymentOfRefunds?month_date=2024-07-01&type=1_Month
+    //  http://localhost:8080/cbicApi/cbic/CustomMISReports/TimelyPaymentOfRefunds?month_date=2024-07-01&type=2_Month
+    //  http://localhost:8080/cbicApi/cbic/CustomMISReports/TimelyPaymentOfRefunds?month_date=2024-07-01&type=3_Month
+    //  http://localhost:8080/cbicApi/cbic/CustomMISReports/TimelyPaymentOfRefunds?month_date=2024-07-01&type=4_Month
+    //  http://localhost:8080/cbicApi/cbic/CustomMISReports/TimelyPaymentOfRefunds?month_date=2024-07-01&type=5_Month
+    //  http://localhost:8080/cbicApi/cbic/CustomMISReports/TimelyPaymentOfRefunds?month_date=2024-07-01&type=6_Month
     public Object TimelyPaymentOfRefunds(@RequestParam String month_date, @RequestParam String type){
         List<CustomMISReports> allGstaList = new ArrayList<>();
         Connection con = null;
@@ -65,32 +71,32 @@ public class CustomMISReportsController {
 
             if (type.equalsIgnoreCase("1_Month")) {
                 formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_CurrentMonth_CgstMISReports(month_date);
+                String query = new CustomMISReportsQuery().QueryFor_TimelyPaymentOfRefunds_CurrentMonth_CustomMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(customMISReportsService.processResultSet_TimelyPaymentOfRefunds(rsGst14aa, formattedDate, "Timely payment of  Refunds"));
             } else if (type.equalsIgnoreCase("2_Month")) {
                 formattedDate = parsedDate.minusMonths(1).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_1_MonthBack_CgstMISReports(month_date);
+                String query = new CustomMISReportsQuery().QueryFor_TimelyPaymentOfRefunds_1_MonthBack_CustomMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(customMISReportsService.processResultSet_TimelyPaymentOfRefunds(rsGst14aa, formattedDate, "Timely payment of  Refunds"));
             } else if (type.equalsIgnoreCase("3_Month")) {
                 formattedDate = parsedDate.minusMonths(2).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_2_MonthBack_CgstMISReports(month_date);
+                String query = new CustomMISReportsQuery().QueryFor_TimelyPaymentOfRefunds_2_MonthBack_CustomMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(customMISReportsService.processResultSet_TimelyPaymentOfRefunds(rsGst14aa, formattedDate, "Timely payment of  Refunds"));
             } else if (type.equalsIgnoreCase("4_Month")) {
                 formattedDate = parsedDate.minusMonths(3).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_3_MonthBack_CgstMISReports(month_date);
+                String query = new CustomMISReportsQuery().QueryFor_TimelyPaymentOfRefunds_3_MonthBack_CustomMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(customMISReportsService.processResultSet_TimelyPaymentOfRefunds(rsGst14aa, formattedDate, "Timely payment of  Refunds"));
             } else if (type.equalsIgnoreCase("5_Month")) {
                 formattedDate = parsedDate.minusMonths(4).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_4_MonthBack_CgstMISReports(month_date);
+                String query = new CustomMISReportsQuery().QueryFor_TimelyPaymentOfRefunds_4_MonthBack_CustomMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(customMISReportsService.processResultSet_TimelyPaymentOfRefunds(rsGst14aa, formattedDate, "Timely payment of  Refunds"));
             } else if (type.equalsIgnoreCase("6_Month")) {
                 formattedDate = parsedDate.minusMonths(5).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
-                String query = new GstMISReportsQuery().QueryFor_ReturnFiling_5_MonthBack_CgstMISReports(month_date);
+                String query = new CustomMISReportsQuery().QueryFor_TimelyPaymentOfRefunds_5_MonthBack_CustomMISReports(month_date);
                 rsGst14aa = GetExecutionSQL.getResult(query);
                 allGstaList.addAll(customMISReportsService.processResultSet_TimelyPaymentOfRefunds(rsGst14aa, formattedDate, "Timely payment of  Refunds"));
             }

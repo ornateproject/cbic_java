@@ -9,7 +9,27 @@ public class CustomMISReportsQuery {
         // '" + month_date + "'	'" + zone_code + "' '" + MonthBack_1 + "' '" + next_month_new + "'  //  this query for current month
         String MonthBack_1 = DateCalculate.get_1_MonthBack(month_date);
         //  in this query normal month date is current month and MonthBack_1 is a previous month
-        String queryGstParameter1 ="";
+        String queryGstParameter1 = "SELECT \n"
+                + "    zc.ZONE_NAME, \n"
+                + "    cc.ZONE_CODE, \n"
+                + "    SUM(c14.CLOSING_NO) AS col10, \n"
+                + "    SUM(c14.MONTHS_3_NO) AS col12, \n"
+                + "    (SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) AS col_difference,\n"
+                + "    ((SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) / SUM(c14.CLOSING_NO)) * 100 AS total_score \n"
+                + "FROM \n"
+                + "    mis_gst_commcode AS cc \n"
+                + "RIGHT JOIN \n"
+                + "    mis_dgi_cus_4 AS c14 ON c14.COMM_CODE = cc.COMM_CODE \n"
+                + "LEFT JOIN \n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "WHERE  \n"
+                + "    c14.MM_YYYY = '" + month_date + "'  \n"
+                + "GROUP BY \n"
+                + "    zc.ZONE_CODE, zc.ZONE_NAME, cc.ZONE_CODE \n"
+                + "ORDER BY \n"
+                + "    total_score ASC \n"
+                + "LIMIT 0, 1000;\n"
+                + "";
         return queryGstParameter1;
     }
     public String QueryFor_TimelyPaymentOfRefunds_1_MonthBack_CustomMISReports(String month_date){
@@ -17,7 +37,27 @@ public class CustomMISReportsQuery {
         String MonthBack_1 = DateCalculate.get_1_MonthBack(month_date); // that is current month_date
         String MonthBack_2 = DateCalculate.get_2_MonthBack(month_date); // thas is previous month
         // in this query MonthBack_1 is a current month and MonthBack_2 is a previous month
-        String queryGstParameter1 ="";
+        String queryGstParameter1 ="SELECT \n"
+                + "    zc.ZONE_NAME, \n"
+                + "    cc.ZONE_CODE, \n"
+                + "    SUM(c14.CLOSING_NO) AS col10, \n"
+                + "    SUM(c14.MONTHS_3_NO) AS col12, \n"
+                + "    (SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) AS col_difference,\n"
+                + "    ((SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) / SUM(c14.CLOSING_NO)) * 100 AS total_score \n"
+                + "FROM \n"
+                + "    mis_gst_commcode AS cc \n"
+                + "RIGHT JOIN \n"
+                + "    mis_dgi_cus_4 AS c14 ON c14.COMM_CODE = cc.COMM_CODE \n"
+                + "LEFT JOIN \n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "WHERE  \n"
+                + "    c14.MM_YYYY = '" + MonthBack_1 + "'  \n"
+                + "GROUP BY \n"
+                + "    zc.ZONE_CODE, zc.ZONE_NAME, cc.ZONE_CODE \n"
+                + "ORDER BY \n"
+                + "    total_score ASC \n"
+                + "LIMIT 0, 1000;\n"
+                + "";
         return queryGstParameter1;
     }
     public String QueryFor_TimelyPaymentOfRefunds_2_MonthBack_CustomMISReports(String month_date){
@@ -25,7 +65,27 @@ public class CustomMISReportsQuery {
         String MonthBack_2 = DateCalculate.get_2_MonthBack(month_date); // that is current month_date
         String MonthBack_3 = DateCalculate.get_3_MonthBack(month_date); // thas is previous month
         // in this query MonthBack_2 is a current month and MonthBack_3 is a previous month
-        String queryGstParameter1 ="";
+        String queryGstParameter1 ="SELECT \n"
+                + "    zc.ZONE_NAME, \n"
+                + "    cc.ZONE_CODE, \n"
+                + "    SUM(c14.CLOSING_NO) AS col10, \n"
+                + "    SUM(c14.MONTHS_3_NO) AS col12, \n"
+                + "    (SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) AS col_difference,\n"
+                + "    ((SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) / SUM(c14.CLOSING_NO)) * 100 AS total_score \n"
+                + "FROM \n"
+                + "    mis_gst_commcode AS cc \n"
+                + "RIGHT JOIN \n"
+                + "    mis_dgi_cus_4 AS c14 ON c14.COMM_CODE = cc.COMM_CODE \n"
+                + "LEFT JOIN \n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "WHERE  \n"
+                + "    c14.MM_YYYY = '" + MonthBack_2 + "'  \n"
+                + "GROUP BY \n"
+                + "    zc.ZONE_CODE, zc.ZONE_NAME, cc.ZONE_CODE \n"
+                + "ORDER BY \n"
+                + "    total_score ASC \n"
+                + "LIMIT 0, 1000;\n"
+                + "";
         return queryGstParameter1;
     }
     public String QueryFor_TimelyPaymentOfRefunds_3_MonthBack_CustomMISReports(String month_date){
@@ -33,7 +93,27 @@ public class CustomMISReportsQuery {
         String MonthBack_3 = DateCalculate.get_3_MonthBack(month_date); // that is current month_date
         String MonthBack_4 = DateCalculate.get_4_MonthBack(month_date); // thas is previous month
         // in this query MonthBack_3 is a current month and MonthBack_4 is a previous month
-        String queryGstParameter1 ="";
+        String queryGstParameter1 ="SELECT \n"
+                + "    zc.ZONE_NAME, \n"
+                + "    cc.ZONE_CODE, \n"
+                + "    SUM(c14.CLOSING_NO) AS col10, \n"
+                + "    SUM(c14.MONTHS_3_NO) AS col12, \n"
+                + "    (SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) AS col_difference,\n"
+                + "    ((SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) / SUM(c14.CLOSING_NO)) * 100 AS total_score \n"
+                + "FROM \n"
+                + "    mis_gst_commcode AS cc \n"
+                + "RIGHT JOIN \n"
+                + "    mis_dgi_cus_4 AS c14 ON c14.COMM_CODE = cc.COMM_CODE \n"
+                + "LEFT JOIN \n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "WHERE  \n"
+                + "    c14.MM_YYYY = '" + MonthBack_3 + "'  \n"
+                + "GROUP BY \n"
+                + "    zc.ZONE_CODE, zc.ZONE_NAME, cc.ZONE_CODE \n"
+                + "ORDER BY \n"
+                + "    total_score ASC \n"
+                + "LIMIT 0, 1000;\n"
+                + "";
         return queryGstParameter1;
     }
     public String QueryFor_TimelyPaymentOfRefunds_4_MonthBack_CustomMISReports(String month_date){
@@ -41,7 +121,27 @@ public class CustomMISReportsQuery {
         String MonthBack_4 = DateCalculate.get_4_MonthBack(month_date); // that is current month_date
         String MonthBack_5 = DateCalculate.get_5_MonthBack(month_date); // thas is previous month
         // in this query MonthBack_4 is a current month and MonthBack_5 is a previous month
-        String queryGstParameter1 ="";
+        String queryGstParameter1 ="SELECT \n"
+                + "    zc.ZONE_NAME, \n"
+                + "    cc.ZONE_CODE, \n"
+                + "    SUM(c14.CLOSING_NO) AS col10, \n"
+                + "    SUM(c14.MONTHS_3_NO) AS col12, \n"
+                + "    (SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) AS col_difference,\n"
+                + "    ((SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) / SUM(c14.CLOSING_NO)) * 100 AS total_score \n"
+                + "FROM \n"
+                + "    mis_gst_commcode AS cc \n"
+                + "RIGHT JOIN \n"
+                + "    mis_dgi_cus_4 AS c14 ON c14.COMM_CODE = cc.COMM_CODE \n"
+                + "LEFT JOIN \n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "WHERE  \n"
+                + "    c14.MM_YYYY = '" + MonthBack_4 + "'  \n"
+                + "GROUP BY \n"
+                + "    zc.ZONE_CODE, zc.ZONE_NAME, cc.ZONE_CODE \n"
+                + "ORDER BY \n"
+                + "    total_score ASC \n"
+                + "LIMIT 0, 1000;\n"
+                + "";
         return queryGstParameter1;
     }
     public String QueryFor_TimelyPaymentOfRefunds_5_MonthBack_CustomMISReports(String month_date){
@@ -49,7 +149,27 @@ public class CustomMISReportsQuery {
         String MonthBack_5 = DateCalculate.get_5_MonthBack(month_date); // that is current month_date
         String MonthBack_6 = DateCalculate.get_6_MonthBack(month_date); // thas is previous month
         // in this query MonthBack_5 is a current month and MonthBack_6 is a previous month
-        String queryGstParameter1 ="";
+        String queryGstParameter1 ="SELECT \n"
+                + "    zc.ZONE_NAME, \n"
+                + "    cc.ZONE_CODE, \n"
+                + "    SUM(c14.CLOSING_NO) AS col10, \n"
+                + "    SUM(c14.MONTHS_3_NO) AS col12, \n"
+                + "    (SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) AS col_difference,\n"
+                + "    ((SUM(c14.CLOSING_NO) - SUM(c14.MONTHS_3_NO)) / SUM(c14.CLOSING_NO)) * 100 AS total_score \n"
+                + "FROM \n"
+                + "    mis_gst_commcode AS cc \n"
+                + "RIGHT JOIN \n"
+                + "    mis_dgi_cus_4 AS c14 ON c14.COMM_CODE = cc.COMM_CODE \n"
+                + "LEFT JOIN \n"
+                + "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n"
+                + "WHERE  \n"
+                + "    c14.MM_YYYY = '" + MonthBack_5 + "'  \n"
+                + "GROUP BY \n"
+                + "    zc.ZONE_CODE, zc.ZONE_NAME, cc.ZONE_CODE \n"
+                + "ORDER BY \n"
+                + "    total_score ASC \n"
+                + "LIMIT 0, 1000;\n"
+                + "";
         return queryGstParameter1;
     }
 

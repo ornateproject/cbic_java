@@ -16,18 +16,14 @@ public class CustomMISReportsService {
     public List<CustomMISReports> processResultSet_TimelyPaymentOfRefunds(ResultSet rs,String formattedDate, String gstname ) throws SQLException {
         List<CustomMISReports> reportsList = new ArrayList<>();
         while (rs.next()) {
-            double col_difference=rs.getInt("col_difference");
-            double col10=rs.getInt("col10");
             String zone_code = rs.getString("ZONE_CODE");
-            Integer insentavization = 0;
             String zoneName = rs.getString("ZONE_NAME");
             double  total = rs.getDouble("total_score");
 
             String formattedTotal = String.format("%.2f", total);
             double total_score = Double.parseDouble(formattedTotal);
             Integer way_to_grade =score.c_marks1(total_score);
-            String ra = "Timely Payment Of Refunds";
-            double weighted_average = way_to_grade * 0.5;
+            double weighted_average = way_to_grade;
 
             CustomMISReports customMISReports = new CustomMISReports(zoneName, zone_code, weighted_average, 0.00, formattedDate, gstname);
             reportsList.add(customMISReports);
