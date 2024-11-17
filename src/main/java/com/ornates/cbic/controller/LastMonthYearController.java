@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,7 @@ import com.ornates.cbic.service.DateCalculate;
 @RequestMapping("/cbic/MonthYear")
 @Controller
 public class LastMonthYearController {
+    private Logger logger = LoggerFactory.getLogger(CustomMISReportsController.class);
     @ResponseBody
     @RequestMapping(value = "/")
     public String home() {

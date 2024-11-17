@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ornates.cbic.dao.Query.GstSubParameterWiseQuery;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +29,7 @@ import com.ornates.cbic.service.RelevantAspect;
 @RequestMapping("/cbic") //....
 @Controller
 public class GstSubParameterController {
+    private Logger logger = LoggerFactory.getLogger(CustomMISReportsController.class);
     GstGradeScore score=new GstGradeScore();
     @ResponseBody
     @RequestMapping(value = "/")

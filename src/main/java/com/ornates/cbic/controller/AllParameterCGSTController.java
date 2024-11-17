@@ -5,6 +5,8 @@ import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.AllParameterTotalScore;
 import com.ornates.cbic.service.DateCalculate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +23,7 @@ import java.util.List;
 @RequestMapping("/cbic/allParameter")
 @Controller
 public class AllParameterCGSTController {
+    private Logger logger = LoggerFactory.getLogger(CustomMISReportsController.class);
     @ResponseBody
     @RequestMapping(value = "/")
     public String home() {

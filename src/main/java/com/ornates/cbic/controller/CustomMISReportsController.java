@@ -5,6 +5,8 @@ import com.ornates.cbic.dao.pool.JDBCConnection;
 import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.CustomMISReports;
 import com.ornates.cbic.service.CustomMISReportsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +25,7 @@ import java.util.stream.IntStream;
 @RequestMapping("/cbic/CustomMISReports")
 @Controller
 public class CustomMISReportsController {
+    private Logger logger = LoggerFactory.getLogger(CustomMISReportsController.class);
     CustomMISReportsService customMISReportsService = new CustomMISReportsService();
 
     @ResponseBody

@@ -6,6 +6,8 @@ import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.TotalScore;
 import com.ornates.cbic.service.GstGradeScore;
 import com.ornates.cbic.service.RelevantAspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/cbic/MIS")
 @Controller
 public class GstMISController {
+    private Logger logger = LoggerFactory.getLogger(CustomMISReportsController.class);
     GstGradeScore score=new GstGradeScore();
     @ResponseBody
     @RequestMapping(value = "/")

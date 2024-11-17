@@ -7,6 +7,8 @@ import com.ornates.cbic.model.response.TotalScore;
 import com.ornates.cbic.service.CustomGreadeScore;
 import com.ornates.cbic.service.CustomRelaventAspect;
 import com.ornates.cbic.service.DateCalculate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/cbic/custom/parameter")
 @Controller
 public class CustomParameterController {
+    private Logger logger = LoggerFactory.getLogger(CustomMISReportsController.class);
     CustomGreadeScore score = new CustomGreadeScore();
     @ResponseBody
     @RequestMapping(value = "/")

@@ -14,6 +14,8 @@ import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.GstMISReports;
 import com.ornates.cbic.service.GstGradeScore;
 import com.ornates.cbic.service.GstMISReportsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +28,7 @@ import com.ornates.cbic.dao.pool.JDBCConnection;
 @RequestMapping("/cbic/CgstMISReports")
 @Controller
 public class GstMISReportsController {
+    private Logger logger = LoggerFactory.getLogger(CustomMISReportsController.class);
 
     GstGradeScore score=new GstGradeScore();
     GstMISReportsService gstMISReportsService =new GstMISReportsService();
