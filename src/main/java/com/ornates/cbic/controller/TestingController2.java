@@ -7,6 +7,8 @@ import com.ornates.cbic.model.response.GST4A;
 import com.ornates.cbic.service.GstGradeScore;
 
 import com.ornates.cbic.service.RelevantAspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/cbic/testing2")
 @Controller
 public class TestingController2 {
+    private Logger logger = LoggerFactory.getLogger(TestingController2.class);
 
     private final GstGradeScore score = new GstGradeScore();
 
@@ -48,6 +51,7 @@ public class TestingController2 {
     //  http://localhost:8080/cbicApi/cbic/testing2/test/gst5a?month_date=2024-04-01&zone_code=70&type=commissary
     //  http://localhost:8080/cbicApi/cbic/testing2/test/gst5a?month_date=2024-04-01&type=all_commissary
     public List<GST4A> getGst5A(@RequestParam String month_date, @RequestParam String type, @RequestParam(required = false) String zone_code) {
+        logger.info("Fetching GST5A data for month_date: {}, type: {}, zone_code: {}", month_date, type, zone_code);
         List<GST4A> allGstaList = new ArrayList<>();
         try {
             if ("zone".equalsIgnoreCase(type)) {
