@@ -64,8 +64,8 @@ public class CustomMISReportsController {
         String formattedDate = "";
 
 
-        // Define the expected zone codes from 50 to 81
-        List<String> expectedZoneCodes = IntStream.rangeClosed(50, 81)
+        // Define the expected zone codes from 54 to 81
+        List<String> expectedZoneCodes = IntStream.rangeClosed(54, 81)
                 .mapToObj(String::valueOf)
                 .collect(Collectors.toList());
 
