@@ -6,10 +6,10 @@ import com.ornates.cbic.dao.result.GetExecutionSQL;
 import com.ornates.cbic.model.response.GST4A;
 import com.ornates.cbic.service.CustomGreadeScore;
 import com.ornates.cbic.service.CustomRelaventAspect;
+import com.ornates.cbic.service.CustomSubParameterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 public class CustomSubParameterController {
     private Logger logger = LoggerFactory.getLogger(CustomMISReportsController.class);
     CustomGreadeScore score = new CustomGreadeScore();
+    CustomSubParameterService customSubParameterService = new CustomSubParameterService();
     @ResponseBody
     @RequestMapping(value = "/")
     public String home() {
@@ -839,43 +840,7 @@ public class CustomSubParameterController {
             if (type.equalsIgnoreCase("zone")) {
                 String queryCustom5b = new CustomSubParameterWiseQuery().QueryFor_cus6a_ZoneWise(month_date);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryCustom5b);
-                while (rsGst14aa.next()) {
-                    String ra = CustomRelaventAspect.cus6a_RA;
-                    String commname = "ALL";
-                    String zoneCode = rsGst14aa.getString("ZONE_CODE");
-                    int col9_3a = rsGst14aa.getInt("col9_3a");
-                    int col9_3b = rsGst14aa.getInt("col9_3b");
-                    int col3_3a = rsGst14aa.getInt("col3_3a");
-                    int col3_3b = rsGst14aa.getInt("col3_3b");
-                    median = rsGst14aa.getDouble("median_6a");
-                    Double numerator_6c = rsGst14aa.getDouble("numerator_9");
-                    int Zonal_rank = 0;
-                    String gst = "no";
-                    //String absval=String.valueOf(col9_3a+col9_3b)+"/"+String.valueOf(col3_3a+col3_3b);
-                    String absval = "";
-                    if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)) {
-                        absval = String.valueOf(col9_3a+col9_3b ) + "/" + String.valueOf(col3_3a+col3_3b);
-                    }
-                    if((col3_3a+col3_3b) != 0) {
-                        total = ((double) (col9_3a+col9_3b) * 100 / (col3_3a+col3_3b));
-                    }else {
-                        total = 0.00;
-                    }
-                    String formattedTotal = String.format("%.2f", total);
-                    double totalScore = Double.parseDouble(formattedTotal);
-                    int way_to_grade = score.c_marks6a(totalScore);
-                    int insentavization = score.c_marks6a(totalScore);
-                    if (numerator_6c > median && way_to_grade < 10) {
-                        insentavization += 1;
-                    }
-                    double sub_parameter_weighted_average = insentavization * 0.2;
-                    sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
-                    if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)) {
-                        gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
-                                Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
-                        allGstaList.add(gsta);}
-                    allGstaList.sort((a, b) -> Double.compare(b.getTotal_score(), a.getTotal_score()));
-                }System.out.println("median 6a zone wise :-" + median);
+                allGstaList.addAll(customSubParameterService.cus6aZone(rsGst14aa));
             }else if (type.equalsIgnoreCase("commissary")) { // cus 1
                 String queryCustom5b = new CustomSubParameterWiseQuery().QueryFor_cus6a_CommissonaryWise(month_date,zone_code);
                 ResultSet rsGst14aa = GetExecutionSQL.getResult(queryCustom5b);
