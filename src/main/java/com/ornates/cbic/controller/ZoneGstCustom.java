@@ -36,9 +36,10 @@ public class ZoneGstCustom {
         return "its working api";
     }
 
+
     @ResponseBody
     @RequestMapping(value = "/gstZone")
-    // http://localhost:8080/cbicApi/zoneName/gstZone
+   // http://localhost:8080/cbicApi/zoneName/gstZone
     public List<Zone> zoneReturnGst() {
         return Arrays.asList(
                 new Zone("CHANDIGARH CE & GST", 50),
@@ -72,15 +73,15 @@ public class ZoneGstCustom {
                 new Zone("MEERUT CE & GST", 54),
                 new Zone("VISHAKAPATNAM CE & GST", 55),
                 new Zone("HYDERABAD CE & GST", 56),
-                new Zone("", 57),
+                new Zone("BENGALURU CE & GST", 57),
                 new Zone("THIRUVANANTHAPURAM CE & GST", 58),
-                new Zone("", 59),
+//                new Zone("CHENNAI CE & GST", 59),
                 new Zone("RANCHI CE & GST", 60),
-                new Zone("", 61),
+//                new Zone("KOLKATA CE & GST", 61),
                 new Zone("BHUBANESHWAR CE & GST", 62),
                 new Zone("JAIPUR CE & GST", 63),
-                new Zone("", 64),
-                new Zone("", 65),
+//                new Zone("AHMEDABAD CE & GST", 64),
+//                new Zone("VADODARA CE & GST", 65),
                 new Zone("NAGPUR CE & GST", 66),
                 new Zone("MUMBAI CE & GST", 67),
                 new Zone("PUNE CE & GST", 68),
@@ -99,4 +100,9 @@ public class ZoneGstCustom {
                 new Zone("TIRUCHIRAPALLI PREV", 81)
         );
     }
+
+
 }
+
+
+

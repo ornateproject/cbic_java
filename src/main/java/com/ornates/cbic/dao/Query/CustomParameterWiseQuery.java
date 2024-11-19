@@ -261,111 +261,55 @@ public class CustomParameterWiseQuery {
     // this query will show all zone || 1no url
     public String QueryFor_Adjudication_5_ZoneWise(String month_date){
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String query_assessment_cus5 = "WITH \r\n"
-                + "-- CTE for the first query\r\n"
-                + "cte_5a AS (\r\n"
-                + "    SELECT \r\n"
-                + "        zc.ZONE_NAME, \r\n"
-                + "        cc.ZONE_CODE, \r\n"
-                + "        SUM(14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO) AS col5a\r\n"
-                + "    FROM \r\n"
-                + "        Mis_DGI_CUS_1A AS 14c\r\n"
-                + "    RIGHT JOIN \r\n"
-                + "        mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \r\n"
-                + "    LEFT JOIN \r\n"
-                + "        mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \r\n"
-                + "    WHERE \r\n"
-                + "        14c.MM_YYYY = '" + month_date + "'\r\n"
-                + "    GROUP BY \r\n"
-                + "        zc.ZONE_NAME, cc.ZONE_CODE\r\n"
-                + "),\r\n"
-                + "-- CTE for the second query\r\n"
-                + "cte_3a AS (\r\n"
-                + "    SELECT \r\n"
-                + "        zc.ZONE_NAME, \r\n"
-                + "        cc.ZONE_CODE, \r\n"
-                + "        SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO) AS col3a\r\n"
-                + "    FROM \r\n"
-                + "        Mis_DGI_CUS_1A AS 14c\r\n"
-                + "    RIGHT JOIN \r\n"
-                + "        mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \r\n"
-                + "    LEFT JOIN \r\n"
-                + "        mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \r\n"
-                + "    WHERE \r\n"
-                + "        14c.MM_YYYY = DATE_SUB('" + month_date + "', INTERVAL 1 MONTH)\r\n"
-                + "    GROUP BY \r\n"
-                + "        zc.ZONE_NAME, cc.ZONE_CODE\r\n"
-                + "),\r\n"
-                + "-- CTE for the median calculation from the first query\r\n"
-                + "median_cte AS (\r\n"
-                + "    SELECT \r\n"
-                + "        AVG(col5a) AS cus5a_median\r\n"
-                + "    FROM (\r\n"
-                + "        SELECT col5a, \r\n"
-                + "               ROW_NUMBER() OVER (ORDER BY col5a) AS rn,\r\n"
-                + "               COUNT(*) OVER () AS cnt\r\n"
-                + "        FROM cte_5a\r\n"
-                + "    ) AS temp\r\n"
-                + "    WHERE rn IN (FLOOR((cnt + 1) / 2), CEIL((cnt + 1) / 2))\r\n"
-                + "),\r\n"
-                + "-- CTE for the second query calculation (col7d and col6a)\r\n"
-                + "cte_5b AS (\r\n"
-                + "    SELECT \r\n"
-                + "        zc.ZONE_NAME, \r\n"
-                + "        cc.ZONE_CODE, \r\n"
-                + "        SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT) AS col7d,\r\n"
-                + "        SUM(14c.AC_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.COMM_CLOSING_NO) AS col6a,\r\n"
-                + "        (SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT) / \r\n"
-                + "         SUM(14c.AC_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.COMM_CLOSING_NO)) * 100 AS total_score5b\r\n"
-                + "    FROM mis_dgi_cus_1A AS 14c\r\n"
-                + "    RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE\r\n"
-                + "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\r\n"
-                + "    WHERE 14c.MM_YYYY = '" + month_date + "'\r\n"
-                + "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\r\n"
-                + "),\r\n"
-                + "-- CTE for the third query (col7 and col9)\r\n"
-                + "cte_5c AS (\r\n"
-                + "    SELECT \r\n"
-                + "        zc.ZONE_NAME, \r\n"
-                + "        cc.ZONE_CODE, \r\n"
-                + "        SUM(14c.CLOSING_NO) AS col7,\r\n"
-                + "        SUM(14c.YEAR_1) AS col9,\r\n"
-                + "        ((SUM(14c.CLOSING_NO) - SUM(14c.YEAR_1)) / SUM(14c.CLOSING_NO)) * 100 AS total_score5c\r\n"
-                + "    FROM mis_gst_commcode AS cc\r\n"
-                + "    RIGHT JOIN mis_dgi_cus_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\r\n"
-                + "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\r\n"
-                + "    WHERE 14c.MM_YYYY = '" + month_date + "'\r\n"
-                + "    GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\r\n"
-                + ")\r\n"
-                + "-- Final SELECT combining all the CTEs\r\n"
-                + "SELECT \r\n"
-                + "    cte_5a.ZONE_NAME, \r\n"
-                + "    cte_5a.ZONE_CODE, \r\n"
-                + "    cte_5a.col5a, \r\n"
-                + "    cte_3a.col3a,\r\n"
-                + "    median_cte.cus5a_median,\r\n"
-                + "    (cte_5a.col5a / cte_3a.col3a) * 100 AS total_score5a,\r\n"
-                + "    cte_5b.col7d, \r\n"
-                + "    cte_5b.col6a, \r\n"
-                + "    cte_5b.total_score5b,\r\n"
-                + "    cte_5c.col7, \r\n"
-                + "    cte_5c.col9, \r\n"
-                + "    cte_5c.total_score5c\r\n"
-                + "FROM \r\n"
-                + "    cte_5a\r\n"
-                + "JOIN \r\n"
-                + "    cte_3a ON cte_5a.ZONE_CODE = cte_3a.ZONE_CODE\r\n"
-                + "JOIN \r\n"
-                + "    cte_5b ON cte_5a.ZONE_CODE = cte_5b.ZONE_CODE\r\n"
-                + "JOIN \r\n"
-                + "    cte_5c ON cte_5a.ZONE_CODE = cte_5c.ZONE_CODE\r\n"
-                + "CROSS JOIN \r\n"
-                + "    median_cte\r\n"
-                + "ORDER BY \r\n"
-                + "    total_score5a DESC, \r\n"
-                + "    total_score5b ASC, \r\n"
-                + "    total_score5c ASC;\r\n"
-                + "";
+        String query_assessment_cus5 = "WITH cte_5a AS (\n" +
+                "SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(14c.COMM_DISPOSAL_NO + 14c.JC_DISPOSAL_NO + 14c.AC_DISPOSAL_NO) AS col5a\n" +
+                "FROM Mis_DGI_CUS_1A AS 14c\n" +
+                "RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "WHERE 14c.MM_YYYY = '" + month_date + "'\n" +
+                "GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),cte_3a AS (SELECT zc.ZONE_NAME,cc.ZONE_CODE,SUM(14c.COMM_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.AC_CLOSING_NO) AS col3a\n" +
+                "FROM Mis_DGI_CUS_1A AS 14c\n" +
+                "RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE \n" +
+                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
+                "WHERE 14c.MM_YYYY = DATE_SUB('" + month_date + "', INTERVAL 1 MONTH)\n" +
+                "GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),median_cte AS (\n" +
+                "SELECT AVG(col5a) AS cus5a_median\n" +
+                "FROM (\n" +
+                "\t\tSELECT col5a, ROW_NUMBER() OVER (ORDER BY col5a) AS rn, COUNT(*) OVER () AS cnt\n" +
+                "\t\t\tFROM cte_5a\n" +
+                "\t\t\t) AS temp\n" +
+                "\t\t\tWHERE rn IN (FLOOR((cnt + 1) / 2), CEIL((cnt + 1) / 2))\n" +
+                "),\n" +
+                "cte_5b AS (\n" +
+                "SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
+                "SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT) AS col7d,\n" +
+                "SUM(14c.AC_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.COMM_CLOSING_NO) AS col6a,\n" +
+                "(SUM(14c.COMM_MORE_YEAR_AMT + 14c.JC_MORE_YEAR_AMT + 14c.AC_MORE_YEAR_AMT) / \n" +
+                "SUM(14c.AC_CLOSING_NO + 14c.JC_CLOSING_NO + 14c.COMM_CLOSING_NO)) * 100 AS total_score5b\n" +
+                "FROM mis_dgi_cus_1A AS 14c\n" +
+                "RIGHT JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE\n" +
+                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "WHERE 14c.MM_YYYY = '" + month_date + "' GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                "),\n" +
+                "cte_5c AS (SELECT zc.ZONE_NAME, cc.ZONE_CODE, SUM(14c.CLOSING_NO) AS col7,SUM(14c.YEAR_1) AS col9,\n" +
+                "((SUM(14c.CLOSING_NO) - SUM(14c.YEAR_1)) / SUM(14c.CLOSING_NO)) * 100 AS total_score5c\n" +
+                "FROM mis_gst_commcode AS cc\n" +
+                "RIGHT JOIN mis_dgi_cus_2 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n" +
+                "LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "WHERE 14c.MM_YYYY = '" + month_date + "' GROUP BY zc.ZONE_NAME, cc.ZONE_CODE\n" +
+                ")\n" +
+                "SELECT cte_5a.ZONE_NAME, cte_5a.ZONE_CODE, cte_5a.col5a, cte_3a.col3a,median_cte.cus5a_median,\n" +
+                "(cte_5a.col5a / cte_3a.col3a) * 100 AS total_score5a,\n" +
+                "cte_5b.col7d, cte_5b.col6a, cte_5b.total_score5b,cte_5c.col7, cte_5c.col9, cte_5c.total_score5c\n" +
+                "FROM cte_5a\n" +
+                "JOIN cte_3a ON cte_5a.ZONE_CODE = cte_3a.ZONE_CODE\n" +
+                "JOIN cte_5b ON cte_5a.ZONE_CODE = cte_5b.ZONE_CODE\n" +
+                "JOIN cte_5c ON cte_5a.ZONE_CODE = cte_5c.ZONE_CODE\n" +
+                "CROSS JOIN median_cte\n" +
+                "ORDER BY total_score5a DESC, \n" +
+                "total_score5b ASC, total_score5c ASC;";
         return query_assessment_cus5;
     }
     // for 2no url , all india rank will show in this query
