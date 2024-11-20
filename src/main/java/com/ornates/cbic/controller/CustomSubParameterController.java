@@ -838,8 +838,8 @@ public class CustomSubParameterController {
         double median = 0.00;
         try {
             if (type.equalsIgnoreCase("zone")) {
-                String queryCustom5b = new CustomSubParameterWiseQuery().QueryFor_cus6a_ZoneWise(month_date);
-                ResultSet rsGst14aa = GetExecutionSQL.getResult(queryCustom5b);
+                String queryCustom6a = new CustomSubParameterWiseQuery().QueryFor_cus6a_ZoneWise(month_date);
+                ResultSet rsGst14aa = GetExecutionSQL.getResult(queryCustom6a);
                 allGstaList.addAll(customSubParameterService.cus6aZone(rsGst14aa));
             }else if (type.equalsIgnoreCase("commissary")) { // cus 1
                 String queryCustom5b = new CustomSubParameterWiseQuery().QueryFor_cus6a_CommissonaryWise(month_date,zone_code);

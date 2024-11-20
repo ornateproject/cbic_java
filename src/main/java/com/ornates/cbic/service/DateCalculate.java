@@ -10,6 +10,13 @@ public class DateCalculate {
 		return prev_month.toString();
 	}
 
+	public static String getFinancialYearStart(String monthDate) {
+		LocalDate inputDate = LocalDate.parse(monthDate);
+		int year = inputDate.getMonthValue() >= 4 ? inputDate.getYear() : inputDate.getYear() - 1;
+		LocalDate financialYearStart = LocalDate.of(year, 4, 1);
+		return financialYearStart.toString();
+	}
+
 	public static String getPreviousMonthTwo(String newDate) {
 		LocalDate curr_month = LocalDate.parse(newDate);
 		LocalDate prev_month = curr_month.minusMonths(2);
@@ -63,14 +70,5 @@ public class DateCalculate {
 		LocalDate next_month = curr_month.plusMonths(1);
 		return next_month.toString();
 	}
-//	public static String getPreviousMonthTwo(String newDate) {
-//		LocalDate curr_month = LocalDate.parse(newDate);
-//		LocalDate prev_month = curr_month.minusMonths(2);
-//		return prev_month.toString();
-//	}
-//	public static String getPreviousMonthfirst(String newDate) {
-//		LocalDate curr_month = LocalDate.parse(newDate);
-//		LocalDate prev_month = curr_month.minusMonths(3);
-//		return prev_month.toString();
-	//}
+
 }

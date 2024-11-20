@@ -582,43 +582,21 @@ public class GstSubParameterWiseQuery {
     public String QueryFor_gst3b_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa="WITH ranked_data AS (\n" +
-                "    SELECT \n" +
-                "        SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) AS numerator_3b,\n" +
-                "        ROW_NUMBER() OVER (ORDER BY SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY)) AS row_num,\n" +
-                "        COUNT(*) OVER () AS total_count\n" +
-                "    FROM mis_gst_commcode AS cc \n" +
-                "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '" +month_date+"'\n" +
-                "    GROUP BY cc.ZONE_CODE\n" +
-                "),\n" +
-                "median_data AS (\n" +
-                "    SELECT \n" +
-                "        CASE \n" +
-                "            WHEN total_count % 2 = 1 THEN \n" +
-                "                (SELECT numerator_3b FROM ranked_data WHERE row_num = (total_count + 1) / 2)\n" +
-                "            ELSE \n" +
-                "                (SELECT AVG(numerator_3b) FROM ranked_data WHERE row_num IN ((total_count / 2), (total_count / 2) + 1))\n" +
-                "        END AS median_numerator_3b\n" +
-                "    FROM ranked_data\n" +
-                "    LIMIT 1\n" +
+        String getFinancialYear = DateCalculate.getFinancialYearStart(month_date);
+        String queryGst14aa="WITH CumulativeData AS (\n" +
+                "    SELECT cc.ZONE_CODE,zc.ZONE_NAME,scr.MM_YYYY,SUM(TAX_LIABILITY_DETECTECT) \n" +
+                "            OVER ( PARTITION BY cc.ZONE_CODE, zc.ZONE_NAME ORDER BY scr.MM_YYYY) AS col14,\n" +
+                "        SUM(scr.AMOUNT_RECOVERED_TAX + scr.AMOUNT_RECOVERED_INTEREST + scr.AMOUNT_RECOVERED_PENALTY\n" +
+                "        ) OVER (PARTITION BY cc.ZONE_CODE, zc.ZONE_NAME ORDER BY scr.MM_YYYY) AS col22\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_dggst_gst_scr_1 AS scr ON cc.COMM_CODE = scr.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE scr.MM_YYYY BETWEEN '" + getFinancialYear + "' AND '" + month_date + "'\n" +
                 ")\n" +
-                "SELECT t.ZONE_NAME, t.ZONE_CODE, t.score_of_parameter,t.absval,t.numerator_3b, \n" +
-                "    DENSE_RANK() OVER (ORDER BY t.score_of_parameter DESC) AS z_rank,\n" +
-                "    m.median_numerator_3b\n" +
-                "FROM (\n" +
-                "    SELECT zc.ZONE_NAME, cc.ZONE_CODE, \n" +
-                "        SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) AS numerator_3b,\n" +
-                "        (SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY) * 100) / SUM(14c.TAX_LIABILITY_DETECTECT) AS score_of_parameter,\n" +
-                "        CONCAT(SUM(14c.AMOUNT_RECOVERED_TAX + 14c.AMOUNT_RECOVERED_INTEREST + 14c.AMOUNT_RECOVERED_PENALTY), ' / ', SUM(14c.TAX_LIABILITY_DETECTECT)) AS absval\n" +
-                "    FROM mis_gst_commcode AS cc \n" +
-                "    RIGHT JOIN mis_dggst_gst_scr_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE \n" +
-                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE \n" +
-                "    WHERE 14c.MM_YYYY = '" +month_date+"' \n" +
-                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
-                ") AS t\n" +
-                "CROSS JOIN median_data m\n" +
-                "ORDER BY t.score_of_parameter DESC;";
+                "SELECT ZONE_CODE,ZONE_NAME,MM_YYYY,\n" +
+                "    MAX(col14) AS col14, MAX(col22) AS col22  \n" +
+                "FROM CumulativeData\n" +
+                "WHERE MM_YYYY = '" + month_date + "' GROUP BY ZONE_CODE, ZONE_NAME, MM_YYYY;";
         return queryGst14aa;
     }
     public String QueryFor_gst3b_CommissonaryWise(String month_date, String zone_code){
