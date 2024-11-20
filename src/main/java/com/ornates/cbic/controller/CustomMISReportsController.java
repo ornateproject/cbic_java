@@ -72,6 +72,8 @@ public class CustomMISReportsController {
                 .mapToObj(String::valueOf)
                 .filter(zoneCode -> !excludedZoneCodes.contains(zoneCode))
                 .collect(Collectors.toList());
+        // Add "DD" as an additional zone code for ZONE :- DRI DG (in antarang that zone name is  DGRI)
+                expectedZoneCodes.add("DD");
 
         try {
             LocalDate parsedDate = LocalDate.parse(month_date);
@@ -162,6 +164,8 @@ public class CustomMISReportsController {
                 .mapToObj(String::valueOf)
                 .filter(zoneCode -> !excludedZoneCodes.contains(zoneCode))
                 .collect(Collectors.toList());
+        // Add "DD" as an additional zone code for ZONE :- DRI DG (in antarang that zone name is  DGRI)
+                 expectedZoneCodes.add("DD");
 
         try {
             LocalDate parsedDate = LocalDate.parse(month_date);
@@ -236,6 +240,90 @@ public class CustomMISReportsController {
     // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Monitoring of un-cleared/unclaimed cargo__8__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
 
     // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Disposal of confiscated Gold and NDPS__9__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+    @ResponseBody
+    @RequestMapping(value = "/DisposalOfConfiscatedGoldAndNDPS")
+    //  http://localhost:8080/cbicApi/cbic/CustomMISReports/DisposalOfConfiscatedGoldAndNDPS?month_date=2024-07-01&type=1_Month
+    //  http://localhost:8080/cbicApi/cbic/CustomMISReports/DisposalOfConfiscatedGoldAndNDPS?month_date=2024-07-01&type=2_Month
+    //  http://localhost:8080/cbicApi/cbic/CustomMISReports/DisposalOfConfiscatedGoldAndNDPS?month_date=2024-07-01&type=3_Month
+    //  http://localhost:8080/cbicApi/cbic/CustomMISReports/DisposalOfConfiscatedGoldAndNDPS?month_date=2024-07-01&type=4_Month
+    //  http://localhost:8080/cbicApi/cbic/CustomMISReports/DisposalOfConfiscatedGoldAndNDPS?month_date=2024-07-01&type=5_Month
+    //  http://localhost:8080/cbicApi/cbic/CustomMISReports/DisposalOfConfiscatedGoldAndNDPS?month_date=2024-07-01&type=6_Month
+    public Object DisposalOfConfiscatedGoldAndNDPS(@RequestParam String month_date, @RequestParam String type){
+        List<CustomMISReports> allGstaList = new ArrayList<>();
+        Connection con = null;
+        ResultSet rsGst14aa = null;
+        String formattedDate = "";
+
+
+        // Define the expected zone codes from 54 to 81
+        List<String> excludedZoneCodes = Arrays.asList("59", "61", "64", "65");
+        List<String> expectedZoneCodes = IntStream.rangeClosed(54, 81)
+                .mapToObj(String::valueOf)
+                .filter(zoneCode -> !excludedZoneCodes.contains(zoneCode))
+                .collect(Collectors.toList());
+        // Add "DD" as an additional zone code for ZONE :- DRI DG (in antarang that zone name is  DGRI)
+        expectedZoneCodes.add("DD");
+
+        try {
+            LocalDate parsedDate = LocalDate.parse(month_date);
+
+            if (type.equalsIgnoreCase("1_Month")) {
+                formattedDate = parsedDate.format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
+                String query = new CustomMISReportsQuery().QueryFor_DisposalOfConfiscatedGoldAndNDPS_CurrentMonth_CustomMISReports(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query);
+                allGstaList.addAll(customMISReportsService.processResultSet_DisposalOfConfiscatedGoldAndNDPS(rsGst14aa, formattedDate, "Disposal of confiscated Gold and NDPS"));
+            } else if (type.equalsIgnoreCase("2_Month")) {
+                formattedDate = parsedDate.minusMonths(1).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
+                String query = new CustomMISReportsQuery().QueryFor_DisposalOfConfiscatedGoldAndNDPS_1_MonthBack_CustomMISReports(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query);
+                allGstaList.addAll(customMISReportsService.processResultSet_DisposalOfConfiscatedGoldAndNDPS(rsGst14aa, formattedDate, "Disposal of confiscated Gold and NDPS"));
+            } else if (type.equalsIgnoreCase("3_Month")) {
+                formattedDate = parsedDate.minusMonths(2).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
+                String query = new CustomMISReportsQuery().QueryFor_DisposalOfConfiscatedGoldAndNDPS_2_MonthBack_CustomMISReports(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query);
+                allGstaList.addAll(customMISReportsService.processResultSet_DisposalOfConfiscatedGoldAndNDPS(rsGst14aa, formattedDate, "Disposal of confiscated Gold and NDPS"));
+            } else if (type.equalsIgnoreCase("4_Month")) {
+                formattedDate = parsedDate.minusMonths(3).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
+                String query = new CustomMISReportsQuery().QueryFor_DisposalOfConfiscatedGoldAndNDPS_3_MonthBack_CustomMISReports(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query);
+                allGstaList.addAll(customMISReportsService.processResultSet_DisposalOfConfiscatedGoldAndNDPS(rsGst14aa, formattedDate, "Disposal of confiscated Gold and NDPS"));
+            } else if (type.equalsIgnoreCase("5_Month")) {
+                formattedDate = parsedDate.minusMonths(4).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
+                String query = new CustomMISReportsQuery().QueryFor_DisposalOfConfiscatedGoldAndNDPS_4_MonthBack_CustomMISReports(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query);
+                allGstaList.addAll(customMISReportsService.processResultSet_DisposalOfConfiscatedGoldAndNDPS(rsGst14aa, formattedDate, "Disposal of confiscated Gold and NDPS"));
+            } else if (type.equalsIgnoreCase("6_Month")) {
+                formattedDate = parsedDate.minusMonths(5).format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH));
+                String query = new CustomMISReportsQuery().QueryFor_DisposalOfConfiscatedGoldAndNDPS_5_MonthBack_CustomMISReports(month_date);
+                rsGst14aa = GetExecutionSQL.getResult(query);
+                allGstaList.addAll(customMISReportsService.processResultSet_DisposalOfConfiscatedGoldAndNDPS(rsGst14aa, formattedDate, "Disposal of confiscated Gold and NDPS"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rsGst14aa != null) rsGst14aa.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Map<String, CustomMISReports> resultMap = allGstaList.stream()
+                .collect(Collectors.toMap(CustomMISReports::getZone_code, report -> report));
+
+        String finalFormattedDate = formattedDate;
+        expectedZoneCodes.forEach(zoneCode -> {
+            if (!resultMap.containsKey(zoneCode)) {
+                String zoneName = customMISReportsService.getZoneName(zoneCode);
+                resultMap.put(zoneCode, new CustomMISReports(zoneName, zoneCode, null, 0.00, finalFormattedDate, "Disposal of confiscated Gold and NDPS"));
+            }
+        });
+        // Return the list sorted by zone_code
+        return resultMap.values().stream()
+                .sorted(Comparator.comparing(CustomMISReports::getZone_code))
+                .collect(Collectors.toList());
+    }
 
     // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Recovery of Arrears__10__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
 

@@ -15,7 +15,6 @@ import static java.util.Map.entry;
 public class CustomMISReportsService {
 
     CustomGreadeScore score = new CustomGreadeScore();
-
     private static final Map<String, String> zoneCodeToNameMap = Map.ofEntries(
             entry("54", "MEERUT CE & GST"),
             entry("55", "VISHAKAPATNAM CE & GST"),
@@ -40,7 +39,9 @@ public class CustomMISReportsService {
             entry("78", "MUMBAI - II CUS"),
             entry("79", "MUMBAI - III CUS"),
             entry("80", "PATNA PREV"),
-            entry("81", "TIRUCHIRAPALLI PREV"));
+            entry("81", "TIRUCHIRAPALLI PREV"),
+            entry("DD", "DRI DG")
+    );
     // Method to get the zone name based on zone code
     public String getZoneName(String zoneCode) {
         return zoneCodeToNameMap.getOrDefault(zoneCode, null);
@@ -128,6 +129,49 @@ public class CustomMISReportsService {
     // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Monitoring of un-cleared/unclaimed cargo__8__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
 
     // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Disposal of confiscated Gold and NDPS__9__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+    public List<CustomMISReports> processResultSet_DisposalOfConfiscatedGoldAndNDPS(ResultSet rsGst14aa,String formattedDate, String gstname ) throws SQLException {
+        List<CustomMISReports> reportsList = new ArrayList<>();
+        while (rsGst14aa.next()) {
+            String zoneName = rsGst14aa.getString("ZONE_NAME");
+            String zone_code = rsGst14aa.getString("ZONE_CODE");
+
+            double total9a = rsGst14aa.getDouble("main_total_score");
+            double total9b = rsGst14aa.getDouble("total_score");
+
+            double median9a = rsGst14aa.getDouble("median_9a");
+            double median9b = rsGst14aa.getDouble("Median");
+
+            Double numerator_9a = rsGst14aa.getDouble("numerator_9a");
+            Double numerator_9b = rsGst14aa.getDouble("s5col13");
+
+            int way_to_grade9a = score.c_marks9a(total9a);
+            int way_to_grade9b = score.c_marks9b(total9b);
+
+            int insentavization9a = way_to_grade9a;
+            int insentavization9b = way_to_grade9b;
+
+            // Logic to adjust insentavization9a and insentavization9b based on the median and numerator values
+            if (numerator_9a > median9a && way_to_grade9a < 10) {
+                insentavization9a += 1;
+            }
+            if (numerator_9b > median9b && way_to_grade9b < 10) {
+                insentavization9b += 1;
+            }
+
+            Integer way_to_grade = way_to_grade9a + way_to_grade9b;
+            Integer insentavization = insentavization9a + insentavization9b;
+
+            double sub_parameter_weighted_average9a = insentavization9a * 0.5;
+            double sub_parameter_weighted_average9b = insentavization9b * 0.5;
+
+            double total_score = sub_parameter_weighted_average9a + sub_parameter_weighted_average9b;
+            double weighted_average = sub_parameter_weighted_average9a + sub_parameter_weighted_average9b;
+
+            CustomMISReports customMISReports = new CustomMISReports(zoneName, zone_code, weighted_average, 0.00, formattedDate, gstname);
+            reportsList.add(customMISReports);
+        }
+        return reportsList;
+    }
 
     // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Recovery of Arrears__10__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
 

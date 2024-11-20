@@ -21,6 +21,7 @@ public class CustomSubParameterService {
         while (rs.next()) {
             String ra = CustomRelaventAspect.cus6a_RA;
             String commname = "ALL";
+            String zoneName = rs.getString("ZONE_NAME");
             String zoneCode = rs.getString("ZONE_CODE");
             int col9_3a = rs.getInt("col9_3a");
             int col9_3b = rs.getInt("col9_3b");
@@ -50,10 +51,13 @@ public class CustomSubParameterService {
             double sub_parameter_weighted_average = insentavization * 0.2;
             sub_parameter_weighted_average = Math.round(sub_parameter_weighted_average * 100.0) / 100.0;
             if (!(col9_3a+col9_3b == 0 && col3_3a+col3_3b== 0)) {
-                gsta=new GST4A(rs.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
+                gsta=new GST4A(zoneName,commname,totalScore,absval,zoneCode,ra,
                         Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                 allGstaList.add(gsta);}
             allGstaList.sort((a, b) -> Double.compare(b.getTotal_score(), a.getTotal_score()));
+
+//            System.out.println("zoneName :-" + zoneName );
+//            System.out.println("zoneCode :- " + zoneCode);
         }System.out.println("median cus6a zone wise :-" + median);
         return allGstaList;
     }

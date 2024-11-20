@@ -820,22 +820,22 @@ public class GstParameterController {
 
 
 
-					System.out.println(zoneName);
-					System.out.println("total3a: " + total3a);
-					System.out.println("numerator_3a : " + numerator_3a);
-					System.out.println("median3a : " + median3a);
-					System.out.println("way_to_grade3a: " + way_to_grade3a);
-					System.out.println("insentavization3a : " + insentavization3a);
-					System.out.println("sub_parameter_weighted_average3a : " + sub_parameter_weighted_average3a);
-
-					System.out.println("total3b: " + total3b);
-					System.out.println("numerator_3b : " + numerator_3b);
-					System.out.println("median3b : " + median3b);
-					System.out.println("way_to_grade3b: " + way_to_grade3b);
-					System.out.println("insentavization3b : " + insentavization3b);
-					System.out.println("sub_parameter_weighted_average3b : " + sub_parameter_weighted_average3b);
-					System.out.println("total_score : " + total_weighted_average);
-					System.out.println("********************************************************************************************");
+//					System.out.println(zoneName);
+//					System.out.println("total3a: " + total3a);
+//					System.out.println("numerator_3a : " + numerator_3a);
+//					System.out.println("median3a : " + median3a);
+//					System.out.println("way_to_grade3a: " + way_to_grade3a);
+//					System.out.println("insentavization3a : " + insentavization3a);
+//					System.out.println("sub_parameter_weighted_average3a : " + sub_parameter_weighted_average3a);
+//
+//					System.out.println("total3b: " + total3b);
+//					System.out.println("numerator_3b : " + numerator_3b);
+//					System.out.println("median3b : " + median3b);
+//					System.out.println("way_to_grade3b: " + way_to_grade3b);
+//					System.out.println("insentavization3b : " + insentavization3b);
+//					System.out.println("sub_parameter_weighted_average3b : " + sub_parameter_weighted_average3b);
+//					System.out.println("total_score : " + total_weighted_average);
+//					System.out.println("********************************************************************************************");
 				}
 
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -1698,22 +1698,22 @@ public class GstParameterController {
 					allGstaList.add(totalScore);
 
 
-					System.out.println(zoneName);
-					System.out.println("total5a: " + total5a);
-					System.out.println("numerator_5a : " + numerator_5a);
-					System.out.println("median5a : " + median5a);
-					System.out.println("way_to_grade5a: " + way_to_grade5a);
-					System.out.println("insentavization5a : " + insentavization5a);
-					System.out.println("sub_parameter_weighted_average5a : " + sub_parameter_weighted_average5a);
-
-					System.out.println("total5b: " + total5b);
-					//System.out.println("numerator_5b : " + numerator_5b);
-					//System.out.println("median5b : " + median5b);
-					System.out.println("way_to_grade5b: " + way_to_grade5b);
-					System.out.println("insentavization5b : " + insentavization5b);
-					System.out.println("sub_parameter_weighted_average5b : " + sub_parameter_weighted_average5b);
-					System.out.println("total_score : " + total_weighted_average);
-					System.out.println("********************************************************************************************");
+//					System.out.println(zoneName);
+//					System.out.println("total5a: " + total5a);
+//					System.out.println("numerator_5a : " + numerator_5a);
+//					System.out.println("median5a : " + median5a);
+//					System.out.println("way_to_grade5a: " + way_to_grade5a);
+//					System.out.println("insentavization5a : " + insentavization5a);
+//					System.out.println("sub_parameter_weighted_average5a : " + sub_parameter_weighted_average5a);
+//
+//					System.out.println("total5b: " + total5b);
+//					//System.out.println("numerator_5b : " + numerator_5b);
+//					//System.out.println("median5b : " + median5b);
+//					System.out.println("way_to_grade5b: " + way_to_grade5b);
+//					System.out.println("insentavization5b : " + insentavization5b);
+//					System.out.println("sub_parameter_weighted_average5b : " + sub_parameter_weighted_average5b);
+//					System.out.println("total_score : " + total_weighted_average);
+//					System.out.println("********************************************************************************************");
 
 				}
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
@@ -1992,7 +1992,7 @@ public class GstParameterController {
 					totalScore = new GstParameter(zoneName, commName,zone_code, total_score, absval, Zonal_rank, gst,ra,way_to_grade,insentavization,Parameter_wise_weighted_average,total_parameter_weight_average);
 					allGstaList.add(totalScore);
 				}
-				System.out.println("gst6 parameter wise median6a");
+				// System.out.println("gst6 parameter wise median6a");
 			}else if (type.equalsIgnoreCase("zone")) { // for parameter zone all button 2
 				//                  '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "'
 				String query_assessment = new GstParameterWiseQuery().QueryFor_Adjudication_Legacy_6_ParticularZoneWise(month_date,zone_code);
