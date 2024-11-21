@@ -178,6 +178,44 @@ public class CustomMISReportsService {
     // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Management of Warehousing bonds__11__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
 
     // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Commissioner (Appeals)__12__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
+    public List<CustomMISReports> processResultSet_CommissionerAppeals(ResultSet rsGst14aa,String formattedDate, String gstname ) throws SQLException {
+        List<CustomMISReports> reportsList = new ArrayList<>();
+        while (rsGst14aa.next()) {
+            String zoneName = rsGst14aa.getString("ZONE_NAME");
+            String zone_code = rsGst14aa.getString("ZONE_CODE");
+            double numerator = rsGst14aa.getDouble("numerator12A");
+            double median12A = rsGst14aa.getDouble("median12A");
+            double total_score12A = rsGst14aa.getDouble("Total_score12A");
+            double total_score12B = rsGst14aa.getDouble("total_score12B");
+
+            int way_to_grade12a = score.c_marks12a(total_score12A, numerator);
+            int way_to_grade12b = score.c_marks12b(total_score12B);
+
+            int insentavization12a = way_to_grade12a;
+            int insentavization12b = way_to_grade12b;
+
+            if (numerator > median12A && way_to_grade12a < 10) {
+                insentavization12a += 1;
+            }
+
+            Integer way_to_grade = way_to_grade12a + way_to_grade12b;
+            Integer insentavization = insentavization12a + insentavization12b;
+
+            double sub_parameter_weighted_average12a = insentavization12a * 0.5;
+            double sub_parameter_weighted_average12b = insentavization12b * 0.5;
+
+            double total_score = sub_parameter_weighted_average12a + sub_parameter_weighted_average12b;
+
+            double total_weighted_average = sub_parameter_weighted_average12a + sub_parameter_weighted_average12b;
+            // Round to two decimal places
+            Double weighted_average = Math.round(total_weighted_average * 100.0) / 100.0;
+
+
+            CustomMISReports customMISReports = new CustomMISReports(zoneName, zone_code, weighted_average, 0.00, formattedDate, gstname);
+            reportsList.add(customMISReports);
+        }
+        return reportsList;
+    }
 
     // =*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=Audit__13__=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
 
