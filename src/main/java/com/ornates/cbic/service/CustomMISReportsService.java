@@ -58,7 +58,7 @@ public class CustomMISReportsService {
             String formattedTotal = String.format("%.2f", total);
             double total_score = Double.parseDouble(formattedTotal);
             Integer way_to_grade =score.c_marks1(total_score);
-            double weighted_average = way_to_grade;
+            double weighted_average = way_to_grade * 0.5;
 
             CustomMISReports customMISReports = new CustomMISReports(zoneName, zone_code, weighted_average, 0.00, formattedDate, gstname);
             reportsList.add(customMISReports);
