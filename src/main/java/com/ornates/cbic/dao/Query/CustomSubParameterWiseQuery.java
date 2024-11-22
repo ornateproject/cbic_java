@@ -1233,399 +1233,153 @@ public class CustomSubParameterWiseQuery {
     public String QueryFor_cus6d_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom6d="WITH cte AS (\n"
-                + "    SELECT \n"
-                + "        zc.ZONE_NAME,\n"
-                + "        cc.ZONE_CODE,\n"
-                + "        -- Total import/export calculations for columns from the mis_dri_cus_7 (14c) table\n"
-                + "        SUM(COALESCE(14c.DURING_DUTY, 0) + \n"
-                + "            COALESCE(14c.DUTY_DUTY, 0) + \n"
-                + "            COALESCE(14c.FINE_DUTY, 0) + \n"
-                + "            COALESCE(14c.PENALTY_DUTY, 0) + \n"
-                + "            COALESCE(14c.INTEREST_DUTY, 0) + \n"
-                + "            COALESCE(14c.DBK_D_DUTY, 0) + \n"
-                + "            COALESCE(14c.DBK_R_DUTY, 0) + \n"
-                + "            COALESCE(14c.RDG_R_DUTY, 0)) AS col4_7,\n"
-                + "        \n"
-                + "        -- Total import/export calculations from mis_dri_cus_3a table for previous month\n"
-                + "        SUM(COALESCE(3a_prev.IMPORT_GOLD_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3a_prev.IMPORT_NARCO_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3a_prev.IMPORT_FICN_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3a_prev.IMPORT_WILD_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3a_prev.IMPORT_ODS_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3a_prev.IMPORT_IPR_CLOSING_DUTY, 0) +\n"
-                + "            COALESCE(3a_prev.IMPORT_OTHERS_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3a_prev.EXPORT_GOLD_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3a_prev.EXPORT_NARCO_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3a_prev.EXPORT_FICN_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3a_prev.EXPORT_WILD_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3a_prev.EXPORT_ODS_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3a_prev.EXPORT_IPR_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3a_prev.EXPORT_OTHERS_CLOSING_DUTY, 0)) AS col5_cus3a,\n"
-                + "        \n"
-                + "        -- Receipt calculations from mis_dri_cus_3a table\n"
-                + "        SUM(COALESCE(3a.IMPORT_GOLD_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3a.IMPORT_NARCO_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3a.IMPORT_FICN_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3a.IMPORT_WILD_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3a.IMPORT_ODS_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3a.IMPORT_IPR_RECEIPT_DUTY, 0) +\n"
-                + "            COALESCE(3a.IMPORT_OTHERS_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3a.EXPORT_GOLD_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3a.EXPORT_NARCO_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3a.EXPORT_FICN_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3a.EXPORT_WILD_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3a.EXPORT_ODS_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3a.EXPORT_IPR_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3a.EXPORT_OTHERS_RECEIPT_DUTY, 0)) AS col8_cus3a,\n"
-                + "\n"
-                + "        -- Total import/export calculations from mis_dri_cus_3b table for previous month\n"
-                + "        SUM(COALESCE(3b_prev.IMPORT_VALUE_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3b_prev.IMPORT_MIS_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3b_prev.IMPORT_DEEC_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3b_prev.IMPORT_DEPB_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3b_prev.IMPORT_EPCG_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3b_prev.IMPORT_EOU_CLOSING_DUTY, 0) +\n"
-                + "            COALESCE(3b_prev.IMPORT_END_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3b_prev.IMPORT_OTHERS_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3b_prev.EXPORT_DEEC_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3b_prev.EXPORT_DEPB_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3b_prev.EXPORT_EPCG_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3b_prev.EXPORT_EOU_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3b_prev.EXPORT_DBK_CLOSING_DUTY, 0) + \n"
-                + "            COALESCE(3b_prev.EXPORT_OTHERS_CLOSING_DUTY, 0)) AS col5_cus3b,\n"
-                + "\n"
-                + "        -- Receipt calculations from mis_dri_cus_3b table\n"
-                + "        SUM(COALESCE(3b.IMPORT_VALUE_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3b.IMPORT_MIS_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3b.IMPORT_DEEC_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3b.IMPORT_DEPB_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3b.IMPORT_EPCG_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3b.IMPORT_EOU_RECEIPT_DUTY, 0) +\n"
-                + "            COALESCE(3b.IMPORT_END_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3b.IMPORT_OTHERS_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3b.EXPORT_DEEC_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3b.EXPORT_DEPB_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3b.EXPORT_EPCG_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3b.EXPORT_EOU_RECEIPT_DUTY, 0) + \n"
-                + "            COALESCE(3b.EXPORT_DBK_RECEIPT_DUTY, 0) +\n"
-                + "            COALESCE(3b.EXPORT_OTHERS_RECEIPT_DUTY, 0)) AS col8_cus3b\n"
-                + "    FROM mis_dri_cus_7 AS 14c\n"
-                + "    INNER JOIN mis_gst_commcode AS cc\n"
-                + "        ON 14c.COMM_CODE = cc.COMM_CODE\n"
-                + "        AND 14c.MM_YYYY = '" + month_date + "' -- Data from April 2024\n"
-                + "    INNER JOIN mis_gst_zonecode AS zc\n"
-                + "        ON zc.ZONE_CODE = cc.ZONE_CODE\n"
-                + "    INNER JOIN mis_dri_cus_3a AS 3a\n"
-                + "        ON 14c.COMM_CODE = 3a.COMM_CODE\n"
-                + "        AND 3a.MM_YYYY = '" + month_date + "'\n"
-                + "    INNER JOIN mis_dri_cus_3a AS 3a_prev\n"
-                + "        ON 14c.COMM_CODE = 3a_prev.COMM_CODE\n"
-                + "        AND 3a_prev.MM_YYYY = '" + prev_month_new + "'  -- Previous month data\n"
-                + "    INNER JOIN mis_dri_cus_3b AS 3b\n"
-                + "        ON 14c.COMM_CODE = 3b.COMM_CODE\n"
-                + "        AND 3b.MM_YYYY = '" + month_date + "'\n"
-                + "    INNER JOIN mis_dri_cus_3b AS 3b_prev\n"
-                + "        ON 14c.COMM_CODE = 3b_prev.COMM_CODE\n"
-                + "        AND 3b_prev.MM_YYYY = '" + prev_month_new + "'  -- Previous month data\n"
-                + "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n"
-                + "),\n"
-                + "row_numbered_cte AS (\n"
-                + "    SELECT \n"
-                + "        *,\n"
-                + "        ROW_NUMBER() OVER (ORDER BY col4_7 ASC) AS row_num,\n"
-                + "        COUNT(*) OVER () AS total_rows\n"
-                + "    FROM cte\n"
-                + "),\n"
-                + "median_cte AS (\n"
-                + "    SELECT \n"
-                + "        col4_7\n"
-                + "    FROM row_numbered_cte\n"
-                + "    WHERE row_num = FLOOR((total_rows + 1) / 2)\n"
-                + ")\n"
-                + "SELECT \n"
-                + "    ZONE_NAME,\n"
-                + "    ZONE_CODE,\n"
-                + "    col4_7,\n"
-                + "    col5_cus3a,\n"
-                + "    col8_cus3a,\n"
-                + "    col5_cus3b,\n"
-                + "    col8_cus3b,\n"
-                + "    (SELECT col4_7 FROM median_cte) AS median_6c,\n"
-                + "    -- Calculate absolute value as p/q form\n"
-                + "    CONCAT(col4_7, '/', (col5_cus3a + col8_cus3a + col5_cus3b + col8_cus3b)) AS absolute_value,\n"
-                + "    -- Calculate total score\n"
-                + "    (col4_7 / (col5_cus3a + col8_cus3a + col5_cus3b + col8_cus3b)) * 100 AS total_score\n"
-                + "FROM cte\n"
-                + "ORDER BY col4_7 ASC;\n"
-                + "";
+        String getFinancialYear = DateCalculate.getFinancialYearStart(month_date);
+
+        String queryCustom6d="WITH CumulativeData AS ( SELECT cc.ZONE_CODE,zc.ZONE_NAME,scr.MM_YYYY,\n" +
+                "        SUM(DUTY_DUTY + FINE_DUTY + DURING_DUTY + PENALTY_DUTY + INTEREST_DUTY + DBK_D_DUTY + DBK_R_DUTY + RDG_R_DUTY) \n" +
+                "            OVER (PARTITION BY cc.ZONE_CODE, zc.ZONE_NAME ORDER BY scr.MM_YYYY) AS cumulative_col4_7\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_dri_cus_7 AS scr ON cc.COMM_CODE = scr.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE scr.MM_YYYY BETWEEN '" + getFinancialYear + "' AND '" + month_date + "'\n" +
+                "),\n" +
+                "cte AS ( SELECT zc.ZONE_NAME,cc.ZONE_CODE,\n" +
+                "        -- Replace the original col4_7 logic with MAX from CumulativeData\n" +
+                "        (SELECT MAX(cumulative_col4_7) FROM CumulativeData cd \n" +
+                "         WHERE cd.ZONE_CODE = cc.ZONE_CODE AND cd.MM_YYYY = '" + month_date + "') AS col4_7,\n" +
+                "        -- Total import/export calculations from mis_dri_cus_3a table for previous month\n" +
+                "        SUM(IFNULL(3a_prev.IMPORT_GOLD_CLOSING_DUTY, 0) + IFNULL(3a_prev.IMPORT_NARCO_CLOSING_DUTY, 0) + IFNULL(3a_prev.IMPORT_FICN_CLOSING_DUTY, 0) + IFNULL(3a_prev.IMPORT_WILD_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3a_prev.IMPORT_ODS_CLOSING_DUTY, 0) + IFNULL(3a_prev.IMPORT_IPR_CLOSING_DUTY, 0) +IFNULL(3a_prev.IMPORT_OTHERS_CLOSING_DUTY, 0) + IFNULL(3a_prev.EXPORT_GOLD_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3a_prev.EXPORT_NARCO_CLOSING_DUTY, 0) + IFNULL(3a_prev.EXPORT_FICN_CLOSING_DUTY, 0) + IFNULL(3a_prev.EXPORT_WILD_CLOSING_DUTY, 0) + IFNULL(3a_prev.EXPORT_ODS_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3a_prev.EXPORT_IPR_CLOSING_DUTY, 0) + IFNULL(3a_prev.EXPORT_OTHERS_CLOSING_DUTY, 0)) AS col5_cus3a,\n" +
+                "        -- Receipt calculations from mis_dri_cus_3a table\n" +
+                "        SUM(IFNULL(3a.IMPORT_GOLD_RECEIPT_DUTY, 0) + IFNULL(3a.IMPORT_NARCO_RECEIPT_DUTY, 0) + IFNULL(3a.IMPORT_FICN_RECEIPT_DUTY, 0) + IFNULL(3a.IMPORT_WILD_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3a.IMPORT_ODS_RECEIPT_DUTY, 0) + IFNULL(3a.IMPORT_IPR_RECEIPT_DUTY, 0) +IFNULL(3a.IMPORT_OTHERS_RECEIPT_DUTY, 0) + IFNULL(3a.EXPORT_GOLD_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3a.EXPORT_NARCO_RECEIPT_DUTY, 0) + IFNULL(3a.EXPORT_FICN_RECEIPT_DUTY, 0) + IFNULL(3a.EXPORT_WILD_RECEIPT_DUTY, 0) + IFNULL(3a.EXPORT_ODS_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3a.EXPORT_IPR_RECEIPT_DUTY, 0) + IFNULL(3a.EXPORT_OTHERS_RECEIPT_DUTY, 0)) AS col8_cus3a,\n" +
+                "        -- Total import/export calculations from mis_dri_cus_3b table for previous month\n" +
+                "        SUM(IFNULL(3b_prev.IMPORT_VALUE_CLOSING_DUTY, 0) + IFNULL(3b_prev.IMPORT_MIS_CLOSING_DUTY, 0) + IFNULL(3b_prev.IMPORT_DEEC_CLOSING_DUTY, 0) + IFNULL(3b_prev.IMPORT_DEPB_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3b_prev.IMPORT_EPCG_CLOSING_DUTY, 0) + IFNULL(3b_prev.IMPORT_EOU_CLOSING_DUTY, 0) +IFNULL(3b_prev.IMPORT_END_CLOSING_DUTY, 0) + IFNULL(3b_prev.IMPORT_OTHERS_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3b_prev.EXPORT_DEEC_CLOSING_DUTY, 0) + IFNULL(3b_prev.EXPORT_DEPB_CLOSING_DUTY, 0) + IFNULL(3b_prev.EXPORT_EPCG_CLOSING_DUTY, 0) + IFNULL(3b_prev.EXPORT_EOU_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3b_prev.EXPORT_DBK_CLOSING_DUTY, 0) + IFNULL(3b_prev.EXPORT_OTHERS_CLOSING_DUTY, 0)) AS col5_cus3b,\n" +
+                "        -- Receipt calculations from mis_dri_cus_3b table\n" +
+                "        SUM(IFNULL(3b.IMPORT_VALUE_RECEIPT_DUTY, 0) + IFNULL(3b.IMPORT_MIS_RECEIPT_DUTY, 0) + IFNULL(3b.IMPORT_DEEC_RECEIPT_DUTY, 0) + IFNULL(3b.IMPORT_DEPB_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3b.IMPORT_EPCG_RECEIPT_DUTY, 0) + IFNULL(3b.IMPORT_EOU_RECEIPT_DUTY, 0) +IFNULL(3b.IMPORT_END_RECEIPT_DUTY, 0) + IFNULL(3b.IMPORT_OTHERS_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3b.EXPORT_DEEC_RECEIPT_DUTY, 0) + IFNULL(3b.EXPORT_DEPB_RECEIPT_DUTY, 0) + IFNULL(3b.EXPORT_EPCG_RECEIPT_DUTY, 0) + IFNULL(3b.EXPORT_EOU_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3b.EXPORT_DBK_RECEIPT_DUTY, 0) +IFNULL(3b.EXPORT_OTHERS_RECEIPT_DUTY, 0)) AS col8_cus3b\n" +
+                "    FROM mis_dri_cus_7 AS 14c\n" +
+                "    INNER JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE AND 14c.MM_YYYY = '" + month_date + "'\n" +
+                "    INNER JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    INNER JOIN mis_dri_cus_3a AS 3a ON 14c.COMM_CODE = 3a.COMM_CODE AND 3a.MM_YYYY = '" + month_date + "'\n" +
+                "    INNER JOIN mis_dri_cus_3a AS 3a_prev ON 14c.COMM_CODE = 3a_prev.COMM_CODE AND 3a_prev.MM_YYYY = '" + prev_month_new + "'\n" +
+                "    INNER JOIN mis_dri_cus_3b AS 3b ON 14c.COMM_CODE = 3b.COMM_CODE AND 3b.MM_YYYY = '" + month_date + "'\n" +
+                "    INNER JOIN mis_dri_cus_3b AS 3b_prev ON 14c.COMM_CODE = 3b_prev.COMM_CODE AND 3b_prev.MM_YYYY = '" + prev_month_new + "'\n" +
+                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                "),\n" +
+                "row_numbered_cte AS ( SELECT *, ROW_NUMBER() OVER (ORDER BY col4_7 ASC) AS row_num,COUNT(*) OVER () AS total_rows FROM cte),\n" +
+                "median_cte AS ( SELECT col4_7\n" +
+                "    FROM row_numbered_cte WHERE row_num = FLOOR((total_rows + 1) / 2))\n" +
+                "SELECT ZONE_NAME,ZONE_CODE,col4_7,col5_cus3a,col8_cus3a,col5_cus3b,col8_cus3b,(SELECT col4_7 FROM median_cte) AS median_6c,\n" +
+                "    CONCAT(col4_7, '/', (col5_cus3a + col8_cus3a + col5_cus3b + col8_cus3b)) AS absolute_value,(col4_7 / (col5_cus3a + col8_cus3a + col5_cus3b + col8_cus3b)) * 100 AS total_score\n" +
+                "FROM cte ORDER BY col4_7 ASC;";
         return queryCustom6d;
     }
     public String QueryFor_cus6d_CommissonaryWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom6d="WITH cte AS (\n"
-                + "    SELECT \n"
-                + "        zc.ZONE_NAME,\n"
-                + "        cc.ZONE_CODE,\n"
-                + "        cc.COMM_NAME,  -- Added comm_name from the commcode table\n"
-                + "        -- Calculations for columns from the mis_dri_cus_7 (14c) table\n"
-                + "        COALESCE(14c.DURING_DUTY, 0) + \n"
-                + "        COALESCE(14c.DUTY_DUTY, 0) + \n"
-                + "        COALESCE(14c.FINE_DUTY, 0) + \n"
-                + "        COALESCE(14c.PENALTY_DUTY, 0) + \n"
-                + "        COALESCE(14c.INTEREST_DUTY, 0) + \n"
-                + "        COALESCE(14c.DBK_D_DUTY, 0) + \n"
-                + "        COALESCE(14c.DBK_R_DUTY, 0) + \n"
-                + "        COALESCE(14c.RDG_R_DUTY, 0) AS col4_7,\n"
-                + "        \n"
-                + "        -- Calculations from mis_dri_cus_3a table for previous month\n"
-                + "        COALESCE(3a_prev.IMPORT_GOLD_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.IMPORT_NARCO_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.IMPORT_FICN_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.IMPORT_WILD_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.IMPORT_ODS_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.IMPORT_IPR_CLOSING_DUTY, 0) +\n"
-                + "        COALESCE(3a_prev.IMPORT_OTHERS_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.EXPORT_GOLD_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.EXPORT_NARCO_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.EXPORT_FICN_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.EXPORT_WILD_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.EXPORT_ODS_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.EXPORT_IPR_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.EXPORT_OTHERS_CLOSING_DUTY, 0) AS col5_cus3a,\n"
-                + "        \n"
-                + "        -- Receipt calculations from mis_dri_cus_3a table\n"
-                + "        COALESCE(3a.IMPORT_GOLD_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.IMPORT_NARCO_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.IMPORT_FICN_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.IMPORT_WILD_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.IMPORT_ODS_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.IMPORT_IPR_RECEIPT_DUTY, 0) +\n"
-                + "        COALESCE(3a.IMPORT_OTHERS_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.EXPORT_GOLD_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.EXPORT_NARCO_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.EXPORT_FICN_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.EXPORT_WILD_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.EXPORT_ODS_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.EXPORT_IPR_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.EXPORT_OTHERS_RECEIPT_DUTY, 0) AS col8_cus3a,\n"
-                + "\n"
-                + "        -- Calculations from mis_dri_cus_3b table for previous month\n"
-                + "        COALESCE(3b_prev.IMPORT_VALUE_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.IMPORT_MIS_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.IMPORT_DEEC_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.IMPORT_DEPB_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.IMPORT_EPCG_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.IMPORT_EOU_CLOSING_DUTY, 0) +\n"
-                + "        COALESCE(3b_prev.IMPORT_END_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.IMPORT_OTHERS_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.EXPORT_DEEC_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.EXPORT_DEPB_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.EXPORT_EPCG_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.EXPORT_EOU_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.EXPORT_DBK_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.EXPORT_OTHERS_CLOSING_DUTY, 0) AS col5_cus3b,\n"
-                + "\n"
-                + "        -- Receipt calculations from mis_dri_cus_3b table\n"
-                + "        COALESCE(3b.IMPORT_VALUE_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.IMPORT_MIS_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.IMPORT_DEEC_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.IMPORT_DEPB_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.IMPORT_EPCG_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.IMPORT_EOU_RECEIPT_DUTY, 0) +\n"
-                + "        COALESCE(3b.IMPORT_END_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.IMPORT_OTHERS_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.EXPORT_DEEC_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.EXPORT_DEPB_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.EXPORT_EPCG_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.EXPORT_EOU_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.EXPORT_DBK_RECEIPT_DUTY, 0) +\n"
-                + "        COALESCE(3b.EXPORT_OTHERS_RECEIPT_DUTY, 0) AS col8_cus3b\n"
-                + "    FROM mis_dri_cus_7 AS 14c\n"
-                + "    INNER JOIN mis_gst_commcode AS cc\n"
-                + "        ON 14c.COMM_CODE = cc.COMM_CODE\n"
-                + "        AND 14c.MM_YYYY = '" + month_date + "'  -- Data from April 2024\n"
-                + "    INNER JOIN mis_gst_zonecode AS zc\n"
-                + "        ON zc.ZONE_CODE = cc.ZONE_CODE\n"
-                + "    INNER JOIN mis_dri_cus_3a AS 3a\n"
-                + "        ON 14c.COMM_CODE = 3a.COMM_CODE\n"
-                + "        AND 3a.MM_YYYY = '" + month_date + "'\n"
-                + "    INNER JOIN mis_dri_cus_3a AS 3a_prev\n"
-                + "        ON 14c.COMM_CODE = 3a_prev.COMM_CODE\n"
-                + "        AND 3a_prev.MM_YYYY = '" + prev_month_new + "'  -- Previous month data\n"
-                + "    INNER JOIN mis_dri_cus_3b AS 3b\n"
-                + "        ON 14c.COMM_CODE = 3b.COMM_CODE\n"
-                + "        AND 3b.MM_YYYY = '" + month_date + "'\n"
-                + "    INNER JOIN mis_dri_cus_3b AS 3b_prev\n"
-                + "        ON 14c.COMM_CODE = 3b_prev.COMM_CODE\n"
-                + "        AND 3b_prev.MM_YYYY = '" + prev_month_new + "'  -- Previous month data\n"
-                + "),\n"
-                + "row_numbered_cte AS (\n"
-                + "    SELECT \n"
-                + "        *,\n"
-                + "        ROW_NUMBER() OVER (ORDER BY col4_7 ASC) AS row_num,\n"
-                + "        COUNT(*) OVER () AS total_rows\n"
-                + "    FROM cte\n"
-                + "),\n"
-                + "median_cte AS (\n"
-                + "    SELECT \n"
-                + "        col4_7\n"
-                + "    FROM row_numbered_cte\n"
-                + "    WHERE row_num IN (\n"
-                + "        FLOOR((total_rows + 1) / 2), \n"
-                + "        CEIL((total_rows + 1) / 2)\n"
-                + "    )\n"
-                + ")\n"
-                + "SELECT \n"
-                + "    ZONE_NAME,\n"
-                + "    ZONE_CODE,\n"
-                + "    COMM_NAME,\n"
-                + "    col4_7,\n"
-                + "    col5_cus3a,\n"
-                + "    col8_cus3a,\n"
-                + "    col5_cus3b,\n"
-                + "    col8_cus3b,\n"
-                + "    (SELECT AVG(col4_7) FROM median_cte) AS median_6c,\n"
-                + "    CONCAT(col4_7, '/', (col5_cus3a + col8_cus3a + col5_cus3b + col8_cus3b)) AS absolute_value,\n"
-                + "    (col4_7 / (col5_cus3a + col8_cus3a + col5_cus3b + col8_cus3b)) * 100 AS total_score\n"
-                + "FROM cte\n"
-                + "WHERE ZONE_CODE = '"+zone_code+"'  -- Filter for ZONE_CODE = 73\n"
-                + "ORDER BY col4_7 ASC;\n"
-                + "";
+        String getFinancialYear = DateCalculate.getFinancialYearStart(month_date);
+
+        String queryCustom6d="WITH CumulativeData AS ( SELECT cc.ZONE_CODE,zc.ZONE_NAME,cc.COMM_NAME,scr.MM_YYYY,\n" +
+                "        SUM(DUTY_DUTY + FINE_DUTY + DURING_DUTY + PENALTY_DUTY + INTEREST_DUTY + DBK_D_DUTY + DBK_R_DUTY + RDG_R_DUTY) \n" +
+                "            OVER (PARTITION BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME ORDER BY scr.MM_YYYY) AS cumulative_col4_7\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_dri_cus_7 AS scr ON cc.COMM_CODE = scr.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE scr.MM_YYYY BETWEEN '" + getFinancialYear + "' AND '" + month_date + "'),\n" +
+                "cte AS (SELECT zc.ZONE_NAME,cc.ZONE_CODE,cc.COMM_NAME,\n" +
+                "        (SELECT MAX(cumulative_col4_7) FROM CumulativeData cd \n" +
+                "         WHERE cd.ZONE_CODE = cc.ZONE_CODE AND cd.COMM_NAME = cc.COMM_NAME AND cd.MM_YYYY = '" + month_date + "') AS col4_7,\n" +
+                "        SUM(IFNULL(3a_prev.IMPORT_GOLD_CLOSING_DUTY, 0) + IFNULL(3a_prev.IMPORT_NARCO_CLOSING_DUTY, 0) + IFNULL(3a_prev.IMPORT_FICN_CLOSING_DUTY, 0) + IFNULL(3a_prev.IMPORT_WILD_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3a_prev.IMPORT_ODS_CLOSING_DUTY, 0) + IFNULL(3a_prev.IMPORT_IPR_CLOSING_DUTY, 0) +IFNULL(3a_prev.IMPORT_OTHERS_CLOSING_DUTY, 0) + IFNULL(3a_prev.EXPORT_GOLD_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3a_prev.EXPORT_NARCO_CLOSING_DUTY, 0) + IFNULL(3a_prev.EXPORT_FICN_CLOSING_DUTY, 0) + IFNULL(3a_prev.EXPORT_WILD_CLOSING_DUTY, 0) + IFNULL(3a_prev.EXPORT_ODS_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3a_prev.EXPORT_IPR_CLOSING_DUTY, 0) + IFNULL(3a_prev.EXPORT_OTHERS_CLOSING_DUTY, 0)) AS col5_cus3a,\n" +
+                "        SUM(IFNULL(3a.IMPORT_GOLD_RECEIPT_DUTY, 0) + IFNULL(3a.IMPORT_NARCO_RECEIPT_DUTY, 0) + IFNULL(3a.IMPORT_FICN_RECEIPT_DUTY, 0) + IFNULL(3a.IMPORT_WILD_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3a.IMPORT_ODS_RECEIPT_DUTY, 0) + IFNULL(3a.IMPORT_IPR_RECEIPT_DUTY, 0) +IFNULL(3a.IMPORT_OTHERS_RECEIPT_DUTY, 0) + IFNULL(3a.EXPORT_GOLD_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3a.EXPORT_NARCO_RECEIPT_DUTY, 0) + IFNULL(3a.EXPORT_FICN_RECEIPT_DUTY, 0) + IFNULL(3a.EXPORT_WILD_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3a.EXPORT_ODS_RECEIPT_DUTY, 0) + IFNULL(3a.EXPORT_IPR_RECEIPT_DUTY, 0) + IFNULL(3a.EXPORT_OTHERS_RECEIPT_DUTY, 0)) AS col8_cus3a,\n" +
+                "        SUM(IFNULL(3b_prev.IMPORT_VALUE_CLOSING_DUTY, 0) + IFNULL(3b_prev.IMPORT_MIS_CLOSING_DUTY, 0) + IFNULL(3b_prev.IMPORT_DEEC_CLOSING_DUTY, 0) + IFNULL(3b_prev.IMPORT_DEPB_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3b_prev.IMPORT_EPCG_CLOSING_DUTY, 0) + IFNULL(3b_prev.IMPORT_EOU_CLOSING_DUTY, 0) +IFNULL(3b_prev.IMPORT_END_CLOSING_DUTY, 0) + IFNULL(3b_prev.IMPORT_OTHERS_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3b_prev.EXPORT_DEEC_CLOSING_DUTY, 0) + IFNULL(3b_prev.EXPORT_DEPB_CLOSING_DUTY, 0) + IFNULL(3b_prev.EXPORT_EPCG_CLOSING_DUTY, 0) + IFNULL(3b_prev.EXPORT_EOU_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3b_prev.EXPORT_DBK_CLOSING_DUTY, 0) + IFNULL(3b_prev.EXPORT_OTHERS_CLOSING_DUTY, 0)) AS col5_cus3b,\n" +
+                "        SUM(IFNULL(3b.IMPORT_VALUE_RECEIPT_DUTY, 0) + IFNULL(3b.IMPORT_MIS_RECEIPT_DUTY, 0) + IFNULL(3b.IMPORT_DEEC_RECEIPT_DUTY, 0) + IFNULL(3b.IMPORT_DEPB_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3b.IMPORT_EPCG_RECEIPT_DUTY, 0) + IFNULL(3b.IMPORT_EOU_RECEIPT_DUTY, 0) +IFNULL(3b.IMPORT_END_RECEIPT_DUTY, 0) + IFNULL(3b.IMPORT_OTHERS_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3b.EXPORT_DEEC_RECEIPT_DUTY, 0) + IFNULL(3b.EXPORT_DEPB_RECEIPT_DUTY, 0) + IFNULL(3b.EXPORT_EPCG_RECEIPT_DUTY, 0) + IFNULL(3b.EXPORT_EOU_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3b.EXPORT_DBK_RECEIPT_DUTY, 0) +IFNULL(3b.EXPORT_OTHERS_RECEIPT_DUTY, 0)) AS col8_cus3b\n" +
+                "    FROM mis_dri_cus_7 AS 14c\n" +
+                "    INNER JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE AND 14c.MM_YYYY = '" + month_date + "'\n" +
+                "    INNER JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    INNER JOIN mis_dri_cus_3a AS 3a ON 14c.COMM_CODE = 3a.COMM_CODE AND 3a.MM_YYYY = '" + month_date + "'\n" +
+                "    INNER JOIN mis_dri_cus_3a AS 3a_prev ON 14c.COMM_CODE = 3a_prev.COMM_CODE AND 3a_prev.MM_YYYY = '" + prev_month_new + "'\n" +
+                "    INNER JOIN mis_dri_cus_3b AS 3b ON 14c.COMM_CODE = 3b.COMM_CODE AND 3b.MM_YYYY = '" + month_date + "'\n" +
+                "    INNER JOIN mis_dri_cus_3b AS 3b_prev ON 14c.COMM_CODE = 3b_prev.COMM_CODE AND 3b_prev.MM_YYYY = '" + prev_month_new + "'\n" +
+                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
+                "),\n" +
+                "row_numbered_cte AS (\n" +
+                "    SELECT *, ROW_NUMBER() OVER (ORDER BY col4_7 ASC) AS row_num, COUNT(*) OVER () AS total_rows FROM cte),\n" +
+                "median_cte AS (SELECT  col4_7 FROM row_numbered_cte WHERE row_num = FLOOR((total_rows + 1) / 2)\n" +
+                ")\n" +
+                "SELECT ZONE_NAME,ZONE_CODE,COMM_NAME,col4_7,col5_cus3a,col8_cus3a,col5_cus3b,col8_cus3b,(SELECT col4_7 FROM median_cte) AS median_6c,\n" +
+                "    CONCAT(col4_7, '/', (col5_cus3a + col8_cus3a + col5_cus3b + col8_cus3b)) AS absolute_value,(col4_7 / (col5_cus3a + col8_cus3a + col5_cus3b + col8_cus3b)) * 100 AS total_score\n" +
+                "FROM cte WHERE ZONE_CODE = 73  ORDER BY col4_7 ASC;";
         return queryCustom6d;
     }
     public String QueryFor_cus6d_AllCommissonaryWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryCustom6d="WITH cte AS (\n"
-                + "    SELECT \n"
-                + "        zc.ZONE_NAME,\n"
-                + "        cc.ZONE_CODE,\n"
-                + "        cc.COMM_NAME,  -- Added comm_name from the commcode table\n"
-                + "        -- Calculations for columns from the mis_dri_cus_7 (14c) table\n"
-                + "        COALESCE(14c.DURING_DUTY, 0) + \n"
-                + "        COALESCE(14c.DUTY_DUTY, 0) + \n"
-                + "        COALESCE(14c.FINE_DUTY, 0) + \n"
-                + "        COALESCE(14c.PENALTY_DUTY, 0) + \n"
-                + "        COALESCE(14c.INTEREST_DUTY, 0) + \n"
-                + "        COALESCE(14c.DBK_D_DUTY, 0) + \n"
-                + "        COALESCE(14c.DBK_R_DUTY, 0) + \n"
-                + "        COALESCE(14c.RDG_R_DUTY, 0) AS col4_7,\n"
-                + "        \n"
-                + "        -- Calculations from mis_dri_cus_3a table for previous month\n"
-                + "        COALESCE(3a_prev.IMPORT_GOLD_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.IMPORT_NARCO_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.IMPORT_FICN_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.IMPORT_WILD_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.IMPORT_ODS_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.IMPORT_IPR_CLOSING_DUTY, 0) +\n"
-                + "        COALESCE(3a_prev.IMPORT_OTHERS_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.EXPORT_GOLD_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.EXPORT_NARCO_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.EXPORT_FICN_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.EXPORT_WILD_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.EXPORT_ODS_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.EXPORT_IPR_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3a_prev.EXPORT_OTHERS_CLOSING_DUTY, 0) AS col5_cus3a,\n"
-                + "        \n"
-                + "        -- Receipt calculations from mis_dri_cus_3a table\n"
-                + "        COALESCE(3a.IMPORT_GOLD_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.IMPORT_NARCO_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.IMPORT_FICN_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.IMPORT_WILD_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.IMPORT_ODS_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.IMPORT_IPR_RECEIPT_DUTY, 0) +\n"
-                + "        COALESCE(3a.IMPORT_OTHERS_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.EXPORT_GOLD_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.EXPORT_NARCO_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.EXPORT_FICN_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.EXPORT_WILD_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.EXPORT_ODS_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.EXPORT_IPR_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3a.EXPORT_OTHERS_RECEIPT_DUTY, 0) AS col8_cus3a,\n"
-                + "\n"
-                + "        -- Calculations from mis_dri_cus_3b table for previous month\n"
-                + "        COALESCE(3b_prev.IMPORT_VALUE_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.IMPORT_MIS_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.IMPORT_DEEC_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.IMPORT_DEPB_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.IMPORT_EPCG_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.IMPORT_EOU_CLOSING_DUTY, 0) +\n"
-                + "        COALESCE(3b_prev.IMPORT_END_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.IMPORT_OTHERS_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.EXPORT_DEEC_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.EXPORT_DEPB_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.EXPORT_EPCG_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.EXPORT_EOU_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.EXPORT_DBK_CLOSING_DUTY, 0) + \n"
-                + "        COALESCE(3b_prev.EXPORT_OTHERS_CLOSING_DUTY, 0) AS col5_cus3b,\n"
-                + "\n"
-                + "        -- Receipt calculations from mis_dri_cus_3b table\n"
-                + "        COALESCE(3b.IMPORT_VALUE_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.IMPORT_MIS_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.IMPORT_DEEC_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.IMPORT_DEPB_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.IMPORT_EPCG_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.IMPORT_EOU_RECEIPT_DUTY, 0) +\n"
-                + "        COALESCE(3b.IMPORT_END_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.IMPORT_OTHERS_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.EXPORT_DEEC_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.EXPORT_DEPB_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.EXPORT_EPCG_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.EXPORT_EOU_RECEIPT_DUTY, 0) + \n"
-                + "        COALESCE(3b.EXPORT_DBK_RECEIPT_DUTY, 0) +\n"
-                + "        COALESCE(3b.EXPORT_OTHERS_RECEIPT_DUTY, 0) AS col8_cus3b\n"
-                + "    FROM mis_dri_cus_7 AS 14c\n"
-                + "    INNER JOIN mis_gst_commcode AS cc\n"
-                + "        ON 14c.COMM_CODE = cc.COMM_CODE\n"
-                + "        AND 14c.MM_YYYY =  '" + month_date + "'  -- Data from April 2024\n"
-                + "    INNER JOIN mis_gst_zonecode AS zc\n"
-                + "        ON zc.ZONE_CODE = cc.ZONE_CODE\n"
-                + "    INNER JOIN mis_dri_cus_3a AS 3a\n"
-                + "        ON 14c.COMM_CODE = 3a.COMM_CODE\n"
-                + "        AND 3a.MM_YYYY =  '" + month_date + "'\n"
-                + "    INNER JOIN mis_dri_cus_3a AS 3a_prev\n"
-                + "        ON 14c.COMM_CODE = 3a_prev.COMM_CODE\n"
-                + "        AND 3a_prev.MM_YYYY = '" + prev_month_new + "'  -- Previous month data\n"
-                + "    INNER JOIN mis_dri_cus_3b AS 3b\n"
-                + "        ON 14c.COMM_CODE = 3b.COMM_CODE\n"
-                + "        AND 3b.MM_YYYY =  '" + month_date + "'\n"
-                + "    INNER JOIN mis_dri_cus_3b AS 3b_prev\n"
-                + "        ON 14c.COMM_CODE = 3b_prev.COMM_CODE\n"
-                + "        AND 3b_prev.MM_YYYY = '" + prev_month_new + "'  -- Previous month data\n"
-                + "),\n"
-                + "row_numbered_cte AS (\n"
-                + "    SELECT \n"
-                + "        *,\n"
-                + "        ROW_NUMBER() OVER (ORDER BY col4_7 ASC) AS row_num,\n"
-                + "        COUNT(*) OVER () AS total_rows\n"
-                + "    FROM cte\n"
-                + "),\n"
-                + "median_cte AS (\n"
-                + "    SELECT \n"
-                + "        col4_7\n"
-                + "    FROM row_numbered_cte\n"
-                + "    WHERE row_num IN (\n"
-                + "        FLOOR((total_rows + 1) / 2), \n"
-                + "        CEIL((total_rows + 1) / 2)\n"
-                + "    )\n"
-                + ")\n"
-                + "SELECT \n"
-                + "    ZONE_NAME,\n"
-                + "    ZONE_CODE,\n"
-                + "    COMM_NAME,\n"
-                + "    col4_7,\n"
-                + "    col5_cus3a,\n"
-                + "    col8_cus3a,\n"
-                + "    col5_cus3b,\n"
-                + "    col8_cus3b,\n"
-                + "    (SELECT AVG(col4_7) FROM median_cte) AS median_6c,\n"
-                + "    CONCAT(col4_7, '/', (col5_cus3a + col8_cus3a + col5_cus3b + col8_cus3b)) AS absolute_value,\n"
-                + "    (col4_7 / (col5_cus3a + col8_cus3a + col5_cus3b + col8_cus3b)) * 100 AS total_score\n"
-                + "FROM cte\n"
-                + "ORDER BY col4_7 ASC;\n"
-                + "";
+        String getFinancialYear = DateCalculate.getFinancialYearStart(month_date);
+
+        String queryCustom6d="WITH CumulativeData AS (\n" +
+                "    SELECT cc.ZONE_CODE,zc.ZONE_NAME,cc.COMM_NAME,scr.MM_YYYY,\n" +
+                "        SUM(DUTY_DUTY + FINE_DUTY + DURING_DUTY + PENALTY_DUTY + INTEREST_DUTY + DBK_D_DUTY + DBK_R_DUTY + RDG_R_DUTY) OVER (PARTITION BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME ORDER BY scr.MM_YYYY) AS cumulative_col4_7\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_dri_cus_7 AS scr ON cc.COMM_CODE = scr.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE scr.MM_YYYY BETWEEN '" + getFinancialYear + "' AND '" + month_date + "' ),\n" +
+                "cte AS (SELECT zc.ZONE_NAME,cc.ZONE_CODE, cc.COMM_NAME,\n" +
+                "        (SELECT MAX(cumulative_col4_7) FROM CumulativeData cd \n" +
+                "         WHERE cd.ZONE_CODE = cc.ZONE_CODE AND cd.COMM_NAME = cc.COMM_NAME AND cd.MM_YYYY = '" + month_date + "') AS col4_7,\n" +
+                "        SUM(IFNULL(3a_prev.IMPORT_GOLD_CLOSING_DUTY, 0) + IFNULL(3a_prev.IMPORT_NARCO_CLOSING_DUTY, 0) + IFNULL(3a_prev.IMPORT_FICN_CLOSING_DUTY, 0) + IFNULL(3a_prev.IMPORT_WILD_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3a_prev.IMPORT_ODS_CLOSING_DUTY, 0) + IFNULL(3a_prev.IMPORT_IPR_CLOSING_DUTY, 0) +IFNULL(3a_prev.IMPORT_OTHERS_CLOSING_DUTY, 0) + IFNULL(3a_prev.EXPORT_GOLD_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3a_prev.EXPORT_NARCO_CLOSING_DUTY, 0) + IFNULL(3a_prev.EXPORT_FICN_CLOSING_DUTY, 0) + IFNULL(3a_prev.EXPORT_WILD_CLOSING_DUTY, 0) + IFNULL(3a_prev.EXPORT_ODS_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3a_prev.EXPORT_IPR_CLOSING_DUTY, 0) + IFNULL(3a_prev.EXPORT_OTHERS_CLOSING_DUTY, 0)) AS col5_cus3a,\n" +
+                "        SUM(IFNULL(3a.IMPORT_GOLD_RECEIPT_DUTY, 0) + IFNULL(3a.IMPORT_NARCO_RECEIPT_DUTY, 0) + IFNULL(3a.IMPORT_FICN_RECEIPT_DUTY, 0) + IFNULL(3a.IMPORT_WILD_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3a.IMPORT_ODS_RECEIPT_DUTY, 0) + IFNULL(3a.IMPORT_IPR_RECEIPT_DUTY, 0) +IFNULL(3a.IMPORT_OTHERS_RECEIPT_DUTY, 0) + IFNULL(3a.EXPORT_GOLD_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3a.EXPORT_NARCO_RECEIPT_DUTY, 0) + IFNULL(3a.EXPORT_FICN_RECEIPT_DUTY, 0) + IFNULL(3a.EXPORT_WILD_RECEIPT_DUTY, 0) + IFNULL(3a.EXPORT_ODS_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3a.EXPORT_IPR_RECEIPT_DUTY, 0) + IFNULL(3a.EXPORT_OTHERS_RECEIPT_DUTY, 0)) AS col8_cus3a,\n" +
+                "        SUM(IFNULL(3b_prev.IMPORT_VALUE_CLOSING_DUTY, 0) + IFNULL(3b_prev.IMPORT_MIS_CLOSING_DUTY, 0) + IFNULL(3b_prev.IMPORT_DEEC_CLOSING_DUTY, 0) + IFNULL(3b_prev.IMPORT_DEPB_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3b_prev.IMPORT_EPCG_CLOSING_DUTY, 0) + IFNULL(3b_prev.IMPORT_EOU_CLOSING_DUTY, 0) +IFNULL(3b_prev.IMPORT_END_CLOSING_DUTY, 0) + IFNULL(3b_prev.IMPORT_OTHERS_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3b_prev.EXPORT_DEEC_CLOSING_DUTY, 0) + IFNULL(3b_prev.EXPORT_DEPB_CLOSING_DUTY, 0) + IFNULL(3b_prev.EXPORT_EPCG_CLOSING_DUTY, 0) + IFNULL(3b_prev.EXPORT_EOU_CLOSING_DUTY, 0) + \n" +
+                "            IFNULL(3b_prev.EXPORT_DBK_CLOSING_DUTY, 0) + IFNULL(3b_prev.EXPORT_OTHERS_CLOSING_DUTY, 0)) AS col5_cus3b,\n" +
+                "        SUM(IFNULL(3b.IMPORT_VALUE_RECEIPT_DUTY, 0) + IFNULL(3b.IMPORT_MIS_RECEIPT_DUTY, 0) + IFNULL(3b.IMPORT_DEEC_RECEIPT_DUTY, 0) + IFNULL(3b.IMPORT_DEPB_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3b.IMPORT_EPCG_RECEIPT_DUTY, 0) + IFNULL(3b.IMPORT_EOU_RECEIPT_DUTY, 0) +IFNULL(3b.IMPORT_END_RECEIPT_DUTY, 0) + IFNULL(3b.IMPORT_OTHERS_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3b.EXPORT_DEEC_RECEIPT_DUTY, 0) + IFNULL(3b.EXPORT_DEPB_RECEIPT_DUTY, 0) + IFNULL(3b.EXPORT_EPCG_RECEIPT_DUTY, 0) + IFNULL(3b.EXPORT_EOU_RECEIPT_DUTY, 0) + \n" +
+                "            IFNULL(3b.EXPORT_DBK_RECEIPT_DUTY, 0) +IFNULL(3b.EXPORT_OTHERS_RECEIPT_DUTY, 0)) AS col8_cus3b\n" +
+                "    FROM mis_dri_cus_7 AS 14c\n" +
+                "    INNER JOIN mis_gst_commcode AS cc ON 14c.COMM_CODE = cc.COMM_CODE AND 14c.MM_YYYY = '" + month_date + "'\n" +
+                "    INNER JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    INNER JOIN mis_dri_cus_3a AS 3a ON 14c.COMM_CODE = 3a.COMM_CODE AND 3a.MM_YYYY = '" + month_date + "'\n" +
+                "    INNER JOIN mis_dri_cus_3a AS 3a_prev ON 14c.COMM_CODE = 3a_prev.COMM_CODE AND 3a_prev.MM_YYYY = '" + prev_month_new + "'\n" +
+                "    INNER JOIN mis_dri_cus_3b AS 3b ON 14c.COMM_CODE = 3b.COMM_CODE AND 3b.MM_YYYY = '" + month_date + "'\n" +
+                "    INNER JOIN mis_dri_cus_3b AS 3b_prev ON 14c.COMM_CODE = 3b_prev.COMM_CODE AND 3b_prev.MM_YYYY = '" + prev_month_new + "'\n" +
+                "    GROUP BY cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME\n" +
+                "),\n" +
+                "row_numbered_cte AS (SELECT *, ROW_NUMBER() OVER (ORDER BY col4_7 ASC) AS row_num, COUNT(*) OVER () AS total_rows FROM cte),\n" +
+                "median_cte AS (\n" +
+                "    SELECT  col4_7 FROM row_numbered_cte WHERE row_num = FLOOR((total_rows + 1) / 2))\n" +
+                "SELECT ZONE_NAME,ZONE_CODE,COMM_NAME,col4_7,col5_cus3a,col8_cus3a,col5_cus3b,col8_cus3b,\n" +
+                "    (SELECT col4_7 FROM median_cte) AS median_6c,CONCAT(col4_7, '/', (col5_cus3a + col8_cus3a + col5_cus3b + col8_cus3b)) AS absolute_value,\n" +
+                "    (col4_7 / (col5_cus3a + col8_cus3a + col5_cus3b + col8_cus3b)) * 100 AS total_score\n" +
+                "FROM cte ORDER BY col4_7 ASC;";
         return queryCustom6d;
     }
     // ********************************************************************************************************************************

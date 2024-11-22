@@ -1003,63 +1003,23 @@ public class GstSubParameterWiseQuery {
     public String QueryFor_gst4d_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa="WITH cte AS (\n"
-                + "    SELECT\n"
-                + "        cc.ZONE_CODE,\n"
-                + "        zc.ZONE_NAME,\n"
-                + "        SUM(14c.REALISATION_CGST_AMT + 14c.REALISATION_IGST_AMT + 14c.REALISATION_SGST_AMT + 14c.REALISATION_CESS_AMT) AS col6_1,\n"
-                + "        SUM(14c.DETECTION_CGST_AMT + 14c.DETECTION_SGST_AMT + 14c.DETECTION_IGST_AMT + 14c.DETECTION_CESS_AMT) AS col6_3\n"
-                + "    FROM\n"
-                + "        mis_gst_commcode AS cc\n"
-                + "        RIGHT JOIN mis_gi_gst_1 AS 14c ON cc.COMM_CODE = 14c.COMM_CODE\n"
-                + "        LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n"
-                + "    WHERE\n"
-                + "        14c.MM_YYYY = '" + month_date + "'  -- Replace with your month_date variable\n"
-                + "    GROUP BY\n"
-                + "        cc.ZONE_CODE, zc.ZONE_NAME\n"
-                + "),\n"
-                + "ranked_cte AS (\n"
-                + "    SELECT\n"
-                + "        ZONE_CODE,\n"
-                + "        ZONE_NAME,\n"
-                + "        col6_1,\n"
-                + "        col6_3,\n"
-                + "        ROW_NUMBER() OVER (ORDER BY col6_1) AS row_num,\n"
-                + "        COUNT(*) OVER () AS total_rows\n"
-                + "    FROM\n"
-                + "        cte\n"
-                + "),\n"
-                + "median_cte AS (\n"
-                + "    SELECT\n"
-                + "        ZONE_CODE,\n"
-                + "        ZONE_NAME,\n"
-                + "        col6_1,\n"
-                + "        col6_3,\n"
-                + "        CASE\n"
-                + "            WHEN MOD(total_rows, 2) = 1 THEN  -- Odd number of rows\n"
-                + "                (SELECT col6_1 FROM ranked_cte WHERE row_num = (total_rows DIV 2) + 1)\n"
-                + "            ELSE  -- Even number of rows\n"
-                + "                (SELECT AVG(col6_1) FROM ranked_cte WHERE row_num IN ((total_rows DIV 2), (total_rows DIV 2) + 1))\n"
-                + "        END AS median_4d\n"
-                + "    FROM\n"
-                + "        ranked_cte\n"
-                + ")\n"
-                + "SELECT\n"
-                + "    ZONE_CODE,\n"
-                + "    ZONE_NAME,\n"
-                + "    col6_1,\n"
-                + "    col6_3,\n"
-                + "    CASE\n"
-                + "        WHEN col6_3 = 0 THEN 0\n"
-                + "        ELSE col6_1 * 100 / col6_3\n"
-                + "    END AS total_score,\n"
-                + "    median_4d,\n"
-                + "    CONCAT(col6_1, '/', col6_3) AS absval  -- Add absval in p/q form\n"
-                + "FROM\n"
-                + "    median_cte\n"
-                + "ORDER BY\n"
-                + "    total_score DESC;\n"
-                + "";
+        String getFinancialYear = DateCalculate.getFinancialYearStart(month_date);
+
+
+        String queryGst14aa="WITH CumulativeData AS (\n" +
+                "    SELECT cc.ZONE_CODE,zc.ZONE_NAME,scr.MM_YYYY,SUM(REALISATION_CGST_AMT + REALISATION_SGST_AMT + REALISATION_IGST_AMT + REALISATION_CESS_AMT) \n" +
+                "            OVER ( PARTITION BY cc.ZONE_CODE, zc.ZONE_NAME ORDER BY scr.MM_YYYY) AS s2col7,\n" +
+                "        SUM(DETECTION_CGST_AMT + DETECTION_SGST_AMT + DETECTION_IGST_AMT + DETECTION_CESS_AMT\n" +
+                "        ) OVER (PARTITION BY cc.ZONE_CODE, zc.ZONE_NAME ORDER BY scr.MM_YYYY) AS s1col7\n" +
+                "    FROM mis_gst_commcode AS cc\n" +
+                "    RIGHT JOIN mis_gi_gst_1 AS scr ON cc.COMM_CODE = scr.COMM_CODE\n" +
+                "    LEFT JOIN mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "    WHERE scr.MM_YYYY BETWEEN '" + getFinancialYear + "' AND '" + month_date + "'\n" +
+                ")\n" +
+                "SELECT ZONE_CODE,ZONE_NAME,MM_YYYY,\n" +
+                "    MAX(s2col7) AS s2col7, MAX(s1col7) AS s1col7  \n" +
+                "FROM CumulativeData\n" +
+                "WHERE MM_YYYY = '" + month_date + "' GROUP BY ZONE_CODE, ZONE_NAME, MM_YYYY;";
         return queryGst14aa;
     }
     public String QueryFor_gst4d_CommissonaryWise(String month_date, String zone_code){
