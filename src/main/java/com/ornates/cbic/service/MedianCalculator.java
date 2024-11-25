@@ -4,19 +4,17 @@ import java.util.List;
 import java.util.Collections;
 
 public class MedianCalculator {
-    public static double calculateMedian(List<Double> numbers) {
-        if (numbers == null || numbers.isEmpty()) {
-            return 0.0;
+    public static double calculateMedian(List<Double> values) {
+        if (values == null || values.isEmpty()) {
+            throw new IllegalArgumentException("List of values cannot be null or empty.");
         }
-        Collections.sort(numbers);
-        int size = numbers.size();
+
+        values.sort(Double::compareTo);
+        int size = values.size();
         if (size % 2 == 0) {
-            // Even number of elements
-            return (numbers.get(size / 2 - 1) + numbers.get(size / 2)) / 2.0;
+            return (values.get(size / 2 - 1) + values.get(size / 2)) / 2.0;
         } else {
-            // Odd number of elements
-            return numbers.get(size / 2);
+            return values.get(size / 2);
         }
     }
 }
-
