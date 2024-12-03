@@ -22,7 +22,7 @@ public class JDBCConnection {
 	public static Connection getTNConnection(){
 
 
-    	String url="jdbc:mysql://localhost:3306/cbecddm"; 		//local for CGST & Custom
+    	String url="jdbc:mysql://localhost:3307/cbecddm"; 		//local for CGST & Custom
 		//	String url="jdbc:mysql://103.205.64.103:3306/cbic"; 		//TEST
 //		String url="jdbc:postgresql://10.25.121.245:5432/TNPCB" ;//TesT
 //		String url="jdbc:postgresql://10.248.110.103:5432/TNPCB"; //Replica Live
@@ -30,7 +30,7 @@ public class JDBCConnection {
 
 
 		String userName="root";
-		String password="Rakesh@500";
+		String password="admin";
    
 
 //    	String userName="cbic_user";
