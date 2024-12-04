@@ -3397,18 +3397,20 @@ public class GstSubParameterController {
                     String commname= "ALL";
                     int col8=rsGst14aa.getInt("col8");
                     int col5=rsGst14aa.getInt("col5");
-                    int col5_1=rsGst14aa.getInt("col5_1");
-                    total = rsGst14aa.getDouble("total_score") * 100;
+                    total = rsGst14aa.getDouble("total_score9A") ;
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
+
                     int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
-                    String absval=String.valueOf(col8)+"/"+String.valueOf(col5 + col5_1);
+
+                    String absval=String.valueOf(col8)+"/"+String.valueOf(col5);
 
                     rank=score.marks9a(total);
+
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.marks9a(totalScore);
+                    Double sub_parameter_weighted_average = way_to_grade * 0.5;
                     gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
@@ -3424,18 +3426,20 @@ public class GstSubParameterController {
                     String commname=rsGst14aa.getString("COMM_NAME");
                     int col8=rsGst14aa.getInt("col8");
                     int col5=rsGst14aa.getInt("col5");
-                    int col5_1=rsGst14aa.getInt("col5_1");
-                    total = rsGst14aa.getDouble("total_score") * 100;
+
+                    total = rsGst14aa.getDouble("total_score9A") ;
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
+
                     int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
-                    String absval=String.valueOf(col8)+"/"+String.valueOf(col5 + col5_1);
+
+                    String absval=String.valueOf(col8)+"/"+String.valueOf(col5 );
 
                     rank=score.marks9a(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.marks9a(totalScore);
+                    Double sub_parameter_weighted_average = way_to_grade * 0.5;
                     gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);
@@ -3450,18 +3454,20 @@ public class GstSubParameterController {
                     String commname=rsGst14aa.getString("COMM_NAME");
                     int col8=rsGst14aa.getInt("col8");
                     int col5=rsGst14aa.getInt("col5");
-                    int col5_1=rsGst14aa.getInt("col5_1");
-                    total = rsGst14aa.getDouble("total_score") * 100;
+
+                    total = rsGst14aa.getDouble("total_score9A") ;
                     int Zonal_rank = 0;
                     String gst = "no";
-                    int way_to_grade = 0;
+                    //int way_to_grade = 0;
                     int insentavization = 0;
-                    int sub_parameter_weighted_average = 0;
-                    String absval=String.valueOf(col8)+"/"+String.valueOf(col5 + col5_1);
+                    // int sub_parameter_weighted_average = 0;
+                    String absval=String.valueOf(col8)+"/"+String.valueOf(col5 );
 
                     rank=score.marks9a(total);
                     String formattedTotal = String.format("%.2f", total);
                     double totalScore = Double.parseDouble(formattedTotal);
+                    int way_to_grade = score.marks9a(totalScore);
+                    Double sub_parameter_weighted_average = way_to_grade * 0.5;
                     gsta=new GST4A(rsGst14aa.getString("ZONE_NAME"),commname,totalScore,absval,zoneCode,ra,
                             Zonal_rank,gst,way_to_grade,insentavization,sub_parameter_weighted_average);
                     allGstaList.add(gsta);

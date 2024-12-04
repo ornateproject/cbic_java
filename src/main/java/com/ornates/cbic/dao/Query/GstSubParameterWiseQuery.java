@@ -2332,148 +2332,82 @@ public class GstSubParameterWiseQuery {
     public String QueryFor_gst9a_ZoneWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa="WITH cte AS (\n" +
-                "    SELECT \n" +
-                "        zc.ZONE_NAME, \n" +
-                "        zc.ZONE_CODE, \n" +
-                "        COUNT(*) AS col8,\n" +
-                "        SUM(lgl.PROSECUTION_SANCTIONED) AS col5\n" +
-                "    FROM mis_dla_gst_lgl_4 AS lgl \n" +
-                "    LEFT JOIN mis_gst_commcode AS cc ON lgl.COMM_CODE = cc.COMM_CODE \n" +
-                "    LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE \n" +
-                "    WHERE lgl.MM_YYYY = '"+month_date+"'\n" +
-                "    GROUP BY zc.ZONE_CODE\n" +
-                "),\n" +
-                "cte1 AS (\n" +
-                "    SELECT \n" +
-                "        zc.ZONE_NAME, \n" +
-                "        zc.ZONE_CODE, \n" +
-                "        SUM(lgl.PROSECUTION_SANCTIONED) AS col5_1 \n" +
-                "    FROM mis_dla_gst_lgl_4 AS lgl \n" +
-                "    LEFT JOIN mis_gst_commcode AS cc ON lgl.COMM_CODE = cc.COMM_CODE \n" +
-                "    LEFT JOIN mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE \n" +
-                "    WHERE lgl.MM_YYYY = '"+prev_month_new+"'\n" +
-                "    GROUP BY zc.ZONE_CODE\n" +
-                ")\n" +
-                "SELECT \n" +
-                "    cte.ZONE_NAME, \n" +
-                "    cte.ZONE_CODE, \n" +
-                "    cte.col8,\n" +
-                "    cte.col5,\n" +
-                "    cte1.col5_1,\n" +
-                "    (cte.col8 / (cte.col5 + cte1.col5_1)) AS total_score\n" +
-                "FROM cte \n" +
-                "INNER JOIN cte1 ON cte.ZONE_CODE = cte1.ZONE_CODE;";
+        String start_date=DateCalculate.getFinancialYearStart(month_date);
+        String queryGst14aa="SELECT\n" +
+                "    cc.ZONE_CODE,\n" +
+                "    zc.ZONE_NAME,\n" +
+                "    -- Calculate col15 with a range for up to the month (e.g., for financial year range)\n" +
+                "    SUM(tc.PROSECUTION_NOT_LAUNCHED) AS col8,\n" +
+                "    SUM(tc.PROSECUTION_SANCTIONED) AS col5,\n" +
+                "    -- Calculate total_score using the formula\n" +
+                "    (SUM(tc.PROSECUTION_NOT_LAUNCHED)) / NULLIF(SUM(tc.PROSECUTION_SANCTIONED), 0) * 100 AS total_score9A\n" +
+                "FROM\n" +
+                "    mis_gst_commcode AS cc\n" +
+                "RIGHT JOIN\n" +
+                "    mis_dla_gst_lgl_4 AS tc ON cc.COMM_CODE = tc.COMM_CODE\n" +
+                "LEFT JOIN\n" +
+                "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "WHERE\n" +
+                "    tc.MM_YYYY BETWEEN '" + start_date + "' AND '" + month_date + "' -- Adjust this to your desired range for financial year\n" +
+                "GROUP BY\n" +
+                "    cc.ZONE_CODE, zc.ZONE_NAME\n" +
+                "ORDER BY\n" +
+                "    total_score9A asc;\n";
         return queryGst14aa;
     }
     public String QueryFor_gst9a_CommissonaryWise(String month_date, String zone_code){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa="WITH cte AS (\n" +
-                "    SELECT \n" +
-                "        zc.ZONE_NAME, \n" +
-                "        zc.ZONE_CODE, \n" +
-                "        cc.COMM_NAME, \n" +
-                "        cc.COMM_CODE, \n" +
-                "        1 AS col8,\n" +
-                "        _11a.PROSECUTION_SANCTIONED AS col5 \n" +
-                "    FROM \n" +
-                "        mis_dla_gst_lgl_4 AS _11a \n" +
-                "    LEFT JOIN \n" +
-                "        mis_gst_commcode AS cc ON _11a.COMM_CODE = cc.COMM_CODE \n" +
-                "    LEFT JOIN \n" +
-                "        mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE \n" +
-                "    WHERE \n" +
-                "        _11a.MM_YYYY = '"+month_date+"' \n" +
-                "        AND cc.ZONE_CODE = '"+zone_code+"'\n" +
-                "),\n" +
-                "cte1 AS (\n" +
-                "    SELECT \n" +
-                "        zc.ZONE_NAME, \n" +
-                "        zc.ZONE_CODE, \n" +
-                "        cc.COMM_NAME, \n" +
-                "        cc.COMM_CODE, \n" +
-                "        _11a.PROSECUTION_SANCTIONED AS col5_1\n" +
-                "    FROM \n" +
-                "        mis_dla_gst_lgl_4 AS _11a \n" +
-                "    LEFT JOIN \n" +
-                "        mis_gst_commcode AS cc ON _11a.COMM_CODE = cc.COMM_CODE \n" +
-                "    LEFT JOIN \n" +
-                "        mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE \n" +
-                "    WHERE \n" +
-                "        _11a.MM_YYYY = '"+prev_month_new+"'\n" +
-                "        AND cc.ZONE_CODE = '"+zone_code+"'\n" +
-                ")\n" +
-                "SELECT \n" +
-                "    cte.ZONE_NAME,\n" +
-                "    cte.ZONE_CODE,\n" +
-                "    cte.COMM_NAME,\n" +
-                "    cte.COMM_CODE,\n" +
-                "    cte.col8,\n" +
-                "    cte.col5,\n" +
-                "    cte1.col5_1,\n" +
-                "    CASE \n" +
-                "        WHEN (cte.col5 + cte1.col5_1) <> 0 THEN cte.col8 / (cte.col5 + cte1.col5_1)\n" +
-                "        ELSE NULL -- or any default value or handling you prefer\n" +
-                "    END AS total_score\n" +
-                "FROM \n" +
-                "    cte \n" +
-                "INNER JOIN \n" +
-                "    cte1 ON cte.COMM_CODE = cte1.COMM_CODE;";
+        String start_date=DateCalculate.getFinancialYearStart(month_date);
+        String queryGst14aa="SELECT\n" +
+                "    cc.ZONE_CODE,\n" +
+                "    zc.ZONE_NAME,\n" +
+                "    cc.COMM_NAME, -- Include COMM_NAME\n" +
+                "    -- Calculate col15 with a range for up to the month (e.g., for financial year range)\n" +
+                "    SUM(tc.PROSECUTION_NOT_LAUNCHED) AS col8,\n" +
+                "    SUM(tc.PROSECUTION_SANCTIONED) AS col5,\n" +
+                "    -- Calculate total_score using the formula\n" +
+                "    (SUM(tc.PROSECUTION_NOT_LAUNCHED)) / NULLIF(SUM(tc.PROSECUTION_SANCTIONED), 0) * 100 AS total_score9A\n" +
+                "FROM\n" +
+                "    mis_gst_commcode AS cc\n" +
+                "RIGHT JOIN\n" +
+                "    mis_dla_gst_lgl_4 AS tc ON cc.COMM_CODE = tc.COMM_CODE\n" +
+                "LEFT JOIN\n" +
+                "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "WHERE\n" +
+                "    zc.ZONE_CODE = 65-- Add condition for ZONE_CODE = '" + zone_code + "'\n" +
+                "    AND tc.MM_YYYY BETWEEN '" + start_date + "' AND '"+month_date+"'  -- Adjust this to your desired range for financial year\n" +
+                "GROUP BY\n" +
+                "    cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME -- Add COMM_NAME in GROUP BY clause\n" +
+                "ORDER BY\n" +
+                "    total_score9A ASC;\n";
         return queryGst14aa;
     }
     public String QueryFor_gst9a_AllCommissonaryWise(String month_date){
         //              '" + month_date + "'	 '" + prev_month_new + "'	'" + zone_code + "'		'" + come_name + "' 	'" + next_month_new + "'
         String prev_month_new = DateCalculate.getPreviousMonth(month_date);
-        String queryGst14aa="WITH cte AS (\n" +
-                "    SELECT \n" +
-                "        zc.ZONE_NAME, \n" +
-                "        zc.ZONE_CODE, \n" +
-                "        cc.COMM_NAME, \n" +
-                "        cc.COMM_CODE, \n" +
-                "        1 AS col8,\n" +
-                "        _11a.PROSECUTION_SANCTIONED AS col5 \n" +
-                "    FROM \n" +
-                "        mis_dla_gst_lgl_4 AS _11a \n" +
-                "    LEFT JOIN \n" +
-                "        mis_gst_commcode AS cc ON _11a.COMM_CODE = cc.COMM_CODE \n" +
-                "    LEFT JOIN \n" +
-                "        mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE \n" +
-                "    WHERE \n" +
-                "        _11a.MM_YYYY = '"+month_date+"' \n" +
-                "),\n" +
-                "cte1 AS (\n" +
-                "    SELECT \n" +
-                "        zc.ZONE_NAME, \n" +
-                "        zc.ZONE_CODE, \n" +
-                "        cc.COMM_NAME, \n" +
-                "        cc.COMM_CODE, \n" +
-                "        _11a.PROSECUTION_SANCTIONED AS col5_1\n" +
-                "    FROM \n" +
-                "        mis_dla_gst_lgl_4 AS _11a \n" +
-                "    LEFT JOIN \n" +
-                "        mis_gst_commcode AS cc ON _11a.COMM_CODE = cc.COMM_CODE \n" +
-                "    LEFT JOIN \n" +
-                "        mis_gst_zonecode AS zc ON cc.ZONE_CODE = zc.ZONE_CODE \n" +
-                "    WHERE \n" +
-                "        _11a.MM_YYYY = '"+prev_month_new+"'\n" +
-                ")\n" +
-                "SELECT \n" +
-                "    cte.ZONE_NAME,\n" +
-                "    cte.ZONE_CODE,\n" +
-                "    cte.COMM_NAME,\n" +
-                "    cte.COMM_CODE,\n" +
-                "    cte.col8,\n" +
-                "    cte.col5,\n" +
-                "    cte1.col5_1,\n" +
-                "    CASE \n" +
-                "        WHEN (cte.col5 + cte1.col5_1) <> 0 THEN cte.col8 / (cte.col5 + cte1.col5_1)\n" +
-                "        ELSE NULL -- or any default value or handling you prefer\n" +
-                "    END AS total_score\n" +
-                "FROM \n" +
-                "    cte \n" +
-                "INNER JOIN \n" +
-                "    cte1 ON cte.COMM_CODE = cte1.COMM_CODE;";
+        String start_date=DateCalculate.getFinancialYearStart(month_date);
+        String queryGst14aa="SELECT\n" +
+                "    cc.ZONE_CODE,\n" +
+                "    zc.ZONE_NAME,\n" +
+                "    cc.COMM_NAME, -- Include COMM_NAME\n" +
+                "    -- Calculate col15 with a range for up to the month (e.g., for financial year range)\n" +
+                "    SUM(tc.PROSECUTION_NOT_LAUNCHED) AS col8,\n" +
+                "    SUM(tc.PROSECUTION_SANCTIONED) AS col5,\n" +
+                "    -- Calculate total_score using the formula\n" +
+                "    (SUM(tc.PROSECUTION_NOT_LAUNCHED)) / NULLIF(SUM(tc.PROSECUTION_SANCTIONED), 0) * 100 AS total_score9A\n" +
+                "FROM\n" +
+                "    mis_gst_commcode AS cc\n" +
+                "RIGHT JOIN\n" +
+                "    mis_dla_gst_lgl_4 AS tc ON cc.COMM_CODE = tc.COMM_CODE\n" +
+                "LEFT JOIN\n" +
+                "    mis_gst_zonecode AS zc ON zc.ZONE_CODE = cc.ZONE_CODE\n" +
+                "WHERE\n" +
+                "    tc.MM_YYYY BETWEEN '" + start_date + "' AND '"+month_date+"'  -- Adjust this to your desired range for financial year\n" +
+                "GROUP BY\n" +
+                "    cc.ZONE_CODE, zc.ZONE_NAME, cc.COMM_NAME -- Add COMM_NAME in GROUP BY clause\n" +
+                "ORDER BY\n" +
+                "    total_score9A ASC;\n";
         return queryGst14aa;
     }
     // ********************************************************************************************************************************
